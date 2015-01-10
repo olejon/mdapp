@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/diseases_and_treatments_search_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/diseases_and_treatments_search_toolbar" style="@style/toolbar">
+        <ProgressBar android:id="@+id/diseases_and_treatments_search_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/diseases_and_treatments_search_swipe_refresh_layout" style="@style/swipe_refresh_cards_layout">
+        <android.support.v7.widget.RecyclerView android:id="@+id/diseases_and_treatments_search_cards" style="@style/diseases_and_treatments_search_cards"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

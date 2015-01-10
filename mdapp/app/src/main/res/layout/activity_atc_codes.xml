@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/atc_codes_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/atc_codes_toolbar" style="@style/toolbar"/>
+
+    <ListView android:id="@+id/atc_codes_list" style="@style/atc_codes_list_layout"/>
+
+</LinearLayout>

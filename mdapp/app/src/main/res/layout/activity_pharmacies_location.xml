@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/pharmacies_location_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/pharmacies_location_toolbar" style="@style/toolbar"/>
+
+    <LinearLayout style="@style/pharmacies_location_inner_layout">
+        <android.support.v7.widget.RecyclerView android:id="@+id/pharmacies_location_cards" style="@style/pharmacies_location_cards"/>
+    </LinearLayout>
+
+</LinearLayout>

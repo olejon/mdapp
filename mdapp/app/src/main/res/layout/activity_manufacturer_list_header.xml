@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturer_list_header_layout">
+
+    <TextView android:text="@string/manufacturer_information_subheader" style="@style/subheader"/>
+
+    <TextView android:id="@+id/manufacturer_information" style="@style/manufacturer_information"/>
+
+    <TextView android:text="@string/manufacturer_list_subheader" style="@style/subheader"/>
+
+</LinearLayout>

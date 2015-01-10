@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/nasjonale_retningslinjer_list_item_layout">
+
+    <TextView android:id="@+id/nasjonale_retningslinjer_list_item_title" style="@style/nasjonale_retningslinjer_list_item_title"/>
+    <TextView android:id="@+id/nasjonale_retningslinjer_list_item_date" style="@style/nasjonale_retningslinjer_list_item_date"/>
+
+</LinearLayout>

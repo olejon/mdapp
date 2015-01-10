@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="main_tabs_base_base">
+        <item name="pstsShouldExpand">false</item>
+        <item name="pstsTabPaddingLeftRight">16dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_category_felleskatalogen">
+        <CheckBoxPreference android:key="SQLITE_DATABASE_FELLESKATALOGEN_UPDATE_ONLY_ON_WIFI" android:defaultValue="true" android:title="@string/settings_checkbox_update_felleskatalogen_only_when_connected_to_wifi" android:summary="@string/settings_checkbox_update_felleskatalogen_only_when_connected_to_wifi_summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_category_notifications_from_slv">
+        <CheckBoxPreference android:key="NOTIFY_WHEN_NEW_NOTIFICATION_FROM_SLV" android:defaultValue="true" android:title="@string/settings_checkbox_notify_when_new_notification_from_slv" android:summary="@string/settings_checkbox_notify_when_new_notification_from_slv_summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_category_about">
+        <Preference android:title="@string/settings_intent_developed_by" android:summary="@string/settings_intent_developed_by_summary"><intent android:action="android.intent.action.VIEW" android:data="@string/project_developer_website"/></Preference>
+        <Preference android:title="@string/settings_intent_website" android:summary="@string/settings_intent_website_summary"><intent android:action="android.intent.action.VIEW" android:data="@string/project_website"/></Preference>
+        <Preference android:title="@string/settings_intent_license" android:summary="@string/settings_intent_license_summary"><intent android:action="android.intent.action.VIEW" android:data="@string/project_developer_license_uri"/></Preference>
+        <Preference android:title="@string/settings_intent_licenses" android:summary="@string/settings_intent_licenses_summary"><intent android:action="android.intent.action.VIEW" android:data="@string/project_developer_licenses_uri"/></Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

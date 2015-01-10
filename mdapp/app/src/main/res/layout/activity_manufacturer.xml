@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturer_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/manufacturer_toolbar" style="@style/toolbar"/>
+
+    <LinearLayout style="@style/manufacturer_extended_toolbar_layout">
+        <TextView android:id="@+id/manufacturer_medications_count" style="@style/manufacturer_medications_count"/>
+    </LinearLayout>
+
+    <ListView android:id="@+id/manufacturer_list" style="@style/manufacturer_list_layout"/>
+
+</LinearLayout>

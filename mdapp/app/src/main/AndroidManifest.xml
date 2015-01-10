@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="net.olejon.mdapp">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/project_name"
+        android:theme="@style/app_theme">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MedicationActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/medisin/.*-.*-.*"/>
+                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/medisin/.*-.*-.*"/>
+                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/m/medisin/.*-.*-.*"/>
+                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/m/medisin/.*-.*-.*"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MedicationPicturesActivity"
+            android:parentActivityName=".MedicationActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationActivity"/>
+        </activity>
+        <activity
+            android:name=".MedicationPictureActivity"
+            android:parentActivityName=".MedicationPicturesActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationPicturesActivity"/>
+        </activity>
+        <activity
+            android:name=".MedicationWebViewActivity"
+            android:parentActivityName=".MedicationActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationActivity"/>
+        </activity>
+        <activity
+            android:name=".SubstanceActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/medisin/substansregister/.*"/>
+                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/medisin/substansregister/.*"/>
+                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/m/medisin/substansregister/.*"/>
+                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/m/medisin/substansregister/.*"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DiseasesAndTreatmentsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".DiseasesAndTreatmentsSearchActivity"
+            android:parentActivityName=".DiseasesAndTreatmentsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DiseasesAndTreatmentsActivity"/>
+        </activity>
+        <activity
+            android:name=".DiseasesAndTreatmentsSearchWebViewActivity"
+            android:parentActivityName=".DiseasesAndTreatmentsSearchActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DiseasesAndTreatmentsSearchActivity"/>
+        </activity>
+        <activity
+            android:name=".LvhActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".LvhCategoriesActivity"
+            android:parentActivityName=".LvhActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhActivity"/>
+        </activity>
+        <activity
+            android:name=".LvhCategoriesWebViewActivity"
+            android:parentActivityName=".LvhCategoriesActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhCategoriesActivity"/>
+        </activity>
+        <activity
+            android:name=".NasjonaleRetningslinjerActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".NasjonaleRetningslinjerWebViewActivity"
+            android:parentActivityName=".NasjonaleRetningslinjerActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NasjonaleRetningslinjerActivity"/>
+        </activity>
+        <activity
+            android:name=".InteractionsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".InteractionsCardsActivity"
+            android:parentActivityName=".InteractionsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".InteractionsActivity"/>
+        </activity>
+        <activity
+            android:name=".InteractionsWebViewActivity"
+            android:parentActivityName=".InteractionsCardsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".InteractionsCardsActivity"/>
+        </activity>
+        <activity
+            android:name=".PoisoningsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".PoisoningsCardsActivity"
+            android:parentActivityName=".PoisoningsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsActivity"/>
+        </activity>
+        <activity
+            android:name=".PoisoningsWebViewActivity"
+            android:parentActivityName=".PoisoningsCardsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsCardsActivity"/>
+        </activity>
+        <activity
+            android:name=".AtcActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".AtcCodesActivity"
+            android:parentActivityName=".AtcActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".AtcActivity"/>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/medisin/atc-register/.*"/>
+                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/medisin/atc-register/.*"/>
+                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/m/medisin/atc-register/.*"/>
+                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/m/medisin/atc-register/.*"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Icd10Activity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".Icd10ChapterActivity"
+            android:parentActivityName=".Icd10Activity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
+        </activity>
+        <activity
+            android:name=".Icd10WebViewActivity"
+            android:parentActivityName=".Icd10ChapterActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10ChapterActivity"/>
+        </activity>
+        <activity
+            android:name=".ManufacturersActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".ManufacturerActivity"
+            android:parentActivityName=".ManufacturersActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ManufacturersActivity"/>
+        </activity>
+        <activity
+            android:name=".PharmaciesActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".PharmaciesLocationActivity"
+            android:parentActivityName=".PharmaciesActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesActivity"/>
+        </activity>
+        <activity
+            android:name=".PharmaciesLocationMapActivity"
+            android:parentActivityName=".PharmaciesLocationActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesLocationActivity"/>
+        </activity>
+        <activity
+            android:name=".NotificationsFromSlvActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".NotificationsFromSlvWebViewActivity"
+            android:parentActivityName=".NotificationsFromSlvActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotificationsFromSlvActivity"/>
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".DonateActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/welcome_theme">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+
+        <receiver android:name=".Widget" android:label="@string/widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget"/>
+        </receiver>
+
+        <receiver android:name=".MyBootReceiver">
+            <intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter>
+        </receiver>
+
+        <receiver android:name=".FelleskatalogenAlarm" android:process=":felleskatalogenalarm"/>
+        <receiver android:name=".NotificationsFromSlvAlarm" android:process=":notificationsfromslvalarm"/>
+
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBl0K_iMW45EKrAzK63lTKFNqf7rYJvOTw"/>
+
+        <service android:name=".FelleskatalogenService"/>
+        <service android:name=".NotificationsFromSlvIntentService"/>
+        <service android:name=".WidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/substance_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/substance_toolbar" style="@style/toolbar"/>
+
+    <LinearLayout style="@style/substance_extended_toolbar_layout">
+        <TextView android:id="@+id/substance_medications_count" style="@style/substance_medications_count"/>
+    </LinearLayout>
+
+    <ListView android:id="@+id/substance_list" style="@style/substance_list_layout"/>
+    <TextView android:id="@+id/substance_list_empty" android:text="@string/substance_list_empty" style="@style/substance_list_empty"/>
+
+</LinearLayout>

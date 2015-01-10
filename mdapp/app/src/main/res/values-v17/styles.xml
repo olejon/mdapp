@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Main -->
+    <style name="main_medications_list_item_circle_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="main_medications_favorites_list_item_circle_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Medication -->
+    <style name="medication_prescription_group_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="medication_blue_prescription_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Medication pictures -->
+    <style name="medication_pictures_card_detail_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Diseases and treatments -->
+    <style name="diseases_and_treatments_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Interactions -->
+    <style name="interactions_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Poisonings -->
+    <style name="poisonings_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Poisonings cards -->
+    <style name="poisonings_cards_card_text_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- ATC -->
+    <style name="atc_list_item_code_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="atc_anatomical_groups_list_item_circle_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- ATC codes -->
+    <style name="atc_codes_list_item_code_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <!-- ICD-10 chapter -->
+    <style name="icd10_chapter_list_item_code_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <!-- Manufacturer -->
+    <style name="manufacturer_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Notifications from SLV -->
+    <style name="notifications_from_slv_card_top_value_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="notifications_from_slv_card_message_base" parent="notifications_from_slv_card_value">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Welcome -->
+    <style name="welcome_page_guide_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="welcome_page_text_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- FAB -->
+    <style name="fab_layout_base">
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+</resources>

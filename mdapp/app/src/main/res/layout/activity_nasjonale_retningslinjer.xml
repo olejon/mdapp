@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/nasjonale_retningslinjer_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/nasjonale_retningslinjer_toolbar" style="@style/toolbar">
+
+        <LinearLayout android:id="@+id/nasjonale_retningslinjer_toolbar_search_layout" style="@style/toolbar_search_layout">
+            <EditText android:id="@+id/nasjonale_retningslinjer_toolbar_search" android:hint="@string/nasjonale_retningslinjer_toolbar_search_hint" style="@style/nasjonale_retningslinjer_toolbar_search_edittext"/>
+            <ImageButton android:id="@+id/nasjonale_retningslinjer_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
+        </LinearLayout>
+
+        <ProgressBar android:id="@+id/nasjonale_retningslinjer_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/nasjonale_retningslinjer_swipe_refresh_layout" android:layout_below="@+id/nasjonale_retningslinjer_toolbar" style="@style/swipe_refresh_layout">
+        <ListView android:id="@+id/nasjonale_retningslinjer_list" style="@style/nasjonale_retningslinjer_list_layout"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView android:id="@+id/nasjonale_retningslinjer_list_empty" android:layout_below="@+id/nasjonale_retningslinjer_toolbar" android:text="@string/nasjonale_retningslinjer_list_empty" style="@style/nasjonale_retningslinjer_list_empty"/>
+
+    <com.melnykov.fab.FloatingActionButton android:id="@+id/nasjonale_retningslinjer_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
+
+</RelativeLayout>

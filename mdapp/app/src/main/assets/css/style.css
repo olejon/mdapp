@@ -1,0 +1,242 @@
+/* Fonts */
+
+@font-face
+{
+	font-family: "roboto";
+	font-style: normal;
+	font-weight: normal;
+	src: url("../fonts/roboto.ttf");
+}
+
+@font-face
+{
+	font-family: "roboto";
+	font-style: normal;
+	font-weight: bold;
+	src: url("../fonts/roboto_bold.ttf");
+}
+
+@font-face
+{
+	font-family: "roboto";
+	font-style: italic;
+	font-weight: normal;
+	src: url("../fonts/roboto_italic.ttf");
+}
+
+@font-face
+{
+	font-family: "roboto";
+	font-style: italic;
+	font-weight: bold;
+	src: url("../fonts/roboto_bold_italic.ttf");
+}
+
+@font-face
+{
+        font-family: "roboto";
+        font-style: normal;
+        font-weight: 600;
+        src: url("../fonts/roboto_medium.ttf");
+}
+
+@font-face
+{
+        font-family: "roboto";
+        font-style: italic;
+        font-weight: 600;
+        src: url("../fonts/roboto_medium_italic.ttf");
+}
+
+/* Body */
+
+body
+{
+	margin: 0;
+	padding: 8px;
+	font-family: "roboto", "arial", "sans-serif";
+	font-size: 14px;
+	color: #000;
+	line-height: 1.5;
+	tap-highlight-color: #4fc3f7
+	-webkit-tap-highlight-color: #4fc3f7;
+}
+
+@media screen and (min-width: 600px)
+{
+    body
+    {
+        padding: 16px;
+        font-size: 16px;
+    }
+}
+
+/* Divisions */
+
+div.section
+{
+    margin: 16px 0 0 0;
+	padding: 16px 0 0 0;
+	border-top: 2px solid #e0e0e0;
+}
+
+div#spc-prolog
+{
+    display: none;
+}
+
+div.table-wrapper
+{
+	width: 100%;
+	padding: 8px 0;
+	overflow: auto;
+}
+
+div.table-wrapper table
+{
+	table-layout: auto;
+	word-wrap: normal;
+}
+
+div#vnr-footnote
+{
+    font-size: 12px;
+}
+
+@media screen and (min-width: 600px)
+{
+    div#vnr-footnote
+    {
+        font-size: 14px;
+    }
+}
+
+div#begrep
+{
+    padding: 12px 0 0 0;
+}
+
+div#begrep > p
+{
+    padding: 12px 0 0 0;
+}
+
+/* Spans */
+
+span.ordbok
+{
+    border-bottom: 1px dashed #03a9f4;
+    font-weight: 600;
+    font-style: italic;
+}
+
+span.ordbok:active
+{
+    color: #03a9f4;
+}
+
+/* Paragraphs */
+
+p
+{
+	margin: 0;
+	padding: 0;
+}
+
+p.begrep span.synonym
+{
+    font-weight: bold;
+}
+
+p.FK_PreparatTabellWebcenter
+{
+    text-align: center;
+}
+
+/* Links */
+
+a
+{
+	outline: 0;
+	text-decoration: underline;
+	color: #03a9f4;
+}
+
+a:active
+{
+	color: #4fc3f7;
+}
+
+a#pakninger
+{
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    overflow: hidden;
+}
+
+/* Tables */
+
+table
+{
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12px;
+}
+
+@media screen and (min-width: 600px)
+{
+    table
+    {
+        font-size: 14px;
+    }
+}
+
+table th, table td
+{
+	padding: 0;
+	vertical-align: top;
+	text-align: left;
+}
+
+table.druid_result td
+{
+	padding: 8px;
+}
+
+table.druid_result tr.odd td
+{
+	background-color: #e0e0e0;
+}
+
+table.druid_result td img
+{
+	width: 32px;
+	height: 32px;
+}
+
+table.varenummertable th
+{
+	padding: 8px;
+	background-color: #e0e0e0;
+	border: 1px solid #e0e0e0;
+}
+
+table.varenummertable th a
+{
+    text-decoration: none;
+}
+
+table.varenummertable td
+{
+	border: 1px solid #e0e0e0;
+	padding: 8px;	
+}
+
+table.varenummertable td.spc img
+{
+    width: 24px;
+    height: 24px;
+}

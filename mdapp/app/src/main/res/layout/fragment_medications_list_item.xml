@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/main_medications_list_item_layout">
+
+    <TextView android:id="@+id/main_medications_list_item_prescription_group" android:layout_alignParentStart="true" android:layout_alignParentLeft="true" android:layout_centerInParent="true" style="@style/main_medications_list_item_circle"/>
+
+    <LinearLayout android:layout_alignParentTop="true" style="@style/main_medications_list_item_text_layout">
+        <TextView android:id="@+id/main_medications_list_item_name" style="@style/main_medications_list_item_name"/>
+        <TextView android:id="@+id/main_medications_list_item_type" style="@style/main_medications_list_item_type"/>
+        <TextView android:id="@+id/main_medications_list_item_manufacturer" style="@style/main_medications_list_item_manufacturer"/>
+    </LinearLayout>
+
+</RelativeLayout>

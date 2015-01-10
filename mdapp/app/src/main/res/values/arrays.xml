@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Tabs -->
+    <string-array name="main_pages">
+        <item>@string/main_page_medications</item>
+        <item>@string/main_page_substances</item>
+        <item>@string/main_page_favorites</item>
+    </string-array>
+
+    <string-array name="welcome_pages">
+        <item>@string/welcome_page_1</item>
+        <item>@string/welcome_page_2</item>
+        <item>@string/welcome_page_3</item>
+        <item>@string/welcome_page_4</item>
+    </string-array>
+
+    <!-- Diseases and treatment -->
+    <string-array name="diseases_and_treatments_spinner">
+        <item>@string/diseases_and_treatments_search_search_in_english</item>
+        <item>@string/diseases_and_treatments_search_search_in_norwegian</item>
+    </string-array>
+
+    <!-- Nasjonale retningslinjer -->
+    <string-array name="nasjonale_retningslinjer_list_item">
+        <item>@string/nasjonale_retningslinjer_list_item_web</item>
+        <item>@string/nasjonale_retningslinjer_list_item_pdf</item>
+    </string-array>
+
+</resources>

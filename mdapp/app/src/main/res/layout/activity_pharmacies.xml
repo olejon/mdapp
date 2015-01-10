@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/pharmacies_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/pharmacies_toolbar" style="@style/toolbar">
+
+        <LinearLayout android:id="@+id/pharmacies_toolbar_search_layout" style="@style/toolbar_search_layout">
+            <EditText android:id="@+id/pharmacies_toolbar_search" android:hint="@string/pharmacies_toolbar_search_hint" style="@style/pharmacies_toolbar_search_edittext"/>
+            <ImageButton android:id="@+id/pharmacies_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ListView android:id="@+id/pharmacies_list" android:layout_below="@+id/pharmacies_toolbar" style="@style/pharmacies_list_layout"/>
+    <TextView android:id="@+id/pharmacies_list_empty" android:layout_below="@+id/pharmacies_toolbar" android:text="@string/pharmacies_list_empty" style="@style/pharmacies_list_empty"/>
+
+    <com.melnykov.fab.FloatingActionButton android:id="@+id/pharmacies_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
+
+</RelativeLayout>
