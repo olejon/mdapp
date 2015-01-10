@@ -47,6 +47,7 @@
                 <TextView android:id="@+id/drawer_item_settings" android:drawableStart="@drawable/ic_settings_grey600_24dp" android:drawableLeft="@drawable/ic_settings_grey600_24dp" android:text="@string/drawer_item_settings" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_donate" android:drawableStart="@drawable/ic_attach_money_grey600_24dp" android:drawableLeft="@drawable/ic_attach_money_grey600_24dp" android:text="@string/drawer_item_donate" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_feedback" android:drawableStart="@drawable/ic_send_grey600_24dp" android:drawableLeft="@drawable/ic_send_grey600_24dp" android:text="@string/drawer_item_feedback" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+                <TextView android:id="@+id/drawer_item_report_issue" android:drawableStart="@drawable/ic_bug_report_grey600_24dp" android:drawableLeft="@drawable/ic_bug_report_grey600_24dp" android:text="@string/drawer_item_report_issue" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 
             </LinearLayout>
 

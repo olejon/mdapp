@@ -8,6 +8,7 @@
     <string name="project_developer_website">http://www.olejon.net/code/mdapp/?page=olejondotnet</string>
     <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
     <string name="project_developer_licenses_uri">http://www.olejon.net/code/mdapp/?page=licenses</string>
+    <string name="project_report_issue_uri">http://www.olejon.net/code/mdapp/?page=issues</string>
     <string name="project_feedback_uri">mailto:mail@olejon.net</string>
 
     <!-- Main -->
@@ -202,7 +203,6 @@
     <!-- ICD-10 chapter -->
     <string name="icd10_chapter_toolbar_search_hint">Søk…</string>
     <string name="icd10_chapter_list_empty">Ingen resultater. Prøv et annet søk.</string>
-    <string name="icd10_chapter_could_not_get_data">Kunne ikke hente ICD-10-koder. Prøv igjen.</string>
 
     <!-- ICD-10 web view -->
     <string name="icd10_webview_title">ICD-10-kode</string>
@@ -257,7 +257,7 @@
     <string name="settings_intent_license">Lisens</string>
     <string name="settings_intent_license_summary">Denne appen er lisensiert under The GNU General Public License, versjon 3.</string>
     <string name="settings_intent_licenses">Lisenser</string>
-    <string name="settings_intent_licenses_summary">Lisenser til fri programvare brukt i denne appen.</string>
+    <string name="settings_intent_licenses_summary">Lisenser til tredjepartsbiblioteker brukt i denne appen.</string>
 
     <!-- Donate -->
     <string name="donate_title">Doner</string>
@@ -273,11 +273,12 @@
     <string name="welcome_page_guide">Dra mot venstre for å gå til neste side</string>
     <string name="welcome_page_1_text">Velkommen til LegeAppen. Tanken bak LegeAppen er at den skal være en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, som Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.</string>
     <string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er Felleskatalogen, med oversikt over alle preparater og substanser.\n\nDu kan raskt søke i preparater og substanser ved å trykke på den blå knappen nede til høyre.\n\nI sidemenyen finner du mange flere muligheter. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
-    <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes umodifisert fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell, og er fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.</string>
+    <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes umodifisert fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell, og er fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\nCopyright 2015 Ole Jon Bjørkum.</string>
     <string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å ta deg til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
     <string name="welcome_page_button">TA MEG TIL APPEN</string>
 
     <!-- Drawer -->
+    <string name="drawer_content_description">Meny</string>
     <string name="drawer_item_felleskatalogen">Felleskatalogen</string>
     <string name="drawer_item_diseases_and_treatments">Sykdommer &amp; Behandlinger</string>
     <string name="drawer_item_lvh">Legevakthåndboken</string>
@@ -292,7 +293,7 @@
     <string name="drawer_item_settings">Innstillinger</string>
     <string name="drawer_item_donate">Doner</string>
     <string name="drawer_item_feedback">Send Tilbakemelding</string>
-    <string name="drawer_content_description">Meny</string>
+    <string name="drawer_item_report_issue">Rapporter feil</string>
 
     <!-- Pages -->
     <string name="main_page_medications">Preparater</string>

@@ -1,5 +1,26 @@
 package net.olejon.mdapp;
 
+/*
+
+Copyright 2015 Ole Jon Bjørkum
+
+This file is part of LegeAppen.
+
+LegeAppen is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LegeAppen is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -79,7 +100,7 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
             @Override
             public void onRefresh()
             {
-                getNotifications();
+                getNotifications(false);
             }
         });
 
@@ -87,11 +108,11 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.notifications_from_slv_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new MedicationPicturesAdapter(mContext, new JSONArray()));
+        mRecyclerView.setAdapter(new NotificationsFromSlvAdapter(mContext, new JSONArray()));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Get notifications
-        getNotifications();
+        getNotifications(true);
     }
 
     @Override
@@ -133,11 +154,15 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
     }
 
     // Get notifications
-    private void getNotifications()
+    private void getNotifications(boolean cache)
     {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website)+"api/1/notifications-from-slv/", new Response.Listener<JSONArray>()
+        String apiUri = getString(R.string.project_website)+"api/1/notifications-from-slv/";
+
+        if(!cache) requestQueue.getCache().remove(apiUri);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
         {
             @Override
             public void onResponse(JSONArray response)

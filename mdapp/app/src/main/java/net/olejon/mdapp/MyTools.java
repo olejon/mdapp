@@ -1,5 +1,26 @@
 package net.olejon.mdapp;
 
+/*
+
+Copyright 2015 Ole Jon Bjørkum
+
+This file is part of LegeAppen.
+
+LegeAppen is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LegeAppen is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 import android.app.DownloadManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -30,42 +51,6 @@ class MyTools
     public MyTools(Context context)
     {
         mContext = context;
-    }
-
-    // Toast
-    public void showToast(String toast, int length)
-    {
-        if(mToast != null) mToast.cancel();
-
-        mToast = Toast.makeText(mContext, toast, length);
-        mToast.show();
-    }
-
-    // Set view background
-    public void setBackgroundDrawable(View view, int drawable)
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-        {
-            view.setBackground(mContext.getResources().getDrawable(drawable));
-        }
-        else
-        {
-            view.setBackgroundDrawable(mContext.getResources().getDrawable(drawable));
-        }
-    }
-
-    // Open URI
-    public void openUri(String uri)
-    {
-        if(uri.equals(""))
-        {
-            showToast(mContext.getString(R.string.mytools_open_uri_invalid), 1);
-        }
-        else
-        {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            mContext.startActivity(intent);
-        }
     }
 
     // Default shared preferences
@@ -155,6 +140,42 @@ class MyTools
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    // Open URI
+    public void openUri(String uri)
+    {
+        if(uri.equals(""))
+        {
+            showToast(mContext.getString(R.string.mytools_open_uri_invalid), 1);
+        }
+        else
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            mContext.startActivity(intent);
+        }
+    }
+
+    // Toast
+    public void showToast(String toast, int length)
+    {
+        if(mToast != null) mToast.cancel();
+
+        mToast = Toast.makeText(mContext, toast, length);
+        mToast.show();
+    }
+
+    // Set view background
+    public void setBackgroundDrawable(View view, int drawable)
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            view.setBackground(mContext.getResources().getDrawable(drawable));
+        }
+        else
+        {
+            view.setBackgroundDrawable(mContext.getResources().getDrawable(drawable));
+        }
     }
 
     // Medication
