@@ -163,7 +163,7 @@ public class PoisoningsActivity extends ActionBarActivity
                 {
                     mTools.setSharedPreferencesBoolean("HIDE_POISONINGS_TIP_DIALOG", true);
                 }
-            }).show();
+            }).contentColor(getResources().getColor(R.color.black)).show();
         }
     }
 

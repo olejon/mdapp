@@ -796,7 +796,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         {
                             mTools.setSharedPreferencesBoolean("HIDE_MEDICATION_TIP_DIALOG", true);
                         }
-                    }).show();
+                    }).contentColor(getResources().getColor(R.color.black)).show();
                 }
             }
             else
@@ -818,7 +818,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                             finish();
                         }
-                    }).show();
+                    }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
                 }
                 catch(Exception e)
                 {
@@ -874,9 +874,16 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         }
 
         @JavascriptInterface
-        public void JSshowDialog(String title, String message)
+        public void JSshowDialog(final String title, final String message)
         {
-            new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).show();
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).contentColor(getResources().getColor(R.color.black)).show();
+                }
+            });
         }
 
         @JavascriptInterface

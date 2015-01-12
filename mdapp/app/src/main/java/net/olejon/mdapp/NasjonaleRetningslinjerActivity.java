@@ -289,16 +289,16 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                         new MaterialDialog.Builder(mContext).title(mTitlesArrayList.get(i)).items(R.array.nasjonale_retningslinjer_list_item).itemsCallback(new MaterialDialog.ListCallback()
                         {
                             @Override
-                            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
+                            public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
                             {
-                                if(i == 0)
+                                if(n == 0)
                                 {
                                     Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
                                     intent.putExtra("title", mTitlesArrayList.get(i));
                                     intent.putExtra("uri", mUrisArrayList.get(i));
                                     startActivity(intent);
                                 }
-                                else if(i == 1)
+                                else if(n == 1)
                                 {
                                     mTools.showToast(getString(R.string.nasjonale_retningslinjer_downloading_pdf), 1);
 
@@ -325,7 +325,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                         {
                             mTools.setSharedPreferencesBoolean("HIDE_NASJONALE_RETNINGSLINJER_TIP_DIALOG", true);
                         }
-                    }).show();
+                    }).contentColor(getResources().getColor(R.color.black)).show();
                 }
             }
         }, new Response.ErrorListener()

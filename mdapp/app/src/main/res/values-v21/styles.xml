@@ -175,9 +175,7 @@
         <item name="android:elevation">2dp</item>
     </style>
 
-    <style name="toolbar_progressbar_base" parent="android:Widget.Material.Light.ProgressBar.Large"/>
-
-    <style name="toolbar_progressbar_horizontal_base" parent="android:Widget.Material.Light.ProgressBar.Horizontal">
+    <style name="toolbar_progressbar_horizontal_base" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:elevation">2dp</item>
     </style>
 

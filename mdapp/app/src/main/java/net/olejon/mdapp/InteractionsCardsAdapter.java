@@ -179,7 +179,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
                                     try
                                     {
-                                        new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.interactions_cards_handling_dialog_title)).content(response.getString("handling")).positiveText(mContext.getString(R.string.interactions_cards_handling_dialog_positive_button)).show();
+                                        new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.interactions_cards_handling_dialog_title)).content(response.getString("handling")).positiveText(mContext.getString(R.string.interactions_cards_handling_dialog_positive_button)).contentColor(mContext.getResources().getColor(R.color.black)).show();
                                     }
                                     catch(Exception e)
                                     {

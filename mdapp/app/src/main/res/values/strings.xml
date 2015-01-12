@@ -97,14 +97,13 @@
     <string name="diseases_and_treatments_search_search">Søk</string>
     <string name="diseases_and_treatments_search_search_in_english">Søk på engelsk (anbefalt)</string>
     <string name="diseases_and_treatments_search_search_in_norwegian">Søk på norsk</string>
-    <string name="diseases_and_treatments_search_no_search_results">Fant ingen treff</string>
     <string name="diseases_and_treatments_search_could_not_search">Kunne ikke søke. Er du koblet til Internett?</string>
     <string name="diseases_and_treatments_search_webview_menu_forward">Gå fram</string>
     <string name="diseases_and_treatments_search_webview_menu_uri">Se på web</string>
 
     <!-- Legevakthåndboken -->
     <string name="lvh_title">Legevakthåndboken</string>
-    <string name="lvh_could_not_load_lvh">Kunne ikke laste Legevakthåndboken</string>
+    <string name="lvh_could_not_load_lvh">Kunne ikke laste Legevakthåndboken. Er du koblet til Internett?</string>
     <string name="lvh_menu_uri">Se på web</string>
     <string name="lvh_categories_webview_menu_go_forward">Gå fram</string>
     <string name="lvh_categories_webview_menu_uri">Se på web</string>
@@ -112,7 +111,7 @@
     <!-- Nasjonale retningslinjer -->
     <string name="nasjonale_retningslinjer_title">Nasjonale retningslinjer</string>
     <string name="nasjonale_retningslinjer_toolbar_search_hint">Søk…</string>
-    <string name="nasjonale_retningslinjer_could_not_get_data">Kunne ikke hente nasjonale retningslinjer. Prøv igjen.</string>
+    <string name="nasjonale_retningslinjer_could_not_get_data">Kunne ikke hente nasjonale retningslinjer. Er du koblet til Internett?.</string>
     <string name="nasjonale_retningslinjer_tip_dialog_title">Tips</string>
     <string name="nasjonale_retningslinjer_tip_dialog_message">Her blir alle publikasjoner fra Helsedirektoratet listet opp.\n\nFor å finne det du ønsker, bruk søkeknappen nede til høyre.</string>
     <string name="nasjonale_retningslinjer_tip_dialog_positive_button">OK</string>
@@ -120,7 +119,7 @@
     <string name="nasjonale_retningslinjer_list_item_web">Se på web</string>
     <string name="nasjonale_retningslinjer_list_item_pdf">Last ned PDF</string>
     <string name="nasjonale_retningslinjer_downloading_pdf">Se i varslingssenteret…</string>
-    <string name="nasjonale_retningslinjer_could_not_get_pdf">Kunne ikke hente PDF. Prøv igjen.</string>
+    <string name="nasjonale_retningslinjer_could_not_get_pdf">Kunne ikke hente PDF. Er du koblet til Internett?.</string>
     <string name="nasjonale_retningslinjer_menu_uri">Se på web</string>
 
     <!-- Nasjonale retningslinjer web view -->
@@ -198,7 +197,7 @@
     <!-- ICD-10 -->
     <string name="icd10_title">ICD-10</string>
     <string name="icd10_codes">Koder</string>
-    <string name="icd10_could_not_get_data">Kunne ikke hente ICD-10. Prøv igjen.</string>
+    <string name="icd10_could_not_get_data">Kunne ikke hente ICD-10. Er du koblet til Internett?.</string>
 
     <!-- ICD-10 chapter -->
     <string name="icd10_chapter_toolbar_search_hint">Søk…</string>

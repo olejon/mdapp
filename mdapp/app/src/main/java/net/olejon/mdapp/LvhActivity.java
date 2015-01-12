@@ -28,6 +28,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -143,20 +144,22 @@ public class LvhActivity extends ActionBarActivity
             @Override
             public void onResponse(JSONArray response)
             {
-                mRecyclerView.setAdapter(new LvhAdapter(mContext, response));
-
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
+
+                if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+                mRecyclerView.setAdapter(new LvhAdapter(mContext, response));
             }
         }, new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError error)
             {
-                mTools.showToast(getString(R.string.lvh_could_not_load_lvh), 1);
-
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
+
+                mTools.showToast(getString(R.string.lvh_could_not_load_lvh), 1);
 
                 finish();
             }

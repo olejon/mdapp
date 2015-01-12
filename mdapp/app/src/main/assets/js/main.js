@@ -52,7 +52,7 @@ $(window).load(function()
             var title = definition.match(/<span class="synonym">([^<]+)<\/span>/);
             var message = definition.match(/<span class="definition">([^<]+)<\/span>/);
 
-            if(title != null && message != null) Android.JSshowDialog(title[1], message[1]);
+            if(title != null && message != null) Android.JSshowDialog(title[1], message[1].replace(/&nbsp;/g, ' '));
         }
 	});
 });

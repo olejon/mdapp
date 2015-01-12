@@ -129,7 +129,7 @@ public class MainActivity extends ActionBarActivity
                     {
                         updateFelleskatalogen(true);
                     }
-                }).show();
+                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
 
                 return true;
             }
@@ -375,7 +375,7 @@ public class MainActivity extends ActionBarActivity
                         intent.setData(Uri.parse("market://details?id=net.olejon.mdapp"));
                         startActivity(intent);
                     }
-                }).show();
+                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
 
                 mTools.setSharedPreferencesBoolean("RATE_DIALOG_HAS_BEEN_SHOWN", true);
             }
@@ -396,7 +396,7 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }
-                }).show();
+                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
 
                 mTools.setSharedPreferencesBoolean("DONATE_DIALOG_HAS_BEEN_SHOWN", true);
             }

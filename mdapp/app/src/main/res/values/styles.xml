@@ -279,22 +279,22 @@
 
     <style name="medication_detail_schengen_certificate" parent="medication_detail">
         <item name="android:visibility">gone</item>
+        <item name="android:clickable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/medication_detail</item>
         <item name="android:drawableLeft">@drawable/medication_schengen_certificate</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:textColorLink">@color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="medication_detail_doping_status" parent="medication_detail">
         <item name="android:layout_marginRight">48dp</item>
+        <item name="android:clickable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/medication_detail</item>
         <item name="android:drawableLeft">@drawable/medication_doping_status_green</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:textColorLink">@color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -311,12 +311,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="medication_pictures_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -355,6 +355,7 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:minHeight">64dp</item>
+        <item name="android:maxHeight">384dp</item>
     </style>
 
     <style name="medication_pictures_card_detail" parent="medication_pictures_card_detail_base">
@@ -602,16 +603,18 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <!-- Diseases and treatments search -->
+
     <style name="diseases_and_treatments_search_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="diseases_and_treatments_search_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -687,12 +690,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="lvh_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -755,17 +758,10 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <!-- Legevakthåndboken categories -->
     <style name="lvh_categories_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
-    </style>
-
-    <style name="lvh_categories_inner_layout">
-        <item name="android:layout_width">@dimen/cards_width</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:orientation">vertical</item>
     </style>
 
@@ -778,6 +774,7 @@
     <style name="lvh_categories_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -980,12 +977,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="interactions_cards_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -1174,12 +1171,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="poisonings_cards_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -1479,7 +1476,7 @@
     </style>
 
     <style name="icd10_chapter_list_item_code" parent="icd10_chapter_list_item_code_base">
-        <item name="android:layout_width">128dp</item>
+        <item name="android:layout_width">134dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:paddingRight">2dp</item>
@@ -1671,14 +1668,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
-    </style>
-
-    <style name="pharmacies_location_inner_layout">
-        <item name="android:layout_width">@dimen/cards_width</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="pharmacies_location_cards">
@@ -1750,12 +1739,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="notifications_from_slv_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -2112,21 +2101,19 @@
 
     <style name="toolbar_base"/>
 
-    <style name="toolbar_progressbar" parent="toolbar_progressbar_base">
+    <style name="toolbar_progressbar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_width">32dp</item>
         <item name="android:layout_height">32dp</item>
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="toolbar_progressbar_base" parent="android:Widget.Holo.Light.ProgressBar.Large"/>
-
     <style name="toolbar_progressbar_horizontal" parent="toolbar_progressbar_horizontal_base">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item>
+        <item name="android:layout_height">1dp</item>
         <item name="android:progressDrawable">@drawable/toolbar_progressbar_horizontal</item>
     </style>
 
-    <style name="toolbar_progressbar_horizontal_base" parent="android:Widget.Holo.Light.ProgressBar.Horizontal"/>
+    <style name="toolbar_progressbar_horizontal_base" parent="Widget.AppCompat.ProgressBar.Horizontal"/>
 
     <style name="toolbar_search_layout">
         <item name="android:layout_width">match_parent</item>
@@ -2196,11 +2183,6 @@
     <style name="swipe_refresh_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="swipe_refresh_cards_layout" parent="swipe_refresh_layout">
-        <item name="android:layout_width">@dimen/cards_width</item>
-        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
     <!-- Tabs -->
@@ -2306,6 +2288,7 @@
 
     <!-- Widget -->
     <style name="widget_layout">
+        <item name="android:theme">@style/app_theme</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
@@ -2332,7 +2315,6 @@
     <style name="widget_list_layout" parent="listview">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:overScrollMode">never</item>
     </style>
 
     <style name="widget_list_empty">
@@ -2347,7 +2329,7 @@
     <style name="widget_list_loading">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:padding">16dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/dark_grey</item>
     </style>
@@ -2357,7 +2339,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">12dp</item>
-        <item name="android:background">@drawable/list_item</item>
     </style>
 
     <style name="widget_list_item_name">

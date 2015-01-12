@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -36,6 +37,8 @@ import org.json.JSONArray;
 public class LvhCategoriesActivity extends ActionBarActivity
 {
     private final Context mContext = this;
+
+    private final MyTools mTools = new MyTools(mContext);
 
     // Create activity
     @Override
@@ -53,6 +56,19 @@ public class LvhCategoriesActivity extends ActionBarActivity
         final String categoryIcon = intent.getStringExtra("icon");
         final String categoryTitle = intent.getStringExtra("title");
 
+        JSONArray subcategories;
+
+        try
+        {
+            subcategories = new JSONArray(intent.getStringExtra("subcategories"));
+        }
+        catch(Exception e)
+        {
+            subcategories = new JSONArray();
+
+            Log.e("LvhCategoriesActivity", Log.getStackTraceString(e));
+        }
+
         // Layout
         setContentView(R.layout.activity_lvh_categories);
 
@@ -67,18 +83,17 @@ public class LvhCategoriesActivity extends ActionBarActivity
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.lvh_categories_cards);
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new LvhCategoriesAdapter(mContext, new JSONArray(), "", ""));
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
+        if(mTools.isTablet())
+        {
+            int spanCount = (subcategories.length() == 1) ? 1 : 2;
+
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+        }
+
         // Get categories
-        try
-        {
-            recyclerView.setAdapter(new LvhCategoriesAdapter(mContext, new JSONArray(intent.getStringExtra("subcategories")), categoryColor, categoryIcon));
-        }
-        catch(Exception e)
-        {
-            Log.e("LvhCategoriesActivity", Log.getStackTraceString(e));
-        }
+        recyclerView.setAdapter(new LvhCategoriesAdapter(mContext, subcategories, categoryColor, categoryIcon));
     }
 
     @Override

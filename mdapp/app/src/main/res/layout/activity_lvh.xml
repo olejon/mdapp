@@ -6,7 +6,7 @@
         <ProgressBar android:id="@+id/lvh_toolbar_progressbar" style="@style/toolbar_progressbar"/>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/lvh_swipe_refresh_layout" style="@style/swipe_refresh_cards_layout">
+    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/lvh_swipe_refresh_layout" style="@style/swipe_refresh_layout">
         <android.support.v7.widget.RecyclerView android:id="@+id/lvh_cards" style="@style/lvh_cards"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 

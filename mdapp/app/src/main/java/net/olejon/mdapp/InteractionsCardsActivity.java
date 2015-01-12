@@ -31,6 +31,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -210,6 +211,13 @@ public class InteractionsCardsActivity extends ActionBarActivity
                     }
                     else
                     {
+                        if(mTools.isTablet())
+                        {
+                            int spanCount = (response.length() == 1) ? 1 : 2;
+
+                            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+                        }
+
                         mRecyclerView.setAdapter(new InteractionsCardsAdapter(mContext, mProgressBar, response));
 
                         ContentValues contentValues = new ContentValues();

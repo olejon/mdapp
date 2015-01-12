@@ -31,6 +31,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -138,8 +139,6 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
     // Search
     private void search(final String language, final String string, final boolean cache)
     {
-        mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, new JSONArray()));
-
         try
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
@@ -156,26 +155,19 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
 
-                    if(response.length() == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_search_results), 1);
+                    if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-                        finish();
-                    }
-                    else
-                    {
-                        mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, response));
+                    mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, response));
 
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING, string);
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING, string);
 
-                        SQLiteDatabase sqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
+                    SQLiteDatabase sqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
 
-                        sqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(string)+" COLLATE NOCASE", null);
-                        sqLiteDatabase.insert(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, contentValues);
+                    sqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(string)+" COLLATE NOCASE", null);
+                    sqLiteDatabase.insert(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, contentValues);
 
-                        sqLiteDatabase.close();
-                    }
+                    sqLiteDatabase.close();
                 }
             }, new Response.ErrorListener()
             {

@@ -28,6 +28,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -154,20 +155,27 @@ public class MedicationPicturesActivity extends ActionBarActivity
                 @Override
                 public void onResponse(JSONArray response)
                 {
-                    mRecyclerView.setAdapter(new MedicationPicturesAdapter(mContext, response));
-
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
+
+                    if(mTools.isTablet())
+                    {
+                        int spanCount = (response.length() == 1) ? 1 : 2;
+
+                        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+                    }
+
+                    mRecyclerView.setAdapter(new MedicationPicturesAdapter(mContext, response));
                 }
             }, new Response.ErrorListener()
             {
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
-                    mTools.showToast(getString(R.string.medication_pictures_could_not_load_pictures), 1);
-
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
+
+                    mTools.showToast(getString(R.string.medication_pictures_could_not_load_pictures), 1);
 
                     finish();
                 }

@@ -31,6 +31,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -40,6 +41,8 @@ import org.json.JSONArray;
 public class PharmaciesLocationActivity extends ActionBarActivity
 {
     private final Context mContext = this;
+
+    private final MyTools mTools = new MyTools(mContext);
 
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
@@ -118,7 +121,16 @@ public class PharmaciesLocationActivity extends ActionBarActivity
                 {
                     mToolbar.setTitle(mCursor.getString(mCursor.getColumnIndexOrThrow("location")));
 
-                    mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow("details")))));
+                    JSONArray pharmacies = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow("details")));
+
+                    if(mTools.isTablet())
+                    {
+                        int spanCount = (pharmacies.length() == 1) ? 1 : 2;
+
+                        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+                    }
+
+                    mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, pharmacies));
                 }
                 catch(Exception e)
                 {
