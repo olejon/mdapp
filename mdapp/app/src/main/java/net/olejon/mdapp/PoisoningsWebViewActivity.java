@@ -120,6 +120,15 @@ public class PoisoningsWebViewActivity extends ActionBarActivity
                     {
                         goForwardMenuItem.setVisible(false);
                     }
+
+                    if(pageUri.contains("helsenorge"))
+                    {
+                        mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
+                    }
+                    else if(pageUri.contains("helsebiblioteket"))
+                    {
+                        mWebView.loadUrl("javascript:var offset = $('div.mobile-article > h1').offset(); window.scrollTo(0, offset.top);");
+                    }
                 }
                 else
                 {

@@ -6,15 +6,11 @@
 
         <TextView android:id="@+id/poisonings_cards_card_title" style="@style/poisonings_cards_card_title"/>
         <TextView android:id="@+id/poisonings_cards_card_text" style="@style/poisonings_cards_card_text"/>
+        <TextView android:id="@+id/poisonings_cards_card_type" style="@style/poisonings_cards_card_type"/>
 
-        <View android:id="@+id/poisonings_cards_card_separator" style="@style/card_separator"/>
+        <View style="@style/card_separator"/>
 
-        <LinearLayout style="@style/poisonings_cards_card_buttons_layout">
-
-            <TextView android:id="@+id/poisonings_cards_card_button_uri" android:text="@string/poisonings_cards_card_button_uri" style="@style/poisonings_cards_card_button"/>
-            <TextView android:id="@+id/poisonings_cards_card_button_helsebiblioteket_uri" android:text="@string/poisonings_cards_card_button_helsebiblioteket_uri" style="@style/poisonings_cards_card_button"/>
-
-        </LinearLayout>
+        <TextView android:id="@+id/poisonings_cards_card_button_uri" android:text="@string/poisonings_cards_card_button_uri" style="@style/poisonings_cards_card_button"/>
 
     </LinearLayout>
 

@@ -299,9 +299,33 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="medication_content_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scrollbars">horizontal</item>
+    </style>
+
+    <style name="medication_content_list" parent="medication_content_list_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">3</item>
+    </style>
+
+    <style name="medication_content_list_base">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="medication_content_list_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="medication_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -340,11 +364,15 @@
         <item name="android:padding">16dp</item>
     </style>
 
-    <style name="medication_pictures_card_name">
+    <style name="medication_pictures_card_name" parent="medication_pictures_card_name_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/purple</item>
+    </style>
+
+    <style name="medication_pictures_card_name_base">
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="medication_pictures_card_picture">
@@ -493,7 +521,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="substance_list_item_name_base"/>
+    <style name="substance_list_item_name_base">
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="substance_list_item_manufacturer">
         <item name="android:layout_width">match_parent</item>
@@ -1252,17 +1282,22 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingBottom">4dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="poisonings_cards_card_text_base"/>
 
-    <style name="poisonings_cards_card_buttons_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">horizontal</item>
+    <style name="poisonings_cards_card_type">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="poisonings_cards_card_button" parent="card_button">
@@ -1551,7 +1586,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="manufacturers_list_item_name_base"/>
+    <style name="manufacturers_list_item_name_base">
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="manufacturers_list_item_medications_count">
         <item name="android:layout_width">match_parent</item>
@@ -1805,9 +1842,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="notifications_from_slv_card_title" parent="notifications_from_slv_card_value">
+    <style name="notifications_from_slv_card_title" parent="notifications_from_slv_card_title_base">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/purple</item>
+    </style>
+
+    <style name="notifications_from_slv_card_title_base" parent="notifications_from_slv_card_value">
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="notifications_from_slv_card_message" parent="notifications_from_slv_card_message_base">
@@ -1910,7 +1951,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingTop">48dp</item>
+        <item name="android:paddingTop">32dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingLeft">16dp</item>
@@ -1924,12 +1965,15 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="donate_information">
+    <style name="donate_information" parent="donate_information_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
     </style>
+
+    <style name="donate_information_base"/>
 
     <!-- Welcome -->
     <style name="welcome_layout">

@@ -34,6 +34,11 @@
         <item name="android:elevation">2dp</item>
     </style>
 
+    <!-- Medication pictures -->
+    <style name="medication_pictures_card_name_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- Substance -->
     <style name="substance_extended_toolbar_layout_base">
         <item name="android:elevation">2dp</item>
@@ -148,6 +153,10 @@
     </style>
 
     <!-- Notifications from SLV -->
+    <style name="notifications_from_slv_card_title_base" parent="notifications_from_slv_card_value">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <style name="notifications_from_slv_card_medications_item_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>

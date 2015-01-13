@@ -49,6 +49,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
     private Spinner mSpinner;
     private ProgressBar mProgressBar;
+    private ListView mListView;
     private WebView mWebView;
 
     private Menu mMenu;
@@ -154,6 +156,12 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             // Progress bar
             mProgressBar = (ProgressBar) findViewById(R.id.medication_toolbar_progressbar);
+
+            // List
+            mListView = (ListView) findViewById(R.id.medication_content_list);
+
+            View listViewHeader = getLayoutInflater().inflate(R.layout.activity_medication_content_list_subheader, mListView, false);
+            mListView.addHeaderView(listViewHeader, null, false);
 
             // Web view
             mWebView = (WebView) findViewById(R.id.medication_content);
@@ -352,6 +360,8 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                 JSONObject jsonObject = jsonArray.getJSONObject(index);
 
+                mListView.setSelection(i);
+
                 mWebView.loadUrl("javascript:scrollToSection('"+jsonObject.getString("id")+"')");
             }
         }
@@ -476,34 +486,52 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                         final int packageInsertsCount = response.length();
 
-                        final String[] packageInsertsNames = new String[packageInsertsCount];
-                        final String[] packageInsertsUris = new String[packageInsertsCount];
-
-                        for(int i = 0; i < packageInsertsCount; i++)
+                        if(packageInsertsCount == 1)
                         {
                             try
                             {
-                                JSONObject packageInsertJsonObject = response.getJSONObject(i);
+                                JSONObject packageInsertJsonObject = response.getJSONObject(0);
 
-                                packageInsertsNames[i] = packageInsertJsonObject.getString("name");
-                                packageInsertsUris[i] = packageInsertJsonObject.getString("uri");
+                                Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                                intent.putExtra("uri", packageInsertJsonObject.getString("uri"));
+                                startActivity(intent);
                             }
                             catch(Exception e)
                             {
                                 Log.e("MedicationActivity", Log.getStackTraceString(e));
                             }
                         }
-
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.medication_package_inserts_dialog_title)).items(packageInsertsNames).itemsCallback(new MaterialDialog.ListCallback()
+                        else
                         {
-                            @Override
-                            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
+                            final String[] packageInsertsNames = new String[packageInsertsCount];
+                            final String[] packageInsertsUris = new String[packageInsertsCount];
+
+                            for(int i = 0; i < packageInsertsCount; i++)
                             {
-                                Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
-                                intent.putExtra("uri", packageInsertsUris[i]);
-                                startActivity(intent);
+                                try
+                                {
+                                    JSONObject packageInsertJsonObject = response.getJSONObject(i);
+
+                                    packageInsertsNames[i] = packageInsertJsonObject.getString("name");
+                                    packageInsertsUris[i] = packageInsertJsonObject.getString("uri");
+                                }
+                                catch(Exception e)
+                                {
+                                    Log.e("MedicationActivity", Log.getStackTraceString(e));
+                                }
                             }
-                        }).show();
+
+                            new MaterialDialog.Builder(mContext).title(getString(R.string.medication_package_inserts_dialog_title)).items(packageInsertsNames).itemsCallback(new MaterialDialog.ListCallback()
+                            {
+                                @Override
+                                public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
+                                {
+                                    Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                                    intent.putExtra("uri", packageInsertsUris[i]);
+                                    startActivity(intent);
+                                }
+                            }).show();
+                        }
                     }
                 }, new Response.ErrorListener()
                 {
@@ -520,6 +548,8 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             }
             catch(Exception e)
             {
+                mTools.showToast(getString(R.string.medication_could_not_get_package_insert), 1);
+
                 Log.e("MedicationActivity", Log.getStackTraceString(e));
             }
         }
@@ -558,6 +588,60 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             medicationPicturesUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PICTURES_URI);
             medicationPatientUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PATIENT_URI);
             medicationSpcUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_SPC_URI);
+
+            // Medication sections
+            try
+            {
+                JSONArray jsonArray = new JSONArray(medicationContentSections);
+
+                ArrayList<String> spinnerArrayList = new ArrayList<>();
+                ArrayList<String> listArrayList = new ArrayList<>();
+
+                spinnerArrayList.add(getString(R.string.medication_choose_section));
+
+                for(int i = 0; i < jsonArray.length(); i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    spinnerArrayList.add(jsonObject.getString("name"));
+                    listArrayList.add(jsonObject.getString("name"));
+                }
+
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getSupportActionBar().getThemedContext(), R.layout.toolbar_spinner_header, spinnerArrayList);
+                spinnerArrayAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item);
+
+                mSpinner.setAdapter(spinnerArrayAdapter);
+
+                ArrayAdapter<String> listArrayAdapter = new ArrayAdapter<>(mContext, R.layout.activity_medication_content_list_item, listArrayList);
+
+                mListView.setAdapter(listArrayAdapter);
+
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                    {
+                        try
+                        {
+                            int index = i - 1;
+
+                            JSONArray jsonArray = new JSONArray(medicationContentSections);
+
+                            JSONObject jsonObject = jsonArray.getJSONObject(index);
+
+                            mWebView.loadUrl("javascript:scrollToSection('"+jsonObject.getString("id")+"')");
+                        }
+                        catch(Exception e)
+                        {
+                            Log.e("MedicationActivity", Log.getStackTraceString(e));
+                        }
+                    }
+                });
+            }
+            catch(Exception e)
+            {
+                Log.e("MedicationActivity", Log.getStackTraceString(e));
+            }
 
             // Medication is favorite?
             if(medicationIsFavorite(medicationUri)) favoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp);
@@ -628,31 +712,6 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         });
                     }
                 }
-            }
-            catch(Exception e)
-            {
-                Log.e("MedicationActivity", Log.getStackTraceString(e));
-            }
-
-            // Medication sections
-            try
-            {
-                JSONArray jsonArray = new JSONArray(medicationContentSections);
-
-                ArrayList<String> arrayList = new ArrayList<>();
-                arrayList.add(getString(R.string.medication_choose_section));
-
-                for(int i = 0; i < jsonArray.length(); i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    arrayList.add(jsonObject.getString("name"));
-                }
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getSupportActionBar().getThemedContext(), R.layout.toolbar_spinner_header, arrayList);
-                arrayAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item);
-
-                mSpinner.setAdapter(arrayAdapter);
             }
             catch(Exception e)
             {

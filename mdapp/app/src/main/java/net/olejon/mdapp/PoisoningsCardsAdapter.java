@@ -54,9 +54,9 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
     static class PoisoningsViewHolder extends RecyclerView.ViewHolder
     {
         private final CardView card;
+        private final TextView type;
         private final TextView title;
         private final TextView text;
-        private final TextView buttonHelsebiblioteketUri;
         private final TextView buttonUri;
 
         public PoisoningsViewHolder(View view)
@@ -64,9 +64,9 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
             super(view);
 
             card = (CardView) view.findViewById(R.id.poisonings_cards_card);
+            type = (TextView) view.findViewById(R.id.poisonings_cards_card_type);
             title = (TextView) view.findViewById(R.id.poisonings_cards_card_title);
             text = (TextView) view.findViewById(R.id.poisonings_cards_card_text);
-            buttonHelsebiblioteketUri = (TextView) view.findViewById(R.id.poisonings_cards_card_button_helsebiblioteket_uri);
             buttonUri = (TextView) view.findViewById(R.id.poisonings_cards_card_button_uri);
         }
     }
@@ -86,12 +86,22 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
         {
             final JSONObject interactionJsonObject = mPoisonings.getJSONObject(i);
 
+            final String type = interactionJsonObject.getString("type");
             final String title = interactionJsonObject.getString("title");
             final String text = interactionJsonObject.getString("text");
             final String uri = interactionJsonObject.getString("uri");
 
             viewHolder.title.setText(title);
             viewHolder.text.setText(text);
+
+            if(type.equals("helsenorge"))
+            {
+                viewHolder.type.setText(mContext.getString(R.string.poisonings_cards_source_helsenorge));
+            }
+            else if(type.equals("helsebiblioteket"))
+            {
+                viewHolder.type.setText(mContext.getString(R.string.poisonings_cards_source_helsebiblioteket));
+            }
 
             viewHolder.buttonUri.setOnClickListener(new View.OnClickListener()
             {
@@ -101,18 +111,6 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
                     Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
-                    mContext.startActivity(intent);
-                }
-            });
-
-            viewHolder.buttonHelsebiblioteketUri.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
-                    intent.putExtra("title", "Helsebiblioteket - Forgiftninger");
-                    intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/");
                     mContext.startActivity(intent);
                 }
             });

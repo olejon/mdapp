@@ -79,6 +79,7 @@ public class DonateActivity extends ActionBarActivity
         // In-app billing
         Intent intent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         intent.setPackage("com.android.vending");
+
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 

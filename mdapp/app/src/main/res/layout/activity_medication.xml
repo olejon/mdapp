@@ -24,6 +24,9 @@
 
     </RelativeLayout>
 
-    <WebView android:id="@+id/medication_content" style="@style/medication_content"/>
+    <LinearLayout style="@style/medication_content_layout">
+        <ListView android:id="@+id/medication_content_list" style="@style/medication_content_list"/>
+        <WebView android:id="@+id/medication_content" style="@style/medication_content"/>
+    </LinearLayout>
 
 </LinearLayout>

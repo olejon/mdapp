@@ -78,6 +78,11 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- Donate -->
+    <style name="donate_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
     <!-- Welcome -->
     <style name="welcome_page_guide_base">
         <item name="android:fontFamily">sans-serif-condensed</item>

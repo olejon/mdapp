@@ -55,6 +55,7 @@
     <string name="medication_full_content_reference_dialog_positive_button">Ja</string>
     <string name="medication_full_content_reference_dialog_negative_button">Nei</string>
     <string name="medication_package_inserts_dialog_title">Velg pakningsvedlegg</string>
+    <string name="medication_could_not_get_package_insert">Kunne ikke hente pakningsvedlegg. Prøv igjen.</string>
     <string name="medication_remove_from_favorites">Preparat fjernet fra favoritter</string>
     <string name="medication_saved_to_favorites">Preparat lagret i favoritter</string>
     <string name="medication_downloading_pdf">Se i varslingssenteret…</string>
@@ -161,7 +162,7 @@
     <string name="poisonings_title">Giftinformasjonen</string>
     <string name="poisonings_toolbar_search_hint">Søk…</string>
     <string name="poisonings_no_recent_searches">Ingen nylige søk</string>
-    <string name="poisonings_information">Søk etter mulige årsaker til forgiftning. Eksempel: \"Maling\".\n\nKilden som brukes er <i>Helsenorge.no</i> fra Helsedirektoratet.</string>
+    <string name="poisonings_information">Søk etter mulige årsaker til forgiftning. Eksempler: \"Maling\" eller "Cipralex".\n\nKildene som brukes er <i>Helsenorge.no</i> og <i>Helsebiblioteket</i>.</string>
     <string name="poisonings_recent_searches">Nylige søk</string>
     <string name="poisonings_recent_searches_removed">Nylige søk fjernet</string>
     <string name="poisonings_tip_dialog_title">Akutt hjelp</string>
@@ -172,8 +173,9 @@
 
     <!-- Poisonings cards -->
     <string name="poisonings_cards_search">Søk</string>
+    <string name="poisonings_cards_source_helsenorge">Kilde: Helsenorge.no</string>
+    <string name="poisonings_cards_source_helsebiblioteket">Kilde: Helsebiblioteket</string>
     <string name="poisonings_cards_card_button_uri">LES MER</string>
-    <string name="poisonings_cards_card_button_helsebiblioteket_uri">HELSEBIBLIOTEKET</string>
     <string name="poisonings_cards_no_results">Fant ingen resultater</string>
     <string name="poisonings_cards_check_on_the_web">Sjekk på nett</string>
     <string name="poisonings_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
