@@ -60,6 +60,8 @@ public class MedicationWebViewActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
+        final String pageTitle = intent.getStringExtra("title");
+
         pageUri = intent.getStringExtra("uri");
 
         // Layout
@@ -67,7 +69,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
 
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.medication_webview_toolbar);
-        mToolbar.setTitle(getString(R.string.medication_webview_title));
+        mToolbar.setTitle(pageTitle);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -91,7 +93,9 @@ public class MedicationWebViewActivity extends ActionBarActivity
             {
                 if(url.matches("^https?://.*?\\.pdf$"))
                 {
-                    mTools.openUri(url);
+                    mTools.showToast(getString(R.string.medication_webview_downloading_pdf), 1);
+
+                    mTools.downloadFile(pageTitle, url);
 
                     return true;
                 }
@@ -117,8 +121,6 @@ public class MedicationWebViewActivity extends ActionBarActivity
                     {
                         goForwardMenuItem.setVisible(false);
                     }
-
-                    mWebView.loadUrl("javascript:Android.JSsetToolbarTitle(document.getElementsByTagName('title')[0].innerHTML)");
                 }
                 else
                 {

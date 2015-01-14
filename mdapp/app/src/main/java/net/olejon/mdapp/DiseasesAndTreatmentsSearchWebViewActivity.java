@@ -103,6 +103,15 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
+                if(url.matches("^https?://.*?\\.pdf$"))
+                {
+                    mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_downloading_pdf), 1);
+
+                    mTools.downloadFile(pageTitle, url);
+
+                    return true;
+                }
+
                 return false;
             }
         });
@@ -136,6 +145,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         CookieManager cookieManager = CookieManager.getInstance();
 
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
+        cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
 

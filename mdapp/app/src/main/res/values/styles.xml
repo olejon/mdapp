@@ -634,7 +634,6 @@
     </style>
 
     <!-- Diseases and treatments search -->
-
     <style name="diseases_and_treatments_search_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -694,7 +693,7 @@
         <item name="android:paddingTop">2dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/dark_grey</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
     </style>
 

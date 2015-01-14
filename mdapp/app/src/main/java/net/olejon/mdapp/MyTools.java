@@ -143,13 +143,6 @@ class MyTools
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    public boolean isTablet()
-    {
-        int size = mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-
-        return ((size) == Configuration.SCREENLAYOUT_SIZE_LARGE || (size) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
-    }
-
     // Open URI
     public void openUri(String uri)
     {
@@ -162,6 +155,28 @@ class MyTools
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             mContext.startActivity(intent);
         }
+    }
+
+    // Download file
+    public void downloadFile(String title, String uri)
+    {
+        DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
+
+        request.setAllowedOverRoaming(false);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setTitle(title);
+
+        downloadManager.enqueue(request);
+    }
+
+    // Check if tablet
+    public boolean isTablet()
+    {
+        int size = mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+
+        return ((size) == Configuration.SCREENLAYOUT_SIZE_LARGE || (size) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
     }
 
     // Toast
@@ -272,20 +287,6 @@ class MyTools
         sqLiteDatabase.close();
 
         return id;
-    }
-
-    // Download file
-    public void downloadFile(String title, String uri)
-    {
-        DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
-
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
-
-        request.setAllowedOverRoaming(false);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setTitle(title);
-
-        downloadManager.enqueue(request);
     }
 
     // Widget

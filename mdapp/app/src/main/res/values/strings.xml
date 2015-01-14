@@ -75,7 +75,7 @@
     <string name="medication_pictures_menu_uri">Se på web</string>
 
     <!-- Medication web view -->
-    <string name="medication_webview_title">Laster…</string>
+    <string name="medication_webview_downloading_pdf">Se i varslingssenteret…</string>
     <string name="medication_webview_menu_go_forward">Gå fram</string>
     <string name="medication_webview_menu_uri">Se på web</string>
 
@@ -92,15 +92,20 @@
     <string name="diseases_and_treatments_toolbar_search_hint">Søk…</string>
     <string name="diseases_and_treatments_recent_searches">Nylige søk</string>
     <string name="diseases_and_treatments_no_recent_searches">Ingen nylige søk</string>
-    <string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>UpToDate</i>, <i>PubMed</i>, <i>MedlinePlus</i> og <i>Wikipedia</i>.\n\nDe norske kildene som benyttes er <i>Tidsskrift for Den norske legeforening</i>, <i>Helsenorge.no</i>, <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Forskning.no</i> og <i>Wikipedia</i>.</string>
+    <string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>UpToDate</i>, <i>PubMed</i>, <i>MedlinePlus</i> og <i>Wikipedia</i>.\n\nDe norske kildene som benyttes er <i>Helsebiblioteket</i>, <i>Tidsskrift for Den norske legeforening</i>, <i>Helsenorge.no</i>, <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Forskning.no</i> og <i>Wikipedia</i>.</string>
     <string name="diseases_and_treatments_recent_searches_removed">Nylige søk fjernet</string>
     <string name="diseases_and_treatments_menu_clear_recent_searches">Fjern nylige søk</string>
+
+    <!-- Diseases and treatments search -->
     <string name="diseases_and_treatments_search_search">Søk</string>
     <string name="diseases_and_treatments_search_search_in_english">Søk på engelsk (anbefalt)</string>
     <string name="diseases_and_treatments_search_search_in_norwegian">Søk på norsk</string>
     <string name="diseases_and_treatments_search_could_not_search">Kunne ikke søke. Er du koblet til Internett?</string>
     <string name="diseases_and_treatments_search_webview_menu_forward">Gå fram</string>
     <string name="diseases_and_treatments_search_webview_menu_uri">Se på web</string>
+
+    <!-- Diseases and treatments search web view -->
+    <string name="diseases_and_treatments_search_webview_downloading_pdf">Se i varslingssenteret…</string>
 
     <!-- Legevakthåndboken -->
     <string name="lvh_title">Legevakthåndboken</string>
@@ -162,7 +167,7 @@
     <string name="poisonings_title">Giftinformasjonen</string>
     <string name="poisonings_toolbar_search_hint">Søk…</string>
     <string name="poisonings_no_recent_searches">Ingen nylige søk</string>
-    <string name="poisonings_information">Søk etter mulige årsaker til forgiftning. Eksempler: \"Maling\" eller "Cipralex".\n\nKildene som brukes er <i>Helsenorge.no</i> og <i>Helsebiblioteket</i>.</string>
+    <string name="poisonings_information">Søk etter mulige årsaker til forgiftning. Eksempler: \"Maling\" eller \"Cipralex\".\n\nKildene som brukes er <i>Helsenorge.no</i> og <i>Helsebiblioteket</i>.</string>
     <string name="poisonings_recent_searches">Nylige søk</string>
     <string name="poisonings_recent_searches_removed">Nylige søk fjernet</string>
     <string name="poisonings_tip_dialog_title">Akutt hjelp</string>
@@ -235,7 +240,8 @@
     <!-- Notifications from SLV -->
     <string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
     <string name="notifications_from_slv_could_not_get_notifications">Kunne ikke hente varsler. Er du koblet til Internett?</string>
-    <string name="notifications_from_slv_card_legemiddelverket">LES MER</string>
+    <string name="notifications_from_slv_card_button">LES MER</string>
+    <string name="notifications_from_slv_downloading_pdf">Se i varslingssenteret…</string>
     <string name="notifications_from_slv_menu_uri">Se på web</string>
 
     <!-- Notifications from SLV web view -->

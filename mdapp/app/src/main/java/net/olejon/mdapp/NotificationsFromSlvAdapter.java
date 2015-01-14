@@ -139,6 +139,7 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                 }
             }
 
+            final String title = notificationsJsonObject.getString("title");
             final String uri = notificationsJsonObject.getString("uri");
 
             if(uri.equals(""))
@@ -156,16 +157,18 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                     @Override
                     public void onClick(View view)
                     {
-                        try
+                        if(uri.matches("^https?://.*?\\.pdf$"))
+                        {
+                            mTools.showToast(mContext.getString(R.string.notifications_from_slv_downloading_pdf), 1);
+
+                            mTools.downloadFile(title, uri);
+                        }
+                        else
                         {
                             Intent intent = new Intent(mContext, NotificationsFromSlvWebViewActivity.class);
-                            intent.putExtra("title", notificationsJsonObject.getString("title"));
+                            intent.putExtra("title", title);
                             intent.putExtra("uri", uri);
                             mContext.startActivity(intent);
-                        }
-                        catch(Exception e)
-                        {
-                            Log.e("NotificationsFromSlvAdapter", Log.getStackTraceString(e));
                         }
                     }
                 });

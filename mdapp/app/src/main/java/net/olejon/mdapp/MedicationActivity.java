@@ -195,6 +195,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     else
                     {
                         Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                        intent.putExtra("title", medicationName);
                         intent.putExtra("uri", url);
                         startActivity(intent);
                     }
@@ -328,6 +329,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 else
                 {
                     Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                    intent.putExtra("title", medicationName);
                     intent.putExtra("uri", medicationSpcUri);
                     startActivity(intent);
                 }
@@ -493,6 +495,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                                 JSONObject packageInsertJsonObject = response.getJSONObject(0);
 
                                 Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                                intent.putExtra("title", medicationName);
                                 intent.putExtra("uri", packageInsertJsonObject.getString("uri"));
                                 startActivity(intent);
                             }
@@ -527,6 +530,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                                 public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
                                 {
                                     Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                                    intent.putExtra("title", medicationName);
                                     intent.putExtra("uri", packageInsertsUris[i]);
                                     startActivity(intent);
                                 }
@@ -677,6 +681,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                             public boolean onMenuItemClick(MenuItem menuItem)
                             {
                                 Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                                intent.putExtra("title", medicationName);
                                 intent.putExtra("uri", poisoningUri);
                                 startActivity(intent);
 
@@ -739,6 +744,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     public void onClick(View view)
                     {
                         Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                        intent.putExtra("title", medicationName);
                         intent.putExtra("uri", "http://legemiddelverket.no/Bruk_og_raad/Medisiner-pa-utenlandsreise/Sider/default.aspx");
                         startActivity(intent);
                     }
@@ -762,6 +768,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     public void onClick(View view)
                     {
                         Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                        intent.putExtra("title", medicationName);
                         intent.putExtra("uri", medicationDopingStatusUri);
                         startActivity(intent);
                     }
@@ -778,6 +785,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     public void onClick(View view)
                     {
                         Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                        intent.putExtra("title", medicationName);
                         intent.putExtra("uri", medicationDopingStatusUri);
                         startActivity(intent);
                     }

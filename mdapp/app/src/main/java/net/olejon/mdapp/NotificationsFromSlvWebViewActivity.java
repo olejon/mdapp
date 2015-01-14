@@ -88,60 +88,49 @@ public class NotificationsFromSlvWebViewActivity extends ActionBarActivity
         // Web view
         mWebView = (WebView) findViewById(R.id.notifications_from_slv_webview_content);
 
-        if(pageUri.matches("^https?://.*?\\.pdf$"))
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setUseWideViewPort(true);
+
+        mWebView.setWebViewClient(new WebViewClient()
         {
-            mTools.showToast(getString(R.string.medication_downloading_pdf), 1);
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            {
+                return false;
+            }
+        });
 
-            mTools.downloadFile(pageTitle, pageUri);
-
-            finish();
-        }
-        else
+        mWebView.setWebChromeClient(new WebChromeClient()
         {
-            WebSettings webSettings = mWebView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webSettings.setBuiltInZoomControls(true);
-            webSettings.setDisplayZoomControls(false);
-            webSettings.setUseWideViewPort(true);
-
-            mWebView.setWebViewClient(new WebViewClient()
+            @Override
+            public void onProgressChanged(WebView view, int newProgress)
             {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url)
+                if(newProgress == 100)
                 {
-                    return false;
-                }
-            });
+                    mProgressBar.setVisibility(View.INVISIBLE);
 
-            mWebView.setWebChromeClient(new WebChromeClient()
-            {
-                @Override
-                public void onProgressChanged(WebView view, int newProgress)
-                {
-                    if(newProgress == 100)
+                    if(mWebView.canGoForward())
                     {
-                        mProgressBar.setVisibility(View.INVISIBLE);
-
-                        if(mWebView.canGoForward())
-                        {
-                            goForwardMenuItem.setVisible(true);
-                        }
-                        else
-                        {
-                            goForwardMenuItem.setVisible(false);
-                        }
+                        goForwardMenuItem.setVisible(true);
                     }
                     else
                     {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        mProgressBar.setProgress(newProgress);
+                        goForwardMenuItem.setVisible(false);
                     }
                 }
-            });
+                else
+                {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mProgressBar.setProgress(newProgress);
+                }
+            }
+        });
 
-            mWebView.setInitialScale(100);
-            mWebView.loadUrl(pageUri);
-        }
+        mWebView.setInitialScale(100);
+        mWebView.loadUrl(pageUri);
     }
 
     // Resume activity

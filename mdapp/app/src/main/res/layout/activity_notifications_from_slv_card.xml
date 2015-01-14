@@ -16,7 +16,7 @@
 
         <View android:id="@+id/notifications_from_slv_card_uri_separator" style="@style/notifications_from_slv_card_separator"/>
 
-        <TextView android:id="@+id/notifications_from_slv_card_button" android:text="@string/notifications_from_slv_card_legemiddelverket" style="@style/notifications_from_slv_card_button"/>
+        <TextView android:id="@+id/notifications_from_slv_card_button" android:text="@string/notifications_from_slv_card_button" style="@style/notifications_from_slv_card_button"/>
 
     </LinearLayout>
 

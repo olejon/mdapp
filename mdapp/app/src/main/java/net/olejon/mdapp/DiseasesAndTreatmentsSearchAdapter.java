@@ -136,6 +136,20 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
+                case "forskning":
+                {
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.forskning));
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
+                case "helsebiblioteket":
+                {
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.helsebiblioteket));
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
                 case "tidsskriftet":
                 {
                     viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.tidsskriftet));
@@ -146,13 +160,6 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
                 case "helsenorge":
                 {
                     viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.helsenorge));
-                    viewHolder.text.setText(text);
-
-                    break;
-                }
-                case "forskning":
-                {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.forskning));
                     viewHolder.text.setText(text);
 
                     break;
