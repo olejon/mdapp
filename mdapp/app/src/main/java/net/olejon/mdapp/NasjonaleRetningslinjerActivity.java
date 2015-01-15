@@ -293,16 +293,16 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                             {
                                 if(n == 0)
                                 {
+                                    mTools.showToast(getString(R.string.nasjonale_retningslinjer_downloading_pdf), 1);
+
+                                    downloadPdf(mTitlesArrayList.get(i), mUrisArrayList.get(i), i);
+                                }
+                                else if(n == 1)
+                                {
                                     Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
                                     intent.putExtra("title", mTitlesArrayList.get(i));
                                     intent.putExtra("uri", mUrisArrayList.get(i));
                                     startActivity(intent);
-                                }
-                                else if(n == 1)
-                                {
-                                    mTools.showToast(getString(R.string.nasjonale_retningslinjer_downloading_pdf), 1);
-
-                                    downloadPdf(mTitlesArrayList.get(i), mUrisArrayList.get(i));
                                 }
                             }
                         }).show();
@@ -348,10 +348,12 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
     }
 
     // Download PDF
-    private void downloadPdf(final String title, String uri)
+    private void downloadPdf(final String title, String uri, final int i)
     {
         try
         {
+            mProgressBar.setVisibility(View.VISIBLE);
+
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/nasjonale-retningslinjer/pdf/?uri="+URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
@@ -359,13 +361,20 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 @Override
                 public void onResponse(JSONObject response)
                 {
+                    mProgressBar.setVisibility(View.GONE);
+
                     try
                     {
                         String uri = response.getString("uri");
 
                         if(uri.equals(""))
                         {
-                            mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_pdf), 1);
+                            mTools.showToast(getString(R.string.nasjonale_retningslinjer_no_pdf), 1);
+
+                            Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
+                            intent.putExtra("title", mTitlesArrayList.get(i));
+                            intent.putExtra("uri", mUrisArrayList.get(i));
+                            startActivity(intent);
                         }
                         else
                         {
@@ -384,6 +393,8 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
+                    mProgressBar.setVisibility(View.GONE);
+
                     mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_pdf), 1);
 
                     Log.e("NasjonaleRetningslinjerActivity", error.toString());

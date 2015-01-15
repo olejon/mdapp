@@ -71,6 +71,7 @@
     <string name="medication_menu_uri">Se på web</string>
 
     <!-- Medication pictures -->
+    <string name="medication_pictures_card_button">FORSTØRR</string>
     <string name="medication_pictures_could_not_load_pictures">Kunne ikke laste bilder. Er du koblet til Internett?</string>
     <string name="medication_pictures_menu_uri">Se på web</string>
 
@@ -122,9 +123,10 @@
     <string name="nasjonale_retningslinjer_tip_dialog_message">Her blir alle publikasjoner fra Helsedirektoratet listet opp.\n\nFor å finne det du ønsker, bruk søkeknappen nede til høyre.</string>
     <string name="nasjonale_retningslinjer_tip_dialog_positive_button">OK</string>
     <string name="nasjonale_retningslinjer_list_empty">Ingen resultater. Prøv et annet søk.</string>
-    <string name="nasjonale_retningslinjer_list_item_web">Se på web</string>
-    <string name="nasjonale_retningslinjer_list_item_pdf">Last ned PDF</string>
+    <string name="nasjonale_retningslinjer_dialog_item_pdf">Last ned PDF</string>
+    <string name="nasjonale_retningslinjer_dialog_item_web">Se på web</string>
     <string name="nasjonale_retningslinjer_downloading_pdf">Se i varslingssenteret…</string>
+    <string name="nasjonale_retningslinjer_no_pdf">Ingen PDF. Åpner nettsiden…</string>
     <string name="nasjonale_retningslinjer_could_not_get_pdf">Kunne ikke hente PDF. Er du koblet til Internett?.</string>
     <string name="nasjonale_retningslinjer_menu_uri">Se på web</string>
 
@@ -182,10 +184,12 @@
     <string name="poisonings_cards_source_helsebiblioteket">Kilde: Helsebiblioteket</string>
     <string name="poisonings_cards_card_button_uri">LES MER</string>
     <string name="poisonings_cards_no_results">Fant ingen resultater</string>
-    <string name="poisonings_cards_check_on_the_web">Sjekk på nett</string>
+    <string name="poisonings_cards_check_on_helsenorge">Sjekk på Helsenorge.no</string>
+    <string name="poisonings_cards_check_on_helsebiblioteket">Sjekk hos Helsebiblioteket</string>
     <string name="poisonings_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
     <string name="poisonings_cards_menu_call">Ring Giftinformasjonen</string>
-    <string name="poisonings_cards_menu_uri">Se på web</string>
+    <string name="poisonings_cards_menu_helsenorge_uri">Se på Helsenorge.no</string>
+    <string name="poisonings_cards_menu_helsebiblioteket_uri">Se hos Helsebiblioteket</string>
 
     <!-- Poisonings web view -->
     <string name="poisonings_webview_menu_go_forward">Gå fram</string>

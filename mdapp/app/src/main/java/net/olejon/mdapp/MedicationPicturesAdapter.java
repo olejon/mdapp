@@ -63,6 +63,7 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
         private final TextView shape;
         private final TextView splitting;
         private final TextView measurement;
+        private final TextView button;
 
         public MedicationViewHolder(View view)
         {
@@ -75,6 +76,7 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
             shape = (TextView) view.findViewById(R.id.medication_pictures_card_shape);
             splitting = (TextView) view.findViewById(R.id.medication_pictures_card_splitting);
             measurement = (TextView) view.findViewById(R.id.medication_pictures_card_measurement);
+            button = (TextView) view.findViewById(R.id.medication_pictures_card_button);
         }
     }
 
@@ -93,9 +95,12 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
         {
             final JSONObject notificationsJsonObject = mPictures.getJSONObject(i);
 
-            viewHolder.name.setText(notificationsJsonObject.getString("name"));
+            final String name = notificationsJsonObject.getString("name");
+            final String uri = notificationsJsonObject.getString("uri");
 
-            Picasso.with(mContext).load(notificationsJsonObject.getString("uri")).into(viewHolder.picture);
+            viewHolder.name.setText(name);
+
+            Picasso.with(mContext).load(uri).into(viewHolder.picture);
 
             viewHolder.picture.setOnClickListener(new View.OnClickListener()
             {
@@ -105,7 +110,25 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
                     try
                     {
                         Intent intent = new Intent(mContext, MedicationPictureActivity.class);
-                        intent.putExtra("uri", notificationsJsonObject.getString("uri"));
+                        intent.putExtra("uri", uri);
+                        mContext.startActivity(intent);
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("MedicationPicturesAdapter", Log.getStackTraceString(e));
+                    }
+                }
+            });
+
+            viewHolder.button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    try
+                    {
+                        Intent intent = new Intent(mContext, MedicationPictureActivity.class);
+                        intent.putExtra("uri", uri);
                         mContext.startActivity(intent);
                     }
                     catch(Exception e)

@@ -31,6 +31,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -59,6 +61,8 @@ public class Icd10WebViewActivity extends ActionBarActivity
     private WebView mWebView;
 
     private String pageSearchUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -133,6 +137,18 @@ public class Icd10WebViewActivity extends ActionBarActivity
                     else
                     {
                         goForwardMenuItem.setVisible(false);
+                    }
+
+                    if(!mWebViewAnimationHasBeenShown)
+                    {
+                        mWebViewAnimationHasBeenShown = true;
+
+                        mWebView.loadUrl("javascript:var offset = $('div.codeDetail').offset(); window.scrollTo(0, offset.top);");
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
                     }
                 }
                 else

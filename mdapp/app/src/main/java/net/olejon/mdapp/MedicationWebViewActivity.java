@@ -30,8 +30,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieSyncManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -44,12 +45,13 @@ public class MedicationWebViewActivity extends ActionBarActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
-    private Toolbar mToolbar;
     private MenuItem goForwardMenuItem;
     private ProgressBar mProgressBar;
     private WebView mWebView;
 
     private String pageUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -68,10 +70,10 @@ public class MedicationWebViewActivity extends ActionBarActivity
         setContentView(R.layout.activity_medication_webview);
 
         // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.medication_webview_toolbar);
-        mToolbar.setTitle(pageTitle);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.medication_webview_toolbar);
+        toolbar.setTitle(pageTitle);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -121,6 +123,18 @@ public class MedicationWebViewActivity extends ActionBarActivity
                     {
                         goForwardMenuItem.setVisible(false);
                     }
+
+                    if(!mWebViewAnimationHasBeenShown)
+                    {
+                        mWebViewAnimationHasBeenShown = true;
+
+                        if(pageUri.contains("antidoping")) mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top);");
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
+                    }
                 }
                 else
                 {
@@ -129,8 +143,6 @@ public class MedicationWebViewActivity extends ActionBarActivity
                 }
             }
         });
-
-        mWebView.addJavascriptInterface(new JavaScriptInterface(), "Android");
 
         mWebView.setInitialScale(100);
         mWebView.loadUrl(pageUri);
@@ -205,23 +217,6 @@ public class MedicationWebViewActivity extends ActionBarActivity
             {
                 return super.onOptionsItemSelected(item);
             }
-        }
-    }
-
-    // JavaScript interface
-    private class JavaScriptInterface
-    {
-        @JavascriptInterface
-        public void JSsetToolbarTitle(final String title)
-        {
-            runOnUiThread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    mToolbar.setTitle(title);
-                }
-            });
         }
     }
 }

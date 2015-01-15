@@ -30,6 +30,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -49,6 +51,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     private WebView mWebView;
 
     private String pageUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -96,7 +100,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
-        webSettings.setUseWideViewPort(true);
 
         mWebView.setWebViewClient(new WebViewClient()
         {
@@ -133,6 +136,41 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                     {
                         goForwardMenuItem.setVisible(false);
                     }
+
+                    if(!mWebViewAnimationHasBeenShown)
+                    {
+                        mWebViewAnimationHasBeenShown = true;
+
+                        if(pageUri.contains("uptodate"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h2').offset(); window.scrollTo(0, offset.top);");
+                        }
+                        else if(pageUri.contains("nhi"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top);");
+                        }
+                        else if(pageUri.contains("sml"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('article.sml_search_result').offset(); window.scrollTo(0, offset.top);");
+                        }
+                        else if(pageUri.contains("forskning"))
+                        {
+                            mWebView.loadUrl("javascript:var elements = document.getElementsByTagName('span'); elements[0].scrollIntoView();");
+                        }
+                        else if(pageUri.contains("helsebiblioteket"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top);");
+                        }
+                        else if(pageUri.contains("helsenorge"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
+                        }
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
+                    }
                 }
                 else
                 {
@@ -149,7 +187,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
 
-        mWebView.setInitialScale(100);
         mWebView.loadUrl(pageUri);
     }
 

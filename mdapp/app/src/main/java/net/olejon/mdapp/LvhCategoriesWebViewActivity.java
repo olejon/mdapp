@@ -30,6 +30,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -48,6 +50,8 @@ public class LvhCategoriesWebViewActivity extends ActionBarActivity
     private WebView mWebView;
 
     private String pageUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -123,7 +127,17 @@ public class LvhCategoriesWebViewActivity extends ActionBarActivity
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
+                    if(!mWebViewAnimationHasBeenShown)
+                    {
+                        mWebViewAnimationHasBeenShown = true;
+
+                        mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
+                    }
                 }
                 else
                 {

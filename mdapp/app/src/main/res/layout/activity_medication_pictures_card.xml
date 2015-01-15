@@ -6,10 +6,17 @@
 
         <TextView android:id="@+id/medication_pictures_card_name" style="@style/medication_pictures_card_name"/>
         <ImageView android:id="@+id/medication_pictures_card_picture" android:contentDescription="@string/image_content_description" style="@style/medication_pictures_card_picture"/>
-        <TextView android:id="@+id/medication_pictures_card_marking" style="@style/medication_pictures_card_detail"/>
-        <TextView android:id="@+id/medication_pictures_card_shape" style="@style/medication_pictures_card_detail"/>
-        <TextView android:id="@+id/medication_pictures_card_splitting" style="@style/medication_pictures_card_detail"/>
-        <TextView android:id="@+id/medication_pictures_card_measurement" style="@style/medication_pictures_card_detail"/>
+
+        <LinearLayout style="@style/medication_pictures_card_details_layout">
+            <TextView android:id="@+id/medication_pictures_card_marking" style="@style/medication_pictures_card_detail"/>
+            <TextView android:id="@+id/medication_pictures_card_shape" style="@style/medication_pictures_card_detail"/>
+            <TextView android:id="@+id/medication_pictures_card_splitting" style="@style/medication_pictures_card_detail"/>
+            <TextView android:id="@+id/medication_pictures_card_measurement" style="@style/medication_pictures_card_detail"/>
+        </LinearLayout>
+
+        <View style="@style/card_separator"/>
+
+        <TextView android:id="@+id/medication_pictures_card_button" android:text="@string/medication_pictures_card_button" style="@style/medication_pictures_card_button"/>
 
     </LinearLayout>
 

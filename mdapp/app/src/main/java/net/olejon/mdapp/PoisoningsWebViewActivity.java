@@ -30,6 +30,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -49,6 +51,8 @@ public class PoisoningsWebViewActivity extends ActionBarActivity
     private WebView mWebView;
 
     private String pageUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -121,13 +125,23 @@ public class PoisoningsWebViewActivity extends ActionBarActivity
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    if(pageUri.contains("helsenorge"))
+                    if(!mWebViewAnimationHasBeenShown)
                     {
-                        mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
-                    }
-                    else if(pageUri.contains("helsebiblioteket"))
-                    {
-                        mWebView.loadUrl("javascript:var offset = $('div.mobile-article > h1').offset(); window.scrollTo(0, offset.top);");
+                        mWebViewAnimationHasBeenShown = true;
+
+                        if(pageUri.contains("helsenorge"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
+                        }
+                        else if(pageUri.contains("helsebiblioteket"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('div.mobile-article > h1').offset(); window.scrollTo(0, offset.top);");
+                        }
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
                     }
                 }
                 else

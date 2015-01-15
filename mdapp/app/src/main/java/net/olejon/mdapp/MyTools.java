@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.net.URLEncoder;
 import java.util.Calendar;
 
 class MyTools
@@ -152,8 +153,15 @@ class MyTools
         }
         else
         {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            mContext.startActivity(intent);
+            try
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mContext.getString(R.string.project_website)+"?page=redirect&uri="+URLEncoder.encode(uri, "utf-8")));
+                mContext.startActivity(intent);
+            }
+            catch(Exception e)
+            {
+                Log.e("MyTools", Log.getStackTraceString(e));
+            }
         }
     }
 

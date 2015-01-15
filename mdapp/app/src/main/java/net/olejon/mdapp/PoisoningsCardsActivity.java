@@ -124,9 +124,10 @@ public class PoisoningsCardsActivity extends ActionBarActivity
         // No poisonings
         mNoPoisoningsLayout = (LinearLayout) findViewById(R.id.poisonings_cards_no_poisonings);
 
-        Button noPoisoningsButton = (Button) findViewById(R.id.poisonings_cards_no_poisonings_button);
+        Button noPoisoningsHelsenorgeButton = (Button) findViewById(R.id.poisonings_cards_check_on_helsenorge);
+        Button noPoisoningsHelsebiblioteketButton = (Button) findViewById(R.id.poisonings_cards_check_on_helsebiblioteket);
 
-        noPoisoningsButton.setOnClickListener(new View.OnClickListener()
+        noPoisoningsHelsenorgeButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -136,6 +137,25 @@ public class PoisoningsCardsActivity extends ActionBarActivity
                     Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.poisonings_cards_search)+": \""+searchString+"\"");
                     intent.putExtra("uri", "https://helsenorge.no/sok/giftinformasjon/?k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                    mContext.startActivity(intent);
+                }
+                catch(Exception e)
+                {
+                    Log.e("PoisoningsCardsActivity", Log.getStackTraceString(e));
+                }
+            }
+        });
+
+        noPoisoningsHelsebiblioteketButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                try
+                {
+                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
+                    intent.putExtra("title", getString(R.string.poisonings_cards_search)+": \""+searchString+"\"");
+                    intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/alle-anbefalinger?cx=005475784484624053973%3A3bnj2dj_uei&ie=UTF-8&q="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&sa=S%C3%B8k");
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)
@@ -174,11 +194,24 @@ public class PoisoningsCardsActivity extends ActionBarActivity
                 startActivity(intent);
                 return true;
             }
-            case R.id.poisonings_cards_menu_uri:
+            case R.id.poisonings_cards_menu_helsenorge_uri:
             {
                 try
                 {
                     mTools.openUri("https://helsenorge.no/sok/giftinformasjon/?k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                }
+                catch(Exception e)
+                {
+                    Log.e("PoisoningsCardsActivity", Log.getStackTraceString(e));
+                }
+
+                return true;
+            }
+            case R.id.poisonings_cards_menu_helsebiblioteket_uri:
+            {
+                try
+                {
+                    mTools.openUri("http://www.helsebiblioteket.no/forgiftninger/alle-anbefalinger?cx=005475784484624053973%3A3bnj2dj_uei&ie=UTF-8&q="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&sa=S%C3%B8k");
                 }
                 catch(Exception e)
                 {

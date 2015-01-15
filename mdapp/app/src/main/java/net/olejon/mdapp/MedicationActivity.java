@@ -40,8 +40,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -98,6 +101,8 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     private String medicationPicturesUri;
     private String medicationPatientUri;
     private String medicationSpcUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -201,6 +206,23 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     }
 
                     return true;
+                }
+            });
+
+            mWebView.setWebChromeClient(new WebChromeClient()
+            {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress)
+                {
+                    if(newProgress == 100 && !mWebViewAnimationHasBeenShown)
+                    {
+                        mWebViewAnimationHasBeenShown = true;
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
+                    }
                 }
             });
 

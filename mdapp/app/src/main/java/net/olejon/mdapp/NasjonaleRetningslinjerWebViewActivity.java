@@ -31,6 +31,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -49,6 +51,8 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
     private WebView mWebView;
 
     private String pageUri;
+
+    private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
     @Override
@@ -128,6 +132,16 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
                     else
                     {
                         goForwardMenuItem.setVisible(false);
+                    }
+
+                    if(!mWebViewAnimationHasBeenShown)
+                    {
+                        mWebViewAnimationHasBeenShown = true;
+
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        mWebView.startAnimation(animation);
+
+                        mWebView.setVisibility(View.VISIBLE);
                     }
                 }
                 else
