@@ -166,7 +166,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                             mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
                         }
 
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         mWebView.startAnimation(animation);
 
                         mWebView.setVisibility(View.VISIBLE);

@@ -138,7 +138,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
                     {
                         mWebViewAnimationHasBeenShown = true;
 
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         mWebView.startAnimation(animation);
 
                         mWebView.setVisibility(View.VISIBLE);

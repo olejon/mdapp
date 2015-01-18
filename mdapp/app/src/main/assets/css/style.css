@@ -34,18 +34,18 @@
 
 @font-face
 {
-        font-family: "roboto";
-        font-style: normal;
-        font-weight: 600;
-        src: url("../fonts/roboto_medium.ttf");
+	font-family: "roboto";
+	font-style: normal;
+	font-weight: 600;
+	src: url("../fonts/roboto_medium.ttf");
 }
 
 @font-face
 {
-        font-family: "roboto";
-        font-style: italic;
-        font-weight: 600;
-        src: url("../fonts/roboto_medium_italic.ttf");
+	font-family: "roboto";
+	font-style: italic;
+	font-weight: 600;
+	src: url("../fonts/roboto_medium_italic.ttf");
 }
 
 /* Body */
@@ -65,25 +65,52 @@ body
 
 @media screen and (min-width: 600px)
 {
-    body
-    {
-        padding: 16px;
-        font-size: 16px;
-    }
+	body
+	{
+		padding: 16px;
+		font-size: 16px;
+	}
 }
 
 /* Divisions */
 
 div.section
 {
-    margin: 16px 0 0 0;
+ 	margin: 16px 0 0 0;
 	padding: 16px 0 0 0;
 	border-top: 2px solid #e0e0e0;
 }
 
+div.video2
+{
+	width: 278px;
+	margin: 16px auto 0 auto;
+}
+
+div.video2 > video
+{
+	width: 278px;
+	height: 155px;
+}
+
+@media screen and (min-width: 600px)
+{
+	div.video2
+	{
+		width: 560px;
+		margin: 16px auto 0 auto;
+	}
+
+	div.video2 > video
+	{
+		width: 560px;
+		height: 312px;
+	}
+}
+
 div#spc-prolog
 {
-    display: none;
+	display: none;
 }
 
 div.table-wrapper
@@ -101,39 +128,39 @@ div.table-wrapper table
 
 div#vnr-footnote
 {
-    font-size: 12px;
+	font-size: 12px;
 }
 
 @media screen and (min-width: 600px)
 {
-    div#vnr-footnote
-    {
-        font-size: 14px;
-    }
+	div#vnr-footnote
+	{
+		font-size: 14px;
+	}
 }
 
 div#begrep
 {
-    padding: 12px 0 0 0;
+	padding: 12px 0 0 0;
 }
 
 div#begrep > p
 {
-    padding: 12px 0 0 0;
+	padding: 12px 0 0 0;
 }
 
 /* Spans */
 
 span.ordbok
 {
-    border-bottom: 1px dashed #03a9f4;
-    font-weight: 600;
-    font-style: italic;
+	border-bottom: 1px dashed #03a9f4;
+	font-weight: 600;
+	font-style: italic;
 }
 
 span.ordbok:active
 {
-    color: #03a9f4;
+	color: #03a9f4;
 }
 
 /* Paragraphs */
@@ -146,12 +173,12 @@ p
 
 p.begrep span.synonym
 {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 p.FK_PreparatTabellWebcenter
 {
-    text-align: center;
+	text-align: center;
 }
 
 /* Links */
@@ -170,12 +197,12 @@ a:active
 
 a#pakninger
 {
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    visibility: hidden;
-    overflow: hidden;
+	width: 0;
+	height: 0;
+	margin: 0;
+	padding: 0;
+	visibility: hidden;
+	overflow: hidden;
 }
 
 /* Tables */
@@ -189,10 +216,10 @@ table
 
 @media screen and (min-width: 600px)
 {
-    table
-    {
-        font-size: 14px;
-    }
+	table
+	{
+		font-size: 14px;
+	}
 }
 
 table th, table td
@@ -227,17 +254,17 @@ table.varenummertable th
 
 table.varenummertable th a
 {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 table.varenummertable td
 {
 	border: 1px solid #e0e0e0;
-	padding: 8px;	
+	padding: 8px;
 }
 
 table.varenummertable td.spc img
 {
-    width: 24px;
-    height: 24px;
+	width: 24px;
+	height: 24px;
 }

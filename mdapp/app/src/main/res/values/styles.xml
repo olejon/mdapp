@@ -206,6 +206,13 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="medication_inner_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
     <style name="medication_extended_toolbar_layout" parent="medication_extended_toolbar_layout_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -325,10 +332,18 @@
     <style name="medication_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
         <item name="android:layout_weight">1</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+    </style>
+
+    <style name="medication_video_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@color/black</item>
     </style>
 
     <!-- Medication pictures -->
@@ -367,7 +382,9 @@
     <style name="medication_pictures_card_name" parent="medication_pictures_card_name_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/purple</item>
     </style>

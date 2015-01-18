@@ -145,7 +145,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
 
                         mWebView.loadUrl("javascript:var offset = $('div.codeDetail').offset(); window.scrollTo(0, offset.top);");
 
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         mWebView.startAnimation(animation);
 
                         mWebView.setVisibility(View.VISIBLE);

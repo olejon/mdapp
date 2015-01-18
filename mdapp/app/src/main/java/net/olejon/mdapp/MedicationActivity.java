@@ -52,6 +52,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -81,12 +82,18 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
     private Spinner mSpinner;
     private ProgressBar mProgressBar;
+    private LinearLayout mLinearLayout;
+    private LinearLayout mLinearVideoLayout;
+    private View mCustomView;
     private ListView mListView;
     private WebView mWebView;
 
     private Menu mMenu;
 
     private MenuItem favoriteMenuItem;
+
+    private WebChromeClient mWebChromeClient;
+    private WebChromeClient.CustomViewCallback mCustomViewCallback;
 
     private long medicationId;
 
@@ -102,11 +109,13 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     private String medicationPatientUri;
     private String medicationSpcUri;
 
-    private boolean mWebViewAnimationHasBeenShown = false;
+    private boolean mLinearLayoutAnimationHasBeenShown = false;
+
+    private int mSectionIndex;
 
     // Create activity
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -147,6 +156,9 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         {
             // Layout
             setContentView(R.layout.activity_medication);
+
+            mLinearLayout = (LinearLayout) findViewById(R.id.medication_inner_layout);
+            mLinearVideoLayout = (LinearLayout) findViewById(R.id.medication_video_layout);
 
             // Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.medication_toolbar);
@@ -192,43 +204,81 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         mTools.getMedicationWithFullContent(url);
                     }
                     else if(url.matches("^https?://.*?\\.pdf$"))
-                    {
-                        mTools.showToast(getString(R.string.medication_downloading_pdf), 1);
+                        {
+                            mTools.showToast(getString(R.string.medication_downloading_pdf), 1);
 
-                        mTools.downloadFile(medicationName, url);
-                    }
-                    else
-                    {
-                        Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
-                        intent.putExtra("title", medicationName);
-                        intent.putExtra("uri", url);
-                        startActivity(intent);
-                    }
+                            mTools.downloadFile(medicationName, url);
+                        }
+                        else
+                        {
+                            Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                            intent.putExtra("title", medicationName);
+                            intent.putExtra("uri", url);
+                            startActivity(intent);
+                        }
 
                     return true;
                 }
             });
 
-            mWebView.setWebChromeClient(new WebChromeClient()
+            mWebChromeClient = new WebChromeClient()
             {
                 @Override
                 public void onProgressChanged(WebView view, int newProgress)
                 {
-                    if(newProgress == 100 && !mWebViewAnimationHasBeenShown)
+                    if(newProgress == 100)
                     {
-                        mWebViewAnimationHasBeenShown = true;
+                        if(!mLinearLayoutAnimationHasBeenShown)
+                        {
+                            mLinearLayoutAnimationHasBeenShown = true;
 
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
-                        mWebView.startAnimation(animation);
+                            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
+                            mLinearLayout.startAnimation(animation);
 
-                        mWebView.setVisibility(View.VISIBLE);
+                            mLinearLayout.setVisibility(View.VISIBLE);
+                        }
+
+                        if(savedInstanceState != null)
+                        {
+                            mSectionIndex = savedInstanceState.getInt("section_index");
+
+                            setSection(false);
+                        }
                     }
                 }
-            });
+
+                @Override
+                public void onShowCustomView(View view, CustomViewCallback callback)
+                {
+                    mLinearVideoLayout.addView(view);
+
+                    mCustomView = view;
+                    mCustomViewCallback = callback;
+
+                    mLinearLayout.setVisibility(View.GONE);
+                    mLinearVideoLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onHideCustomView()
+                {
+                    if(mCustomView != null)
+                    {
+                        mLinearVideoLayout.removeView(mCustomView);
+                        mLinearVideoLayout.setVisibility(View.GONE);
+
+                        mCustomView = null;
+                        mCustomViewCallback.onCustomViewHidden();
+
+                        mLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+            };
+
+            mWebView.setWebChromeClient(mWebChromeClient);
 
             mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Android");
         }
-
     }
 
     // Resume activity
@@ -246,9 +296,19 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     {
         super.onPause();
 
+        mWebView.loadUrl("javascript:pauseVideos()");
+
         mWebView.pauseTimers();
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("section_index", mSectionIndex);
     }
 
     // Destroy activity
@@ -258,6 +318,20 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         super.onDestroy();
 
         if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+    }
+
+    // Back button
+    @Override
+    public void onBackPressed()
+    {
+        if(mCustomView != null)
+        {
+            mWebChromeClient.onHideCustomView();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     // Menu
@@ -374,29 +448,35 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
     {
+        if(i > 0)
+        {
+            mSectionIndex = i;
+
+            setSection(true);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) { }
+
+    // Section
+    private void setSection(boolean animate)
+    {
         try
         {
-            if(i > 0)
-            {
-                int index = i - 1;
+            JSONObject sectionJsonObject = new JSONArray(medicationContentSections).getJSONObject(mSectionIndex - 1);
 
-                JSONArray jsonArray = new JSONArray(medicationContentSections);
+            mListView.setSelection(mSectionIndex);
 
-                JSONObject jsonObject = jsonArray.getJSONObject(index);
+            String id = sectionJsonObject.getString("id");
 
-                mListView.setSelection(i);
-
-                mWebView.loadUrl("javascript:scrollToSection('"+jsonObject.getString("id")+"')");
-            }
+            mWebView.loadUrl("javascript:scrollToSection('"+id+"', "+animate+")");
         }
         catch(Exception e)
         {
             Log.e("MedicationActivity", Log.getStackTraceString(e));
         }
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) { }
 
     // Favorite
     private void addToFavorites(String name, String manufacturer, String type, String prescription_group, String uri)
@@ -433,7 +513,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
     private boolean medicationIsFavorite(String uri)
     {
-        Cursor cursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, MedicationsFavoritesSQLiteHelper.COLUMN_URI+" = "+mTools.sqe(uri), null, null, null, null);
+        Cursor cursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, MedicationsFavoritesSQLiteHelper.COLUMN_URI + " = " + mTools.sqe(uri), null, null, null, null);
 
         long id = 0;
 
@@ -647,20 +727,9 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
                     {
-                        try
-                        {
-                            int index = i - 1;
+                        mSectionIndex = i;
 
-                            JSONArray jsonArray = new JSONArray(medicationContentSections);
-
-                            JSONObject jsonObject = jsonArray.getJSONObject(index);
-
-                            mWebView.loadUrl("javascript:scrollToSection('"+jsonObject.getString("id")+"')");
-                        }
-                        catch(Exception e)
-                        {
-                            Log.e("MedicationActivity", Log.getStackTraceString(e));
-                        }
+                        setSection(true);
                     }
                 });
             }
@@ -827,7 +896,6 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 mTools.setBackgroundDrawable(button, R.drawable.medication_prescription_group_red);
             }
 
-            // Medication prescription group description
             button.setOnClickListener(new View.OnClickListener()
             {
                 @Override

@@ -2,31 +2,37 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/medication_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/medication_toolbar" style="@style/toolbar">
-        <Spinner android:id="@+id/medication_toolbar_spinner" style="@style/toolbar_spinner"/>
-        <ProgressBar android:id="@+id/medication_toolbar_progressbar" style="@style/toolbar_progressbar"/>
-    </android.support.v7.widget.Toolbar>
+    <LinearLayout android:id="@+id/medication_inner_layout" style="@style/medication_inner_layout">
 
-    <RelativeLayout style="@style/medication_extended_toolbar_layout">
+        <android.support.v7.widget.Toolbar android:id="@+id/medication_toolbar" style="@style/toolbar">
+            <Spinner android:id="@+id/medication_toolbar_spinner" style="@style/toolbar_spinner"/>
+            <ProgressBar android:id="@+id/medication_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+        </android.support.v7.widget.Toolbar>
 
-        <LinearLayout android:layout_alignParentTop="true" style="@style/medication_extended_toolbar_inner_layout">
+        <RelativeLayout style="@style/medication_extended_toolbar_layout">
 
-            <TextView android:id="@+id/medication_name" style="@style/medication_detail_name"/>
-            <TextView android:id="@+id/medication_type" style="@style/medication_detail_type"/>
-            <TextView android:id="@+id/medication_schengen_certificate" style="@style/medication_detail_schengen_certificate"/>
-            <TextView android:id="@+id/medication_doping_status" style="@style/medication_detail_doping_status"/>
+            <LinearLayout android:layout_alignParentTop="true" style="@style/medication_extended_toolbar_inner_layout">
 
+                <TextView android:id="@+id/medication_name" style="@style/medication_detail_name"/>
+                <TextView android:id="@+id/medication_type" style="@style/medication_detail_type"/>
+                <TextView android:id="@+id/medication_schengen_certificate" style="@style/medication_detail_schengen_certificate"/>
+                <TextView android:id="@+id/medication_doping_status" style="@style/medication_detail_doping_status"/>
+
+            </LinearLayout>
+
+            <ImageButton android:id="@+id/medication_triangle" android:layout_toStartOf="@+id/medication_prescription_group" android:layout_toLeftOf="@+id/medication_prescription_group" android:src="@drawable/ic_warning_white_48dp" android:contentDescription="@string/image_content_description" style="@style/medication_triangle"/>
+            <Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_prescription_group"/>
+            <Button android:id="@+id/medication_blue_prescription" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_blue_prescription"/>
+
+        </RelativeLayout>
+
+        <LinearLayout style="@style/medication_content_layout">
+            <ListView android:id="@+id/medication_content_list" style="@style/medication_content_list"/>
+            <WebView android:id="@+id/medication_content" style="@style/medication_content"/>
         </LinearLayout>
 
-        <ImageButton android:id="@+id/medication_triangle" android:layout_toStartOf="@+id/medication_prescription_group" android:layout_toLeftOf="@+id/medication_prescription_group" android:src="@drawable/ic_warning_white_48dp" android:contentDescription="@string/image_content_description" style="@style/medication_triangle"/>
-        <Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_prescription_group"/>
-        <Button android:id="@+id/medication_blue_prescription" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_blue_prescription"/>
-
-    </RelativeLayout>
-
-    <LinearLayout style="@style/medication_content_layout">
-        <ListView android:id="@+id/medication_content_list" style="@style/medication_content_list"/>
-        <WebView android:id="@+id/medication_content" style="@style/medication_content"/>
     </LinearLayout>
+
+    <LinearLayout android:id="@+id/medication_video_layout" style="@style/medication_video_layout"/>
 
 </LinearLayout>

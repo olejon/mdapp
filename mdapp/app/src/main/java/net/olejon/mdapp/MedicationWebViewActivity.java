@@ -130,7 +130,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
 
                         if(pageUri.contains("antidoping")) mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top);");
 
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.webview);
+                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         mWebView.startAnimation(animation);
 
                         mWebView.setVisibility(View.VISIBLE);

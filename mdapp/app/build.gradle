@@ -8,7 +8,7 @@ android {
         applicationId "net.olejon.mdapp"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 30
+        versionCode 32
         versionName "1.0"
     }
 

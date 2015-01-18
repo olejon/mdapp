@@ -84,7 +84,7 @@ public class InteractionsActivity extends ActionBarActivity
         }
         else
         {
-            searchString = intent.getStringExtra("search").replaceAll("(?i)\\s*depot", "");
+            searchString = intent.getStringExtra("search");
         }
 
         // Layout

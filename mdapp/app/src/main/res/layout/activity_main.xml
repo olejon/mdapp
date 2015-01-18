@@ -9,9 +9,8 @@
             <LinearLayout android:id="@+id/main_toolbar_search_layout" style="@style/toolbar_search_layout">
                 <EditText android:id="@+id/main_toolbar_search" android:hint="@string/main_toolbar_search_hint" style="@style/toolbar_search_edittext"/>
                 <ImageButton android:id="@+id/main_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
+                <ProgressBar android:id="@+id/main_toolbar_progressbar" style="@style/toolbar_progressbar"/>
             </LinearLayout>
-
-            <ProgressBar android:id="@+id/main_toolbar_progressbar" style="@style/toolbar_progressbar"/>
 
         </android.support.v7.widget.Toolbar>
 
