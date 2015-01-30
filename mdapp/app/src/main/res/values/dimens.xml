@@ -9,5 +9,6 @@
     <dimen name="list_item_circle_text_layout_margin_left">56dp</dimen>
     <dimen name="card_item_padding_top_bottom">8dp</dimen>
     <dimen name="card_item_padding_right_left">16dp</dimen>
+    <dimen name="toolbar_progressbar_horizontal_height">1dp</dimen>
 
 </resources>

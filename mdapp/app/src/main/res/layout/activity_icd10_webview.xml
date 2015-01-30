@@ -10,4 +10,6 @@
 
     <WebView android:id="@+id/icd10_webview_content" android:layout_below="@+id/icd10_webview_toolbar" style="@style/icd10_webview_content"/>
 
+    <View android:layout_below="@+id/icd10_webview_toolbar" style="@style/toolbar_shadow"/>
+
 </RelativeLayout>

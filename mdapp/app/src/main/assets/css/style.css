@@ -153,14 +153,15 @@ div#begrep > p
 
 span.ordbok
 {
-	border-bottom: 1px dashed #03a9f4;
+	border-bottom: 1px dashed #009688;
 	font-weight: 600;
-	font-style: italic;
+	color: #009688;
 }
 
 span.ordbok:active
 {
-	color: #03a9f4;
+    border-bottom: 1px dashed #4db6ac;
+	color: #4db6ac;
 }
 
 /* Paragraphs */

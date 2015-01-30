@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturer_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturer_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/manufacturer_toolbar" style="@style/toolbar"/>
+    <android.support.v7.widget.Toolbar android:id="@+id/manufacturer_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <LinearLayout style="@style/manufacturer_extended_toolbar_layout">
+    <LinearLayout android:id="@+id/manufacturer_extended_toolbar" android:layout_below="@+id/manufacturer_toolbar" style="@style/manufacturer_extended_toolbar_layout">
         <TextView android:id="@+id/manufacturer_medications_count" style="@style/manufacturer_medications_count"/>
     </LinearLayout>
 
-    <ListView android:id="@+id/manufacturer_list" style="@style/manufacturer_list_layout"/>
+    <ListView android:id="@+id/manufacturer_list" android:layout_below="@+id/manufacturer_extended_toolbar" style="@style/manufacturer_list_layout"/>
 
-</LinearLayout>
+    <View android:layout_below="@+id/manufacturer_extended_toolbar" style="@style/toolbar_shadow"/>
+
+</RelativeLayout>

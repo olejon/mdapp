@@ -197,6 +197,12 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <style name="toolbar_shadow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <!-- Tabs -->
     <style name="main_tabs_base" parent="main_tabs_base_base">
         <item name="android:elevation">2dp</item>

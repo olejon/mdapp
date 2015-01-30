@@ -9,7 +9,7 @@
     <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
     <string name="project_developer_licenses_uri">http://www.olejon.net/code/mdapp/?page=licenses</string>
     <string name="project_report_issue_uri">http://www.olejon.net/code/mdapp/?page=issues</string>
-    <string name="project_feedback_uri">mailto:mail@olejon.net</string>
+    <string name="project_feedback_uri">mail@olejon.net</string>
 
     <!-- Main -->
     <string name="main_title">Felleskatalogen</string>
@@ -17,6 +17,7 @@
     <string name="main_loading">Laster inn Felleskatalogen…</string>
     <string name="main_medications_list_empty">Ingen resultater</string>
     <string name="main_substances_list_empty">Ingen resultater</string>
+    <string name="main_message_dialog_positive_button">LUKK</string>
     <string name="main_sqlite_database_felleskatalogen_has_been_updated">Felleskatalogen er blitt oppdatert</string>
     <string name="main_update_felleskatalogen_testing_dialog_title">Last ned testversjon</string>
     <string name="main_update_felleskatalogen_testing_dialog_message">Er du sikker på at du vil laste ned testversjonen av Felleskatalogen?\n\nDenne funksjonen er ment for utvikler.</string>
@@ -27,7 +28,7 @@
     <string name="main_rate_dialog_positive_button">Gi vurdering</string>
     <string name="main_rate_dialog_negative_button">Senere</string>
     <string name="main_donate_dialog_title">Støtt appen</string>
-    <string name="main_donate_dialog_message">Liker du LegeAppen? I så fall hadde det vært fint om du kunne vurdere å donere en liten sum for å støtte utviklingen av appen.\n\nDu kan enkelt donere rett i appen med bare noen få trykk.\n\nDu kan også donere senere ved å åpne sidemenyen, skrolle ned og velge Doner.\n\nLegeAppen er fri programvare med åpen kildekode.</string>
+    <string name="main_donate_dialog_message">Liker du LegeAppen? I så fall hadde det vært fint om du kunne vurdere å donere en liten sum for å støtte utviklingen av appen.\n\nDu kan enkelt donere rett i appen med bare noen få trykk.\n\nDu kan også donere senere ved å åpne sidemenyen, skrolle ned og velge Doner.\n\nLegeAppen er ikke-kommersiell og er fri programvare med åpen kildekode.</string>
     <string name="main_donate_dialog_positive_button">Doner</string>
     <string name="main_donate_dialog_negative_button">Senere</string>
     <string name="main_menu_update_felleskatalogen">Oppdater Felleskatalogen</string>
@@ -56,7 +57,6 @@
     <string name="medication_full_content_reference_dialog_negative_button">Nei</string>
     <string name="medication_package_inserts_dialog_title">Velg pakningsvedlegg</string>
     <string name="medication_could_not_get_package_insert">Kunne ikke hente pakningsvedlegg. Prøv igjen.</string>
-    <string name="medication_remove_from_favorites">Preparat fjernet fra favoritter</string>
     <string name="medication_saved_to_favorites">Preparat lagret i favoritter</string>
     <string name="medication_downloading_pdf">Se i varslingssenteret…</string>
     <string name="medication_javascript_interface_dialog_positive_button">Lukk</string>
@@ -241,6 +241,15 @@
     <!-- Pharmacies location -->
     <string name="pharmacies_location_card_show_on_map">VIS PÅ KART</string>
 
+    <!-- Clinical trials -->
+    <string name="clinicaltrials_title">Kliniske Studier</string>
+    <string name="clinicaltrials_toolbar_search_hint">Søk…</string>
+    <string name="clinicaltrials_no_recent_searches">Ingen nylige søk</string>
+    <string name="clinicaltrials_information">Søk på engelsk etter studier, sykdommer eller preparater.\n\nKilden som brukes er <i>ClinicalTrials.gov</i> fra US National Institutes of Health.</string>
+    <string name="clinicaltrials_recent_searches">Nylige søk</string>
+    <string name="clinicaltrials_recent_searches_removed">Nylige søk fjernet</string>
+    <string name="clinicaltrials_menu_clear_recent_searches">Fjern nylige søk</string>
+
     <!-- Notifications from SLV -->
     <string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
     <string name="notifications_from_slv_could_not_get_notifications">Kunne ikke hente varsler. Er du koblet til Internett?</string>
@@ -256,19 +265,19 @@
     <string name="settings_title">Innstillinger</string>
     <string name="settings_category_felleskatalogen">Felleskatalogen</string>
     <string name="settings_checkbox_update_felleskatalogen_only_when_connected_to_wifi">Bare oppdater når koblet til Wi-Fi</string>
-    <string name="settings_checkbox_update_felleskatalogen_only_when_connected_to_wifi_summary">Felleskatalogen blir bare oppdatert når enheten er koblet til Wi-Fi.</string>
+    <string name="settings_checkbox_update_felleskatalogen_only_when_connected_to_wifi_summary">Bare oppdater Felleskatalogen når enheten er koblet til Wi-Fi</string>
     <string name="settings_category_notifications_from_slv">Varsler fra Legemiddelverket</string>
     <string name="settings_checkbox_notify_when_new_notification_from_slv">Varsle ved nytt varsel</string>
-    <string name="settings_checkbox_notify_when_new_notification_from_slv_summary">Varsle meg på denne enheten når det kommer et nytt varsel fra Legemiddelverket. Databruken er minimal.</string>
+    <string name="settings_checkbox_notify_when_new_notification_from_slv_summary">Varsle meg når det kommer et nytt varsel fra Legemiddelverket</string>
     <string name="settings_category_about">Om</string>
     <string name="settings_intent_developed_by">Utviklet av</string>
     <string name="settings_intent_developed_by_summary">Ole Jon Bjørkum</string>
     <string name="settings_intent_website">Nettside</string>
-    <string name="settings_intent_website_summary">Besøk nettsiden til denne appen.</string>
+    <string name="settings_intent_website_summary">Besøk nettsiden til denne appen</string>
     <string name="settings_intent_license">Lisens</string>
-    <string name="settings_intent_license_summary">Denne appen er lisensiert under The GNU General Public License, versjon 3.</string>
+    <string name="settings_intent_license_summary">Denne appen er lisensiert under The GNU General Public License, versjon 3</string>
     <string name="settings_intent_licenses">Lisenser</string>
-    <string name="settings_intent_licenses_summary">Lisenser til tredjepartsbiblioteker brukt i denne appen.</string>
+    <string name="settings_intent_licenses_summary">Lisenser til tredjepartsbiblioteker brukt i denne appen</string>
 
     <!-- Donate -->
     <string name="donate_title">Doner</string>
@@ -284,7 +293,7 @@
     <string name="welcome_page_guide">Dra mot venstre for å gå til neste side</string>
     <string name="welcome_page_1_text">Velkommen til LegeAppen. Tanken bak LegeAppen er at den skal være en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, som Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.</string>
     <string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er Felleskatalogen, med oversikt over alle preparater og substanser.\n\nDu kan raskt søke i preparater og substanser ved å trykke på den blå knappen nede til høyre.\n\nI sidemenyen finner du mange flere muligheter. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
-    <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes umodifisert fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell, og er fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\nCopyright 2015 Ole Jon Bjørkum.</string>
+    <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes umodifisert fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell og er fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\nCopyright 2015 Ole Jon Bjørkum.</string>
     <string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å ta deg til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
     <string name="welcome_page_button">TA MEG TIL APPEN</string>
 
@@ -300,6 +309,7 @@
     <string name="drawer_item_icd10">ICD-10</string>
     <string name="drawer_item_manufacturers">Legemiddelfirmaer</string>
     <string name="drawer_item_pharmacies">Apotek</string>
+    <string name="drawer_item_clinicaltrials">Kliniske Studier</string>
     <string name="drawer_item_notifications_from_slv">Varsler fra Legemiddelverket</string>
     <string name="drawer_item_settings">Innstillinger</string>
     <string name="drawer_item_donate">Doner</string>
@@ -314,6 +324,9 @@
     <string name="welcome_page_2">Navigasjon</string>
     <string name="welcome_page_3">Ansvarsfraskrivelse</string>
     <string name="welcome_page_4">Klar til bruk</string>
+
+    <!-- Snackbars -->
+    <string name="snackbar_undo">ANGRE</string>
 
     <!-- Widget -->
     <string name="widget_title">LegeAppen - Favoritter</string>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/donate_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/donate_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/donate_toolbar" style="@style/toolbar"/>
+    <android.support.v7.widget.Toolbar android:id="@+id/donate_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <ScrollView style="@style/donate_inner_layout">
+    <ScrollView android:layout_below="@+id/donate_toolbar" style="@style/donate_inner_layout">
 
         <LinearLayout style="@style/donate_inner_inner_layout">
 
@@ -18,4 +18,6 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <View android:layout_below="@+id/donate_toolbar" style="@style/toolbar_shadow"/>
+
+</RelativeLayout>

@@ -36,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -200,6 +201,8 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                                     Log.e("InteractionsCardsAdapter", error.toString());
                                 }
                             });
+
+                            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
                             requestQueue.add(jsonObjectRequest);
                         }

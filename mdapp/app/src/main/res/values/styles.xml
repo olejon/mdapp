@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:card_view="http://schemas.android.com/apk/res-auto" xmlns:fab="http://schemas.android.com/apk/res-auto">
+<resources>
 
     <!-- Theme -->
     <style name="app_theme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -209,7 +209,6 @@
     <style name="medication_inner_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
         <item name="android:visibility">invisible</item>
     </style>
 
@@ -350,7 +349,6 @@
     <style name="medication_pictures_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="medication_pictures_cards">
@@ -461,7 +459,6 @@
     <style name="substance_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="substance_extended_toolbar_layout" parent="substance_extended_toolbar_layout_base">
@@ -567,14 +564,14 @@
     </style>
 
     <!-- Diseases and treatments -->
-    <style name="diseases_and_treatments_toolbar_search_edittext" parent="toolbar_search_edittext">
-        <item name="android:imeOptions">actionSearch</item>
-        <item name="android:inputType">textAutoCorrect</item>
-    </style>
-
     <style name="diseases_and_treatments_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="diseases_and_treatments_toolbar_search_edittext" parent="toolbar_search_edittext">
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:inputType">textAutoCorrect</item>
     </style>
 
     <style name="diseases_and_treatments_separator">
@@ -671,7 +668,6 @@
     <style name="diseases_and_treatments_search_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="diseases_and_treatments_search_cards">
@@ -754,7 +750,6 @@
     <style name="lvh_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="lvh_cards">
@@ -827,7 +822,6 @@
     <style name="lvh_categories_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="lvh_card_categories_layout">
@@ -1044,7 +1038,6 @@
     <style name="interactions_cards_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="interactions_cards_cards">
@@ -1241,7 +1234,6 @@
     <style name="poisonings_cards_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="poisonings_cards_cards">
@@ -1366,7 +1358,6 @@
     <style name="atc_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="atc_list_layout">
@@ -1433,7 +1424,6 @@
     <style name="atc_codes_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="atc_codes_list_layout">
@@ -1471,7 +1461,6 @@
     <style name="icd10_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="icd10_list_layout">
@@ -1647,7 +1636,6 @@
     <style name="manufacturer_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="manufacturer_extended_toolbar_layout" parent="manufacturer_extended_toolbar_layout_base">
@@ -1750,7 +1738,6 @@
     <style name="pharmacies_location_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="pharmacies_location_cards">
@@ -1817,11 +1804,81 @@
         <item name="android:drawablePadding">8dp</item>
     </style>
 
+    <!-- Pharmacies location map -->
+    <style name="pharmacies_location_map_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!-- Clinical trials -->
+    <style name="clinicaltrials_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="clinicaltrials_toolbar_search_edittext" parent="toolbar_search_edittext">
+        <item name="android:imeOptions">actionSearch</item>
+    </style>
+
+    <style name="clinicaltrials_list_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="clinicaltrials_list_empty_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+    </style>
+
+    <style name="clinicaltrials_list_empty_inner_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">32dp</item>
+    </style>
+
+    <style name="clinicaltrials_list_empty" parent="clinicaltrials_list_empty_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="clinicaltrials_list_empty_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="clinicaltrials_list_information" parent="clinicaltrials_list_information_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style>
+
+    <style name="clinicaltrials_list_information_base"/>
+
+    <style name="clinicaltrials_list_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
+        <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <!-- Notifications from SLV -->
     <style name="notifications_from_slv_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="notifications_from_slv_cards">
@@ -1971,7 +2028,6 @@
     <style name="settings_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="settings_inner_layout">
@@ -1984,7 +2040,6 @@
     <style name="donate_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="donate_inner_layout">
@@ -2193,6 +2248,12 @@
 
     <style name="toolbar_base"/>
 
+    <style name="toolbar_progressbar_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
     <style name="toolbar_progressbar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_width">32dp</item>
         <item name="android:layout_height">32dp</item>
@@ -2201,7 +2262,7 @@
 
     <style name="toolbar_progressbar_horizontal" parent="toolbar_progressbar_horizontal_base">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">@dimen/toolbar_progressbar_horizontal_height</item>
         <item name="android:progressDrawable">@drawable/toolbar_progressbar_horizontal</item>
     </style>
 
@@ -2269,6 +2330,12 @@
         <item name="android:background">@drawable/toolbar_spinner_item</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="toolbar_shadow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:background">@drawable/toolbar_shadow</item>
     </style>
 
     <!-- Swipe refresh -->
@@ -2369,13 +2436,6 @@
 
     <style name="subheader_base">
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <!-- Map -->
-    <style name="map_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
     </style>
 
     <!-- Widget -->

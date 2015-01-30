@@ -9,13 +9,19 @@
             <LinearLayout android:id="@+id/main_toolbar_search_layout" style="@style/toolbar_search_layout">
                 <EditText android:id="@+id/main_toolbar_search" android:hint="@string/main_toolbar_search_hint" style="@style/toolbar_search_edittext"/>
                 <ImageButton android:id="@+id/main_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
+            </LinearLayout>
+
+            <LinearLayout style="@style/toolbar_progressbar_layout">
                 <ProgressBar android:id="@+id/main_toolbar_progressbar" style="@style/toolbar_progressbar"/>
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 
         <com.astuetz.PagerSlidingTabStrip android:id="@+id/main_tabs" android:layout_below="@+id/main_toolbar" style="@style/main_tabs"/>
+
         <android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_tabs" style="@style/main_pager"/>
+
+        <View android:layout_below="@+id/main_tabs" style="@style/toolbar_shadow"/>
 
         <com.melnykov.fab.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 
@@ -39,6 +45,7 @@
                 <TextView android:id="@+id/drawer_item_icd10" android:drawableStart="@drawable/ic_view_list_grey600_24dp" android:drawableLeft="@drawable/ic_view_list_grey600_24dp" android:text="@string/drawer_item_icd10" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_manufacturers" android:drawableStart="@drawable/ic_business_grey600_24dp" android:drawableLeft="@drawable/ic_business_grey600_24dp" android:text="@string/drawer_item_manufacturers" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_pharmacies" android:drawableStart="@drawable/ic_local_pharmacy_grey600_24dp" android:drawableLeft="@drawable/ic_local_pharmacy_grey600_24dp" android:text="@string/drawer_item_pharmacies" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+                <TextView android:id="@+id/drawer_item_clinicaltrials" android:drawableStart="@drawable/ic_content_paste_grey600_24dp" android:drawableLeft="@drawable/ic_content_paste_grey600_24dp" android:text="@string/drawer_item_clinicaltrials" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_notifications_from_slv" android:drawableStart="@drawable/ic_notifications_grey600_24dp" android:drawableLeft="@drawable/ic_notifications_grey600_24dp" android:text="@string/drawer_item_notifications_from_slv" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 
                 <View style="@style/drawer_separator"/>

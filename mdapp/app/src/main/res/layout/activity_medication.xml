@@ -2,14 +2,14 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/medication_layout">
 
-    <LinearLayout android:id="@+id/medication_inner_layout" style="@style/medication_inner_layout">
+    <RelativeLayout android:id="@+id/medication_inner_layout" style="@style/medication_inner_layout">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/medication_toolbar" style="@style/toolbar">
+        <android.support.v7.widget.Toolbar android:id="@+id/medication_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
             <Spinner android:id="@+id/medication_toolbar_spinner" style="@style/toolbar_spinner"/>
             <ProgressBar android:id="@+id/medication_toolbar_progressbar" style="@style/toolbar_progressbar"/>
         </android.support.v7.widget.Toolbar>
 
-        <RelativeLayout style="@style/medication_extended_toolbar_layout">
+        <RelativeLayout android:id="@+id/medication_extended_toolbar" android:layout_below="@+id/medication_toolbar" style="@style/medication_extended_toolbar_layout">
 
             <LinearLayout android:layout_alignParentTop="true" style="@style/medication_extended_toolbar_inner_layout">
 
@@ -26,12 +26,14 @@
 
         </RelativeLayout>
 
-        <LinearLayout style="@style/medication_content_layout">
+        <LinearLayout android:layout_below="@+id/medication_extended_toolbar" style="@style/medication_content_layout">
             <ListView android:id="@+id/medication_content_list" style="@style/medication_content_list"/>
             <WebView android:id="@+id/medication_content" style="@style/medication_content"/>
         </LinearLayout>
 
-    </LinearLayout>
+        <View android:layout_below="@+id/medication_extended_toolbar" style="@style/toolbar_shadow"/>
+
+    </RelativeLayout>
 
     <LinearLayout android:id="@+id/medication_video_layout" style="@style/medication_video_layout"/>
 

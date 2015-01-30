@@ -34,6 +34,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -63,7 +64,11 @@ public class NotificationsFromSlvIntentService extends IntentService
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website)+"api/1/notifications-from-slv/?first", new Response.Listener<JSONArray>()
+            int projectVersionCode = mTools.getProjectVersionCode();
+
+            String device = mTools.getDevice();
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website)+"api/1/notifications-from-slv/?first&version_code="+projectVersionCode+"&device="+device, new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -123,6 +128,8 @@ public class NotificationsFromSlvIntentService extends IntentService
                     Log.e("NotificationsFromSlvIntentService", error.toString());
                 }
             });
+
+            jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             requestQueue.add(jsonArrayRequest);
         }

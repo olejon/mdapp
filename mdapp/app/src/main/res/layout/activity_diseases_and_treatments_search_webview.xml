@@ -8,4 +8,6 @@
 
     <WebView android:id="@+id/diseases_and_treatments_search_webview_content" android:layout_below="@+id/diseases_and_treatments_search_webview_toolbar" style="@style/diseases_and_treatments_search_webview_content"/>
 
+    <View android:layout_below="@+id/diseases_and_treatments_search_webview_toolbar" style="@style/toolbar_shadow"/>
+
 </RelativeLayout>

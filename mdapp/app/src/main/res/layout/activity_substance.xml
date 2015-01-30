@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/substance_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/substance_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/substance_toolbar" style="@style/toolbar"/>
+    <android.support.v7.widget.Toolbar android:id="@+id/substance_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <LinearLayout style="@style/substance_extended_toolbar_layout">
+    <LinearLayout android:id="@+id/substance_extended_toolbar" android:layout_below="@+id/substance_toolbar" style="@style/substance_extended_toolbar_layout">
         <TextView android:id="@+id/substance_medications_count" style="@style/substance_medications_count"/>
     </LinearLayout>
 
-    <ListView android:id="@+id/substance_list" style="@style/substance_list_layout"/>
-    <TextView android:id="@+id/substance_list_empty" android:text="@string/substance_list_empty" style="@style/substance_list_empty"/>
+    <ListView android:id="@+id/substance_list" android:layout_below="@+id/substance_extended_toolbar" style="@style/substance_list_layout"/>
+    <TextView android:id="@+id/substance_list_empty" android:layout_below="@+id/substance_extended_toolbar" android:text="@string/substance_list_empty" style="@style/substance_list_empty"/>
 
-</LinearLayout>
+    <View android:layout_below="@+id/substance_extended_toolbar" style="@style/toolbar_shadow"/>
+
+</RelativeLayout>

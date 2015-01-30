@@ -8,4 +8,6 @@
 
     <WebView android:id="@+id/lvh_categories_webview_content" android:layout_below="@+id/lvh_categories_webview_toolbar" style="@style/lvh_categories_webview_content"/>
 
+    <View android:layout_below="@+id/lvh_categories_webview_toolbar" style="@style/toolbar_shadow"/>
+
 </RelativeLayout>

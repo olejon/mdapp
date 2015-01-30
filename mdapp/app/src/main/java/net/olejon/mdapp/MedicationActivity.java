@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -55,15 +56,20 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,6 +80,8 @@ import java.util.HashMap;
 
 public class MedicationActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
+    private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -82,7 +90,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
     private Spinner mSpinner;
     private ProgressBar mProgressBar;
-    private LinearLayout mLinearLayout;
+    private RelativeLayout mRelativeLayout;
     private LinearLayout mLinearVideoLayout;
     private View mCustomView;
     private ListView mListView;
@@ -110,6 +118,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     private String medicationSpcUri;
 
     private boolean mLinearLayoutAnimationHasBeenShown = false;
+    private boolean mSetSection = true;
 
     private int mSectionIndex;
 
@@ -157,7 +166,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             // Layout
             setContentView(R.layout.activity_medication);
 
-            mLinearLayout = (LinearLayout) findViewById(R.id.medication_inner_layout);
+            mRelativeLayout = (RelativeLayout) findViewById(R.id.medication_inner_layout);
             mLinearVideoLayout = (LinearLayout) findViewById(R.id.medication_video_layout);
 
             // Toolbar
@@ -233,13 +242,15 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                             mLinearLayoutAnimationHasBeenShown = true;
 
                             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                            mLinearLayout.startAnimation(animation);
+                            mRelativeLayout.startAnimation(animation);
 
-                            mLinearLayout.setVisibility(View.VISIBLE);
+                            mRelativeLayout.setVisibility(View.VISIBLE);
                         }
 
-                        if(savedInstanceState != null)
+                        if(mSetSection && savedInstanceState != null)
                         {
+                            mSetSection = false;
+
                             mSectionIndex = savedInstanceState.getInt("section_index");
 
                             setSection(false);
@@ -255,7 +266,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     mCustomView = view;
                     mCustomViewCallback = callback;
 
-                    mLinearLayout.setVisibility(View.GONE);
+                    mRelativeLayout.setVisibility(View.GONE);
                     mLinearVideoLayout.setVisibility(View.VISIBLE);
                 }
 
@@ -270,7 +281,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         mCustomView = null;
                         mCustomViewCallback.onCustomViewHidden();
 
-                        mLinearLayout.setVisibility(View.VISIBLE);
+                        mRelativeLayout.setVisibility(View.VISIBLE);
                     }
                 }
             };
@@ -479,7 +490,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     }
 
     // Favorite
-    private void addToFavorites(String name, String manufacturer, String type, String prescription_group, String uri)
+    private void addToFavorites(final String name, final String manufacturer, final String type, final String prescription_group, final String uri)
     {
         boolean medicationIsFavorite = medicationIsFavorite(medicationUri);
 
@@ -488,8 +499,6 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             mSqLiteDatabase.delete(MedicationsFavoritesSQLiteHelper.TABLE, MedicationsFavoritesSQLiteHelper.COLUMN_URI+" = "+mTools.sqe(uri), null);
 
             favoriteMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
-
-            mTools.showToast(getString(R.string.medication_remove_from_favorites), 1);
         }
         else
         {
@@ -505,7 +514,14 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             favoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp);
 
-            mTools.showToast(getString(R.string.medication_saved_to_favorites), 1);
+            SnackbarManager.show(Snackbar.with(mActivity).text(getString(R.string.medication_saved_to_favorites)).color(getResources().getColor(R.color.dark)).actionLabel(getString(R.string.snackbar_undo)).actionColor(getResources().getColor(R.color.orange)).actionListener(new ActionClickListener()
+            {
+                @Override
+                public void onActionClicked(Snackbar snackbar)
+                {
+                    addToFavorites(name, manufacturer, type, prescription_group, uri);
+                }
+            }));
         }
 
         mTools.updateWidget();
@@ -649,6 +665,8 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         Log.e("MedicationActivity", error.toString());
                     }
                 });
+
+                jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
                 requestQueue.add(jsonArrayRequest);
             }

@@ -179,6 +179,23 @@ class MyTools
         downloadManager.enqueue(request);
     }
 
+    // Get device
+    public String getDevice()
+    {
+        String device = "";
+
+        try
+        {
+            device = (Build.MANUFACTURER == null || Build.MODEL == null || Build.VERSION.SDK_INT < 1) ? "" : URLEncoder.encode(Build.MANUFACTURER+" "+Build.MODEL+" "+Build.VERSION.SDK_INT, "utf-8");
+        }
+        catch(Exception e)
+        {
+            Log.e("MyTools", Log.getStackTraceString(e));
+        }
+
+        return device;
+    }
+
     // Check if tablet
     public boolean isTablet()
     {

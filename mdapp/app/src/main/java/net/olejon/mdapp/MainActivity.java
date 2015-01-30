@@ -58,8 +58,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.melnykov.fab.FloatingActionButton;
+
+import org.json.JSONObject;
 
 import java.io.InputStream;
 
@@ -189,96 +198,95 @@ public class MainActivity extends ActionBarActivity
                     {
                         Intent intent = new Intent(mContext, DiseasesAndTreatmentsActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_lvh:
                     {
                         Intent intent = new Intent(mContext, LvhActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_nasjonale_retningslinjer:
                     {
                         Intent intent = new Intent(mContext, NasjonaleRetningslinjerActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_interactions:
                     {
                         Intent intent = new Intent(mContext, InteractionsActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_poisonings:
                     {
                         Intent intent = new Intent(mContext, PoisoningsActivity.class);
                         startActivity(intent);
-
-                        break;
-                    }
-                    case R.id.drawer_item_notifications_from_slv:
-                    {
-                        Intent intent = new Intent(mContext, NotificationsFromSlvActivity.class);
-                        startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_atc:
                     {
                         Intent intent = new Intent(mContext, AtcActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_icd10:
                     {
                         Intent intent = new Intent(mContext, Icd10Activity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_manufacturers:
                     {
                         Intent intent = new Intent(mContext, ManufacturersActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_pharmacies:
                     {
                         Intent intent = new Intent(mContext, PharmaciesActivity.class);
                         startActivity(intent);
-
+                        break;
+                    }
+                    case R.id.drawer_item_notifications_from_slv:
+                    {
+                        Intent intent = new Intent(mContext, NotificationsFromSlvActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_clinicaltrials:
+                    {
+                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
+                        startActivity(intent);
                         break;
                     }
                     case R.id.drawer_item_settings:
                     {
                         Intent intent = new Intent(mContext, SettingsActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_donate:
                     {
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
-
                         break;
                     }
                     case R.id.drawer_item_feedback:
                     {
-                        mTools.openUri(getString(R.string.project_feedback_uri));
+                        String[] feedbackAddress = {getString(R.string.project_feedback_uri)};
+                        String feedbackSubject = getString(R.string.project_name);
 
+                        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+                        intent.setType("message/rfc822");
+                        intent.putExtra(Intent.EXTRA_EMAIL, feedbackAddress);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, feedbackSubject);
+                        startActivity(intent);
                         break;
                     }
                     case R.id.drawer_item_report_issue:
                     {
                         mTools.openUri(getString(R.string.project_report_issue_uri));
-
                         break;
                     }
                 }
@@ -337,6 +345,48 @@ public class MainActivity extends ActionBarActivity
                 }
             }, 1000);
         }
+
+        // Message
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+        int projectVersionCode = mTools.getProjectVersionCode();
+
+        String device = mTools.getDevice();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/message/?version_name="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response)
+            {
+                try
+                {
+                    final long id = response.getLong("id");
+                    final String title = response.getString("title");
+                    final String message = response.getString("message");
+
+                    final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
+
+                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColor(getResources().getColor(R.color.black)).show();
+
+                    mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
+                }
+                catch(Exception e)
+                {
+                    Log.e("MainActivity", Log.getStackTraceString(e));
+                }
+            }
+        }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.e("MainActivity", error.toString());
+            }
+        });
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        requestQueue.add(jsonObjectRequest);
 
         // Get Felleskatalogen
         if(!mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED")) getFelleskatalogen();

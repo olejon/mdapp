@@ -8,4 +8,6 @@
 
     <WebView android:id="@+id/nasjonale_retningslinjer_webview_content" android:layout_below="@+id/nasjonale_retningslinjer_webview_toolbar" style="@style/nasjonale_retningslinjer_webview_content"/>
 
+    <View android:layout_below="@+id/nasjonale_retningslinjer_webview_toolbar" style="@style/toolbar_shadow"/>
+
 </RelativeLayout>

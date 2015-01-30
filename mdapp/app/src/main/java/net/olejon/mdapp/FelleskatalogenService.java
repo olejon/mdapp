@@ -37,7 +37,6 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.ResultReceiver;
@@ -45,6 +44,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -57,7 +57,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URLEncoder;
 
 public class FelleskatalogenService extends Service
 {
@@ -115,8 +114,8 @@ public class FelleskatalogenService extends Service
 
         mDownloadOnlyOnWifi = mTools.getDefaultSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_UPDATE_ONLY_ON_WIFI");
 
-        mUpdateManually = (mIntent.getAction() != null && mIntent.getAction().equals("manually"));
-        mUpdateTesting = (mIntent.getAction() != null && mIntent.getAction().equals("testing"));
+        mUpdateManually = (mIntent != null && mIntent.getAction() != null && mIntent.getAction().equals("manually"));
+        mUpdateTesting = (mIntent != null && mIntent.getAction() != null && mIntent.getAction().equals("testing"));
 
         mDownloadManagerFile = new File(mContext.getExternalFilesDir(null), FelleskatalogenSQLiteHelper.DB_ZIPPED_NAME);
 
@@ -148,16 +147,7 @@ public class FelleskatalogenService extends Service
             {
                 RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-                String device = "";
-
-                try
-                {
-                    device = (Build.MANUFACTURER == null || Build.MODEL == null || Build.VERSION.SDK_INT < 1) ? "" : URLEncoder.encode(Build.MANUFACTURER+" "+Build.MODEL+" "+Build.VERSION.SDK_INT, "utf-8");
-                }
-                catch(Exception e)
-                {
-                    Log.e("FelleskatalogenService", Log.getStackTraceString(e));
-                }
+                String device = mTools.getDevice();
 
                 String uriAppend = (mUpdateTesting) ? "&testing&device="+device : "&device="+device;
 
@@ -207,6 +197,8 @@ public class FelleskatalogenService extends Service
                     }
                 });
 
+                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
                 requestQueue.add(jsonObjectRequest);
             }
         }
@@ -215,7 +207,7 @@ public class FelleskatalogenService extends Service
             if(mUpdateManually) mTools.showToast(getString(R.string.device_not_connected), 1);
         }
 
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     @Override

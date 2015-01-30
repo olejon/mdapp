@@ -8,4 +8,6 @@
 
     <WebView android:id="@+id/medication_webview_content" android:layout_below="@+id/medication_webview_toolbar" style="@style/medication_webview_content"/>
 
+    <View android:layout_below="@+id/medication_webview_toolbar" style="@style/toolbar_shadow"/>
+
 </RelativeLayout>

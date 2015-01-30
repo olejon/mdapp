@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notifications_from_slv_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notifications_from_slv_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/notifications_from_slv_toolbar" style="@style/toolbar">
+    <android.support.v7.widget.Toolbar android:id="@+id/notifications_from_slv_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
         <ProgressBar android:id="@+id/notifications_from_slv_toolbar_progressbar" style="@style/toolbar_progressbar"/>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/notifications_from_slv_swipe_refresh_layout" style="@style/swipe_refresh_layout">
+    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/notifications_from_slv_swipe_refresh_layout" android:layout_below="@+id/notifications_from_slv_toolbar" style="@style/swipe_refresh_layout">
         <android.support.v7.widget.RecyclerView android:id="@+id/notifications_from_slv_cards" style="@style/notifications_from_slv_cards"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+    <View android:layout_below="@+id/notifications_from_slv_toolbar" style="@style/toolbar_shadow"/>
+
+</RelativeLayout>
