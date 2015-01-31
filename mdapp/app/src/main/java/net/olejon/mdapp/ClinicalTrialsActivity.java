@@ -256,13 +256,11 @@ public class ClinicalTrialsActivity extends ActionBarActivity
     // Search
     private void search(String string)
     {
-        /*if(string.equals("")) return;
+        if(string.equals("")) return;
 
         Intent intent = new Intent(mContext, ClinicalTrialsCardsActivity.class);
         intent.putExtra("search", string);
-        startActivity(intent);*/
-
-        mTools.showToast("Ikke ferdig ennå", 1);
+        startActivity(intent);
     }
 
     private void getRecentSearches()

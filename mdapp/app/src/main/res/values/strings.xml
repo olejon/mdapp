@@ -77,7 +77,7 @@
 
     <!-- Medication web view -->
     <string name="medication_webview_downloading_pdf">Se i varslingssenteret…</string>
-    <string name="medication_webview_menu_go_forward">Gå fram</string>
+    <string name="medication_webview_menu_go_forward">Gå frem</string>
     <string name="medication_webview_menu_uri">Se på web</string>
 
     <!-- Substance -->
@@ -89,7 +89,7 @@
     <string name="substance_menu_uri">Se på web</string>
 
     <!-- Diseases and treatments -->
-    <string name="diseases_and_treatments_title">Sykdommer &amp; Behandlinger</string>
+    <string name="diseases_and_treatments_title">Sykdommer og behandlinger</string>
     <string name="diseases_and_treatments_toolbar_search_hint">Søk…</string>
     <string name="diseases_and_treatments_recent_searches">Nylige søk</string>
     <string name="diseases_and_treatments_no_recent_searches">Ingen nylige søk</string>
@@ -102,7 +102,10 @@
     <string name="diseases_and_treatments_search_search_in_english">Søk på engelsk (anbefalt)</string>
     <string name="diseases_and_treatments_search_search_in_norwegian">Søk på norsk</string>
     <string name="diseases_and_treatments_search_could_not_search">Kunne ikke søke. Er du koblet til Internett?</string>
-    <string name="diseases_and_treatments_search_webview_menu_forward">Gå fram</string>
+    <string name="diseases_and_treatments_tip_dialog_title">Tips</string>
+    <string name="diseases_and_treatments_tip_dialog_message">Husk å velge språk før du søker, ellers vil du ikke få relevante treff.</string>
+    <string name="diseases_and_treatments_tip_dialog_positive_button">OK</string>
+    <string name="diseases_and_treatments_search_webview_menu_forward">Gå frem</string>
     <string name="diseases_and_treatments_search_webview_menu_uri">Se på web</string>
 
     <!-- Diseases and treatments search web view -->
@@ -112,7 +115,7 @@
     <string name="lvh_title">Legevakthåndboken</string>
     <string name="lvh_could_not_load_lvh">Kunne ikke laste Legevakthåndboken. Er du koblet til Internett?</string>
     <string name="lvh_menu_uri">Se på web</string>
-    <string name="lvh_categories_webview_menu_go_forward">Gå fram</string>
+    <string name="lvh_categories_webview_menu_go_forward">Gå frem</string>
     <string name="lvh_categories_webview_menu_uri">Se på web</string>
 
     <!-- Nasjonale retningslinjer -->
@@ -132,7 +135,7 @@
 
     <!-- Nasjonale retningslinjer web view -->
     <string name="nasjonale_retningslinjer_webview_downloading_pdf">Se i varslingssenteret…</string>
-    <string name="nasjonale_retningslinjer_webview_menu_go_forward">Gå fram</string>
+    <string name="nasjonale_retningslinjer_webview_menu_go_forward">Gå frem</string>
     <string name="nasjonale_retningslinjer_webview_menu_uri">Se på web</string>
 
     <!-- Interactions -->
@@ -162,7 +165,7 @@
     <string name="interactions_cards_menu_uri">Se på web</string>
 
     <!-- Interactions web view -->
-    <string name="interactions_webview_menu_go_forward">Gå fram</string>
+    <string name="interactions_webview_menu_go_forward">Gå frem</string>
     <string name="interactions_webview_menu_uri">Se på web</string>
 
     <!-- Poisonings -->
@@ -192,7 +195,7 @@
     <string name="poisonings_cards_menu_helsebiblioteket_uri">Se hos Helsebiblioteket</string>
 
     <!-- Poisonings web view -->
-    <string name="poisonings_webview_menu_go_forward">Gå fram</string>
+    <string name="poisonings_webview_menu_go_forward">Gå frem</string>
     <string name="poisonings_webview_menu_uri">Se på web</string>
 
     <!-- ATC -->
@@ -217,7 +220,7 @@
     <!-- ICD-10 web view -->
     <string name="icd10_webview_title">ICD-10-kode</string>
     <string name="icd10_webview_could_not_find_code">Kunne ikke finne ICD-10-kode</string>
-    <string name="icd10_webview_menu_go_forward">Gå fram</string>
+    <string name="icd10_webview_menu_go_forward">Gå frem</string>
     <string name="icd10_webview_menu_uri">Se på web</string>
 
     <!-- Manufacturers -->
@@ -242,13 +245,28 @@
     <string name="pharmacies_location_card_show_on_map">VIS PÅ KART</string>
 
     <!-- Clinical trials -->
-    <string name="clinicaltrials_title">Kliniske Studier</string>
+    <string name="clinicaltrials_title">Kliniske studier</string>
     <string name="clinicaltrials_toolbar_search_hint">Søk…</string>
     <string name="clinicaltrials_no_recent_searches">Ingen nylige søk</string>
-    <string name="clinicaltrials_information">Søk på engelsk etter studier, sykdommer eller preparater.\n\nKilden som brukes er <i>ClinicalTrials.gov</i> fra US National Institutes of Health.</string>
+    <string name="clinicaltrials_information">Søk på <b>engelsk</b> etter studier, sykdommer, preparater eller substanser.\n\nKilden som brukes er <i>ClinicalTrials.gov</i> fra US National Institutes of Health.</string>
     <string name="clinicaltrials_recent_searches">Nylige søk</string>
     <string name="clinicaltrials_recent_searches_removed">Nylige søk fjernet</string>
     <string name="clinicaltrials_menu_clear_recent_searches">Fjern nylige søk</string>
+
+    <!-- Clinical trials cards -->
+    <string name="clinicaltrials_cards_search">Søk</string>
+    <string name="clinicaltrials_cards_card_status">Status:</string>
+    <string name="clinicaltrials_cards_card_conditions">Tilstander:</string>
+    <string name="clinicaltrials_cards_card_intervention">Intervensjoner:</string>
+    <string name="clinicaltrials_cards_card_button_uri">LES MER</string>
+    <string name="clinicaltrials_cards_no_results">Fant ingen resultater</string>
+    <string name="clinicaltrials_cards_no_results_button">Sjekk på nett</string>
+    <string name="clinicaltrials_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
+    <string name="clinicaltrials_cards_menu_uri">Se på web</string>
+
+    <!-- Clinical trials web view -->
+    <string name="clinicaltrials_webview_menu_go_forward">Gå frem</string>
+    <string name="clinicaltrials_webview_menu_uri">Se på web</string>
 
     <!-- Notifications from SLV -->
     <string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
@@ -258,7 +276,7 @@
     <string name="notifications_from_slv_menu_uri">Se på web</string>
 
     <!-- Notifications from SLV web view -->
-    <string name="notifications_from_slv_webview_menu_go_forward">Gå fram</string>
+    <string name="notifications_from_slv_webview_menu_go_forward">Gå frem</string>
     <string name="notifications_from_slv_webview_menu_uri">Se på web</string>
 
     <!-- Settings -->
@@ -293,14 +311,14 @@
     <string name="welcome_page_guide">Dra mot venstre for å gå til neste side</string>
     <string name="welcome_page_1_text">Velkommen til LegeAppen. Tanken bak LegeAppen er at den skal være en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, som Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.</string>
     <string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er Felleskatalogen, med oversikt over alle preparater og substanser.\n\nDu kan raskt søke i preparater og substanser ved å trykke på den blå knappen nede til høyre.\n\nI sidemenyen finner du mange flere muligheter. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
-    <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes umodifisert fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell og er fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\nCopyright 2015 Ole Jon Bjørkum.</string>
+    <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes umodifisert fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\nCopyright 2015 Ole Jon Bjørkum.</string>
     <string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å ta deg til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
     <string name="welcome_page_button">TA MEG TIL APPEN</string>
 
     <!-- Drawer -->
     <string name="drawer_content_description">Meny</string>
     <string name="drawer_item_felleskatalogen">Felleskatalogen</string>
-    <string name="drawer_item_diseases_and_treatments">Sykdommer &amp; Behandlinger</string>
+    <string name="drawer_item_diseases_and_treatments">Sykdommer og behandlinger</string>
     <string name="drawer_item_lvh">Legevakthåndboken</string>
     <string name="drawer_item_nasjonale_retningslinjer">Nasjonale retningslinjer</string>
     <string name="drawer_item_interactions">Interaksjonsanalyse</string>
@@ -309,11 +327,11 @@
     <string name="drawer_item_icd10">ICD-10</string>
     <string name="drawer_item_manufacturers">Legemiddelfirmaer</string>
     <string name="drawer_item_pharmacies">Apotek</string>
-    <string name="drawer_item_clinicaltrials">Kliniske Studier</string>
+    <string name="drawer_item_clinicaltrials">Kliniske studier</string>
     <string name="drawer_item_notifications_from_slv">Varsler fra Legemiddelverket</string>
     <string name="drawer_item_settings">Innstillinger</string>
     <string name="drawer_item_donate">Doner</string>
-    <string name="drawer_item_feedback">Send Tilbakemelding</string>
+    <string name="drawer_item_feedback">Send tilbakemelding</string>
     <string name="drawer_item_report_issue">Rapporter feil</string>
 
     <!-- Pages -->

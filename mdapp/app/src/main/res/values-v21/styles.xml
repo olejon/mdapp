@@ -152,6 +152,19 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- Clinical trials cards -->
+    <style name="clinicaltrials_cards_no_clinicaltrials_information_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_detail_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- Notifications from SLV -->
     <style name="notifications_from_slv_card_title_base" parent="notifications_from_slv_card_value">
         <item name="android:fontFamily">sans-serif-medium</item>

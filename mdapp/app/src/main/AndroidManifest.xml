@@ -209,6 +209,16 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
         <activity
+            android:name=".ClinicalTrialsCardsActivity"
+            android:parentActivityName=".ClinicalTrialsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsActivity"/>
+        </activity>
+        <activity
+            android:name=".ClinicalTrialsWebViewActivity"
+            android:parentActivityName=".ClinicalTrialsCardsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsCardsActivity"/>
+        </activity>
+        <activity
             android:name=".NotificationsFromSlvActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>

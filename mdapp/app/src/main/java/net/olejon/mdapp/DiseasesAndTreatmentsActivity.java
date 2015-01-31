@@ -49,6 +49,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
 public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
@@ -161,6 +162,21 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
                 }
             }
         });
+
+        // Tip dialog
+        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("HIDE_DISEASES_AND_TREATMENTS_TIP_DIALOG");
+
+        if(!hideTipDialog)
+        {
+            new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_tip_dialog_title)).content(getString(R.string.diseases_and_treatments_tip_dialog_message)).positiveText(getString(R.string.diseases_and_treatments_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+            {
+                @Override
+                public void onPositive(MaterialDialog dialog)
+                {
+                    mTools.setSharedPreferencesBoolean("HIDE_DISEASES_AND_TREATMENTS_TIP_DIALOG", true);
+                }
+            }).contentColor(getResources().getColor(R.color.black)).show();
+        }
     }
 
     // Resume activity

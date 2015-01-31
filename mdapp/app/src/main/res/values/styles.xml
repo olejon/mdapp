@@ -1818,6 +1818,7 @@
 
     <style name="clinicaltrials_toolbar_search_edittext" parent="toolbar_search_edittext">
         <item name="android:imeOptions">actionSearch</item>
+        <item name="android:inputType">textAutoCorrect</item>
     </style>
 
     <style name="clinicaltrials_list_layout">
@@ -1873,6 +1874,133 @@
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Clinical trial cards -->
+    <style name="clinicaltrials_cards_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="clinicaltrials_cards_cards">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+    </style>
+
+    <style name="clinicaltrials_cards_no_clinicaltrials_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@color/background</item>
+    </style>
+
+    <style name="clinicaltrials_cards_no_clinicaltrials_information" parent="clinicaltrials_cards_no_clinicaltrials_information_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingTop">64dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="clinicaltrials_cards_no_clinicaltrials_information_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="clinicaltrials_cards_no_clinicaltrials_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:minWidth">256dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_inner_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_title" parent="clinicaltrials_cards_card_title_base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/purple</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_title_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_detail_title" parent="clinicaltrials_cards_card_detail_title_base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_detail_title_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_detail">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_separator" parent="card_separator">
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_button" parent="card_button">
+        <item name="android:textColor">@color/teal</item>
+    </style>
+
+    <!-- Clinical trials web view -->
+    <style name="clinicaltrials_webview_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="clinicaltrials_webview_content">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
     <!-- Notifications from SLV -->

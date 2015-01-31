@@ -152,9 +152,9 @@ public class PoisoningsActivity extends ActionBarActivity
         });
 
         // Tip dialog
-        boolean hideCallTipDialog = mTools.getSharedPreferencesBoolean("HIDE_POISONINGS_TIP_DIALOG");
+        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("HIDE_POISONINGS_TIP_DIALOG");
 
-        if(!hideCallTipDialog)
+        if(!hideTipDialog)
         {
             new MaterialDialog.Builder(mContext).title(getString(R.string.poisonings_tip_dialog_title)).content(getString(R.string.poisonings_tip_dialog_message)).positiveText(getString(R.string.poisonings_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
             {

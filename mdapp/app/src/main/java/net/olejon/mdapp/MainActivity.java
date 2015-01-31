@@ -414,7 +414,7 @@ public class MainActivity extends ActionBarActivity
             long currentTime = mTools.getCurrentTime();
             long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
 
-            if(currentTime - installedTime > 1000 * 3600 * 24)
+            if(currentTime - installedTime > 1000 * 3600 * 48)
             {
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
                 {
@@ -436,7 +436,7 @@ public class MainActivity extends ActionBarActivity
             long currentTime = mTools.getCurrentTime();
             long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
 
-            if(currentTime - installedTime > 1000 * 3600 * 48)
+            if(currentTime - installedTime > 1000 * 3600 * 96)
             {
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
                 {
@@ -449,6 +449,27 @@ public class MainActivity extends ActionBarActivity
                 }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
 
                 mTools.setSharedPreferencesBoolean("DONATE_DIALOG_HAS_BEEN_SHOWN", true);
+            }
+        }
+
+        if(!mTools.getSharedPreferencesBoolean("SECOND_DONATE_DIALOG_HAS_BEEN_SHOWN"))
+        {
+            long currentTime = mTools.getCurrentTime();
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
+
+            if(currentTime - installedTime > 1000 * 3600 * 336)
+            {
+                new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onPositive(MaterialDialog dialog)
+                    {
+                        Intent intent = new Intent(mContext, DonateActivity.class);
+                        startActivity(intent);
+                    }
+                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
+
+                mTools.setSharedPreferencesBoolean("SECOND_DONATE_DIALOG_HAS_BEEN_SHOWN", true);
             }
         }
     }
