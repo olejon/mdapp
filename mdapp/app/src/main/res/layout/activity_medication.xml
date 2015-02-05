@@ -31,6 +31,11 @@
             <WebView android:id="@+id/medication_content" style="@style/medication_content"/>
         </LinearLayout>
 
+        <LinearLayout android:id="@+id/medication_find_in_text_layout" android:layout_alignParentBottom="true" style="@style/medication_find_in_text_layout">
+            <EditText android:id="@+id/medication_find_in_text_search" android:hint="@string/medication_find_in_text_search_hint" style="@style/medication_find_in_text_search_edittext"/>
+            <ImageButton android:id="@+id/medication_find_in_text_search_next" android:src="@drawable/ic_keyboard_arrow_right_white_24dp" android:contentDescription="@string/image_content_description" style="@style/medication_find_in_text_search_next"/>
+        </LinearLayout>
+
         <View android:layout_below="@+id/medication_extended_toolbar" style="@style/toolbar_shadow"/>
 
     </RelativeLayout>

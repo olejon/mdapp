@@ -138,7 +138,7 @@ public class MainActivity extends ActionBarActivity
                     {
                         updateFelleskatalogen(true);
                     }
-                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
+                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
 
                 return true;
             }
@@ -366,7 +366,7 @@ public class MainActivity extends ActionBarActivity
 
                     final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
 
-                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColor(getResources().getColor(R.color.black)).show();
+                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColorRes(R.color.black).show();
 
                     mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
                 }
@@ -425,7 +425,7 @@ public class MainActivity extends ActionBarActivity
                         intent.setData(Uri.parse("market://details?id=net.olejon.mdapp"));
                         startActivity(intent);
                     }
-                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
+                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
 
                 mTools.setSharedPreferencesBoolean("RATE_DIALOG_HAS_BEEN_SHOWN", true);
             }
@@ -446,7 +446,7 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }
-                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
+                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
 
                 mTools.setSharedPreferencesBoolean("DONATE_DIALOG_HAS_BEEN_SHOWN", true);
             }
@@ -467,7 +467,7 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }
-                }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
+                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
 
                 mTools.setSharedPreferencesBoolean("SECOND_DONATE_DIALOG_HAS_BEEN_SHOWN", true);
             }

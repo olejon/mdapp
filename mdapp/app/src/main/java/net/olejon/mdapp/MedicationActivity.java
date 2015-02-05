@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,11 +39,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -52,6 +56,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -88,10 +93,15 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
     private SQLiteDatabase mSqLiteDatabase;
 
+    private InputMethodManager mInputMethodManager;
+
     private Spinner mSpinner;
     private ProgressBar mProgressBar;
     private RelativeLayout mRelativeLayout;
     private LinearLayout mLinearVideoLayout;
+    private LinearLayout mLinearFindInTextLayout;
+    private EditText mEditTextFindInText;
+    private ImageButton mImageButtonFindInText;
     private View mCustomView;
     private ListView mListView;
     private WebView mWebView;
@@ -168,6 +178,12 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             mRelativeLayout = (RelativeLayout) findViewById(R.id.medication_inner_layout);
             mLinearVideoLayout = (LinearLayout) findViewById(R.id.medication_video_layout);
+            mLinearFindInTextLayout = (LinearLayout) findViewById(R.id.medication_find_in_text_layout);
+            mEditTextFindInText = (EditText) findViewById(R.id.medication_find_in_text_search);
+            mImageButtonFindInText = (ImageButton) findViewById(R.id.medication_find_in_text_search_next);
+
+            // Input manager
+            mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
             // Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.medication_toolbar);
@@ -289,6 +305,46 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             mWebView.setWebChromeClient(mWebChromeClient);
 
             mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Android");
+
+            mEditTextFindInText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+            {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+                {
+                    if(i == EditorInfo.IME_ACTION_NEXT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                    {
+                        mInputMethodManager.toggleSoftInputFromWindow(mEditTextFindInText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                        String find = mEditTextFindInText.getText().toString().trim();
+
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                        {
+                            mWebView.findAllAsync(find);
+                        }
+                        else
+                        {
+                            mWebView.findAll(find);
+                        }
+
+                        mImageButtonFindInText.setVisibility(View.VISIBLE);
+
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
+
+            mImageButtonFindInText.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    mWebView.findNext(true);
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) mWebView.loadUrl("javascript:scrollToPositionAfterFindInText()");
+                }
+            });
         }
     }
 
@@ -338,6 +394,13 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         if(mCustomView != null)
         {
             mWebChromeClient.onHideCustomView();
+        }
+        else if(mLinearFindInTextLayout.getVisibility() == View.VISIBLE)
+        {
+            mWebView.clearMatches();
+            mLinearFindInTextLayout.setVisibility(View.GONE);
+            mEditTextFindInText.setText("");
+            mImageButtonFindInText.setVisibility(View.GONE);
         }
         else
         {
@@ -443,6 +506,15 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                 return true;
             }
+            case R.id.medication_menu_find_in_text:
+            {
+                mLinearFindInTextLayout.setVisibility(View.VISIBLE);
+                mEditTextFindInText.requestFocus();
+
+                mInputMethodManager.toggleSoftInputFromWindow(mEditTextFindInText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+
+                return true;
+            }
             case R.id.medication_menu_uri:
             {
                 mTools.openUri(medicationUri);
@@ -514,7 +586,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             favoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp);
 
-            SnackbarManager.show(Snackbar.with(mActivity).text(getString(R.string.medication_saved_to_favorites)).color(getResources().getColor(R.color.dark)).actionLabel(getString(R.string.snackbar_undo)).actionColor(getResources().getColor(R.color.orange)).actionListener(new ActionClickListener()
+            SnackbarManager.show(Snackbar.with(mActivity).text(getString(R.string.medication_saved_to_favorites)).colorResource(R.color.dark).actionLabel(getString(R.string.snackbar_undo)).actionLabelTypeface(Typeface.DEFAULT_BOLD).actionColorResource(R.color.orange).actionListener(new ActionClickListener()
             {
                 @Override
                 public void onActionClicked(Snackbar snackbar)
@@ -652,7 +724,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                                     intent.putExtra("uri", packageInsertsUris[i]);
                                     startActivity(intent);
                                 }
-                            }).show();
+                            }).itemColorRes(R.color.dark_blue).show();
                         }
                     }
                 }, new Response.ErrorListener()
@@ -971,7 +1043,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         {
                             mTools.setSharedPreferencesBoolean("HIDE_MEDICATION_TIP_DIALOG", true);
                         }
-                    }).contentColor(getResources().getColor(R.color.black)).show();
+                    }).contentColorRes(R.color.black).show();
                 }
             }
             else
@@ -993,7 +1065,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                             finish();
                         }
-                    }).contentColor(getResources().getColor(R.color.black)).negativeColor(getResources().getColor(R.color.black)).show();
+                    }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
                 }
                 catch(Exception e)
                 {
@@ -1056,7 +1128,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 @Override
                 public void run()
                 {
-                    new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).contentColor(getResources().getColor(R.color.black)).show();
+                    new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).contentColorRes(R.color.black).show();
                 }
             });
         }

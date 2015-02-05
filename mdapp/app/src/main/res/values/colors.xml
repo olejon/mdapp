@@ -4,6 +4,7 @@
 
     <color name="blue">#03A9F4</color>
     <color name="light_blue">#4FC3F7</color>
+    <color name="lighter_blue">#B3E5FC</color>
     <color name="dark_blue">#0288D1</color>
     <color name="accent_blue">#40C4FF</color>
     <color name="green">#4CAF50</color>
@@ -14,10 +15,10 @@
     <color name="red">#F44336</color>
     <color name="accent_red">#FF5252</color>
     <color name="teal">#009688</color>
-    <color name="accent_teal">#64FFDA</color>
     <color name="purple">#9C27B0</color>
     <color name="accent_purple">#E040FB</color>
     <color name="light_grey">#E0E0E0</color>
+    <color name="lighter_grey">#EEEEEE</color>
     <color name="dark_grey">#9E9E9E</color>
     <color name="dark">#212121</color>
     <color name="white">#FFFFFF</color>

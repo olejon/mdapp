@@ -306,7 +306,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                                     startActivity(intent);
                                 }
                             }
-                        }).show();
+                        }).itemColorRes(R.color.dark_blue).show();
                     }
                 });
 
@@ -326,7 +326,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                         {
                             mTools.setSharedPreferencesBoolean("HIDE_NASJONALE_RETNINGSLINJER_TIP_DIALOG", true);
                         }
-                    }).contentColor(getResources().getColor(R.color.black)).show();
+                    }).contentColorRes(R.color.black).show();
                 }
             }
         }, new Response.ErrorListener()

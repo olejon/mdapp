@@ -37,6 +37,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -190,37 +192,64 @@ public class AtcCodesActivity extends ActionBarActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
                 {
-                    String name = substancesNamesArrayList.get(i);
-                    String uri = substancesUrisArrayList.get(i);
+                    final String name = substancesNamesArrayList.get(i);
+                    final String uri = substancesUrisArrayList.get(i);
 
-                    if(name.equals("") || name.equals("Diverse") || name.equals("Kombinasjoner") || name.startsWith("Andre ") || name.contains("kombinasjon") || name.matches("^\\w+ og \\w+$") || name.matches("^\\w+, .*og \\w+$"))
+                    if(name.equals("") || name.equals("Diverse") || name.equals("Kombinasjoner") || name.startsWith("Andre ") || name.contains("kombinasjon"))
                     {
                         mTools.showToast(getString(R.string.atc_codes_substance_not_a_substance), 1);
                     }
-                    else if(uri.equals(""))
+                    else if(name.matches("^\\w+ og \\w+$"))
                     {
-                        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+                        Pattern pattern = Pattern.compile("^(\\w+) og (\\w+)$");
+                        Matcher matcher = pattern.matcher(name);
 
-                        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, null, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
+                        final String[] substancesStringArray = {"", ""};
 
-                        if(cursor.getCount() == 1)
+                        while(matcher.find())
                         {
-                            if(cursor.moveToFirst())
-                            {
-                                String id = cursor.getString(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID));
+                            substancesStringArray[0] = matcher.group(1).substring(0, 1).toUpperCase() + matcher.group(1).substring(1);
+                            substancesStringArray[1] = matcher.group(2).substring(0, 1).toUpperCase() + matcher.group(2).substring(1);
+                        }
 
-                                Intent intent = new Intent(mContext, SubstanceActivity.class);
-                                intent.putExtra("id", Long.parseLong(id));
-                                startActivity(intent);
+                        new MaterialDialog.Builder(mContext).title(getString(R.string.atc_codes_dialog_title)).items(substancesStringArray).itemsCallback(new MaterialDialog.ListCallback()
+                        {
+                            @Override
+                            public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
+                            {
+                                getSubstance(substancesStringArray[n]);
+                            }
+                        }).itemColorRes(R.color.dark_blue).show();
+                    }
+                    else if(name.matches("^\\w+, .*og \\w+$"))
+                    {
+                        final String[] substancesStringArray = name.split(" ");
+                        final String[] substancesListStringArray = new String[substancesStringArray.length - 1];
+
+                        int n = 0;
+
+                        for(String substance : substancesStringArray)
+                        {
+                            if(!substance.equals("og"))
+                            {
+                                substancesListStringArray[n] = substance.substring(0, 1).toUpperCase() + substance.substring(1).replace(",", "");
+
+                                n++;
                             }
                         }
-                        else
-                        {
-                            mTools.showToast(getString(R.string.atc_codes_substance_not_in_felleskatalogen), 1);
-                        }
 
-                        cursor.close();
-                        sqLiteDatabase.close();
+                        new MaterialDialog.Builder(mContext).title(getString(R.string.atc_codes_dialog_title)).items(substancesListStringArray).itemsCallback(new MaterialDialog.ListCallback()
+                        {
+                            @Override
+                            public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
+                            {
+                                getSubstance(substancesListStringArray[n]);
+                            }
+                        }).itemColorRes(R.color.dark_blue).show();
+                    }
+                    else if(uri.equals(""))
+                    {
+                        getSubstance(name);
                     }
                     else
                     {
@@ -269,5 +298,31 @@ public class AtcCodesActivity extends ActionBarActivity
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    private void getSubstance(String name)
+    {
+        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, null, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
+
+        if(cursor.getCount() == 1)
+        {
+            if(cursor.moveToFirst())
+            {
+                String id = cursor.getString(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID));
+
+                Intent intent = new Intent(mContext, SubstanceActivity.class);
+                intent.putExtra("id", Long.parseLong(id));
+                startActivity(intent);
+            }
+        }
+        else
+        {
+            mTools.showToast(getString(R.string.atc_codes_substance_not_in_felleskatalogen), 1);
+        }
+
+        cursor.close();
+        sqLiteDatabase.close();
     }
 }

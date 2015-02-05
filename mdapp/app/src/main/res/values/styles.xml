@@ -336,6 +336,38 @@
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
+    <style name="medication_find_in_text_layout" parent="medication_find_in_text_layout_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@color/blue</item>
+        <item name="android:theme">@style/toolbar_theme</item>
+    </style>
+
+    <style name="medication_find_in_text_layout_base"/>
+    
+    <style name="medication_find_in_text_search_edittext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">textAutoCorrect</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/hint</item>
+    </style>
+
+    <style name="medication_find_in_text_search_next">
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@drawable/medication_find_in_text_next</item>
+    </style>
+
     <style name="medication_video_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -2293,7 +2325,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/welcome_button</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/blue</item>
     </style>
 
     <style name="welcome_page_button_base">

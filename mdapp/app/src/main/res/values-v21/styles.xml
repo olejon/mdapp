@@ -34,6 +34,10 @@
         <item name="android:elevation">2dp</item>
     </style>
 
+    <style name="medication_find_in_text_layout_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
     <!-- Medication pictures -->
     <style name="medication_pictures_card_name_base">
         <item name="android:fontFamily">sans-serif-medium</item>

@@ -175,7 +175,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
                 {
                     mTools.setSharedPreferencesBoolean("HIDE_DISEASES_AND_TREATMENTS_TIP_DIALOG", true);
                 }
-            }).contentColor(getResources().getColor(R.color.black)).show();
+            }).contentColorRes(R.color.black).show();
         }
     }
 

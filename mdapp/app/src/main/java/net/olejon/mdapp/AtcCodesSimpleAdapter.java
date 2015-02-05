@@ -22,8 +22,10 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -34,6 +36,8 @@ class AtcCodesSimpleAdapter extends SimpleAdapter
 {
     private final Context mContext;
 
+    private final MyTools mTools;
+
     private final String mAtcCode;
 
     public AtcCodesSimpleAdapter(Context context, String atcCode, ArrayList<HashMap<String, String>> data, String[] from, int[] to)
@@ -41,6 +45,8 @@ class AtcCodesSimpleAdapter extends SimpleAdapter
         super(context, data, R.layout.activity_atc_codes_list_item, from, to);
 
         mContext = context;
+
+        mTools = new MyTools(mContext);
 
         mAtcCode = atcCode;
     }
@@ -50,17 +56,30 @@ class AtcCodesSimpleAdapter extends SimpleAdapter
     {
         View view = super.getView(position, convertView, parent);
 
-        TextView textView = (TextView) view.findViewById(R.id.atc_codes_list_item_code);
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.atc_codes_list_item_layout);
 
-        String atcCode = (String) textView.getText();
+        TextView atcCodeTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_code);
+        TextView atcNameTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_name);
+
+        String atcCode = (String) atcCodeTextView.getText();
 
         if(atcCode.equals(mAtcCode))
         {
-            textView.setTextColor(mContext.getResources().getColor(R.color.purple));
+            mTools.setBackgroundDrawable(linearLayout, R.drawable.atc_codes_code);
+
+            atcCodeTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
+
+            atcNameTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
+            atcNameTextView.setTypeface(Typeface.DEFAULT_BOLD);
         }
         else
         {
-            textView.setTextColor(mContext.getResources().getColor(R.color.black));
+            linearLayout.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+
+            atcCodeTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+
+            atcNameTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            atcNameTextView.setTypeface(Typeface.DEFAULT);
         }
 
         return view;

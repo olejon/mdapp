@@ -85,6 +85,14 @@ function scrollToSection(id, animate)
 	scrollToPosition(position, animate);
 }
 
+function scrollToPositionAfterFindInText()
+{
+    var scroll_top = $(window).scrollTop();
+    var scroll_to = scroll_top + 128;
+
+    window.scrollTo(0, scroll_to);
+}
+
 function pauseVideos()
 {
 	var elements = document.getElementsByTagName('video');

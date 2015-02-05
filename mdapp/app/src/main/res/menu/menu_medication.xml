@@ -8,6 +8,7 @@
     <item android:id="@+id/medication_menu_manufacturer_uri" android:orderInCategory="11" app:showAsAction="never" android:title="@string/medication_menu_manufacturer_uri"/>
     <item android:id="@+id/medication_menu_patient_uri" android:orderInCategory="12" app:showAsAction="never" android:title="@string/medication_menu_patient_uri"/>
     <item android:id="@+id/medication_menu_spc_uri" android:orderInCategory="13" app:showAsAction="never" android:title="@string/medication_menu_spc_uri"/>
-    <item android:id="@+id/medication_menu_uri" android:orderInCategory="14" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
+    <item android:id="@+id/medication_menu_find_in_text" android:orderInCategory="14" app:showAsAction="never" android:title="@string/medication_menu_find_in_text"/>
+    <item android:id="@+id/medication_menu_uri" android:orderInCategory="15" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
 
 </menu>
