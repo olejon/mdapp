@@ -361,7 +361,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
 
                         mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
                     }
-                }, 1000);
+                }, 500);
             }
         }, new Response.ErrorListener()
         {

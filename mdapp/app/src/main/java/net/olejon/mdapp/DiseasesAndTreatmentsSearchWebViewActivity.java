@@ -101,7 +101,9 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
 
-        if(pageUri.contains("webofknowledge")) webSettings.setUseWideViewPort(true);
+        if(pageUri.contains("webofknowledge") || pageUri.contains("brukerhandboken")) webSettings.setUseWideViewPort(true);
+
+        if(pageUri.contains("brukerhandboken")) webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:35.0) Gecko/20100101 Firefox/35.0");
 
         mWebView.setWebViewClient(new WebViewClient()
         {
@@ -151,6 +153,10 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                         {
                             mWebView.loadUrl("javascript:var offset = $('h2').offset(); window.scrollTo(0, offset.top);");
                         }
+                        else if(pageUri.contains("bmj"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('small.monograph-title').offset(); window.scrollTo(0, offset.top);");
+                        }
                         else if(pageUri.contains("nhi"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top);");
@@ -171,6 +177,10 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                         {
                             mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
                         }
+                        else if(pageUri.contains("brukerhandboken"))
+                        {
+                                mWebView.loadUrl("javascript:var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top);");
+                        }
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         mWebView.startAnimation(animation);
@@ -188,13 +198,13 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         CookieManager cookieManager = CookieManager.getInstance();
 
-        cookieManager.setCookie("http://apps.webofknowledge.com/", "ROAMING_LOGIN=\"25240265d905679e8451b2f889f62c816d61696c406f6c656a6f6e2e6e6574\"; USERNAME=\"mail@olejon.net\"; SID=\"Q1dZpJaupULTHAyAdDt\"; CUSTOMER=\"CRISTIN under the Ministry of Education and Research - Norway\"; E_GROUP_NAME=\"University of Bergen\"; JSESSIONID=4D64D905FA818A5FB0C839CA9852E69E");
+        cookieManager.setCookie("http://apps.webofknowledge.com/", "ROAMING_LOGIN=\"25240265d905679e8451b2f889f62c816d61696c406f6c656a6f6e2e6e6574\"; USERNAME=\"mail@olejon.net\"; SID=\"Q2INjfCqiFR6bkCfOx5\"; CUSTOMER=\"CRISTIN under the Ministry of Education and Research - Norway\"; E_GROUP_NAME=\"University of Bergen\"; JSESSIONID=98BFA3B163FC02F082B30D3B2B5BC587");
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
 
-        if(pageUri.contains("webofknowledge")) mWebView.setInitialScale(100);
+        if(pageUri.contains("webofknowledge") || pageUri.contains("brukerhandboken")) mWebView.setInitialScale(100);
 
         mWebView.loadUrl(pageUri);
     }

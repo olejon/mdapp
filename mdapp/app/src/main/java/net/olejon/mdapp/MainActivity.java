@@ -332,6 +332,16 @@ public class MainActivity extends ActionBarActivity
             }, 1000);
         }
 
+        // Get Felleskatalogen
+        if(!mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED")) getFelleskatalogen();
+    }
+
+    // Resume activity
+    @Override
+    protected void onPostResume()
+    {
+        super.onPostResume();
+
         // Message
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
@@ -373,16 +383,6 @@ public class MainActivity extends ActionBarActivity
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(jsonObjectRequest);
-
-        // Get Felleskatalogen
-        if(!mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED")) getFelleskatalogen();
-    }
-
-    // Resume activity
-    @Override
-    protected void onPostResume()
-    {
-        super.onPostResume();
 
         if(mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED"))
         {

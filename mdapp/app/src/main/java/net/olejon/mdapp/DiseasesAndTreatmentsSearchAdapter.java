@@ -129,6 +129,13 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
+                case "bmj":
+                {
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.bmj));
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
                 case "nhi":
                 {
                     viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nhi));

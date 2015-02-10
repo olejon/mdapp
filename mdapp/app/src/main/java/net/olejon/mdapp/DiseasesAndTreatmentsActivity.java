@@ -69,6 +69,8 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 
     private String mSearchLanguage = "";
 
+    private boolean mActivityPaused = false;
+
     private int mSearchSelectedLanguage = 0;
 
     // Create activity
@@ -142,6 +144,14 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
                 showSearchLanguageDialog();
             }
         });
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mActivityPaused = true;
     }
 
     // Resume activity
@@ -311,7 +321,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
             mFloatingActionButton.startAnimation(fabAnimation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            if(mCursor.getCount() > 0)
+            if(!mActivityPaused && mCursor.getCount() > 0)
             {
                 Handler handler = new Handler();
 
@@ -322,7 +332,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
                     {
                         showSearchLanguageDialog();
                     }
-                }, 750);
+                }, 250);
             }
         }
 

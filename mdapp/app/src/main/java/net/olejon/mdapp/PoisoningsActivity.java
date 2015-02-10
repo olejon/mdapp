@@ -308,7 +308,7 @@ public class PoisoningsActivity extends ActionBarActivity
 
                             mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
                         }
-                    }, 1000);
+                    }, 500);
                 }
             }
             else
