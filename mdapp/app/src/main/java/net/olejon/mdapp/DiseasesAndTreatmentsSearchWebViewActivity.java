@@ -50,6 +50,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     private ProgressBar mProgressBar;
     private WebView mWebView;
 
+    private String pageTitle;
     private String pageUri;
 
     private boolean mWebViewAnimationHasBeenShown = false;
@@ -76,8 +77,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         // Intent
         Intent intent = getIntent();
 
-        final String pageTitle = intent.getStringExtra("title");
-
+        pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
 
         // Layout
@@ -100,6 +100,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
+
+        if(pageUri.contains("webofknowledge")) webSettings.setUseWideViewPort(true);
 
         mWebView.setWebViewClient(new WebViewClient()
         {
@@ -141,7 +143,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                     {
                         mWebViewAnimationHasBeenShown = true;
 
-                        if(pageUri.contains("uptodate"))
+                        if(pageUri.contains("webofknowledge"))
+                        {
+                            mWebView.loadUrl("javascript:$('div.search-criteria input').val('"+pageTitle+"'); $('form#UA_GeneralSearch_input_form').submit()");
+                        }
+                        else if(pageUri.contains("uptodate"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('h2').offset(); window.scrollTo(0, offset.top);");
                         }
@@ -182,10 +188,13 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         CookieManager cookieManager = CookieManager.getInstance();
 
+        cookieManager.setCookie("http://apps.webofknowledge.com/", "ROAMING_LOGIN=\"25240265d905679e8451b2f889f62c816d61696c406f6c656a6f6e2e6e6574\"; USERNAME=\"mail@olejon.net\"; SID=\"Q1dZpJaupULTHAyAdDt\"; CUSTOMER=\"CRISTIN under the Ministry of Education and Research - Norway\"; E_GROUP_NAME=\"University of Bergen\"; JSESSIONID=4D64D905FA818A5FB0C839CA9852E69E");
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
+
+        if(pageUri.contains("webofknowledge")) mWebView.setInitialScale(100);
 
         mWebView.loadUrl(pageUri);
     }
@@ -251,6 +260,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
             case R.id.diseases_and_treatments_search_webview_menu_go_forward:
             {
                 mWebView.goForward();
+                return true;
+            }
+            case R.id.diseases_and_treatments_search_webview_menu_print:
+            {
+                mTools.printDocument(mWebView, pageTitle);
                 return true;
             }
             case R.id.diseases_and_treatments_search_webview_menu_uri:

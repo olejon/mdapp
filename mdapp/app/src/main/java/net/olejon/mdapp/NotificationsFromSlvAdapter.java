@@ -178,7 +178,7 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
         }
         catch(Exception e)
         {
-            Log.e("NotificationsFromSlvAdapter", Log.getStackTraceString(e));
+            Log.e("NotificationsFromSlv", Log.getStackTraceString(e));
         }
     }
 

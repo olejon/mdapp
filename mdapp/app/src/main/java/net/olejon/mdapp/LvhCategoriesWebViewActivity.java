@@ -49,6 +49,7 @@ public class LvhCategoriesWebViewActivity extends ActionBarActivity
     private ProgressBar mProgressBar;
     private WebView mWebView;
 
+    private String pageTitle;
     private String pageUri;
 
     private boolean mWebViewAnimationHasBeenShown = false;
@@ -75,8 +76,7 @@ public class LvhCategoriesWebViewActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        final String pageTitle = intent.getStringExtra("title");
-
+        pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
 
         // Layout
@@ -211,6 +211,11 @@ public class LvhCategoriesWebViewActivity extends ActionBarActivity
             case R.id.lvh_categories_webview_menu_go_forward:
             {
                 mWebView.goForward();
+                return true;
+            }
+            case R.id.lvh_categories_webview_menu_print:
+            {
+                mTools.printDocument(mWebView, pageTitle);
                 return true;
             }
             case R.id.lvh_categories_webview_menu_uri:

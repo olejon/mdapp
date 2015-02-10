@@ -144,7 +144,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            String apiUri = getString(R.string.project_website)+"api/1/diseases-and-treatments/"+language+"/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
+            String apiUri = getString(R.string.project_website)+"api/1/diseases-and-treatments/"+language+"/?search="+URLEncoder.encode(string, "utf-8");
 
             if(!cache) requestQueue.getCache().remove(apiUri);
 
@@ -180,7 +180,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
 
                     mTools.showToast(getString(R.string.diseases_and_treatments_search_could_not_search), 1);
 
-                    Log.e("DiseasesAndTreatmentsSearchActivity", error.toString());
+                    Log.e("DiseasesAndTreatments", error.toString());
 
                     finish();
                 }
@@ -192,7 +192,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            Log.e("DiseasesAndTreatmentsSearchActivity", Log.getStackTraceString(e));
+            Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
         }
     }
 }

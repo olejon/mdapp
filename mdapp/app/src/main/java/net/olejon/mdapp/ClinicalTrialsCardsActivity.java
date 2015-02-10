@@ -139,7 +139,7 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("ClinicalTrialsCardsActivity", Log.getStackTraceString(e));
+                    Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
                 }
             }
         });
@@ -174,7 +174,7 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("ClinicalTrialsCardsActivity", Log.getStackTraceString(e));
+                    Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
                 }
 
                 return true;
@@ -244,7 +244,7 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
 
                     finish();
 
-                    Log.e("ClinicalTrialsCardsActivity", error.toString());
+                    Log.e("ClinicalTrialsCards", error.toString());
                 }
             });
 
@@ -254,7 +254,7 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            Log.e("ClinicalTrialsCardsActivity", Log.getStackTraceString(e));
+            Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
         }
     }
 }

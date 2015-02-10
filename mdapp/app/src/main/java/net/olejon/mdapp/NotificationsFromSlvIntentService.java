@@ -60,7 +60,7 @@ public class NotificationsFromSlvIntentService extends IntentService
 
         final MyTools mTools = new MyTools(mContext);
 
-        if(mTools.getDefaultSharedPreferencesBoolean("NOTIFY_WHEN_NEW_NOTIFICATION_FROM_SLV") && mTools.isDeviceConnected())
+        if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY") && mTools.isDeviceConnected())
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
@@ -117,7 +117,7 @@ public class NotificationsFromSlvIntentService extends IntentService
                     }
                     catch(Exception e)
                     {
-                        Log.e("NotificationsFromSlvIntentService", Log.getStackTraceString(e));
+                        Log.e("NotificationsFromSlv", Log.getStackTraceString(e));
                     }
                 }
             }, new Response.ErrorListener()
@@ -125,7 +125,7 @@ public class NotificationsFromSlvIntentService extends IntentService
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
-                    Log.e("NotificationsFromSlvIntentService", error.toString());
+                    Log.e("NotificationsFromSlv", error.toString());
                 }
             });
 

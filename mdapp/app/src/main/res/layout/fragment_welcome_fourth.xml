@@ -7,7 +7,7 @@
         <TextView android:text="@string/welcome_page_4" style="@style/welcome_page_title"/>
         <TextView android:text="@string/welcome_page_4_text" style="@style/welcome_page_text"/>
 
-        <TextView android:id="@+id/welcome_page_button" android:text="@string/welcome_page_button" style="@style/welcome_page_button"/>
+        <TextView android:id="@+id/welcome_page_4_button" android:text="@string/welcome_page_4_button" style="@style/welcome_page_4_button"/>
 
     </LinearLayout>
 

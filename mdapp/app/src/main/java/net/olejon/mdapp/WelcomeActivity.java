@@ -112,9 +112,7 @@ public class WelcomeActivity extends ActionBarActivity
     {
         if(mViewPagerPosition == 3)
         {
-            mTools.setSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN", true);
-
-            super.onBackPressed();
+            mTools.showToast(getString(R.string.welcome_page_4_back_button), 1);
         }
         else
         {

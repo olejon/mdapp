@@ -101,6 +101,13 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
+                case "webofscience":
+                {
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.webofscience));
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
                 case "medlineplus":
                 {         
                     viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.medlineplus));
@@ -164,6 +171,13 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
+                case "brukerhandboken":
+                {
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.brukerhandboken));
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
             }
 
             viewHolder.card.setOnClickListener(new View.OnClickListener()
@@ -182,7 +196,7 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
         }
         catch(Exception e)
         {
-            Log.e("DiseasesAndTreatmentsSearchAdapter", Log.getStackTraceString(e));
+            Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
         }
     }
 

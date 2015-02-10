@@ -5,6 +5,14 @@
     <!-- Main -->
     <style name="main_updating_progressbar_base" parent="android:Widget.Material.Light.ProgressBar.Inverse"/>
 
+    <style name="main_search_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="main_tabs_base" parent="main_tabs_base_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
     <style name="main_medications_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
@@ -82,15 +90,6 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Nasjonale retningslinjer -->
-    <style name="nasjonale_retningslinjer_list_item_title_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_empty_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <!-- Interactions -->
     <style name="interactions_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -120,6 +119,15 @@
     </style>
 
     <style name="poisonings_cards_card_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Nasjonale retningslinjer -->
+    <style name="nasjonale_retningslinjer_list_item_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
@@ -183,7 +191,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="welcome_page_button_base">
+    <style name="welcome_page_4_button_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
@@ -220,17 +228,17 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <!-- Tabs -->
-    <style name="main_tabs_base" parent="main_tabs_base_base">
-        <item name="android:elevation">2dp</item>
-    </style>
-
     <!-- List view -->
     <style name="listview_base" parent="android:Widget.Material.Light.ListView" />
 
     <!-- Cards -->
     <style name="card_button_base">
         <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Floating action button -->
+    <style name="fab_mini_text_base">
+        <item name="android:elevation">2dp</item>
     </style>
 
     <!-- Subheaders -->

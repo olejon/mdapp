@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -273,6 +274,20 @@ public class PharmaciesActivity extends ActionBarActivity
             mFloatingActionButton.startAnimation(animation);
 
             mFloatingActionButton.setVisibility(View.VISIBLE);
+
+            Handler handler = new Handler();
+
+            handler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                    mToolbarSearchEditText.requestFocus();
+
+                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                }
+            }, 1000);
         }
 
         @Override

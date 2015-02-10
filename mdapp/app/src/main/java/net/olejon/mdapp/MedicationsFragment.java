@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,9 +43,11 @@ public class MedicationsFragment extends Fragment
 {
     private Activity mActivity;
 
+    private MyTools mTools;
+
     private Cursor mCursor;
 
-    private EditText mToolbarSearchEditText;
+    private EditText mSearchEditText;
 
     private ListView mListView;
     private View mListViewEmpty;
@@ -55,11 +58,12 @@ public class MedicationsFragment extends Fragment
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medications, container, false);
 
-        // Activity
         mActivity = getActivity();
 
-        // Toolbar
-        mToolbarSearchEditText = (EditText) mActivity.findViewById(R.id.main_toolbar_search);
+        mTools = new MyTools(mActivity);
+
+        // Search
+        mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_medications_list);
@@ -97,12 +101,18 @@ public class MedicationsFragment extends Fragment
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
                     Intent intent = new Intent(mActivity, MedicationActivity.class);
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    {
+                        if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    }
+
                     intent.putExtra("id", id);
                     startActivity(intent);
                 }
             });
 
-            mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+            mSearchEditText.addTextChangedListener(new TextWatcher()
             {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)

@@ -115,7 +115,7 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
         }
         catch(Exception e)
         {
-            Log.e("InteractionsCardsAdapter", Log.getStackTraceString(e));
+            Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
         }
     }
 

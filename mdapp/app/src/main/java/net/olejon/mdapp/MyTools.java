@@ -37,12 +37,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.List;
 
 class MyTools
 {
@@ -226,6 +232,31 @@ class MyTools
         }
     }
 
+    // Printing
+    public void printDocument(WebView webView, String title)
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            PrintManager printManager = (PrintManager) mContext.getSystemService(Context.PRINT_SERVICE);
+
+            PrintDocumentAdapter printDocumentAdapter = webView.createPrintDocumentAdapter();
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) printDocumentAdapter = webView.createPrintDocumentAdapter(title);
+
+            String documentName = mContext.getString(R.string.project_name)+" - "+title;
+
+            PrintJob printJob = printManager.print(documentName, printDocumentAdapter, new PrintAttributes.Builder().build());
+
+            List<PrintJob> printJobs = printManager.getPrintJobs();
+
+            printJobs.add(printJob);
+        }
+        else
+        {
+            showToast(mContext.getString(R.string.mytools_printing_not_supported), 1);
+        }
+    }
+
     // Medication
     public long getMedicationIdFromUri(String uri)
     {
@@ -273,6 +304,12 @@ class MyTools
             else
             {
                 Intent intent = new Intent(mContext, MedicationActivity.class);
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    if(getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                }
+
                 intent.putExtra("id", id);
                 mContext.startActivity(intent);
             }

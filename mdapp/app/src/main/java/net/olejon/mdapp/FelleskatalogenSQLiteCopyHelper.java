@@ -53,7 +53,7 @@ class FelleskatalogenSQLiteCopyHelper
 
             while((zipEntry = zipInputStream.getNextEntry()) != null)
             {
-                Log.w("FelleskatalogenSQLiteCopyHelper", "Unzip: "+zipEntry.getName());
+                Log.w("FelleskatalogenSQLite", "Unzip: "+zipEntry.getName());
 
                 FileOutputStream fileOutputStream = new FileOutputStream(mContext.getDatabasePath(FelleskatalogenSQLiteHelper.DB_NAME));
 
@@ -71,7 +71,7 @@ class FelleskatalogenSQLiteCopyHelper
         }
         catch(Exception e)
         {
-            Log.e("FelleskatalogenSQLiteCopyHelper", Log.getStackTraceString(e));
+            Log.e("FelleskatalogenSQLite", Log.getStackTraceString(e));
         }
 
         sqLiteDatabase.close();

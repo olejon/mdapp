@@ -61,6 +61,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
     private ProgressBar mHorizontalProgressBar;
     private WebView mWebView;
 
+    private String pageTitle;
     private String pageSearchUri;
 
     private boolean mWebViewAnimationHasBeenShown = false;
@@ -87,7 +88,8 @@ public class Icd10WebViewActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        final String pageTitle = intent.getStringExtra("title");
+        pageTitle = intent.getStringExtra("title");
+
         final String pageUri = intent.getStringExtra("uri");
 
         pageSearchUri = pageUri;
@@ -264,6 +266,11 @@ public class Icd10WebViewActivity extends ActionBarActivity
             case R.id.icd10_webview_menu_go_forward:
             {
                 mWebView.goForward();
+                return true;
+            }
+            case R.id.icd10_webview_menu_print:
+            {
+                mTools.printDocument(mWebView, pageTitle);
                 return true;
             }
             case R.id.icd10_webview_menu_uri:

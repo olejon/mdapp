@@ -134,7 +134,7 @@ public class PharmaciesLocationActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("PharmaciesLocationActivity", Log.getStackTraceString(e));
+                    Log.e("PharmaciesLocation", Log.getStackTraceString(e));
                 }
             }
         }

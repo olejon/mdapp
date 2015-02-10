@@ -110,7 +110,7 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
         }
         catch(Exception e)
         {
-            Log.e("PharmaciesLocationAdapter", Log.getStackTraceString(e));
+            Log.e("PharmaciesLocation", Log.getStackTraceString(e));
         }
     }
 

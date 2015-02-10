@@ -45,7 +45,7 @@ public class SubstancesFragment extends Fragment
 
     private Cursor mCursor;
 
-    private EditText mToolbarSearchEditText;
+    private EditText mSearchEditText;
 
     private ListView mListView;
     private View mListViewEmpty;
@@ -59,8 +59,8 @@ public class SubstancesFragment extends Fragment
         // Activity
         mActivity = getActivity();
 
-        // Toolbar
-        mToolbarSearchEditText = (EditText) mActivity.findViewById(R.id.main_toolbar_search);
+        // Search
+        mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_substances_list);
@@ -103,7 +103,7 @@ public class SubstancesFragment extends Fragment
                 }
             });
 
-            mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+            mSearchEditText.addTextChangedListener(new TextWatcher()
             {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)

@@ -180,13 +180,13 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
                                     try
                                     {
-                                        new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.interactions_cards_handling_dialog_title)).content(response.getString("handling")).positiveText(mContext.getString(R.string.interactions_cards_handling_dialog_positive_button)).contentColorRes(R.color.black).show();
+                                        new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.interactions_cards_handling_dialog_title)).content(response.getString("handling")).positiveText(mContext.getString(R.string.interactions_cards_handling_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                                     }
                                     catch(Exception e)
                                     {
                                         mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);
 
-                                        Log.e("InteractionsCardsAdapter", Log.getStackTraceString(e));
+                                        Log.e("InteractionsCards", Log.getStackTraceString(e));
                                     }
                                 }
                             }, new Response.ErrorListener()
@@ -198,7 +198,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
                                     mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);
 
-                                    Log.e("InteractionsCardsAdapter", error.toString());
+                                    Log.e("InteractionsCards", error.toString());
                                 }
                             });
 
@@ -208,7 +208,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                         }
                         catch(Exception e)
                         {
-                            Log.e("InteractionsCardsAdapter", Log.getStackTraceString(e));
+                            Log.e("InteractionsCards", Log.getStackTraceString(e));
                         }
                     }
                     else
@@ -246,7 +246,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
         }
         catch(Exception e)
         {
-            Log.e("InteractionsCardsAdapter", Log.getStackTraceString(e));
+            Log.e("InteractionsCards", Log.getStackTraceString(e));
         }
     }
 

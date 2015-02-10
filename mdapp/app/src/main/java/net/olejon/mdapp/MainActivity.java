@@ -52,7 +52,6 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -88,9 +87,8 @@ public class MainActivity extends ActionBarActivity
 
     private LinearLayout mDrawer;
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mToolbarSearchLayout;
-    private EditText mToolbarSearchEditText;
     private ProgressBar mProgressBar;
+    private EditText mSearchEditText;
     private ViewPager mViewPager;
     private FloatingActionButton mFloatingActionButton;
 
@@ -138,23 +136,25 @@ public class MainActivity extends ActionBarActivity
                     {
                         updateFelleskatalogen(true);
                     }
-                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
 
                 return true;
             }
         });
 
-        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.main_toolbar_search_layout);
-        mToolbarSearchEditText = (EditText) findViewById(R.id.main_toolbar_search);
+        mProgressBar = (ProgressBar) findViewById(R.id.main_toolbar_progressbar);
 
-        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        // Search
+        mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
+
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
             {
                 if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
                     return true;
                 }
@@ -162,19 +162,6 @@ public class MainActivity extends ActionBarActivity
                 return false;
             }
         });
-
-        final ImageButton toolbarSearchClearButton = (ImageButton) findViewById(R.id.main_toolbar_clear_search);
-
-        toolbarSearchClearButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mToolbarSearchEditText.setText("");
-            }
-        });
-
-        mProgressBar = (ProgressBar) findViewById(R.id.main_toolbar_progressbar);
 
         // Drawer
         mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
@@ -304,10 +291,9 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onClick(View view)
             {
-                mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                mToolbarSearchEditText.requestFocus();
+                mSearchEditText.requestFocus();
 
-                mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
             }
         });
 
@@ -366,7 +352,7 @@ public class MainActivity extends ActionBarActivity
 
                     final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
 
-                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColorRes(R.color.black).show();
+                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
 
                     mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
                 }
@@ -409,7 +395,7 @@ public class MainActivity extends ActionBarActivity
             mTools.setSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED", false);
         }
 
-        if(!mTools.getSharedPreferencesBoolean("RATE_DIALOG_HAS_BEEN_SHOWN"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG"))
         {
             long currentTime = mTools.getCurrentTime();
             long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
@@ -421,17 +407,17 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onPositive(MaterialDialog dialog)
                     {
+                        mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG", true);
+
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse("market://details?id=net.olejon.mdapp"));
                         startActivity(intent);
                     }
-                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
-
-                mTools.setSharedPreferencesBoolean("RATE_DIALOG_HAS_BEEN_SHOWN", true);
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
             }
         }
 
-        if(!mTools.getSharedPreferencesBoolean("DONATE_DIALOG_HAS_BEEN_SHOWN"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG"))
         {
             long currentTime = mTools.getCurrentTime();
             long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
@@ -443,16 +429,16 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onPositive(MaterialDialog dialog)
                     {
+                        mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG", true);
+
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }
-                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
-
-                mTools.setSharedPreferencesBoolean("DONATE_DIALOG_HAS_BEEN_SHOWN", true);
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
             }
         }
 
-        if(!mTools.getSharedPreferencesBoolean("SECOND_DONATE_DIALOG_HAS_BEEN_SHOWN"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_SECOND_DONATE_DIALOG"))
         {
             long currentTime = mTools.getCurrentTime();
             long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
@@ -464,12 +450,12 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onPositive(MaterialDialog dialog)
                     {
+                        mTools.setSharedPreferencesBoolean("MAIN_HIDE_SECOND_DONATE_DIALOG", true);
+
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }
-                }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
-
-                mTools.setSharedPreferencesBoolean("SECOND_DONATE_DIALOG_HAS_BEEN_SHOWN", true);
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
             }
         }
     }
@@ -491,10 +477,9 @@ public class MainActivity extends ActionBarActivity
         {
             mDrawerLayout.closeDrawers();
         }
-        else if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+        else if(!mSearchEditText.getText().toString().equals(""))
         {
-            mToolbarSearchLayout.setVisibility(View.GONE);
-            mToolbarSearchEditText.setText("");
+            mSearchEditText.setText("");
         }
         else
         {
@@ -508,10 +493,9 @@ public class MainActivity extends ActionBarActivity
     {
         if(keyCode == KeyEvent.KEYCODE_SEARCH)
         {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.requestFocus();
+            mSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
 
             return true;
         }
@@ -532,6 +516,12 @@ public class MainActivity extends ActionBarActivity
     {
         switch(item.getItemId())
         {
+            case R.id.main_menu_scan_barcode:
+            {
+                Intent intent = new Intent(mContext, BarcodeScannerActivity.class);
+                startActivity(intent);
+                return true;
+            }
             case R.id.main_menu_update_felleskatalogen:
             {
                 updateFelleskatalogen(false);
@@ -698,18 +688,9 @@ public class MainActivity extends ActionBarActivity
                 {
                     VIEW_PAGER_POSITION = position;
 
-                    mToolbarSearchLayout.setVisibility(View.GONE);
+                    mSearchEditText.setText("");
 
-                    mToolbarSearchEditText.setText("");
-
-                    if(position == 2)
-                    {
-                        mFloatingActionButton.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        animateFab();
-                    }
+                    animateFab();
                 }
             });
 

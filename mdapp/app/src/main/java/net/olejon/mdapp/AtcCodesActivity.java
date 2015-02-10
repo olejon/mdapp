@@ -183,7 +183,7 @@ public class AtcCodesActivity extends ActionBarActivity
                 }
             }
 
-            AtcCodesSimpleAdapter atcCodesSimpleAdapter = new AtcCodesSimpleAdapter(mContext, mAtcCode, substancesArrayList, fromColumns, toViews);
+            AtcCodesSimpleAdapter atcCodesSimpleAdapter = new AtcCodesSimpleAdapter(mContext, toolbar, mAtcCode, substancesArrayList, fromColumns, toViews);
 
             listView.setAdapter(atcCodesSimpleAdapter);
 

@@ -115,7 +115,7 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
                     }
                     catch(Exception e)
                     {
-                        Log.e("MedicationPicturesAdapter", Log.getStackTraceString(e));
+                        Log.e("MedicationPictures", Log.getStackTraceString(e));
                     }
                 }
             });
@@ -133,7 +133,7 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
                     }
                     catch(Exception e)
                     {
-                        Log.e("MedicationPicturesAdapter", Log.getStackTraceString(e));
+                        Log.e("MedicationPictures", Log.getStackTraceString(e));
                     }
                 }
             });
@@ -147,7 +147,7 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
         }
         catch(Exception e)
         {
-            Log.e("MedicationPicturesAdapter", Log.getStackTraceString(e));
+            Log.e("MedicationPictures", Log.getStackTraceString(e));
         }
     }
 

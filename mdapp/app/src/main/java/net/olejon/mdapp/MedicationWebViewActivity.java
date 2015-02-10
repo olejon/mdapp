@@ -49,6 +49,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
     private ProgressBar mProgressBar;
     private WebView mWebView;
 
+    private String pageTitle;
     private String pageUri;
 
     private boolean mWebViewAnimationHasBeenShown = false;
@@ -62,8 +63,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        final String pageTitle = intent.getStringExtra("title");
-
+        pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
 
         // Layout
@@ -206,6 +206,11 @@ public class MedicationWebViewActivity extends ActionBarActivity
             case R.id.medication_webview_menu_go_forward:
             {
                 mWebView.goForward();
+                return true;
+            }
+            case R.id.medication_webview_menu_print:
+            {
+                mTools.printDocument(mWebView, pageTitle);
                 return true;
             }
             case R.id.medication_webview_menu_uri:

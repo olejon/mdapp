@@ -22,6 +22,11 @@
         <item name="colorControlActivated">@color/white</item>
     </style>
 
+    <style name="main_search_theme" parent="app_theme">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
+
     <style name="welcome_theme" parent="app_theme">
         <item name="android:windowBackground">@color/blue</item>
     </style>
@@ -30,6 +35,42 @@
     <style name="main_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="main_search" parent="main_search_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:background">@color/blue</item>
+        <item name="android:theme">@style/main_search_theme</item>
+    </style>
+
+    <style name="main_search_base"/>
+
+    <style name="main_search_edittext" parent="toolbar_search_edittext"/>
+
+    <style name="main_tabs" parent="main_tabs_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@color/blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="pstsIndicatorHeight">2dp</item>
+        <item name="pstsIndicatorColor">@color/white</item>
+        <item name="pstsDividerPadding">0dp</item>
+        <item name="pstsDividerColor">@android:color/transparent</item>
+        <item name="pstsUnderlineHeight">0dp</item>
+        <item name="pstsUnderlineColor">@android:color/transparent</item>
+    </style>
+
+    <style name="main_tabs_base" parent="main_tabs_base_base"/>
+
+    <style name="main_tabs_base_base">
+        <item name="pstsShouldExpand">true</item>
+        <item name="pstsTabPaddingLeftRight">6dp</item>
     </style>
 
     <style name="main_pager">
@@ -928,79 +969,6 @@
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
-    <!-- Nasjonale retningslinjer -->
-    <style name="nasjonale_retningslinjer_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_toolbar_search_edittext" parent="toolbar_search_edittext">
-        <item name="android:inputType">textAutoCorrect</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_empty" parent="nasjonale_retningslinjer_list_empty_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingTop">64dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/blue</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_empty_base">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_item_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_item_title" parent="nasjonale_retningslinjer_list_item_title_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_item_title_base">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_list_item_date">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">2dp</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <!-- Nasjonale retningslinjer web view -->
-    <style name="nasjonale_retningslinjer_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
     <!-- Interactions -->
     <style name="interactions_layout">
         <item name="android:layout_width">match_parent</item>
@@ -1379,6 +1347,79 @@
     </style>
 
     <style name="poisonings_webview_content">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+    </style>
+
+    <!-- Nasjonale retningslinjer -->
+    <style name="nasjonale_retningslinjer_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_toolbar_search_edittext" parent="toolbar_search_edittext">
+        <item name="android:inputType">textAutoCorrect</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_empty" parent="nasjonale_retningslinjer_list_empty_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingTop">64dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_empty_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_item_title" parent="nasjonale_retningslinjer_list_item_title_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_item_title_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_list_item_date">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Nasjonale retningslinjer web view -->
+    <style name="nasjonale_retningslinjer_webview_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="nasjonale_retningslinjer_webview_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:visibility">invisible</item>
@@ -2315,7 +2356,7 @@
 
     <style name="welcome_page_text_base"/>
 
-    <style name="welcome_page_button" parent="welcome_page_button_base">
+    <style name="welcome_page_4_button" parent="welcome_page_4_button_base">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/welcome_page_button_margin</item>
@@ -2328,7 +2369,7 @@
         <item name="android:textColor">@color/blue</item>
     </style>
 
-    <style name="welcome_page_button_base">
+    <style name="welcome_page_4_button_base">
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -2504,28 +2545,6 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <!-- Tabs -->
-    <style name="main_tabs" parent="main_tabs_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:background">@color/blue</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="pstsIndicatorHeight">2dp</item>
-        <item name="pstsIndicatorColor">@color/white</item>
-        <item name="pstsDividerPadding">0dp</item>
-        <item name="pstsDividerColor">@android:color/transparent</item>
-        <item name="pstsUnderlineHeight">0dp</item>
-        <item name="pstsUnderlineColor">@android:color/transparent</item>
-    </style>
-
-    <style name="main_tabs_base" parent="main_tabs_base_base"/>
-
-    <style name="main_tabs_base_base">
-        <item name="pstsShouldExpand">true</item>
-        <item name="pstsTabPaddingLeftRight">4dp</item>
-    </style>
-
     <!-- List view -->
     <style name="listview" parent="listview_base">
         <item name="android:divider">@color/light_grey</item>
@@ -2533,6 +2552,7 @@
         <item name="android:headerDividersEnabled">false</item>
         <item name="android:fastScrollEnabled">true</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+        <item name="android:listSelector">@drawable/list_item</item>
     </style>
 
     <style name="listview_base" parent="android:Widget.Holo.Light.ListView"/>
@@ -2582,7 +2602,51 @@
         <item name="fab_colorRipple">@color/light_blue</item>
     </style>
 
-    <style name="fab_layout_base" />
+    <style name="fab_layout_base"/>
+
+    <style name="fab_mini_1_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="fab_type">mini</item>
+        <item name="fab_colorNormal">@color/background</item>
+        <item name="fab_colorPressed">@color/light_grey</item>
+        <item name="fab_colorRipple">@color/light_grey</item>
+    </style>
+
+    <style name="fab_mini_2_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="fab_type">mini</item>
+        <item name="fab_colorNormal">@color/background</item>
+        <item name="fab_colorPressed">@color/light_grey</item>
+        <item name="fab_colorRipple">@color/light_grey</item>
+    </style>
+
+    <style name="fab_mini_text" parent="fab_mini_text_base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_marginRight">76dp</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:background">@drawable/fab_mini</item>
+        <item name="android:alpha">0.88</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="fab_mini_text_base"/>
+
+    <style name="fab_mini_1_text" parent="fab_mini_text">
+        <item name="android:layout_marginBottom">96dp</item>
+    </style>
+
+    <style name="fab_mini_2_text" parent="fab_mini_text">
+        <item name="android:layout_marginBottom">152dp</item>
+    </style>
 
     <!-- Subheaders -->
     <style name="subheader" parent="subheader_base">

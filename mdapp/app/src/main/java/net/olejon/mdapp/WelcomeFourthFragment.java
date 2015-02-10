@@ -46,7 +46,7 @@ public class WelcomeFourthFragment extends Fragment
 
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_fourth, container, false);
 
-        TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_button);
+        TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_4_button);
 
         textView.setOnClickListener(new View.OnClickListener()
         {

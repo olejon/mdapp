@@ -188,7 +188,7 @@ public class MedicationPicturesActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            Log.e("MedicationPicturesActivity", Log.getStackTraceString(e));
+            Log.e("MedicationPictures", Log.getStackTraceString(e));
         }
     }
 }

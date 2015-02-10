@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -40,19 +41,17 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
-public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
+public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 {
     private final Context mContext = this;
 
@@ -68,7 +67,9 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
-    private String mSearchLanguage;
+    private String mSearchLanguage = "";
+
+    private int mSearchSelectedLanguage = 0;
 
     // Create activity
     @Override
@@ -121,15 +122,6 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
             }
         });
 
-        // Spinner
-        Spinner spinner = (Spinner) findViewById(R.id.diseases_and_treatments_spinner);
-        spinner.setOnItemSelectedListener(this);
-
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(mContext, R.array.diseases_and_treatments_spinner, R.layout.activity_diseases_and_treatments_spinner_header);
-        arrayAdapter.setDropDownViewResource(R.layout.activity_diseases_and_treatments_spinner_item);
-
-        spinner.setAdapter(arrayAdapter);
-
         // List
         mListView = (ListView) findViewById(R.id.diseases_and_treatments_list);
 
@@ -139,7 +131,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
         View listViewHeader = getLayoutInflater().inflate(R.layout.activity_diseases_and_treatments_list_subheader, mListView, false);
         mListView.addHeaderView(listViewHeader, null, false);
 
-        // Floating action button
+        // Floating action buttons
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.diseases_and_treatments_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
@@ -147,36 +139,9 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
             @Override
             public void onClick(View view)
             {
-                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-                {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                    search(mToolbarSearchEditText.getText().toString());
-                }
-                else
-                {
-                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                    mToolbarSearchEditText.requestFocus();
-
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-                }
+                showSearchLanguageDialog();
             }
         });
-
-        // Tip dialog
-        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("HIDE_DISEASES_AND_TREATMENTS_TIP_DIALOG");
-
-        if(!hideTipDialog)
-        {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_tip_dialog_title)).content(getString(R.string.diseases_and_treatments_tip_dialog_message)).positiveText(getString(R.string.diseases_and_treatments_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
-            {
-                @Override
-                public void onPositive(MaterialDialog dialog)
-                {
-                    mTools.setSharedPreferencesBoolean("HIDE_DISEASES_AND_TREATMENTS_TIP_DIALOG", true);
-                }
-            }).contentColorRes(R.color.black).show();
-        }
     }
 
     // Resume activity
@@ -260,26 +225,6 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
         }
     }
 
-    // Spinner
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
-    {
-        if(i == 1)
-        {
-            mSearchLanguage = "no";
-        }
-        else
-        {
-            mSearchLanguage = "";
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView)
-    {
-
-    }
-
     // Search
     private void getRecentSearches()
     {
@@ -294,6 +239,43 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
         mTools.showToast(getString(R.string.diseases_and_treatments_recent_searches_removed), 0);
 
         getRecentSearches();
+    }
+
+    private void showSearchLanguageDialog()
+    {
+        new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_language_dialog_title)).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallbackSingleChoice(mSearchSelectedLanguage, new MaterialDialog.ListCallback()
+        {
+            @Override
+            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text)
+            {
+                if(which == 0)
+                {
+                    mSearchLanguage = "";
+
+                    mSearchSelectedLanguage = 0;
+
+                    mToolbarSearchEditText.setHint(getString(R.string.diseases_and_treatments_toolbar_search_english_hint));
+                }
+                else
+                {
+                    mSearchLanguage = "no";
+
+                    mSearchSelectedLanguage = 1;
+
+                    mToolbarSearchEditText.setHint(getString(R.string.diseases_and_treatments_toolbar_search_norwegian_hint));
+                }
+
+                showSearch();
+            }
+        }).show();
+    }
+
+    private void showSearch()
+    {
+        mToolbarSearchLayout.setVisibility(View.VISIBLE);
+        mToolbarSearchEditText.requestFocus();
+
+        mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
     }
 
     private void search(String string)
@@ -324,10 +306,24 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity implements 
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
+            Animation fabAnimation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
 
+            mFloatingActionButton.startAnimation(fabAnimation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
+
+            if(mCursor.getCount() > 0)
+            {
+                Handler handler = new Handler();
+
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        showSearchLanguageDialog();
+                    }
+                }, 750);
+            }
         }
 
         @Override

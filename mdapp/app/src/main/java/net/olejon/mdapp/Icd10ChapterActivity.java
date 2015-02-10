@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -347,6 +348,20 @@ public class Icd10ChapterActivity extends ActionBarActivity
                         }
                     }
                 });
+
+                Handler handler = new Handler();
+
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                        mToolbarSearchEditText.requestFocus();
+
+                        mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                    }
+                }, 1000);
             }
         }, new Response.ErrorListener()
         {

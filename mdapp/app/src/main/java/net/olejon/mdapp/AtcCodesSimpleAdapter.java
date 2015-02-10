@@ -23,6 +23,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -36,15 +37,19 @@ class AtcCodesSimpleAdapter extends SimpleAdapter
 {
     private final Context mContext;
 
+    private final Toolbar mToolbar;
+
     private final MyTools mTools;
 
     private final String mAtcCode;
 
-    public AtcCodesSimpleAdapter(Context context, String atcCode, ArrayList<HashMap<String, String>> data, String[] from, int[] to)
+    public AtcCodesSimpleAdapter(Context context, Toolbar toolbar, String atcCode, ArrayList<HashMap<String, String>> data, String[] from, int[] to)
     {
         super(context, data, R.layout.activity_atc_codes_list_item, from, to);
 
         mContext = context;
+
+        mToolbar = toolbar;
 
         mTools = new MyTools(mContext);
 
@@ -71,6 +76,10 @@ class AtcCodesSimpleAdapter extends SimpleAdapter
 
             atcNameTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
             atcNameTextView.setTypeface(Typeface.DEFAULT_BOLD);
+
+            String substances = atcNameTextView.getText().toString();
+
+            mToolbar.setTitle(mAtcCode+" - "+substances);
         }
         else
         {

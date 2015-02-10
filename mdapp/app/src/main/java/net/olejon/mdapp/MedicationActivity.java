@@ -508,11 +508,30 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             }
             case R.id.medication_menu_find_in_text:
             {
+                boolean hideFindInTextTipDialog = mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_FIND_IN_TEXT_TIP_DIALOG");
+
+                if(!hideFindInTextTipDialog)
+                {
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_find_in_text_tip_dialog_title)).content(getString(R.string.medication_find_in_text_tip_dialog_message)).positiveText(getString(R.string.medication_find_in_text_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                    {
+                        @Override
+                        public void onPositive(MaterialDialog dialog)
+                        {
+                            mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_FIND_IN_TEXT_TIP_DIALOG", true);
+                        }
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                }
+
                 mLinearFindInTextLayout.setVisibility(View.VISIBLE);
                 mEditTextFindInText.requestFocus();
 
                 mInputMethodManager.toggleSoftInputFromWindow(mEditTextFindInText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
 
+                return true;
+            }
+            case R.id.medication_menu_print:
+            {
+                mTools.printDocument(mWebView, medicationName);
                 return true;
             }
             case R.id.medication_menu_uri:
@@ -1032,7 +1051,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             // Medication exists with more information?
             if(medicationFullContentReference.equals(""))
             {
-                boolean hideMedicationTipDialog = mTools.getSharedPreferencesBoolean("HIDE_MEDICATION_TIP_DIALOG");
+                boolean hideMedicationTipDialog = mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG");
 
                 if(!hideMedicationTipDialog)
                 {
@@ -1041,9 +1060,9 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                         @Override
                         public void onPositive(MaterialDialog dialog)
                         {
-                            mTools.setSharedPreferencesBoolean("HIDE_MEDICATION_TIP_DIALOG", true);
+                            mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG", true);
                         }
-                    }).contentColorRes(R.color.black).show();
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
             }
             else
@@ -1065,7 +1084,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                             finish();
                         }
-                    }).contentColorRes(R.color.black).negativeColorRes(R.color.black).show();
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
                 }
                 catch(Exception e)
                 {
@@ -1128,7 +1147,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 @Override
                 public void run()
                 {
-                    new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).contentColorRes(R.color.black).show();
+                    new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
             });
         }

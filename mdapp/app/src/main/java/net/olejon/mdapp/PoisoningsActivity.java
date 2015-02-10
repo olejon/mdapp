@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -150,21 +151,6 @@ public class PoisoningsActivity extends ActionBarActivity
                 }
             }
         });
-
-        // Tip dialog
-        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("HIDE_POISONINGS_TIP_DIALOG");
-
-        if(!hideTipDialog)
-        {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.poisonings_tip_dialog_title)).content(getString(R.string.poisonings_tip_dialog_message)).positiveText(getString(R.string.poisonings_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
-            {
-                @Override
-                public void onPositive(MaterialDialog dialog)
-                {
-                    mTools.setSharedPreferencesBoolean("HIDE_POISONINGS_TIP_DIALOG", true);
-                }
-            }).contentColorRes(R.color.black).show();
-        }
     }
 
     // Resume activity
@@ -302,6 +288,40 @@ public class PoisoningsActivity extends ActionBarActivity
             mFloatingActionButton.startAnimation(animation);
 
             mFloatingActionButton.setVisibility(View.VISIBLE);
+
+            // Tip dialog
+            boolean hideTipDialog = mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG");
+
+            if(hideTipDialog)
+            {
+                if(mCursor.getCount() > 0)
+                {
+                    Handler handler = new Handler();
+
+                    handler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                            mToolbarSearchEditText.requestFocus();
+
+                            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                        }
+                    }, 1000);
+                }
+            }
+            else
+            {
+                new MaterialDialog.Builder(mContext).title(getString(R.string.poisonings_tip_dialog_title)).content(getString(R.string.poisonings_tip_dialog_message)).positiveText(getString(R.string.poisonings_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onPositive(MaterialDialog dialog)
+                    {
+                        mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG", true);
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            }
         }
 
         @Override

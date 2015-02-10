@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -287,7 +288,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
                     {
-                        new MaterialDialog.Builder(mContext).title(mTitlesArrayList.get(i)).items(R.array.nasjonale_retningslinjer_list_item).itemsCallback(new MaterialDialog.ListCallback()
+                        new MaterialDialog.Builder(mContext).title(mTitlesArrayList.get(i)).items(R.array.nasjonale_retningslinjer_list_item_dialog_items).itemsCallback(new MaterialDialog.ListCallback()
                         {
                             @Override
                             public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
@@ -315,18 +316,34 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
 
                 mFloatingActionButton.setVisibility(View.VISIBLE);
 
-                boolean hideNasjonaleRetningslinjerTipDialog = mTools.getSharedPreferencesBoolean("HIDE_NASJONALE_RETNINGSLINJER_TIP_DIALOG");
+                boolean hideTipDialog = mTools.getSharedPreferencesBoolean("NASJONALE_RETNINGSLINJER_HIDE_TIP_DIALOG");
 
-                if(!hideNasjonaleRetningslinjerTipDialog)
+                if(hideTipDialog)
+                {
+                    Handler handler = new Handler();
+
+                    handler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                            mToolbarSearchEditText.requestFocus();
+
+                            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                        }
+                    }, 1000);
+                }
+                else
                 {
                     new MaterialDialog.Builder(mContext).title(getString(R.string.nasjonale_retningslinjer_tip_dialog_title)).content(getString(R.string.nasjonale_retningslinjer_tip_dialog_message)).positiveText(getString(R.string.nasjonale_retningslinjer_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
                     {
                         @Override
                         public void onPositive(MaterialDialog dialog)
                         {
-                            mTools.setSharedPreferencesBoolean("HIDE_NASJONALE_RETNINGSLINJER_TIP_DIALOG", true);
+                            mTools.setSharedPreferencesBoolean("NASJONALE_RETNINGSLINJER_HIDE_TIP_DIALOG", true);
                         }
-                    }).contentColorRes(R.color.black).show();
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
             }
         }, new Response.ErrorListener()
@@ -339,7 +356,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                Log.e("NasjonaleRetningslinjerActivity", error.toString());
+                Log.e("NasjonaleRetningslinjer", error.toString());
 
                 finish();
             }
@@ -388,7 +405,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                     {
                         mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_pdf), 1);
 
-                        Log.e("NasjonaleRetningslinjerActivity", Log.getStackTraceString(e));
+                        Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
                     }
                 }
             }, new Response.ErrorListener()
@@ -400,7 +417,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
 
                     mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_pdf), 1);
 
-                    Log.e("NasjonaleRetningslinjerActivity", error.toString());
+                    Log.e("NasjonaleRetningslinjer", error.toString());
                 }
             });
 
@@ -410,7 +427,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            Log.e("NasjonaleRetningslinjerActivity", Log.getStackTraceString(e));
+            Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
         }
     }
 
@@ -461,7 +478,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            Log.e("NasjonaleRetningslinjerActivity", Log.getStackTraceString(e));
+            Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
         }
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_nasjonale_retningslinjer_list_item, fromColumns, toViews);

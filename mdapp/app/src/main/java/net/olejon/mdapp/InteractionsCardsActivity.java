@@ -138,7 +138,7 @@ public class InteractionsCardsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("InteractionsCardsActivity", Log.getStackTraceString(e));
+                    Log.e("InteractionsCards", Log.getStackTraceString(e));
                 }
             }
         });
@@ -173,7 +173,7 @@ public class InteractionsCardsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("InteractionsCardsActivity", Log.getStackTraceString(e));
+                    Log.e("InteractionsCards", Log.getStackTraceString(e));
                 }
 
                 return true;
@@ -243,7 +243,7 @@ public class InteractionsCardsActivity extends ActionBarActivity
 
                     finish();
 
-                    Log.e("InteractionsCardsActivity", error.toString());
+                    Log.e("InteractionsCards", error.toString());
                 }
             });
 
@@ -251,7 +251,7 @@ public class InteractionsCardsActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            Log.e("InteractionsCardsActivity", Log.getStackTraceString(e));
+            Log.e("InteractionsCards", Log.getStackTraceString(e));
         }
     }
 }
