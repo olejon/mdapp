@@ -362,9 +362,9 @@ public class MainActivity extends ActionBarActivity
 
                     final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
 
-                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-
                     mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
+
+                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
                 catch(Exception e)
                 {
@@ -384,17 +384,19 @@ public class MainActivity extends ActionBarActivity
 
         requestQueue.add(jsonObjectRequest);
 
+        // Felleskatalogen
         if(mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED"))
         {
+            mTools.setSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED", false);
+
             mNotificationManagerCompat.cancel(FelleskatalogenService.NOTIFICATION_ID);
 
             mTools.showToast(getString(R.string.main_sqlite_database_felleskatalogen_has_been_updated), 1);
 
             getFelleskatalogen();
-
-            mTools.setSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED", false);
         }
 
+        // Rate
         if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG"))
         {
             long currentTime = mTools.getCurrentTime();
@@ -402,13 +404,13 @@ public class MainActivity extends ActionBarActivity
 
             if(currentTime - installedTime > 1000 * 3600 * 48)
             {
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG", true);
+
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
                 {
                     @Override
                     public void onPositive(MaterialDialog dialog)
                     {
-                        mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG", true);
-
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse("market://details?id=net.olejon.mdapp"));
                         startActivity(intent);
@@ -417,6 +419,7 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
+        // Donate
         if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG"))
         {
             long currentTime = mTools.getCurrentTime();
@@ -424,13 +427,13 @@ public class MainActivity extends ActionBarActivity
 
             if(currentTime - installedTime > 1000 * 3600 * 96)
             {
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG", true);
+
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
                 {
                     @Override
                     public void onPositive(MaterialDialog dialog)
                     {
-                        mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG", true);
-
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }
@@ -445,13 +448,13 @@ public class MainActivity extends ActionBarActivity
 
             if(currentTime - installedTime > 1000 * 3600 * 336)
             {
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_SECOND_DONATE_DIALOG", true);
+
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
                 {
                     @Override
                     public void onPositive(MaterialDialog dialog)
                     {
-                        mTools.setSharedPreferencesBoolean("MAIN_HIDE_SECOND_DONATE_DIALOG", true);
-
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
                     }

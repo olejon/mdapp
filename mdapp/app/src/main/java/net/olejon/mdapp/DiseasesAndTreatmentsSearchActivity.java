@@ -112,7 +112,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.diseases_and_treatments_search_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, new JSONArray()));
+        mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, new JSONArray(), ""));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Search
@@ -158,7 +158,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
 
                     if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-                    mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, response));
+                    mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(mContext, response, string));
 
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING, string);

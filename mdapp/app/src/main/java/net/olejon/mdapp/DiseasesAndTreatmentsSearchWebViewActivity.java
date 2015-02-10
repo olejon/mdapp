@@ -52,6 +52,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
     private String pageTitle;
     private String pageUri;
+    private String mSearch;
 
     private boolean mWebViewAnimationHasBeenShown = false;
 
@@ -79,6 +80,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
+        mSearch = intent.getStringExtra("search");
 
         // Layout
         setContentView(R.layout.activity_diseases_and_treatments_search_webview);
@@ -147,7 +149,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
                         if(pageUri.contains("webofknowledge"))
                         {
-                            mWebView.loadUrl("javascript:$('div.search-criteria input').val('"+pageTitle+"'); $('form#UA_GeneralSearch_input_form').submit()");
+                            mWebView.loadUrl("javascript:$('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit()");
                         }
                         else if(pageUri.contains("uptodate"))
                         {
@@ -198,7 +200,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         CookieManager cookieManager = CookieManager.getInstance();
 
-        cookieManager.setCookie("http://apps.webofknowledge.com/", "ROAMING_LOGIN=\"25240265d905679e8451b2f889f62c816d61696c406f6c656a6f6e2e6e6574\"; USERNAME=\"mail@olejon.net\"; SID=\"Q2INjfCqiFR6bkCfOx5\"; CUSTOMER=\"CRISTIN under the Ministry of Education and Research - Norway\"; E_GROUP_NAME=\"University of Bergen\"; JSESSIONID=98BFA3B163FC02F082B30D3B2B5BC587");
+        cookieManager.setCookie("http://apps.webofknowledge.com/", "ROAMING_LOGIN=\"25240265d905679e8451b2f889f62c816d61696c406f6c656a6f6e2e6e6574\"; USERNAME=\"mail@olejon.net\"; SID=\"N1dWqv2NkMRI1vZn9GT\"; CUSTOMER=\"CRISTIN under the Ministry of Education and Research - Norway\"; E_GROUP_NAME=\"University of Bergen\"; JSESSIONID=2317F473B59E82F45A4AB4647EC786E2");
+        cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");

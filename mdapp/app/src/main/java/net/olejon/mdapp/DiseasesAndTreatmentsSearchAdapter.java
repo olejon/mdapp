@@ -43,13 +43,17 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
     private final JSONArray mResults;
 
+    private final String mSearch;
+
     private int lastPosition = -1;
 
-    public DiseasesAndTreatmentsSearchAdapter(Context context, JSONArray results)
+    public DiseasesAndTreatmentsSearchAdapter(Context context, JSONArray results, String search)
     {
         mContext = context;
 
         mResults = results;
+
+        mSearch = search;
     }
 
     static class DiseasesAndTreatmentsSearchViewHolder extends RecyclerView.ViewHolder
@@ -195,6 +199,7 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
                     Intent intent = new Intent(mContext, DiseasesAndTreatmentsSearchWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
+                    intent.putExtra("search", mSearch);
                     mContext.startActivity(intent);
                 }
             });
