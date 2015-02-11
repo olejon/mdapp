@@ -152,6 +152,27 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                 viewHolder.uriSeparator.setVisibility(View.VISIBLE);
                 viewHolder.uri.setVisibility(View.VISIBLE);
 
+                viewHolder.title.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if(uri.matches("^https?://.*?\\.pdf$"))
+                        {
+                            mTools.showToast(mContext.getString(R.string.notifications_from_slv_downloading_pdf), 1);
+
+                            mTools.downloadFile(title, uri);
+                        }
+                        else
+                        {
+                            Intent intent = new Intent(mContext, NotificationsFromSlvWebViewActivity.class);
+                            intent.putExtra("title", title);
+                            intent.putExtra("uri", uri);
+                            mContext.startActivity(intent);
+                        }
+                    }
+                });
+
                 viewHolder.uri.setOnClickListener(new View.OnClickListener()
                 {
                     @Override

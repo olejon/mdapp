@@ -166,6 +166,13 @@ public class MainActivity extends ActionBarActivity
         // Drawer
         mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+
+        TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
+        TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
+
+        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name)+": "+mTools.getProjectVersionName());
+        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code)+": "+mTools.getProjectVersionCode());
+
         mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.project_name, R.string.project_name));
 
         mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
@@ -261,14 +268,8 @@ public class MainActivity extends ActionBarActivity
                     }
                     case R.id.drawer_item_feedback:
                     {
-                        String[] feedbackAddress = {getString(R.string.project_feedback_uri)};
-                        String feedbackSubject = getString(R.string.project_name);
-
-                        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
-                        intent.setType("message/rfc822");
-                        intent.putExtra(Intent.EXTRA_EMAIL, feedbackAddress);
-                        intent.putExtra(Intent.EXTRA_SUBJECT, feedbackSubject);
-                        startActivity(intent);
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"+getString(R.string.project_feedback_uri)+"?subject="+getString(R.string.project_name)));
+                        startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
                         break;
                     }
                     case R.id.drawer_item_report_issue:

@@ -99,6 +99,18 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
             viewHolder.conditions.setText(conditions);
             viewHolder.intervention.setText(intervention);
 
+            viewHolder.title.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent intent = new Intent(mContext, ClinicalTrialsWebViewActivity.class);
+                    intent.putExtra("title", title);
+                    intent.putExtra("uri", uri);
+                    mContext.startActivity(intent);
+                }
+            });
+
             viewHolder.button.setOnClickListener(new View.OnClickListener()
             {
                 @Override

@@ -306,7 +306,7 @@ public class AtcCodesActivity extends ActionBarActivity
 
         Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, null, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
 
-        if(cursor.getCount() == 1)
+        if(cursor.getCount() > 0)
         {
             if(cursor.moveToFirst())
             {

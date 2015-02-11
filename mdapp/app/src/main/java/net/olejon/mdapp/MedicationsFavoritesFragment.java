@@ -90,7 +90,7 @@ public class MedicationsFavoritesFragment extends Fragment
     {
         super.onResume();
 
-        getFavorites();
+        if(mSearchEditText.getText().toString().equals("")) getFavorites();
     }
 
     // Destroy fragment
@@ -210,11 +210,7 @@ public class MedicationsFavoritesFragment extends Fragment
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
                 {
-                    if(MainActivity.VIEW_PAGER_POSITION == 2)
-                    {
-                        Log.w("LOG", charSequence.toString());
-                        medicationsFavoritesSimpleCursorAdapter.getFilter().filter(charSequence);
-                    }
+                    if(MainActivity.VIEW_PAGER_POSITION == 2) medicationsFavoritesSimpleCursorAdapter.getFilter().filter(charSequence);
                 }
 
                 @Override

@@ -107,6 +107,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         if(pageUri.contains("brukerhandboken")) webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:35.0) Gecko/20100101 Firefox/35.0");
 
+        if(pageUri.contains("webofknowledge")) mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_this_can_take_some_time), 1);
+
         mWebView.setWebViewClient(new WebViewClient()
         {
             @Override
@@ -147,11 +149,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                     {
                         mWebViewAnimationHasBeenShown = true;
 
-                        if(pageUri.contains("webofknowledge"))
-                        {
-                            mWebView.loadUrl("javascript:$('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit()");
-                        }
-                        else if(pageUri.contains("uptodate"))
+                        if(pageUri.contains("uptodate"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('h2').offset(); window.scrollTo(0, offset.top);");
                         }
@@ -181,7 +179,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                         }
                         else if(pageUri.contains("brukerhandboken"))
                         {
-                                mWebView.loadUrl("javascript:var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top);");
                         }
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
@@ -189,6 +187,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
                         mWebView.setVisibility(View.VISIBLE);
                     }
+
+                    if(pageUri.contains("webofknowledge")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit(); }");
                 }
                 else
                 {
@@ -200,7 +200,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         CookieManager cookieManager = CookieManager.getInstance();
 
-        cookieManager.setCookie("http://apps.webofknowledge.com/", "ROAMING_LOGIN=\"25240265d905679e8451b2f889f62c816d61696c406f6c656a6f6e2e6e6574\"; USERNAME=\"mail@olejon.net\"; SID=\"N1dWqv2NkMRI1vZn9GT\"; CUSTOMER=\"CRISTIN under the Ministry of Education and Research - Norway\"; E_GROUP_NAME=\"University of Bergen\"; JSESSIONID=2317F473B59E82F45A4AB4647EC786E2");
         cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");

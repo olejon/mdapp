@@ -401,11 +401,22 @@
         <item name="android:textColorHint">@color/hint</item>
     </style>
 
-    <style name="medication_find_in_text_search_next">
-        <item name="android:layout_width">96dp</item>
+    <style name="medication_find_in_text_search_count">
+        <item name="android:layout_width">128dp</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:visibility">gone</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="medication_find_in_text_search_next">
+        <item name="android:layout_width">128dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center</item>
         <item name="android:background">@drawable/medication_find_in_text_next</item>
     </style>
 
@@ -457,7 +468,7 @@
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/purple</item>
+        <item name="android:textColor">@color/card_title</item>
     </style>
 
     <style name="medication_pictures_card_name_base">
@@ -1306,7 +1317,7 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/purple</item>
+        <item name="android:textColor">@color/card_title</item>
     </style>
 
     <style name="poisonings_cards_card_title_base">
@@ -2025,7 +2036,7 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/purple</item>
+        <item name="android:textColor">@color/card_title</item>
     </style>
 
     <style name="clinicaltrials_cards_card_title_base">
@@ -2148,7 +2159,7 @@
 
     <style name="notifications_from_slv_card_title" parent="notifications_from_slv_card_title_base">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/purple</item>
+        <item name="android:textColor">@color/card_title</item>
     </style>
 
     <style name="notifications_from_slv_card_title_base" parent="notifications_from_slv_card_value">
@@ -2427,6 +2438,18 @@
     </style>
 
     <style name="drawer_item_base"/>
+
+    <style name="drawer_version_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
     <style name="drawer_separator">
         <item name="android:layout_width">match_parent</item>

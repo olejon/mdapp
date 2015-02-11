@@ -103,6 +103,18 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
                 viewHolder.type.setText(mContext.getString(R.string.poisonings_cards_source_helsebiblioteket));
             }
 
+            viewHolder.title.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
+                    intent.putExtra("title", title);
+                    intent.putExtra("uri", uri);
+                    mContext.startActivity(intent);
+                }
+            });
+
             viewHolder.buttonUri.setOnClickListener(new View.OnClickListener()
             {
                 @Override

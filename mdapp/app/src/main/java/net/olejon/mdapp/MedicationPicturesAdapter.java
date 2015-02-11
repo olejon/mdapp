@@ -102,21 +102,25 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
 
             Picasso.with(mContext).load(uri).into(viewHolder.picture);
 
+            viewHolder.name.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Intent intent = new Intent(mContext, MedicationPictureActivity.class);
+                    intent.putExtra("uri", uri);
+                    mContext.startActivity(intent);
+                }
+            });
+
             viewHolder.picture.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    try
-                    {
-                        Intent intent = new Intent(mContext, MedicationPictureActivity.class);
-                        intent.putExtra("uri", uri);
-                        mContext.startActivity(intent);
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("MedicationPictures", Log.getStackTraceString(e));
-                    }
+                    Intent intent = new Intent(mContext, MedicationPictureActivity.class);
+                    intent.putExtra("uri", uri);
+                    mContext.startActivity(intent);
                 }
             });
 

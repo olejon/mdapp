@@ -101,6 +101,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     private LinearLayout mLinearVideoLayout;
     private LinearLayout mLinearFindInTextLayout;
     private EditText mEditTextFindInText;
+    private TextView mTextViewFindInTextCount;
     private ImageButton mImageButtonFindInText;
     private View mCustomView;
     private ListView mListView;
@@ -180,6 +181,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             mLinearVideoLayout = (LinearLayout) findViewById(R.id.medication_video_layout);
             mLinearFindInTextLayout = (LinearLayout) findViewById(R.id.medication_find_in_text_layout);
             mEditTextFindInText = (EditText) findViewById(R.id.medication_find_in_text_search);
+            mTextViewFindInTextCount = (TextView) findViewById(R.id.medication_find_in_text_search_count);
             mImageButtonFindInText = (ImageButton) findViewById(R.id.medication_find_in_text_search_next);
 
             // Input manager
@@ -304,6 +306,21 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             mWebView.setWebChromeClient(mWebChromeClient);
 
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            {
+                mWebView.setFindListener(new WebView.FindListener()
+                {
+                    @Override
+                    public void onFindResultReceived(int i, int i2, boolean b)
+                    {
+                        int active = i + 1;
+
+                        mTextViewFindInTextCount.setText(String.valueOf(active)+"/"+String.valueOf(i2));
+                        mTextViewFindInTextCount.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+
             mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Android");
 
             mEditTextFindInText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -400,6 +417,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             mWebView.clearMatches();
             mLinearFindInTextLayout.setVisibility(View.GONE);
             mEditTextFindInText.setText("");
+            mTextViewFindInTextCount.setVisibility(View.GONE);
             mImageButtonFindInText.setVisibility(View.GONE);
         }
         else

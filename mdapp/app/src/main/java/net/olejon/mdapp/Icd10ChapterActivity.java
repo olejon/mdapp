@@ -265,7 +265,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
 
                     mCodesArrayList.add(code);
                 }
-                else if(name.matches("(?i).*?"+searchString+".*"))
+                else if(name.matches("(?i).*?"+searchString+".*") || code.matches("(?i).*?"+searchString+".*"))
                 {
                     item.put("code", code);
                     item.put("name", name);

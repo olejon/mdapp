@@ -101,6 +101,7 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
         double latitude = Double.parseDouble(pharmacyCoordinates[0]);
         double longitude = Double.parseDouble(pharmacyCoordinates[1]);
 
+        googleMap.setMyLocationEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
     }

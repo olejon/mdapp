@@ -128,6 +128,22 @@ class MyTools
         return code;
     }
 
+    public String getProjectVersionName()
+    {
+        String name = "0.0";
+
+        try
+        {
+            name = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
+        }
+        catch(Exception e)
+        {
+            Log.e("MyTools", Log.getStackTraceString(e));
+        }
+
+        return name;
+    }
+
     // Time
     public long getCurrentTime()
     {

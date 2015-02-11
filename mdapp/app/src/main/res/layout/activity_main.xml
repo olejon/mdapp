@@ -50,6 +50,11 @@
                 <TextView android:id="@+id/drawer_item_feedback" android:drawableStart="@drawable/ic_send_grey600_24dp" android:drawableLeft="@drawable/ic_send_grey600_24dp" android:text="@string/drawer_item_feedback" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_report_issue" android:drawableStart="@drawable/ic_bug_report_grey600_24dp" android:drawableLeft="@drawable/ic_bug_report_grey600_24dp" android:text="@string/drawer_item_report_issue" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 
+                <View style="@style/drawer_separator"/>
+
+                <TextView android:id="@+id/drawer_version_name" style="@style/drawer_version_text"/>
+                <TextView android:id="@+id/drawer_version_code" style="@style/drawer_version_text"/>
+
             </LinearLayout>
 
         </ScrollView>

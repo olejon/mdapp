@@ -9,6 +9,7 @@
     <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
     <string name="project_developer_licenses_uri">http://www.olejon.net/code/mdapp/?page=licenses</string>
     <string name="project_report_issue_uri">http://www.olejon.net/code/mdapp/?page=issues</string>
+    <string name="project_feedback_text">Send tilbakemelding</string>
     <string name="project_feedback_uri">mail@olejon.net</string>
 
     <!-- Main -->
@@ -115,6 +116,7 @@
 
     <!-- Diseases and treatments search web view -->
     <string name="diseases_and_treatments_search_webview_downloading_pdf">Se i varslingssenteret…</string>
+    <string name="diseases_and_treatments_search_webview_this_can_take_some_time">Dette kan ta noe tid…</string>
     <string name="diseases_and_treatments_search_webview_menu_forward">Gå frem</string>
     <string name="diseases_and_treatments_search_webview_menu_print">Skriv ut</string>
     <string name="diseases_and_treatments_search_webview_menu_uri">Se på web</string>
@@ -357,6 +359,8 @@
     <string name="drawer_item_donate">Doner</string>
     <string name="drawer_item_feedback">Send tilbakemelding</string>
     <string name="drawer_item_report_issue">Rapporter feil</string>
+    <string name="drawer_version_name">Versjon</string>
+    <string name="drawer_version_code">Versjonskode</string>
 
     <!-- Pages -->
     <string name="main_page_medications">Preparater</string>

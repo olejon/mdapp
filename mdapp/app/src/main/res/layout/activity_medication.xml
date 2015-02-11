@@ -33,6 +33,7 @@
 
         <LinearLayout android:id="@+id/medication_find_in_text_layout" android:layout_alignParentBottom="true" style="@style/medication_find_in_text_layout">
             <EditText android:id="@+id/medication_find_in_text_search" android:hint="@string/medication_find_in_text_search_hint" style="@style/medication_find_in_text_search_edittext"/>
+            <TextView android:id="@+id/medication_find_in_text_search_count" style="@style/medication_find_in_text_search_count"/>
             <ImageButton android:id="@+id/medication_find_in_text_search_next" android:src="@drawable/ic_keyboard_arrow_right_white_24dp" android:contentDescription="@string/image_content_description" style="@style/medication_find_in_text_search_next"/>
         </LinearLayout>
 
