@@ -38,6 +38,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLocationAdapter.PharmaciesViewHolder>
 {
     private final Context mContext;
@@ -86,8 +88,11 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
         {
             final JSONObject pharmacyJsonObject = mPharmacies.getJSONObject(i);
 
-            final String coordinates = pharmacyJsonObject.getString("coordinates");
             final String name = pharmacyJsonObject.getString("name");
+            final String coordinates = pharmacyJsonObject.getString("coordinates");
+
+            final ArrayList<String> namesArrayList = new ArrayList<>();
+            namesArrayList.add(name);
 
             viewHolder.name.setText(name);
 
@@ -101,7 +106,9 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
                 {
                     Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
                     intent.putExtra("name", name);
+                    intent.putExtra("names", namesArrayList);
                     intent.putExtra("coordinates", coordinates);
+                    intent.putExtra("multiple_coordinates", false);
                     mContext.startActivity(intent);
                 }
             });

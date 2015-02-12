@@ -2,10 +2,19 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/pharmacies_location_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/pharmacies_location_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+    <android.support.v7.widget.Toolbar android:id="@+id/pharmacies_location_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+
+        <LinearLayout android:id="@+id/pharmacies_location_toolbar_search_layout" style="@style/toolbar_search_layout">
+            <EditText android:id="@+id/pharmacies_location_toolbar_search" android:hint="@string/pharmacies_location_toolbar_search_hint" style="@style/toolbar_search_edittext"/>
+            <ImageButton android:id="@+id/pharmacies_location_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView android:id="@+id/pharmacies_location_cards" android:layout_below="@+id/pharmacies_location_toolbar" style="@style/pharmacies_location_cards"/>
 
     <View android:layout_below="@+id/pharmacies_location_toolbar" style="@style/toolbar_shadow"/>
+
+    <com.melnykov.fab.FloatingActionButton android:id="@+id/pharmacies_location_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 
 </RelativeLayout>

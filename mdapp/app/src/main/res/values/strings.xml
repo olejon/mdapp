@@ -133,7 +133,7 @@
 
     <!-- Interactions -->
     <string name="interactions_title">Interaksjonsanalyse</string>
-    <string name="interactions_toolbar_search_hint">Preparater, substanser, ATC-koder…</string>
+    <string name="interactions_toolbar_search_hint">Søk…</string>
     <string name="interactions_no_recent_searches">Ingen nylige søk</string>
     <string name="interactions_information">Søk etter preparater, substanser og ATC-koder, <b>skilt med mellomrom</b>. Eksempel: \"Lamictal Orfiril\".\n\nKilden som brukes er <i>Interaksjoner.no</i> fra Legemiddelverket.</string>
     <string name="interactions_recent_searches">Nylige søk</string>
@@ -258,7 +258,9 @@
     <string name="pharmacies_menu_uri">Se på web</string>
 
     <!-- Pharmacies location -->
+    <string name="pharmacies_location_toolbar_search_hint">Søk…</string>
     <string name="pharmacies_location_card_show_on_map">VIS PÅ KART</string>
+    <string name="pharmacies_menu_locations">Vis alle på kart</string>
 
     <!-- Clinical trials -->
     <string name="clinicaltrials_title">Kliniske studier</string>

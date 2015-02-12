@@ -35,14 +35,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class PharmaciesLocationMapActivity extends ActionBarActivity implements OnMapReadyCallback
 {
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private ArrayList<String> mPharmaciesNamesArrayList = new ArrayList<>();
+    private ArrayList<String> mPharmaciesCoordinatesArrayList = new ArrayList<>();
+
     private String mPharmacyName;
     private String mPharmacyCoordinates;
+
+    private boolean mPharmacyMultipleCoordinates;
 
     // Create activity
     @Override
@@ -57,7 +64,17 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
         Intent intent = getIntent();
 
         mPharmacyName = intent.getStringExtra("name");
-        mPharmacyCoordinates = intent.getStringExtra("coordinates");
+        mPharmaciesNamesArrayList = intent.getStringArrayListExtra("names");
+        mPharmacyMultipleCoordinates = intent.getBooleanExtra("multiple_coordinates", false);
+
+        if(mPharmacyMultipleCoordinates)
+        {
+            mPharmaciesCoordinatesArrayList = intent.getStringArrayListExtra("coordinates");
+        }
+        else
+        {
+            mPharmacyCoordinates = intent.getStringExtra("coordinates");
+        }
 
         // Layout
         setContentView(R.layout.activity_pharmacies_location_map);
@@ -96,13 +113,41 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
-        String[] pharmacyCoordinates = mPharmacyCoordinates.split(",");
-
-        double latitude = Double.parseDouble(pharmacyCoordinates[0]);
-        double longitude = Double.parseDouble(pharmacyCoordinates[1]);
-
         googleMap.setMyLocationEnabled(true);
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+
+        int mPharmaciesCoordinatesArrayListSize = mPharmaciesCoordinatesArrayList.size();
+
+        if(mPharmacyMultipleCoordinates)
+        {
+            for(int i = 0; i < mPharmaciesCoordinatesArrayListSize; i++)
+            {
+                String pharmacyName = mPharmaciesNamesArrayList.get(i);
+                String[] pharmacyCoordinates = mPharmaciesCoordinatesArrayList.get(i).split(",");
+
+                double latitude = Double.parseDouble(pharmacyCoordinates[0]);
+                double longitude = Double.parseDouble(pharmacyCoordinates[1]);
+
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(pharmacyName));
+            }
+
+            String[] cameraPharmacyCoordinates = mPharmaciesCoordinatesArrayList.get(0).split(",");
+
+            double cameraLatitude = Double.parseDouble(cameraPharmacyCoordinates[0]);
+            double cameraLongitude = Double.parseDouble(cameraPharmacyCoordinates[1]);
+
+            float cameraZoom = (mPharmaciesCoordinatesArrayListSize >= 16) ? 10 : 12;
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude, cameraLongitude), cameraZoom));
+        }
+        else
+        {
+            String[] pharmacyCoordinates = mPharmacyCoordinates.split(",");
+
+            double latitude = Double.parseDouble(pharmacyCoordinates[0]);
+            double longitude = Double.parseDouble(pharmacyCoordinates[1]);
+
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+        }
     }
 }

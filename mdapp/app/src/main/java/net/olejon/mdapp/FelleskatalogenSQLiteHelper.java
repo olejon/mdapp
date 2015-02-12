@@ -27,7 +27,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class FelleskatalogenSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final int DB_VERSION = 328;
+    private static final int DB_VERSION = 329;
 
     public static final String DB_NAME = "felleskatalogen.db";
     public static final String DB_ZIPPED_NAME = "felleskatalogen.db.zip";
