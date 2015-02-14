@@ -266,12 +266,14 @@
         </receiver>
 
         <receiver android:name=".FelleskatalogenAlarm" android:process=":felleskatalogenalarm"/>
+        <receiver android:name=".MessageAlarm" android:process=":messagealarm"/>
         <receiver android:name=".NotificationsFromSlvAlarm" android:process=":notificationsfromslvalarm"/>
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBl0K_iMW45EKrAzK63lTKFNqf7rYJvOTw"/>
 
         <service android:name=".FelleskatalogenService"/>
+        <service android:name=".MessageIntentService"/>
         <service android:name=".NotificationsFromSlvIntentService"/>
         <service android:name=".WidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 

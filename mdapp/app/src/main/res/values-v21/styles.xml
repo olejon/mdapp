@@ -65,19 +65,11 @@
     </style>
 
     <!-- Diseases and treatments -->
-    <style name="diseases_and_treatments_spinner_base">
-        <item name="android:dropDownVerticalOffset">56dp</item>
-    </style>
-
     <style name="diseases_and_treatments_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="diseases_and_treatments_search_card_title_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <style name="diseases_and_treatments_spinner_header_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
@@ -123,10 +115,6 @@
     </style>
 
     <!-- Nasjonale retningslinjer -->
-    <style name="nasjonale_retningslinjer_list_item_title_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <style name="nasjonale_retningslinjer_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>

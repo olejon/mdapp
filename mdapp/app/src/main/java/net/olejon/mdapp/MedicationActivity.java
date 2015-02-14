@@ -40,6 +40,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,7 +132,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     private boolean mLinearLayoutAnimationHasBeenShown = false;
     private boolean mSetSection = true;
 
-    private int mSectionIndex;
+    private int mSectionIndex = 0;
 
     // Create activity
     @Override
@@ -584,13 +585,16 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     {
         try
         {
-            JSONObject sectionJsonObject = new JSONArray(medicationContentSections).getJSONObject(mSectionIndex - 1);
+            if(mSectionIndex > 0)
+            {
+                JSONObject sectionJsonObject = new JSONArray(medicationContentSections).getJSONObject(mSectionIndex - 1);
 
-            mListView.setSelection(mSectionIndex);
+                mListView.setSelection(mSectionIndex);
 
-            String id = sectionJsonObject.getString("id");
+                String id = sectionJsonObject.getString("id");
 
-            mWebView.loadUrl("javascript:scrollToSection('"+id+"', "+animate+")");
+                mWebView.loadUrl("javascript:scrollToSection('"+id+"', "+animate+")");
+            }
         }
         catch(Exception e)
         {
@@ -909,6 +913,20 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     }
                 }
 
+                boolean showAtcCodesBelowMedicationName = mTools.getDefaultSharedPreferencesBoolean("SHOW_ATC_CODES_BELOW_MEDICATION_NAME");
+
+                LayoutInflater layoutInflater = null;
+                LinearLayout linearLayout = null;
+
+                if(showAtcCodesBelowMedicationName)
+                {
+                    layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                    linearLayout = (LinearLayout) findViewById(R.id.medication_detail_atc_codes_layout);
+
+                    linearLayout.setVisibility(View.VISIBLE);
+                }
+
                 if(!medicationAtcCodes.equals(""))
                 {
                     final JSONArray medicationAtcCodesJsonArray = new JSONArray(medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODES));
@@ -933,6 +951,27 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                                 return true;
                             }
                         });
+
+                        if(showAtcCodesBelowMedicationName)
+                        {
+                            TextView textView = (TextView) layoutInflater.inflate(R.layout.activity_medication_detail_atc_code, null);
+
+                            textView.setText(getString(R.string.medication_atc_code)+": "+atcCode);
+                            textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+                            textView.setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    Intent intent = new Intent(mContext, AtcCodesActivity.class);
+                                    intent.putExtra("code", atcCode);
+                                    startActivity(intent);
+                                }
+                            });
+
+                            linearLayout.addView(textView);
+                        }
                     }
                 }
             }

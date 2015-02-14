@@ -75,7 +75,8 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        final String pageTitle = intent.getStringExtra("title");
+        final String pageSearch = intent.getStringExtra("search");
+        final String pageTitle = getString(R.string.nasjonale_retningslinjer_webview_search)+": \""+pageSearch+"\"";
 
         pageUri = intent.getStringExtra("uri");
 
@@ -104,9 +105,11 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
             {
                 if(url.matches("^https?://.*?\\.pdf$"))
                 {
+                    String fileTitle = view.getTitle();
+
                     mTools.showToast(getString(R.string.nasjonale_retningslinjer_webview_downloading_pdf), 1);
 
-                    mTools.downloadFile(pageTitle, url);
+                    mTools.downloadFile(fileTitle, url);
 
                     return true;
                 }
@@ -133,9 +136,15 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    if(!mWebViewAnimationHasBeenShown)
+                    if(mWebViewAnimationHasBeenShown)
+                    {
+                        mWebView.loadUrl("javascript:var offset = $('span.refinesearch').offset(); window.scrollTo(0, offset.top);");
+                    }
+                    else
                     {
                         mWebViewAnimationHasBeenShown = true;
+
+                        mWebView.loadUrl("javascript:var offset = $('div.searchfield').offset(); window.scrollTo(0, offset.top + 48);");
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         mWebView.startAnimation(animation);
@@ -154,7 +163,6 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(false);
 
-        mWebView.setInitialScale(100);
         mWebView.loadUrl(pageUri);
     }
 

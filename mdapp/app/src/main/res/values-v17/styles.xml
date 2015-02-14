@@ -45,6 +45,11 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- Nasjonale retningslinjer -->
+    <style name="nasjonale_retningslinjer_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
     <!-- ATC -->
     <style name="atc_list_item_code_base">
         <item name="android:fontFamily">sans-serif-condensed</item>

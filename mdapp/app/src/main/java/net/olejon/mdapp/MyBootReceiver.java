@@ -36,6 +36,9 @@ public class MyBootReceiver extends BroadcastReceiver
             FelleskatalogenAlarm felleskatalogenAlarm = new FelleskatalogenAlarm();
             felleskatalogenAlarm.setAlarm(context.getApplicationContext());
 
+            MessageAlarm messageAlarm = new MessageAlarm();
+            messageAlarm.setAlarm(context.getApplicationContext());
+
             NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
             notificationsFromSlvAlarm.setAlarm(context.getApplicationContext());
         }

@@ -119,15 +119,6 @@ public class PoisoningsActivity extends ActionBarActivity
             }
         });
 
-        // List
-        mListView = (ListView) findViewById(R.id.poisonings_list);
-
-        View listViewEmpty = findViewById(R.id.poisonings_list_empty);
-        mListView.setEmptyView(listViewEmpty);
-
-        View listViewHeader = getLayoutInflater().inflate(R.layout.activity_poisonings_list_subheader, mListView, false);
-        mListView.addHeaderView(listViewHeader, null, false);
-
         // Floating action button
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.poisonings_fab);
 
@@ -151,6 +142,15 @@ public class PoisoningsActivity extends ActionBarActivity
                 }
             }
         });
+
+        // List
+        mListView = (ListView) findViewById(R.id.poisonings_list);
+
+        View listViewEmpty = findViewById(R.id.poisonings_list_empty);
+        mListView.setEmptyView(listViewEmpty);
+
+        View listViewHeader = getLayoutInflater().inflate(R.layout.activity_poisonings_list_subheader, mListView, false);
+        mListView.addHeaderView(listViewHeader, null, false);
     }
 
     // Resume activity

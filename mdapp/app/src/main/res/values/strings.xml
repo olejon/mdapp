@@ -18,7 +18,6 @@
     <string name="main_search_hint">Søk…</string>
     <string name="main_medications_list_empty">Ingen resultater</string>
     <string name="main_substances_list_empty">Ingen resultater</string>
-    <string name="main_message_dialog_positive_button">LUKK</string>
     <string name="main_sqlite_database_felleskatalogen_has_been_updated">Felleskatalogen er blitt oppdatert</string>
     <string name="main_update_felleskatalogen_testing_dialog_title">Last ned testversjon</string>
     <string name="main_update_felleskatalogen_testing_dialog_message">Er du sikker på at du vil laste ned testversjonen av Felleskatalogen?\n\nDenne funksjonen er ment for utvikler.</string>
@@ -43,6 +42,7 @@
     <!-- Medication -->
     <string name="medication_could_not_find_medication">Kunne ikke finne preparatet</string>
     <string name="medication_choose_section">Velg seksjon</string>
+    <string name="medication_atc_code">ATC-kode</string>
     <string name="medication_blue_prescription">Kan forskrives på blå resept</string>
     <string name="medication_triangle">Forsiktighet ved bilkjøring og betjening av maskiner</string>
     <string name="medication_schengen_certificate">Krever Schengen-attest</string>
@@ -106,7 +106,7 @@
     <string name="diseases_and_treatments_norwegian">Norsk</string>
     <string name="diseases_and_treatments_recent_searches">Nylige søk</string>
     <string name="diseases_and_treatments_no_recent_searches">Ingen nylige søk</string>
-    <string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>UpToDate</i>, <i>PubMed</i>, <i>MedlinePlus</i>, <i>Web of Science</i> og <i>Wikipedia</i>.\n\nDe norske kildene som benyttes er <i>Helsebiblioteket</i>, <i>Tidsskrift for Den norske legeforening</i>, <i>Helsenorge.no</i>, <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Nasjonal brukerhåndbok i Medisinsk Biokjemi</i>, <i>Forskning.no</i> og <i>Wikipedia</i>.</string>
+    <string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>UpToDate</i>, <i>BMJ Best Practice</i>, <i>PubMed</i>, <i>Web of Science</i>, <i>MedlinePlus</i> og <i>Wikipedia</i>.\n\nDe norske kildene som benyttes er <i>Helsebiblioteket</i>, <i>Tidsskrift for Den norske legeforening</i>, <i>Helsenorge.no</i>, <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Nasjonal brukerhåndbok i Medisinsk Biokjemi</i>, <i>Forskning.no</i> og <i>Wikipedia</i>.</string>
     <string name="diseases_and_treatments_recent_searches_removed">Nylige søk fjernet</string>
     <string name="diseases_and_treatments_menu_clear_recent_searches">Fjern nylige søk</string>
 
@@ -195,19 +195,15 @@
     <!-- Nasjonale retningslinjer -->
     <string name="nasjonale_retningslinjer_title">Nasjonale retningslinjer</string>
     <string name="nasjonale_retningslinjer_toolbar_search_hint">Søk…</string>
-    <string name="nasjonale_retningslinjer_could_not_get_data">Kunne ikke hente nasjonale retningslinjer. Er du koblet til Internett?.</string>
-    <string name="nasjonale_retningslinjer_tip_dialog_title">Tips</string>
-    <string name="nasjonale_retningslinjer_tip_dialog_message">Her blir alle publikasjoner fra Helsedirektoratet listet opp.\n\nFor å finne det du ønsker, bruk søkeknappen nede til høyre.</string>
-    <string name="nasjonale_retningslinjer_tip_dialog_positive_button">OK</string>
-    <string name="nasjonale_retningslinjer_list_empty">Ingen resultater. Prøv et annet søk.</string>
-    <string name="nasjonale_retningslinjer_dialog_item_pdf">Last ned PDF</string>
-    <string name="nasjonale_retningslinjer_dialog_item_web">Se på web</string>
-    <string name="nasjonale_retningslinjer_downloading_pdf">Se i varslingssenteret…</string>
-    <string name="nasjonale_retningslinjer_no_pdf">Ingen PDF. Åpner nettsiden…</string>
-    <string name="nasjonale_retningslinjer_could_not_get_pdf">Kunne ikke hente PDF. Er du koblet til Internett?.</string>
+    <string name="nasjonale_retningslinjer_no_recent_searches">Ingen nylige søk</string>
+    <string name="nasjonale_retningslinjer_information">Kilden som brukes er <i>Nasjonale faglige retningslinjer</i> fra Helsedirektoratet</string>
+    <string name="nasjonale_retningslinjer_recent_searches">Nylige søk</string>
+    <string name="nasjonale_retningslinjer_recent_searches_removed">Nylige søk fjernet</string>
+    <string name="nasjonale_retningslinjer_clear_recent_searches">Fjern nylige søk</string>
     <string name="nasjonale_retningslinjer_menu_uri">Se på web</string>
 
     <!-- Nasjonale retningslinjer web view -->
+    <string name="nasjonale_retningslinjer_webview_search">Søk</string>
     <string name="nasjonale_retningslinjer_webview_downloading_pdf">Se i varslingssenteret…</string>
     <string name="nasjonale_retningslinjer_webview_menu_go_forward">Gå frem</string>
     <string name="nasjonale_retningslinjer_webview_menu_uri">Se på web</string>
@@ -304,6 +300,8 @@
     <string name="settings_category_felleskatalogen">Felleskatalogen</string>
     <string name="settings_checkbox_sqlite_database_felleskatalogen_update_only_on_wifi_title">Bare oppdater når koblet til Wi-Fi</string>
     <string name="settings_checkbox_sqlite_database_felleskatalogen_update_only_on_wifi_summary">Bare oppdater Felleskatalogen når enheten er koblet til Wi-Fi</string>
+    <string name="settings_checkbox_show_atc_codes_below_medication_name_title">Vis ATC-kode(r) under preparatnavn</string>
+    <string name="settings_checkbox_show_atc_codes_below_medication_name_summary">Vis ATC-kode(r) under preparatnavn. Du kan alltid se ATC-kode(r) til et preparat ved å trykke på ikonet øverst til høyre</string>
     <string name="settings_category_notifications_from_slv">Varsler fra Legemiddelverket</string>
     <string name="settings_checkbox_notifications_from_slv_notify_title">Varsle ved nytt varsel</string>
     <string name="settings_checkbox_notifications_from_slv_notify_summary">Varsle meg når det kommer et nytt varsel fra Legemiddelverket</string>
@@ -331,6 +329,7 @@
     <string name="donate_menu_reset">Tilbakestill</string>
 
     <!-- Barcode scanner -->
+    <string name="barcode_scanner_scan">Skann strekkoden på en preparatpakning</string>
     <string name="barcode_scanner_wait">Vent…</string>
     <string name="barcode_scanner_no_results">Ingen resultater</string>
 

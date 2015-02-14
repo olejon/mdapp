@@ -57,17 +57,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.melnykov.fab.FloatingActionButton;
-
-import org.json.JSONObject;
 
 import java.io.InputStream;
 
@@ -307,7 +298,15 @@ public class MainActivity extends ActionBarActivity
             felleskatalogenAlarm.setAlarm(getApplicationContext());
         }
 
-        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(getApplicationContext(), NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean messageAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(getApplicationContext(), MessageIntentService.class), PendingIntent.FLAG_NO_CREATE) != null);
+
+        if(!messageAlarmIsStarted)
+        {
+            MessageAlarm messageAlarm = new MessageAlarm();
+            messageAlarm.setAlarm(getApplicationContext());
+        }
+
+        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 3, new Intent(getApplicationContext(), NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
 
         if(!notificationsFromSlvAlarmIsStarted)
         {
@@ -342,48 +341,6 @@ public class MainActivity extends ActionBarActivity
     protected void onPostResume()
     {
         super.onPostResume();
-
-        // Message
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
-        int projectVersionCode = mTools.getProjectVersionCode();
-
-        String device = mTools.getDevice();
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/message/?version_name="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
-        {
-            @Override
-            public void onResponse(JSONObject response)
-            {
-                try
-                {
-                    final long id = response.getLong("id");
-                    final String title = response.getString("title");
-                    final String message = response.getString("message");
-
-                    final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
-
-                    mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
-
-                    if(lastId != 0 && id != lastId) new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.main_message_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-                }
-                catch(Exception e)
-                {
-                    Log.e("MainActivity", Log.getStackTraceString(e));
-                }
-            }
-        }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                Log.e("MainActivity", error.toString());
-            }
-        });
-
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        requestQueue.add(jsonObjectRequest);
 
         // Felleskatalogen
         if(mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED"))

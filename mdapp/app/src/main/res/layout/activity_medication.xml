@@ -14,6 +14,7 @@
             <LinearLayout android:layout_alignParentTop="true" style="@style/medication_extended_toolbar_inner_layout">
 
                 <TextView android:id="@+id/medication_name" style="@style/medication_detail_name"/>
+                <LinearLayout android:id="@+id/medication_detail_atc_codes_layout" style="@style/medication_detail_atc_codes_layout"/>
                 <TextView android:id="@+id/medication_type" style="@style/medication_detail_type"/>
                 <TextView android:id="@+id/medication_schengen_certificate" style="@style/medication_detail_schengen_certificate"/>
                 <TextView android:id="@+id/medication_doping_status" style="@style/medication_detail_doping_status"/>

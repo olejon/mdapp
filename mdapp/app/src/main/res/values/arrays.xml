@@ -8,12 +8,6 @@
         <item>@string/diseases_and_treatments_norwegian</item>
     </string-array>
 
-    <!-- Nasjonale retningslinjer -->
-    <string-array name="nasjonale_retningslinjer_list_item_dialog_items">
-        <item>@string/nasjonale_retningslinjer_dialog_item_pdf</item>
-        <item>@string/nasjonale_retningslinjer_dialog_item_web</item>
-    </string-array>
-
     <!-- Welcome -->
     <string-array name="welcome_pages">
         <item>@string/welcome_page_1</item>

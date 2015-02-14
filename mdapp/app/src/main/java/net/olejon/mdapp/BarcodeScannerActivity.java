@@ -61,6 +61,9 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
         mZXingScannerView = new ZXingScannerView(this);
 
         setContentView(mZXingScannerView);
+
+        // Toast
+        mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
     }
 
     // Resume activity

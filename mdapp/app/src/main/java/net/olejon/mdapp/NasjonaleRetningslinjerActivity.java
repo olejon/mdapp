@@ -21,17 +21,18 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -46,27 +47,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.melnykov.fab.FloatingActionButton;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class NasjonaleRetningslinjerActivity extends ActionBarActivity
 {
@@ -74,19 +60,15 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private SQLiteDatabase mSqLiteDatabase;
+    private Cursor mCursor;
+
     private InputMethodManager mInputMethodManager;
 
-    private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
-
-    private JSONArray mResponse;
-
-    private ArrayList<String> mTitlesArrayList;
-    private ArrayList<String> mUrisArrayList;
 
     // Create activity
     @Override
@@ -118,9 +100,11 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
             {
-                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
                     mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                    search(mToolbarSearchEditText.getText().toString().trim());
 
                     return true;
                 }
@@ -140,29 +124,6 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
             }
         });
 
-        // Progress bar
-        mProgressBar = (ProgressBar) findViewById(R.id.nasjonale_retningslinjer_toolbar_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        // Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.nasjonale_retningslinjer_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_green, R.color.accent_purple, R.color.accent_orange);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-                {
-                    mToolbarSearchLayout.setVisibility(View.GONE);
-                    mToolbarSearchEditText.setText("");
-                }
-
-                getData(false);
-            }
-        });
-
         // Floating action button
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.nasjonale_retningslinjer_fab);
 
@@ -171,18 +132,49 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
             @Override
             public void onClick(View view)
             {
-                mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                mToolbarSearchEditText.requestFocus();
+                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+                {
+                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-                mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                    search(mToolbarSearchEditText.getText().toString().trim());
+                }
+                else
+                {
+                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                    mToolbarSearchEditText.requestFocus();
+
+                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                }
             }
         });
 
         // List
         mListView = (ListView) findViewById(R.id.nasjonale_retningslinjer_list);
 
-        // Get data
-        getData(true);
+        View listViewEmpty = findViewById(R.id.nasjonale_retningslinjer_list_empty);
+        mListView.setEmptyView(listViewEmpty);
+
+        View listViewHeader = getLayoutInflater().inflate(R.layout.activity_nasjonale_retningslinjer_list_subheader, mListView, false);
+        mListView.addHeaderView(listViewHeader, null, false);
+    }
+
+    // Resume activity
+    @Override
+    protected void onPostResume()
+    {
+        super.onPostResume();
+
+        getRecentSearches();
+    }
+
+    // Destroy activity
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
     }
 
     // Back button
@@ -235,9 +227,14 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
+            case R.id.nasjonale_retningslinjer_clear_recent_searches:
+            {
+                clearRecentSearches();
+                return true;
+            }
             case R.id.nasjonale_retningslinjer_uri:
             {
-                mTools.openUri("http://helsedirektoratet.no/publikasjoner/Sider/default.aspx?Kategori=Nasjonale+faglige+retningslinjer");
+                mTools.openUri("https://helsedirektoratet.no/retningslinjer#Default=%7B%22k%22%3A%22%22%2C%22r%22%3A%5B%7B%22n%22%3A%22HDDocumentType%22%2C%22t%22%3A%5B%22%5C%22%C7%82%C7%824e61736a6f6e616c65206661676c696765207265746e696e67736c696e6a6572%5C%22%22%2C%22equals(%5C%22Nasjonale%20faglige%20retningslinjer%5C%22)%22%5D%2C%22o%22%3A%22and%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D%5D%7D");
                 return true;
             }
             default:
@@ -247,245 +244,97 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
         }
     }
 
-    // Get data
-    private void getData(boolean cache)
+    // Search
+    private void search(String string)
     {
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        if(string.equals("")) return;
 
-        String apiUri = getString(R.string.project_website)+"api/1/nasjonale-retningslinjer/";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING, string);
 
-        if(!cache) requestQueue.getCache().remove(apiUri);
+        mSqLiteDatabase.delete(NasjonaleRetningslinjerSQLiteHelper.TABLE, NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(string)+" COLLATE NOCASE", null);
+        mSqLiteDatabase.insert(NasjonaleRetningslinjerSQLiteHelper.TABLE, null, contentValues);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
-        {
-            @Override
-            public void onResponse(JSONArray response)
-            {
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
-
-                mResponse = response;
-
-                mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
-                {
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
-                    {
-                        populateListView(charSequence.toString().trim());
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) { }
-                });
-
-                populateListView(null);
-
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
-                    {
-                        new MaterialDialog.Builder(mContext).title(mTitlesArrayList.get(i)).items(R.array.nasjonale_retningslinjer_list_item_dialog_items).itemsCallback(new MaterialDialog.ListCallback()
-                        {
-                            @Override
-                            public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
-                            {
-                                if(n == 0)
-                                {
-                                    mTools.showToast(getString(R.string.nasjonale_retningslinjer_downloading_pdf), 1);
-
-                                    downloadPdf(mTitlesArrayList.get(i), mUrisArrayList.get(i), i);
-                                }
-                                else if(n == 1)
-                                {
-                                    Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
-                                    intent.putExtra("title", mTitlesArrayList.get(i));
-                                    intent.putExtra("uri", mUrisArrayList.get(i));
-                                    startActivity(intent);
-                                }
-                            }
-                        }).itemColorRes(R.color.dark_blue).show();
-                    }
-                });
-
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-                mFloatingActionButton.startAnimation(animation);
-
-                mFloatingActionButton.setVisibility(View.VISIBLE);
-
-                boolean hideTipDialog = mTools.getSharedPreferencesBoolean("NASJONALE_RETNINGSLINJER_HIDE_TIP_DIALOG");
-
-                if(hideTipDialog)
-                {
-                    Handler handler = new Handler();
-
-                    handler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                            mToolbarSearchEditText.requestFocus();
-
-                            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-                        }
-                    }, 500);
-                }
-                else
-                {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.nasjonale_retningslinjer_tip_dialog_title)).content(getString(R.string.nasjonale_retningslinjer_tip_dialog_message)).positiveText(getString(R.string.nasjonale_retningslinjer_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
-                    {
-                        @Override
-                        public void onPositive(MaterialDialog dialog)
-                        {
-                            mTools.setSharedPreferencesBoolean("NASJONALE_RETNINGSLINJER_HIDE_TIP_DIALOG", true);
-                        }
-                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-                }
-            }
-        }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_data), 1);
-
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
-
-                Log.e("NasjonaleRetningslinjer", error.toString());
-
-                finish();
-            }
-        });
-
-        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        requestQueue.add(jsonArrayRequest);
-    }
-
-    // Download PDF
-    private void downloadPdf(final String title, String uri, final int i)
-    {
         try
         {
-            mProgressBar.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
+            intent.putExtra("search", string);
+            intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#Default=%7B%22k%22%3A%22"+URLEncoder.encode(string.toLowerCase(), "utf-8")+"%22%2C%22r%22%3A%5B%7B%22n%22%3A%22HDDocumentType%22%2C%22t%22%3A%5B%22%5C%22%C7%82%C7%824e61736a6f6e616c65206661676c696765207265746e696e67736c696e6a6572%5C%22%22%2C%22equals(%5C%22Nasjonale%20faglige%20retningslinjer%5C%22)%22%5D%2C%22o%22%3A%22and%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D%5D%7D");
+            startActivity(intent);
+        }
+        catch(Exception e)
+        {
+            Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+        }
+    }
 
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+    private void getRecentSearches()
+    {
+        GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
+        getRecentSearchesTask.execute();
+    }
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/nasjonale-retningslinjer/pdf/?uri="+URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
+    private void clearRecentSearches()
+    {
+        mSqLiteDatabase.delete(NasjonaleRetningslinjerSQLiteHelper.TABLE, null, null);
+
+        mTools.showToast(getString(R.string.nasjonale_retningslinjer_recent_searches_removed), 0);
+
+        getRecentSearches();
+    }
+
+    private class GetRecentSearchesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    {
+        @Override
+        protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
+        {
+            mListView.setAdapter(simpleCursorAdapter);
+
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
-                public void onResponse(JSONObject response)
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
                 {
-                    mProgressBar.setVisibility(View.GONE);
+                    int index = i - 1;
 
-                    try
-                    {
-                        String uri = response.getString("uri");
-
-                        if(uri.equals(""))
-                        {
-                            mTools.showToast(getString(R.string.nasjonale_retningslinjer_no_pdf), 1);
-
-                            Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
-                            intent.putExtra("title", mTitlesArrayList.get(i));
-                            intent.putExtra("uri", mUrisArrayList.get(i));
-                            startActivity(intent);
-                        }
-                        else
-                        {
-                            mTools.downloadFile(title, uri);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_pdf), 1);
-
-                        Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    mProgressBar.setVisibility(View.GONE);
-
-                    mTools.showToast(getString(R.string.nasjonale_retningslinjer_could_not_get_pdf), 1);
-
-                    Log.e("NasjonaleRetningslinjer", error.toString());
+                    if(mCursor.moveToPosition(index)) search(mCursor.getString(mCursor.getColumnIndexOrThrow(NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING)));
                 }
             });
 
-            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+            mFloatingActionButton.startAnimation(animation);
 
-            requestQueue.add(jsonObjectRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
-        }
-    }
+            mFloatingActionButton.setVisibility(View.VISIBLE);
 
-    // Populate list view
-    private void populateListView(String searchString)
-    {
-        final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
-
-        mTitlesArrayList = new ArrayList<>();
-        mUrisArrayList = new ArrayList<>();
-
-        String[] fromColumns = new String[] {"title", "date"};
-        int[] toViews = new int[] {R.id.nasjonale_retningslinjer_list_item_title, R.id.nasjonale_retningslinjer_list_item_date};
-
-        try
-        {
-            for(int i = 0; i < mResponse.length(); i++)
+            if(mCursor.getCount() > 0)
             {
-                HashMap<String, String> item = new HashMap<>();
+                Handler handler = new Handler();
 
-                JSONObject itemJsonObject = mResponse.getJSONObject(i);
-
-                String title = itemJsonObject.getString("title");
-                String date = itemJsonObject.getString("date");
-                String uri = itemJsonObject.getString("uri");
-
-                if(searchString == null)
+                handler.postDelayed(new Runnable()
                 {
-                    item.put("title", title);
-                    item.put("date", date);
+                    @Override
+                    public void run()
+                    {
+                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                        mToolbarSearchEditText.requestFocus();
 
-                    itemsArrayList.add(item);
-
-                    mTitlesArrayList.add(title);
-                    mUrisArrayList.add(uri);
-                }
-                else if(title.matches("(?i).*?"+searchString+".*"))
-                {
-                    item.put("title", title);
-                    item.put("date", date);
-
-                    itemsArrayList.add(item);
-
-                    mTitlesArrayList.add(title);
-                    mUrisArrayList.add(uri);
-                }
+                        mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                    }
+                }, 500);
             }
         }
-        catch(Exception e)
+
+        @Override
+        protected SimpleCursorAdapter doInBackground(Void... voids)
         {
-            Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+            mSqLiteDatabase = new NasjonaleRetningslinjerSQLiteHelper(mContext).getWritableDatabase();
+
+            mCursor = mSqLiteDatabase.query(NasjonaleRetningslinjerSQLiteHelper.TABLE, null, null, null, null, null, NasjonaleRetningslinjerSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+
+            String[] fromColumns = {NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING};
+            int[] toViews = {R.id.nasjonale_retningslinjer_list_item_string};
+
+            return new SimpleCursorAdapter(mContext, R.layout.activity_nasjonale_retningslinjer_list_item, mCursor, fromColumns, toViews, 0);
         }
-
-        SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_nasjonale_retningslinjer_list_item, fromColumns, toViews);
-
-        mListView.setAdapter(simpleAdapter);
-
-        View listViewEmpty = findViewById(R.id.nasjonale_retningslinjer_list_empty);
-        mListView.setEmptyView(listViewEmpty);
     }
 }

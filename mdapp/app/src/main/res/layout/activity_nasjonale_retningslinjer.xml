@@ -9,17 +9,18 @@
             <ImageButton android:id="@+id/nasjonale_retningslinjer_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
         </LinearLayout>
 
-        <LinearLayout style="@style/toolbar_progressbar_layout">
-            <ProgressBar android:id="@+id/nasjonale_retningslinjer_toolbar_progressbar" style="@style/toolbar_progressbar"/>
-        </LinearLayout>
-
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/nasjonale_retningslinjer_swipe_refresh_layout" android:layout_below="@+id/nasjonale_retningslinjer_toolbar" style="@style/swipe_refresh_layout">
-        <ListView android:id="@+id/nasjonale_retningslinjer_list" style="@style/nasjonale_retningslinjer_list_layout"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <ListView android:id="@+id/nasjonale_retningslinjer_list" android:layout_below="@+id/nasjonale_retningslinjer_toolbar" style="@style/nasjonale_retningslinjer_list_layout"/>
 
-    <TextView android:id="@+id/nasjonale_retningslinjer_list_empty" android:layout_below="@+id/nasjonale_retningslinjer_toolbar" android:text="@string/nasjonale_retningslinjer_list_empty" style="@style/nasjonale_retningslinjer_list_empty"/>
+    <ScrollView android:id="@+id/nasjonale_retningslinjer_list_empty" android:layout_below="@+id/nasjonale_retningslinjer_toolbar" style="@style/nasjonale_retningslinjer_list_empty_layout">
+
+        <LinearLayout style="@style/nasjonale_retningslinjer_list_empty_inner_layout">
+            <TextView android:text="@string/nasjonale_retningslinjer_no_recent_searches" style="@style/nasjonale_retningslinjer_list_empty"/>
+            <TextView android:text="@string/nasjonale_retningslinjer_information" style="@style/nasjonale_retningslinjer_list_information"/>
+        </LinearLayout>
+
+    </ScrollView>
 
     <View android:layout_below="@+id/nasjonale_retningslinjer_toolbar" style="@style/toolbar_shadow"/>
 
