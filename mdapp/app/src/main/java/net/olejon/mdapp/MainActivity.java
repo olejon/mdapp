@@ -672,6 +672,15 @@ public class MainActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            updateFelleskatalogen(true);
+                        }
+                    });
+
                     Log.e("MainActivity", Log.getStackTraceString(e));
                 }
             }

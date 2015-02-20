@@ -5,7 +5,8 @@
     <!-- Project -->
     <string name="project_name">LegeAppen</string>
     <string name="project_website">http://www.olejon.net/code/mdapp/</string>
-    <string name="project_developer_website">http://www.olejon.net/code/mdapp/?page=olejondotnet</string>
+    <string name="project_developer_website_uri">http://www.olejon.net/code/mdapp/?page=olejondotnet</string>
+    <string name="project_developer_privacy_uri">http://www.olejon.net/code/mdapp/?page=privacy</string>
     <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
     <string name="project_developer_licenses_uri">http://www.olejon.net/code/mdapp/?page=licenses</string>
     <string name="project_report_issue_uri">http://www.olejon.net/code/mdapp/?page=issues</string>
@@ -113,6 +114,20 @@
     <!-- Diseases and treatments search -->
     <string name="diseases_and_treatments_search_search">Søk</string>
     <string name="diseases_and_treatments_search_could_not_search">Kunne ikke søke. Er du koblet til Internett?</string>
+    <string name="diseases_and_treatments_search_scroll_to">Skroll til…</string>
+    <string name="diseases_and_treatments_search_pubmed">PubMed</string>
+    <string name="diseases_and_treatments_search_webofscience">Web of Science</string>
+    <string name="diseases_and_treatments_search_medlineplus">MedlinePlus</string>
+    <string name="diseases_and_treatments_search_wikipedia">Wikipedia</string>
+    <string name="diseases_and_treatments_search_uptodate">UpToDate</string>
+    <string name="diseases_and_treatments_search_bmj">BMJ Best Practice</string>
+    <string name="diseases_and_treatments_search_nhi">Norsk Helseinformatikk</string>
+    <string name="diseases_and_treatments_search_sml">Store medisinske leksikon</string>
+    <string name="diseases_and_treatments_search_forskning">Forskning.no</string>
+    <string name="diseases_and_treatments_search_helsebiblioteket">Helsebiblioteket</string>
+    <string name="diseases_and_treatments_search_tidsskriftet">Tidsskrift for Den norske legeforening</string>
+    <string name="diseases_and_treatments_search_helsenorge">Helsenorge.no</string>
+    <string name="diseases_and_treatments_search_brukerhandboken">Nasjonal brukerhåndbok i Medisinsk Biokjemi</string>
 
     <!-- Diseases and treatments search web view -->
     <string name="diseases_and_treatments_search_webview_downloading_pdf">Se i varslingssenteret…</string>
@@ -313,6 +328,8 @@
     <string name="settings_intent_project_developer_website_summary">Ole Jon Bjørkum</string>
     <string name="settings_intent_project_website_title">Nettside</string>
     <string name="settings_intent_project_website_summary">Besøk nettsiden til denne appen</string>
+    <string name="settings_intent_project_privacy_title">Personvern</string>
+    <string name="settings_intent_project_privacy_summary">Informasjon om hvordan ditt personvern ivaretas</string>
     <string name="settings_intent_project_license_title">Lisens</string>
     <string name="settings_intent_project_license_summary">Denne appen er lisensiert under The GNU General Public License, versjon 3</string>
     <string name="settings_intent_project_licenses_title">Lisenser</string>
@@ -372,8 +389,19 @@
     <string name="welcome_page_3">Ansvarsfraskrivelse</string>
     <string name="welcome_page_4">Klar til bruk</string>
 
+    <!-- Correct -->
+    <string name="correct_dialog_title">Feil stavelse?</string>
+    <string name="correct_dialog_message">Det kan se ut som om du har stavet søket ditt feil. Mente du heller</string>
+    <string name="correct_dialog_positive_button">JA</string>
+    <string name="correct_dialog_negative_button">NEI</string>
+
     <!-- Snackbars -->
     <string name="snackbar_undo">ANGRE</string>
+
+    <!-- My tools -->
+    <string name="mytools_open_uri_invalid">Ugyldig URL</string>
+    <string name="mytools_printing_not_supported">Kun tilgjengelig for Android 4.4 og nyere</string>
+    <string name="mytools_could_not_find_medication">Kunne ikke finne preparatet</string>
 
     <!-- Widget -->
     <string name="widget_title">LegeAppen - Favoritter</string>
@@ -392,13 +420,9 @@
     <string name="service_felleskatalogen_notification_use">Bruk</string>
     <string name="service_notifications_from_slv_read_more">Les mer</string>
 
-    <!-- My tools -->
-    <string name="mytools_open_uri_invalid">Ugyldig URL</string>
-    <string name="mytools_printing_not_supported">Kun tilgjengelig for Android 4.4 og nyere</string>
-    <string name="mytools_could_not_find_medication">Kunne ikke finne preparatet</string>
-
     <!-- Various -->
     <string name="device_not_connected">Du må være tilkoblet Internett</string>
     <string name="image_content_description">Image</string>
+    <string name="diseases_and_treatments_search_no_results">Ingen treff i denne kilden</string>
 
 </resources>

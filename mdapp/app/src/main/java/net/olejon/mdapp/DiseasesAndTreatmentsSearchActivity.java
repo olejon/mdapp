@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -33,31 +34,57 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
-public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
+public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private Toolbar mToolbar;
     private ProgressBar mProgressBar;
+    private Spinner mSpinner;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+
+    private String mSearchLanguage;
+
+    private int mFirstPubMedPosition = 0;
+    private int mFirstWebOfSciencePosition = 0;
+    private int mFirstMedlinePlusPosition = 0;
+    private int mFirstWikipediaPosition = 0;
+    private int mFirstUpToDatePosition = 0;
+    private int mFirstBmjPosition = 0;
+    private int mFirstNhiPosition = 0;
+    private int mFirstSmlPosition = 0;
+    private int mFirstForskningPosition = 0;
+    private int mFirstHelsebiblioteketPosition = 0;
+    private int mFirstTidsskriftetPosition = 0;
+    private int mFirstHelsenorgePosition = 0;
+    private int mFirstBrukerhandbokenPosition = 0;
 
     // Create activity
     @Override
@@ -78,22 +105,42 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        final String searchLanguage = intent.getStringExtra("language");
+        mSearchLanguage = intent.getStringExtra("language");
+
         final String searchString = intent.getStringExtra("string");
 
         // Layout
         setContentView(R.layout.activity_diseases_and_treatments_search);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_toolbar);
-        toolbar.setTitle(getString(R.string.diseases_and_treatments_search_search)+": \""+searchString+"\"");
+        mToolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_toolbar);
+        mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search)+": \""+searchString+"\"");
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
         mProgressBar = (ProgressBar) findViewById(R.id.diseases_and_treatments_search_toolbar_progressbar);
         mProgressBar.setVisibility(View.VISIBLE);
+
+        // Spinner
+        mSpinner = (Spinner) findViewById(R.id.diseases_and_treatments_search_spinner);
+
+        ArrayAdapter<CharSequence> arrayAdapter;
+
+        if(mSearchLanguage.equals(""))
+        {
+            arrayAdapter = ArrayAdapter.createFromResource(mContext, R.array.diseases_and_treatments_search_spinner_items_english, R.layout.activity_diseases_and_treatments_search_spinner_header);
+        }
+        else
+        {
+            arrayAdapter = ArrayAdapter.createFromResource(mContext, R.array.diseases_and_treatments_search_spinner_items_norwegian, R.layout.activity_diseases_and_treatments_search_spinner_header);
+        }
+
+        arrayAdapter.setDropDownViewResource(R.layout.activity_diseases_and_treatments_search_spinner_item);
+
+        mSpinner.setAdapter(arrayAdapter);
+        mSpinner.setOnItemSelectedListener(this);
 
         // Refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.diseases_and_treatments_search_swipe_refresh_layout);
@@ -104,7 +151,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
             @Override
             public void onRefresh()
             {
-                search(searchLanguage, searchString, false);
+                search(mSearchLanguage, searchString, false);
             }
         });
 
@@ -116,7 +163,70 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Search
-        search(searchLanguage, searchString, true);
+        search(mSearchLanguage, searchString, true);
+
+        // Correct
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+        try
+        {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response)
+                {
+                    try
+                    {
+                        final String correctSearchString = response.getString("correct");
+
+                        if(!correctSearchString.equals(""))
+                        {
+                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                            {
+                                @Override
+                                public void onPositive(MaterialDialog dialog)
+                                {
+                                    ContentValues contentValues = new ContentValues();
+                                    contentValues.put(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING, correctSearchString);
+
+                                    SQLiteDatabase sqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
+
+                                    sqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+                                    sqLiteDatabase.insert(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, contentValues);
+
+                                    sqLiteDatabase.close();
+
+                                    mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search)+": \""+correctSearchString+"\"");
+
+                                    mProgressBar.setVisibility(View.VISIBLE);
+
+                                    search(mSearchLanguage, correctSearchString, true);
+                                }
+                            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
+                    }
+                }
+            }, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    Log.e("DiseasesAndTreatments", error.toString());
+                }
+            });
+
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            requestQueue.add(jsonObjectRequest);
+        }
+        catch(Exception e)
+        {
+            Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
+        }
     }
 
     // Menu
@@ -137,6 +247,156 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
         }
     }
 
+    // Spinner
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+    {
+        if(mSearchLanguage.equals(""))
+        {
+            switch(i)
+            {
+                case 1:
+                {
+                    mRecyclerView.scrollToPosition(mFirstPubMedPosition);
+                    break;
+                }
+                case 2:
+                {
+                    mRecyclerView.scrollToPosition(mFirstWebOfSciencePosition);
+                    break;
+                }
+                case 3:
+                {
+                    mRecyclerView.scrollToPosition(mFirstMedlinePlusPosition);
+                    break;
+                }
+                case 4:
+                {
+                    mRecyclerView.scrollToPosition(mFirstWikipediaPosition);
+                    break;
+                }
+                case 5:
+                {
+                    if(mFirstUpToDatePosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstUpToDatePosition);
+                    }
+
+                    break;
+                }
+                case 6:
+                {
+                    if(mFirstBmjPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstBmjPosition);
+                    }
+
+                    break;
+                }
+            }
+        }
+        else
+        {
+            switch(i)
+            {
+                case 1:
+                {
+                    mRecyclerView.scrollToPosition(mFirstNhiPosition);
+                    break;
+                }
+                case 2:
+                {
+                    mRecyclerView.scrollToPosition(mFirstSmlPosition);
+                    break;
+                }
+                case 3:
+                {
+                    mRecyclerView.scrollToPosition(mFirstWikipediaPosition);
+                    break;
+                }
+                case 4:
+                {
+                    mRecyclerView.scrollToPosition(mFirstForskningPosition);
+                    break;
+                }
+                case 5:
+                {
+                    if(mFirstHelsebiblioteketPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstHelsebiblioteketPosition);
+                    }
+
+                    break;
+                }
+                case 6:
+                {
+                    if(mFirstTidsskriftetPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstTidsskriftetPosition);
+                    }
+
+                    break;
+                }
+                case 7:
+                {
+                    if(mFirstHelsenorgePosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstHelsenorgePosition);
+                    }
+
+                    break;
+                }
+                case 8:
+                {
+                    if(mFirstBrukerhandbokenPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstBrukerhandbokenPosition);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mSpinner.setSelection(0);
+            }
+        }, 250);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) { }
+
     // Search
     private void search(final String language, final String string, final boolean cache)
     {
@@ -153,6 +413,46 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity
                 @Override
                 public void onResponse(JSONArray response)
                 {
+                    for(int i = 0; i < response.length(); i++)
+                    {
+                        try
+                        {
+                            JSONObject jsonObject = response.getJSONObject(i);
+
+                            String type = jsonObject.getString("type");
+
+                            if(mFirstPubMedPosition == 0 && type.equals("pubmed")) mFirstPubMedPosition = i;
+
+                            if(mFirstWebOfSciencePosition == 0 && type.equals("webofscience")) mFirstWebOfSciencePosition = i;
+
+                            if(mFirstMedlinePlusPosition == 0 && type.equals("medlineplus")) mFirstMedlinePlusPosition = i;
+
+                            if(mFirstWikipediaPosition == 0 && type.equals("wikipedia")) mFirstWikipediaPosition = i;
+
+                            if(mFirstUpToDatePosition == 0 && type.equals("uptodate")) mFirstUpToDatePosition = i;
+
+                            if(mFirstBmjPosition == 0 && type.equals("bmj")) mFirstBmjPosition = i;
+
+                            if(mFirstNhiPosition == 0 && type.equals("nhi")) mFirstNhiPosition = i;
+
+                            if(mFirstSmlPosition == 0 && type.equals("sml")) mFirstSmlPosition = i;
+
+                            if(mFirstForskningPosition == 0 && type.equals("forskning")) mFirstForskningPosition = i;
+
+                            if(mFirstHelsebiblioteketPosition == 0 && type.equals("helsebiblioteket")) mFirstHelsebiblioteketPosition = i;
+
+                            if(mFirstTidsskriftetPosition == 0 && type.equals("tidsskriftet")) mFirstTidsskriftetPosition = i;
+
+                            if(mFirstHelsenorgePosition == 0 && type.equals("helsenorge")) mFirstHelsenorgePosition = i;
+
+                            if(mFirstBrukerhandbokenPosition == 0 && type.equals("brukerhandboken")) mFirstBrukerhandbokenPosition = i;
+                        }
+                        catch(Exception e)
+                        {
+                            Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
+                        }
+                    }
+
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
 

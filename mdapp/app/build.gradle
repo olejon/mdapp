@@ -8,8 +8,8 @@ android {
         applicationId "net.olejon.mdapp"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 100
-        versionName "1.0"
+        versionCode 110
+        versionName "1.1"
     }
 
     buildTypes {

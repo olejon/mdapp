@@ -23,6 +23,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -142,9 +143,6 @@ public class InteractionsWebViewActivity extends ActionBarActivity
             }
         });
 
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptCookie(false);
-
         mWebView.loadUrl(pageUri);
     }
 
@@ -164,6 +162,8 @@ public class InteractionsWebViewActivity extends ActionBarActivity
         super.onPause();
 
         mWebView.pauseTimers();
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
     }
 
     // Back button

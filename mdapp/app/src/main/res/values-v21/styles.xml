@@ -73,6 +73,19 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- Diseases and treatments search -->
+    <style name="diseases_and_treatments_search_separator_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="diseases_and_treatments_search_spinner_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="diseases_and_treatments_search_spinner_header_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- Legevakthåndboken -->
     <style name="lvh_card_title_base">
         <item name="android:fontFamily">sans-serif-medium</item>

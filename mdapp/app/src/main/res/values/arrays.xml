@@ -8,6 +8,29 @@
         <item>@string/diseases_and_treatments_norwegian</item>
     </string-array>
 
+    <!-- Diseases and treatments search -->
+    <string-array name="diseases_and_treatments_search_spinner_items_english">
+        <item>@string/diseases_and_treatments_search_scroll_to</item>
+        <item>@string/diseases_and_treatments_search_pubmed</item>
+        <item>@string/diseases_and_treatments_search_webofscience</item>
+        <item>@string/diseases_and_treatments_search_medlineplus</item>
+        <item>@string/diseases_and_treatments_search_wikipedia</item>
+        <item>@string/diseases_and_treatments_search_uptodate</item>
+        <item>@string/diseases_and_treatments_search_bmj</item>
+    </string-array>
+
+    <string-array name="diseases_and_treatments_search_spinner_items_norwegian">
+        <item>@string/diseases_and_treatments_search_scroll_to</item>
+        <item>@string/diseases_and_treatments_search_nhi</item>
+        <item>@string/diseases_and_treatments_search_sml</item>
+        <item>@string/diseases_and_treatments_search_wikipedia</item>
+        <item>@string/diseases_and_treatments_search_forskning</item>
+        <item>@string/diseases_and_treatments_search_helsebiblioteket</item>
+        <item>@string/diseases_and_treatments_search_tidsskriftet</item>
+        <item>@string/diseases_and_treatments_search_helsenorge</item>
+        <item>@string/diseases_and_treatments_search_brukerhandboken</item>
+    </string-array>
+
     <!-- Welcome -->
     <string-array name="welcome_pages">
         <item>@string/welcome_page_1</item>

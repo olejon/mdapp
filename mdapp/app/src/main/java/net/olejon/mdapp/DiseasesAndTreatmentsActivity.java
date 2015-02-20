@@ -141,7 +141,16 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
             @Override
             public void onClick(View view)
             {
-                showSearchLanguageDialog();
+                String string = mToolbarSearchEditText.getText().toString().trim();
+
+                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE && !string.equals(""))
+                {
+                    search(string);
+                }
+                else
+                {
+                    showSearchLanguageDialog();
+                }
             }
         });
     }

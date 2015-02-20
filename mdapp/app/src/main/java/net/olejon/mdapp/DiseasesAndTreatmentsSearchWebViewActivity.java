@@ -235,7 +235,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     @Override
     public void onBackPressed()
     {
-        if(mWebView.canGoBack())
+        if(mWebView.canGoBack() && !pageUri.contains("webofknowledge"))
         {
             mWebView.goBack();
         }

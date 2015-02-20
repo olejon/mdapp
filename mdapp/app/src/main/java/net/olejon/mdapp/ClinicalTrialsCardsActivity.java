@@ -33,6 +33,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,14 +42,18 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
@@ -58,6 +63,7 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -90,10 +96,10 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
         setContentView(R.layout.activity_clinicaltrials_cards);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
-        toolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
+        mToolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
+        mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -146,6 +152,72 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
 
         // Search
         search(searchString, true);
+
+        // Correct
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+        try
+        {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response)
+                {
+                    try
+                    {
+                        final String correctSearchString = response.getString("correct");
+
+                        if(!correctSearchString.equals(""))
+                        {
+                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                            {
+                                @Override
+                                public void onPositive(MaterialDialog dialog)
+                                {
+                                    ContentValues contentValues = new ContentValues();
+                                    contentValues.put(ClinicalTrialsSQLiteHelper.COLUMN_STRING, correctSearchString);
+
+                                    SQLiteDatabase sqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
+
+                                    sqLiteDatabase.delete(ClinicalTrialsSQLiteHelper.TABLE, ClinicalTrialsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+                                    sqLiteDatabase.insert(ClinicalTrialsSQLiteHelper.TABLE, null, contentValues);
+
+                                    sqLiteDatabase.close();
+
+                                    mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+correctSearchString+"\"");
+
+                                    mProgressBar.setVisibility(View.VISIBLE);
+
+                                    mNoClinicalTrialsLayout.setVisibility(View.GONE);
+                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                                    search(correctSearchString, true);
+                                }
+                            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+                    }
+                }
+            }, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    Log.e("ClinicalTrialsCards", error.toString());
+                }
+            });
+
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            requestQueue.add(jsonObjectRequest);
+        }
+        catch(Exception e)
+        {
+            Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+        }
     }
 
     // Menu
