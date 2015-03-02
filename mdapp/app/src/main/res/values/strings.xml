@@ -4,7 +4,7 @@
 
     <!-- Project -->
     <string name="project_name">LegeAppen</string>
-    <string name="project_website">http://www.olejon.net/code/mdapp/</string>
+    <string name="project_website_uri">http://www.olejon.net/code/mdapp/</string>
     <string name="project_developer_website_uri">http://www.olejon.net/code/mdapp/?page=olejondotnet</string>
     <string name="project_developer_privacy_uri">http://www.olejon.net/code/mdapp/?page=privacy</string>
     <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
@@ -34,7 +34,7 @@
     <string name="main_donate_dialog_negative_button">Senere</string>
     <string name="main_menu_scan_barcode">Skann strekkode</string>
     <string name="main_menu_update_felleskatalogen">Oppdater Felleskatalogen</string>
-    <string name="main_menu_donate">Doner</string>
+    <string name="main_menu_uri">Se på web</string>
 
     <!-- Medications favorites -->
     <string name="main_medications_favorites_list_empty">Ingen favoritter</string>
@@ -58,18 +58,24 @@
     <string name="medication_full_content_reference_dialog_message_second">\n\nVil du heller se omtalen for det preparatet?</string>
     <string name="medication_full_content_reference_dialog_positive_button">Ja</string>
     <string name="medication_full_content_reference_dialog_negative_button">Nei</string>
+    <string name="medication_substances_dialog_title">Substanser</string>
     <string name="medication_package_inserts_dialog_title">Velg pakningsvedlegg</string>
     <string name="medication_could_not_get_package_insert">Kunne ikke hente pakningsvedlegg. Prøv igjen.</string>
     <string name="medication_saved_to_favorites">Preparat lagret i favoritter</string>
     <string name="medication_downloading_pdf">Se i varslingssenteret…</string>
-    <string name="medication_javascript_interface_dialog_positive_button">Lukk</string>
     <string name="medication_find_in_text_tip_dialog_title">Tips</string>
     <string name="medication_find_in_text_tip_dialog_message">Skriv inn teksten du ønsker å søke etter. Trykk deretter på tasten nederst til høyre på tastaturet ditt.\n\nVed treff, vil disse bli markert i teksten.\n\nVed treff, vil en pil dukke opp til høyre for søkefeltet. Trykk på pilen for å gå til neste treff.</string>
     <string name="medication_find_in_text_tip_dialog_positive_button">OK</string>
     <string name="medication_find_in_text_search_hint">Søk…</string>
+    <string name="medication_synonym_dialog_positive_button">Lukk</string>
+    <string name="medication_synonym_dialog_neutral_button">Se ordforklaringer</string>
+    <string name="medication_synonym_list_dialog_title">Ordforklaringer</string>
+    <string name="medication_synonym_dialog_source">Kilde: Felleskatalogen.no</string>
+    <string name="medication_could_not_get_data">Kunne ikke hente data. Er du koblet til Internett?</string>
     <string name="medication_menu_star">Lagre som favoritt</string>
     <string name="medication_menu_interactions">Interaksjonsanalyse</string>
     <string name="medication_menu_pictures_uri">Bilder</string>
+    <string name="medication_menu_substances">Substanser</string>
     <string name="medication_menu_poisoning_uri">Forgiftningsinformasjon</string>
     <string name="medication_menu_manufacturer_uri">Legemiddelfirma</string>
     <string name="medication_menu_atc_code_uri">ATC-register</string>
@@ -77,6 +83,7 @@
     <string name="medication_menu_spc_uri">SPC</string>
     <string name="medication_menu_find_in_text">Finn i tekst</string>
     <string name="medication_menu_print">Skriv ut</string>
+    <string name="medication_menu_nlh">Legemiddelhåndboken</string>
     <string name="medication_menu_uri">Se på web</string>
 
     <!-- Medication pictures -->
@@ -91,6 +98,7 @@
     <string name="medication_webview_menu_uri">Se på web</string>
 
     <!-- Substance -->
+    <string name="substance_source">Kilde: Felleskatalogen.no</string>
     <string name="substance_could_not_find_substance">Kunne ikke finne substans</string>
     <string name="substance_atc_codes">ATC-koder</string>
     <string name="substance_list_subheader">Preparater</string>
@@ -125,9 +133,11 @@
     <string name="diseases_and_treatments_search_sml">Store medisinske leksikon</string>
     <string name="diseases_and_treatments_search_forskning">Forskning.no</string>
     <string name="diseases_and_treatments_search_helsebiblioteket">Helsebiblioteket</string>
+    <string name="diseases_and_treatments_search_oncolex">Oncolex</string>
     <string name="diseases_and_treatments_search_tidsskriftet">Tidsskrift for Den norske legeforening</string>
     <string name="diseases_and_treatments_search_helsenorge">Helsenorge.no</string>
     <string name="diseases_and_treatments_search_brukerhandboken">Nasjonal brukerhåndbok i Medisinsk Biokjemi</string>
+    <string name="diseases_and_treatments_search_no_results">Ingen treff i denne kilden</string>
 
     <!-- Diseases and treatments search web view -->
     <string name="diseases_and_treatments_search_webview_downloading_pdf">Se i varslingssenteret…</string>
@@ -214,7 +224,7 @@
     <string name="nasjonale_retningslinjer_information">Kilden som brukes er <i>Nasjonale faglige retningslinjer</i> fra Helsedirektoratet</string>
     <string name="nasjonale_retningslinjer_recent_searches">Nylige søk</string>
     <string name="nasjonale_retningslinjer_recent_searches_removed">Nylige søk fjernet</string>
-    <string name="nasjonale_retningslinjer_clear_recent_searches">Fjern nylige søk</string>
+    <string name="nasjonale_retningslinjer_menu_clear_recent_searches">Fjern nylige søk</string>
     <string name="nasjonale_retningslinjer_menu_uri">Se på web</string>
 
     <!-- Nasjonale retningslinjer web view -->
@@ -225,6 +235,7 @@
 
     <!-- ATC -->
     <string name="atc_title">ATC-register</string>
+    <string name="atc_source">Kilde: Felleskatalogen.no</string>
     <string name="atc_menu_uri">Se på web</string>
 
     <!-- ATC codes -->
@@ -253,10 +264,12 @@
     <!-- Manufacturers -->
     <string name="manufacturers_title">Legemiddelfirmaer</string>
     <string name="manufacturers_toolbar_search_hint">Søk…</string>
+    <string name="manufacturers_source">Kilde: Felleskatalogen.no</string>
     <string name="manufacturers_list_empty">Ingen resultater</string>
     <string name="manufacturers_menu_uri">Se på web</string>
 
     <!-- Manufacturer -->
+    <string name="manufacturer_source">Kilde: Felleskatalogen.no</string>
     <string name="manufacturer_could_not_find_medication">Kunne ikke finne preparatet</string>
     <string name="manufacturer_information_subheader">Informasjon</string>
     <string name="manufacturer_list_subheader">Preparater</string>
@@ -265,13 +278,18 @@
     <!-- Pharmacies -->
     <string name="pharmacies_title">Apotek</string>
     <string name="pharmacies_toolbar_search_hint">Søk…</string>
+    <string name="pharmacies_source">Kilde: Felleskatalogen.no</string>
     <string name="pharmacies_list_empty">Ingen resultater</string>
     <string name="pharmacies_menu_uri">Se på web</string>
 
     <!-- Pharmacies location -->
     <string name="pharmacies_location_toolbar_search_hint">Søk…</string>
+    <string name="pharmacies_location_source">Kilde: Felleskatalogen.no</string>
     <string name="pharmacies_location_card_show_on_map">VIS PÅ KART</string>
     <string name="pharmacies_menu_locations">Vis alle på kart</string>
+
+    <!-- Pharmacies loaction map -->
+    <string name="pharmacies_location_map_source">Kilde: Felleskatalogen.no</string>
 
     <!-- Clinical trials -->
     <string name="clinicaltrials_title">Kliniske studier</string>
@@ -297,6 +315,45 @@
     <string name="clinicaltrials_webview_menu_go_forward">Gå frem</string>
     <string name="clinicaltrials_webview_menu_print">Skriv ut</string>
     <string name="clinicaltrials_webview_menu_uri">Se på web</string>
+
+    <!-- Calculators -->
+    <string name="calculators_title">Kalkulatorer</string>
+    <string name="calculators_information_dialog_title">Informasjon</string>
+    <string name="calculators_information_dialog_message"><![CDATA[<b>BMI</b><br>Mennesker med stor muskelmasse kan ha høy BMI, men har lav fettprosent og karakteriseres ikke som overvektige. For barn og ungdom opp til 18 år er det en egen alders- og kjønnsjustert skala.<br><br><b>Midjemål</b><br>Midjemål supplerer BMI i vurdering av overvektrelatert helserisiko, spesielt med tanke på metabolsk syndrom og type 2-diabetes.​ Målingen tas med vanlig målebånd og måles midt mellom nederste ribben og øverste delen av hoftekammen. Eller sagt på en annen måte: Mål der midjen er smalest!<br><br><b>Gravide</b><br>For gravide kvinner er overvekt og vektøkning, utover det anbefalte, forbundet med risiko for svangerskapsdiabetes og komplikasjoner under fødselen. For kvinner med stor vektøkning i svangerskapet kan det være vanskeligere å redusere vekten etter graviditeten. For kvinner med normal vekt er øvre anbefalte vektoppgang i løpet av svangerskapsperioden 16 kg i følge Institute of Medicine (IOM) sine retningslinjer fra 1990.​<br><br><small><i>Kilde: Helsenorge.no</i></small>]]></string>
+    <string name="calculators_information_dialog_positive_button">Lukk</string>
+    <string name="calculators_information_dialog_neutral_button">Les mer</string>
+    <string name="calculators_button">BEREGN</string>
+    <string name="calculators_bmi_title">BMI</string>
+    <string name="calculators_bmi_weight_hint">Vekt i kilogram</string>
+    <string name="calculators_bmi_height_hint">Høyde i centimeter</string>
+    <string name="calculators_bmi_normal_weight">Normalvekt</string>
+    <string name="calculators_bmi_under_weight">Undervekt</string>
+    <string name="calculators_bmi_over_weight">Overvekt</string>
+    <string name="calculators_bmi_obesity_1_weight">Fedme grad I</string>
+    <string name="calculators_bmi_obesity_2_weight">Fedme grad II</string>
+    <string name="calculators_bmi_obesity_3_weight">Fedme grad III</string>
+    <string name="calculators_bmi_dialog_title">BMI</string>
+    <string name="calculators_bmi_dialog_message_first">Resultat:</string>
+    <string name="calculators_bmi_dialog_message_second">Tolkning:</string>
+    <string name="calculators_bmi_dialog_message_third">Kilde: Helsenorge.no</string>
+    <string name="calculators_bmi_dialog_positive_button">Lukk</string>
+    <string name="calculators_bmi_dialog_neutral_button">Les mer</string>
+    <string name="calculators_bmi_invalid_values">Ugyldige verdier</string>
+    <string name="calculators_waist_measurement_title">Midjemål</string>
+    <string name="calculators_waist_measurement_hint">Midjemål i centimeter</string>
+    <string name="calculators_waist_measurement_men">Menn</string>
+    <string name="calculators_waist_measurement_women">Kvinner</string>
+    <string name="calculators_waist_measurement_normal_weight">Normalvekt</string>
+    <string name="calculators_waist_measurement_over_weight">Overvekt</string>
+    <string name="calculators_waist_measurement_obesity_weight">Fedme</string>
+    <string name="calculators_waist_measurement_dialog_title">Midjemål</string>
+    <string name="calculators_waist_measurement_dialog_message_first">Resultat:</string>
+    <string name="calculators_waist_measurement_dialog_message_second">Tolkning:</string>
+    <string name="calculators_waist_measurement_dialog_message_third">Kilde: Helsenorge.no</string>
+    <string name="calculators_waist_measurement_dialog_positive_button">Lukk</string>
+    <string name="calculators_waist_measurement_dialog_neutral_button">Les mer</string>
+    <string name="calculators_waist_measurement_invalid_value">Ugyldig verdi</string>
+    <string name="calculators_menu_information">Informasjon</string>
 
     <!-- Notifications from SLV -->
     <string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
@@ -371,6 +428,7 @@
     <string name="drawer_item_icd10">ICD-10</string>
     <string name="drawer_item_manufacturers">Legemiddelfirmaer</string>
     <string name="drawer_item_pharmacies">Apotek</string>
+    <string name="drawer_item_calculators">Kalkulatorer</string>
     <string name="drawer_item_clinicaltrials">Kliniske studier</string>
     <string name="drawer_item_notifications_from_slv">Varsler fra Legemiddelverket</string>
     <string name="drawer_item_settings">Innstillinger</string>
@@ -392,8 +450,8 @@
     <!-- Correct -->
     <string name="correct_dialog_title">Feil stavelse?</string>
     <string name="correct_dialog_message">Det kan se ut som om du har stavet søket ditt feil. Mente du heller</string>
-    <string name="correct_dialog_positive_button">JA</string>
-    <string name="correct_dialog_negative_button">NEI</string>
+    <string name="correct_dialog_positive_button">Ja</string>
+    <string name="correct_dialog_negative_button">Nei</string>
 
     <!-- Snackbars -->
     <string name="snackbar_undo">ANGRE</string>
@@ -423,6 +481,5 @@
     <!-- Various -->
     <string name="device_not_connected">Du må være tilkoblet Internett</string>
     <string name="image_content_description">Image</string>
-    <string name="diseases_and_treatments_search_no_results">Ingen treff i denne kilden</string>
 
 </resources>

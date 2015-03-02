@@ -4,8 +4,10 @@
 
     <android.support.v7.widget.Toolbar android:id="@+id/atc_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <ListView android:id="@+id/atc_list" android:layout_below="@+id/atc_toolbar" style="@style/atc_list_layout"/>
+    <TextView android:id="@+id/atc_source" android:layout_below="@+id/atc_toolbar" android:text="@string/atc_source" style="@style/atc_source"/>
 
-    <View android:layout_below="@+id/atc_toolbar" style="@style/toolbar_shadow"/>
+    <ListView android:id="@+id/atc_list" android:layout_below="@+id/atc_source" style="@style/atc_list_layout"/>
+
+    <View android:layout_below="@+id/atc_source" style="@style/toolbar_shadow"/>
 
 </RelativeLayout>

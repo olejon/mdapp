@@ -233,6 +233,12 @@ public class MainActivity extends ActionBarActivity
                         startActivity(intent);
                         break;
                     }
+                    case R.id.drawer_item_calculators:
+                    {
+                        Intent intent = new Intent(mContext, CalculatorsActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
                     case R.id.drawer_item_notifications_from_slv:
                     {
                         Intent intent = new Intent(mContext, NotificationsFromSlvActivity.class);
@@ -290,28 +296,30 @@ public class MainActivity extends ActionBarActivity
         });
 
         // Alarms
-        boolean felleskatalogenAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 1, new Intent(getApplicationContext(), FelleskatalogenAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
+        Context applicationContext = getApplicationContext();
+
+        boolean felleskatalogenAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 1, new Intent(applicationContext, FelleskatalogenAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
 
         if(!felleskatalogenAlarmIsStarted)
         {
             FelleskatalogenAlarm felleskatalogenAlarm = new FelleskatalogenAlarm();
-            felleskatalogenAlarm.setAlarm(getApplicationContext());
+            felleskatalogenAlarm.setAlarm(applicationContext);
         }
 
-        boolean messageAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(getApplicationContext(), MessageIntentService.class), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean messageAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(applicationContext, MessageIntentService.class), PendingIntent.FLAG_NO_CREATE) != null);
 
         if(!messageAlarmIsStarted)
         {
             MessageAlarm messageAlarm = new MessageAlarm();
-            messageAlarm.setAlarm(getApplicationContext());
+            messageAlarm.setAlarm(applicationContext);
         }
 
-        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 3, new Intent(getApplicationContext(), NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 3, new Intent(applicationContext, NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
 
         if(!notificationsFromSlvAlarmIsStarted)
         {
             NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
-            notificationsFromSlvAlarm.setAlarm(getApplicationContext());
+            notificationsFromSlvAlarm.setAlarm(applicationContext);
         }
 
         // Welcome
@@ -488,10 +496,9 @@ public class MainActivity extends ActionBarActivity
                 updateFelleskatalogen(false);
                 return true;
             }
-            case R.id.main_menu_donate:
+            case R.id.main_menu_uri:
             {
-                Intent intent = new Intent(mContext, DonateActivity.class);
-                startActivity(intent);
+                mTools.openUri("http://www.felleskatalogen.no/");
                 return true;
             }
             default:

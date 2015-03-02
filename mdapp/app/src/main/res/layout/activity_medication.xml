@@ -13,7 +13,11 @@
 
             <LinearLayout android:layout_alignParentTop="true" style="@style/medication_extended_toolbar_inner_layout">
 
-                <TextView android:id="@+id/medication_name" style="@style/medication_detail_name"/>
+                <LinearLayout style="@style/medication_detail_name_layout">
+                    <TextView android:id="@+id/medication_name" style="@style/medication_detail_name"/>
+                    <ImageButton android:id="@+id/medication_black_triangle" android:src="@drawable/ic_warning_black_24dp" android:contentDescription="@string/image_content_description" style="@style/medication_black_triangle"/>
+                </LinearLayout>
+
                 <LinearLayout android:id="@+id/medication_detail_atc_codes_layout" style="@style/medication_detail_atc_codes_layout"/>
                 <TextView android:id="@+id/medication_type" style="@style/medication_detail_type"/>
                 <TextView android:id="@+id/medication_schengen_certificate" style="@style/medication_detail_schengen_certificate"/>
@@ -21,7 +25,7 @@
 
             </LinearLayout>
 
-            <ImageButton android:id="@+id/medication_triangle" android:layout_toStartOf="@+id/medication_prescription_group" android:layout_toLeftOf="@+id/medication_prescription_group" android:src="@drawable/ic_warning_white_48dp" android:contentDescription="@string/image_content_description" style="@style/medication_triangle"/>
+            <ImageButton android:id="@+id/medication_triangle" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:src="@drawable/ic_warning_white_48dp" android:contentDescription="@string/image_content_description" style="@style/medication_triangle"/>
             <Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_prescription_group"/>
             <Button android:id="@+id/medication_blue_prescription" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_blue_prescription"/>
 

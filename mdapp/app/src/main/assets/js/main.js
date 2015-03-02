@@ -46,16 +46,11 @@ $(window).load(function()
 
 		var classes = element.attr('class');
 
-		var id = classes.match(/ordbok\s+(\d+)-\d+/);
+		var id = classes.match(/ordbok\s+(\d+-\d+)/);
 
 		if(id != null)
 		{
-			var definition = $('p#begrep-'+id[1]).html();
-
-			var title = definition.match(/<span class="synonym">([^<]+)<\/span>/);
-			var message = definition.match(/<span class="definition">([^<]+)<\/span>/);
-
-			if(title != null && message != null) Android.JSshowDialog(title[1], message[1].replace(/&nbsp;/g, ' '));
+			if(id[1] != null) Android.JSshowSynonymDialog(id[1]);
 		}
 	});
 });
@@ -101,4 +96,9 @@ function pauseVideos()
 	{
 		elements[i].pause();
 	}
+}
+
+function addPregnancyAndBreastfeedingLinks()
+{
+    $('div.nlh-substans-liste').html('<div class="pregnancy_and_breastfeeding"><a onclick="Android.JSshowPregnancyOrBreastfeedingDialog(\'graviditet\');">Vis informasjon om graviditet fra Norsk legemiddelhåndbok</a></div><div class="pregnancy_and_breastfeeding"><a onclick="Android.JSshowPregnancyOrBreastfeedingDialog(\'amming\');">Vis informasjon om amming fra Norsk legemiddelhåndbok</a></div>');
 }

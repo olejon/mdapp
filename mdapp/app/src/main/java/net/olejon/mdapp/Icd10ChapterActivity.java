@@ -294,7 +294,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
     {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        String apiUri = getString(R.string.project_website)+"api/1/icd-10/chapter/?chapter="+chapter;
+        String apiUri = getString(R.string.project_website_uri)+"api/1/icd-10/chapter/?chapter="+chapter;
 
         if(!cache) requestQueue.getCache().remove(apiUri);
 

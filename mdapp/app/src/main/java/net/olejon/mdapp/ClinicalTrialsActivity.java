@@ -242,7 +242,7 @@ public class ClinicalTrialsActivity extends ActionBarActivity
                 finish();
                 return true;
             }
-            case R.id.clinicaltrials_clear_recent_searches:
+            case R.id.clinicaltrials_menu_clear_recent_searches:
             {
                 clearRecentSearches();
                 return true;

@@ -245,7 +245,7 @@ public class InteractionsActivity extends ActionBarActivity
                 finish();
                 return true;
             }
-            case R.id.interactions_clear_recent_searches:
+            case R.id.interactions_menu_clear_recent_searches:
             {
                 clearRecentSearches();
                 return true;

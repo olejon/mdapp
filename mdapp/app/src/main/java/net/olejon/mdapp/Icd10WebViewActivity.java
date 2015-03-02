@@ -164,7 +164,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/icd-10/search/?uri="+pageUri, null, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+pageUri, null, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)

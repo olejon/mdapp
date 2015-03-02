@@ -5,11 +5,12 @@
     <item android:id="@+id/medication_menu_star" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_star_outline_white_24dp" android:title="@string/medication_menu_star"/>
     <item android:id="@+id/medication_menu_interactions" android:orderInCategory="2" app:showAsAction="never" android:title="@string/medication_menu_interactions"/>
     <item android:id="@+id/medication_menu_pictures_uri" android:orderInCategory="3" app:showAsAction="never" android:title="@string/medication_menu_pictures_uri"/>
-    <item android:id="@+id/medication_menu_manufacturer_uri" android:orderInCategory="11" app:showAsAction="never" android:title="@string/medication_menu_manufacturer_uri"/>
-    <item android:id="@+id/medication_menu_patient_uri" android:orderInCategory="12" app:showAsAction="never" android:title="@string/medication_menu_patient_uri"/>
-    <item android:id="@+id/medication_menu_spc_uri" android:orderInCategory="13" app:showAsAction="never" android:title="@string/medication_menu_spc_uri"/>
-    <item android:id="@+id/medication_menu_find_in_text" android:orderInCategory="14" app:showAsAction="never" android:title="@string/medication_menu_find_in_text"/>
-    <item android:id="@+id/medication_menu_print" android:orderInCategory="15" app:showAsAction="never" android:title="@string/medication_menu_print"/>
-    <item android:id="@+id/medication_menu_uri" android:orderInCategory="16" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
+    <item android:id="@+id/medication_menu_manufacturer_uri" android:orderInCategory="21" app:showAsAction="never" android:title="@string/medication_menu_manufacturer_uri"/>
+    <item android:id="@+id/medication_menu_patient_uri" android:orderInCategory="22" app:showAsAction="never" android:title="@string/medication_menu_patient_uri"/>
+    <item android:id="@+id/medication_menu_spc_uri" android:orderInCategory="23" app:showAsAction="never" android:title="@string/medication_menu_spc_uri"/>
+    <item android:id="@+id/medication_menu_find_in_text" android:orderInCategory="24" app:showAsAction="never" android:title="@string/medication_menu_find_in_text"/>
+    <item android:id="@+id/medication_menu_print" android:orderInCategory="25" app:showAsAction="never" android:title="@string/medication_menu_print"/>
+    <item android:id="@+id/medication_menu_nlh" android:orderInCategory="26" app:showAsAction="never" android:title="@string/medication_menu_nlh"/>
+    <item android:id="@+id/medication_menu_uri" android:orderInCategory="27" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
 
 </menu>

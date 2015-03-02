@@ -151,7 +151,7 @@ public class FelleskatalogenService extends Service
 
                 String uriAppend = (mUpdateTesting) ? "&testing&device="+device : "&device="+device;
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/felleskatalogen/db/?version_code="+mProjectVersionCode+uriAppend, null, new Response.Listener<JSONObject>()
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/felleskatalogen/db/?version_code="+mProjectVersionCode+uriAppend, null, new Response.Listener<JSONObject>()
                 {
                     @Override
                     public void onResponse(JSONObject response)
@@ -207,7 +207,7 @@ public class FelleskatalogenService extends Service
             if(mUpdateManually) mTools.showToast(getString(R.string.device_not_connected), 1);
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -227,7 +227,7 @@ public class FelleskatalogenService extends Service
     {
         if(!mTools.isDeviceConnected()) return;
 
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getString(R.string.project_website)+"api/1/felleskatalogen/db/"+file));
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getString(R.string.project_website_uri)+"api/1/felleskatalogen/db/"+file));
 
         request.setVisibleInDownloadsUi(false);
         request.setAllowedOverRoaming(false);

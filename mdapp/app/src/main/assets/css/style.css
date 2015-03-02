@@ -126,6 +126,11 @@ div.table-wrapper table
 	word-wrap: normal;
 }
 
+div.pregnancy_and_breastfeeding
+{
+    margin: 4px 0 0 0;
+}
+
 div#vnr-footnote
 {
 	font-size: 12px;

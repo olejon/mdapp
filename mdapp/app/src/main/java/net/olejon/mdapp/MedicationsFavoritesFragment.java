@@ -227,11 +227,11 @@ public class MedicationsFavoritesFragment extends Fragment
                 {
                     String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_TYPE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP};
 
-                    if(charSequence.length() == 0) return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, null);
+                    if(charSequence.length() == 0) return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
 
                     String query = charSequence.toString().trim();
 
-                    return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, null);
+                    return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
                 }
             });
 
@@ -243,7 +243,8 @@ public class MedicationsFavoritesFragment extends Fragment
         {
             mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getWritableDatabase();
 
-            mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+            String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_TYPE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP};
+            mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
 
             String[] fromColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_TYPE, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP};
             int[] toViews = {R.id.main_medications_favorites_list_item_name, R.id.main_medications_favorites_list_item_manufacturer, R.id.main_medications_favorites_list_item_type, R.id.main_medications_favorites_list_item_prescription_group};

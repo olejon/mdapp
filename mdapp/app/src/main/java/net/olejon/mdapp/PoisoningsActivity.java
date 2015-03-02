@@ -222,14 +222,14 @@ public class PoisoningsActivity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
-            case R.id.poisonings_call:
+            case R.id.poisonings_menu_call:
             {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:+4722591300"));
                 startActivity(intent);
                 return true;
             }
-            case R.id.poisonings_clear_recent_searches:
+            case R.id.poisonings_menu_clear_recent_searches:
             {
                 clearRecentSearches();
                 return true;

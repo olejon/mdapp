@@ -227,12 +227,12 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
-            case R.id.nasjonale_retningslinjer_clear_recent_searches:
+            case R.id.nasjonale_retningslinjer_menu_clear_recent_searches:
             {
                 clearRecentSearches();
                 return true;
             }
-            case R.id.nasjonale_retningslinjer_uri:
+            case R.id.nasjonale_retningslinjer_menu_uri:
             {
                 mTools.openUri("https://helsedirektoratet.no/retningslinjer#Default=%7B%22k%22%3A%22%22%2C%22r%22%3A%5B%7B%22n%22%3A%22HDDocumentType%22%2C%22t%22%3A%5B%22%5C%22%C7%82%C7%824e61736a6f6e616c65206661676c696765207265746e696e67736c696e6a6572%5C%22%22%2C%22equals(%5C%22Nasjonale%20faglige%20retningslinjer%5C%22)%22%5D%2C%22o%22%3A%22and%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D%5D%7D");
                 return true;

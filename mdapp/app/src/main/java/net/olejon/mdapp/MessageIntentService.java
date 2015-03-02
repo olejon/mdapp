@@ -67,7 +67,7 @@ public class MessageIntentService extends IntentService
 
         String device = mTools.getDevice();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/message/?version_name="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)

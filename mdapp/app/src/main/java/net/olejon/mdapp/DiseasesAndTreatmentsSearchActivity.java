@@ -72,19 +72,20 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
     private String mSearchLanguage;
 
-    private int mFirstPubMedPosition = 0;
-    private int mFirstWebOfSciencePosition = 0;
-    private int mFirstMedlinePlusPosition = 0;
-    private int mFirstWikipediaPosition = 0;
-    private int mFirstUpToDatePosition = 0;
-    private int mFirstBmjPosition = 0;
-    private int mFirstNhiPosition = 0;
-    private int mFirstSmlPosition = 0;
-    private int mFirstForskningPosition = 0;
-    private int mFirstHelsebiblioteketPosition = 0;
-    private int mFirstTidsskriftetPosition = 0;
-    private int mFirstHelsenorgePosition = 0;
-    private int mFirstBrukerhandbokenPosition = 0;
+    private int mFirstPubMedPosition;
+    private int mFirstWebOfSciencePosition;
+    private int mFirstMedlinePlusPosition;
+    private int mFirstWikipediaPosition;
+    private int mFirstUpToDatePosition;
+    private int mFirstBmjPosition;
+    private int mFirstNhiPosition;
+    private int mFirstSmlPosition;
+    private int mFirstForskningPosition;
+    private int mFirstHelsebiblioteketPosition;
+    private int mFirstOncolexPosition;
+    private int mFirstTidsskriftetPosition;
+    private int mFirstHelsenorgePosition;
+    private int mFirstBrukerhandbokenPosition;
 
     // Create activity
     @Override
@@ -170,7 +171,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -342,6 +343,19 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
                 }
                 case 6:
                 {
+                    if(mFirstOncolexPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstOncolexPosition);
+                    }
+
+                    break;
+                }
+                case 7:
+                {
                     if(mFirstTidsskriftetPosition == 0)
                     {
                         mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
@@ -353,7 +367,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
                     break;
                 }
-                case 7:
+                case 8:
                 {
                     if(mFirstHelsenorgePosition == 0)
                     {
@@ -366,7 +380,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
                     break;
                 }
-                case 8:
+                case 9:
                 {
                     if(mFirstBrukerhandbokenPosition == 0)
                     {
@@ -400,11 +414,26 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
     // Search
     private void search(final String language, final String string, final boolean cache)
     {
+        mFirstPubMedPosition = 0;
+        mFirstWebOfSciencePosition = 0;
+        mFirstMedlinePlusPosition = 0;
+        mFirstWikipediaPosition = 0;
+        mFirstUpToDatePosition = 0;
+        mFirstBmjPosition = 0;
+        mFirstNhiPosition = 0;
+        mFirstSmlPosition = 0;
+        mFirstForskningPosition = 0;
+        mFirstHelsebiblioteketPosition = 0;
+        mFirstOncolexPosition = 0;
+        mFirstTidsskriftetPosition = 0;
+        mFirstHelsenorgePosition = 0;
+        mFirstBrukerhandbokenPosition = 0;
+
         try
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            String apiUri = getString(R.string.project_website)+"api/1/diseases-and-treatments/"+language+"/?search="+URLEncoder.encode(string, "utf-8");
+            String apiUri = getString(R.string.project_website_uri)+"api/1/diseases-and-treatments/"+language+"/?search="+URLEncoder.encode(string, "utf-8");
 
             if(!cache) requestQueue.getCache().remove(apiUri);
 
@@ -440,6 +469,8 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
                             if(mFirstForskningPosition == 0 && type.equals("forskning")) mFirstForskningPosition = i;
 
                             if(mFirstHelsebiblioteketPosition == 0 && type.equals("helsebiblioteket")) mFirstHelsebiblioteketPosition = i;
+
+                            if(mFirstOncolexPosition == 0 && type.equals("oncolex")) mFirstOncolexPosition = i;
 
                             if(mFirstTidsskriftetPosition == 0 && type.equals("tidsskriftet")) mFirstTidsskriftetPosition = i;
 

@@ -2,6 +2,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/icd10_uri" android:orderInCategory="1" app:showAsAction="never" android:title="@string/icd10_menu_uri"/>
+    <item android:id="@+id/icd10_menu_uri" android:orderInCategory="1" app:showAsAction="never" android:title="@string/icd10_menu_uri"/>
 
 </menu>

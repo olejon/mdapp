@@ -208,8 +208,8 @@ public class AtcCodesActivity extends ActionBarActivity
 
                         while(matcher.find())
                         {
-                            substancesStringArray[0] = matcher.group(1).substring(0, 1).toUpperCase() + matcher.group(1).substring(1);
-                            substancesStringArray[1] = matcher.group(2).substring(0, 1).toUpperCase() + matcher.group(2).substring(1);
+                            substancesStringArray[0] = mTools.ucfirst(matcher.group(1));
+                            substancesStringArray[1] = mTools.ucfirst(matcher.group(2));
                         }
 
                         new MaterialDialog.Builder(mContext).title(getString(R.string.atc_codes_dialog_title)).items(substancesStringArray).itemsCallback(new MaterialDialog.ListCallback()
@@ -217,7 +217,7 @@ public class AtcCodesActivity extends ActionBarActivity
                             @Override
                             public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
                             {
-                                getSubstance(substancesStringArray[n]);
+                                mTools.getSubstance(substancesStringArray[n]);
                             }
                         }).itemColorRes(R.color.dark_blue).show();
                     }
@@ -232,7 +232,7 @@ public class AtcCodesActivity extends ActionBarActivity
                         {
                             if(!substance.equals("og"))
                             {
-                                substancesListStringArray[n] = substance.substring(0, 1).toUpperCase() + substance.substring(1).replace(",", "");
+                                substancesListStringArray[n] = mTools.ucfirst(substance).replace(",", "");
 
                                 n++;
                             }
@@ -243,13 +243,13 @@ public class AtcCodesActivity extends ActionBarActivity
                             @Override
                             public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
                             {
-                                getSubstance(substancesListStringArray[n]);
+                                mTools.getSubstance(substancesListStringArray[n]);
                             }
                         }).itemColorRes(R.color.dark_blue).show();
                     }
                     else if(uri.equals(""))
                     {
-                        getSubstance(name);
+                        mTools.getSubstance(name);
                     }
                     else
                     {
@@ -298,31 +298,5 @@ public class AtcCodesActivity extends ActionBarActivity
                 return super.onOptionsItemSelected(item);
             }
         }
-    }
-
-    private void getSubstance(String name)
-    {
-        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, null, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
-
-        if(cursor.getCount() > 0)
-        {
-            if(cursor.moveToFirst())
-            {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID));
-
-                Intent intent = new Intent(mContext, SubstanceActivity.class);
-                intent.putExtra("id", Long.parseLong(id));
-                startActivity(intent);
-            }
-        }
-        else
-        {
-            mTools.showToast(getString(R.string.atc_codes_substance_not_in_felleskatalogen), 1);
-        }
-
-        cursor.close();
-        sqLiteDatabase.close();
     }
 }

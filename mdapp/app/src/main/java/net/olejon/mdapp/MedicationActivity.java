@@ -32,12 +32,15 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -68,10 +71,12 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -83,6 +88,8 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MedicationActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
 {
@@ -128,6 +135,9 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     private String medicationPicturesUri;
     private String medicationPatientUri;
     private String medicationSpcUri;
+    private String medicationSubstances;
+
+    private String[] medicationSubstancesStringArray;
 
     private boolean mLinearLayoutAnimationHasBeenShown = false;
     private boolean mSetSection = true;
@@ -314,15 +324,46 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                     @Override
                     public void onFindResultReceived(int i, int i2, boolean b)
                     {
-                        int active = i + 1;
+                        if(i2 == 0)
+                        {
+                            mTextViewFindInTextCount.setVisibility(View.GONE);
+                            mImageButtonFindInText.setVisibility(View.GONE);
 
-                        mTextViewFindInTextCount.setText(String.valueOf(active)+"/"+String.valueOf(i2));
-                        mTextViewFindInTextCount.setVisibility(View.VISIBLE);
+                            mTools.showToast("Ingen treff", 1);
+                        }
+                        else
+                        {
+                            int active = i + 1;
+
+                            mTextViewFindInTextCount.setText(String.valueOf(active)+"/"+String.valueOf(i2));
+                            mTextViewFindInTextCount.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }
 
             mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Android");
+
+            mEditTextFindInText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+                {
+                    String find = mEditTextFindInText.getText().toString().trim();
+
+                    if(find.equals(""))
+                    {
+                        mTextViewFindInTextCount.setVisibility(View.GONE);
+                        mImageButtonFindInText.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
 
             mEditTextFindInText.setOnEditorActionListener(new TextView.OnEditorActionListener()
             {
@@ -360,7 +401,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 {
                     mWebView.findNext(true);
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) mWebView.loadUrl("javascript:scrollToPositionAfterFindInText()");
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) mWebView.loadUrl("javascript:scrollToPositionAfterFindInText();");
                 }
             });
         }
@@ -381,7 +422,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     {
         super.onPause();
 
-        mWebView.loadUrl("javascript:pauseVideos()");
+        mWebView.loadUrl("javascript:pauseVideos();");
 
         mWebView.pauseTimers();
 
@@ -498,7 +539,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             }
             case R.id.medication_menu_patient_uri:
             {
-                if(medicationPicturesUri.equals(""))
+                if(medicationPatientUri.equals(""))
                 {
                     mTools.showToast(getString(R.string.medication_no_package_inserts), 1);
                 }
@@ -553,6 +594,14 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 mTools.printDocument(mWebView, medicationName);
                 return true;
             }
+            case R.id.medication_menu_nlh:
+            {
+                Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                intent.putExtra("title", medicationName);
+                intent.putExtra("uri", "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+medicationName);
+                startActivity(intent);
+                return true;
+            }
             case R.id.medication_menu_uri:
             {
                 mTools.openUri(medicationUri);
@@ -593,7 +642,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                 String id = sectionJsonObject.getString("id");
 
-                mWebView.loadUrl("javascript:scrollToSection('"+id+"', "+animate+")");
+                mWebView.loadUrl("javascript:scrollToSection('"+id+"', "+animate+");");
             }
         }
         catch(Exception e)
@@ -710,7 +759,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                 RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website)+"api/1/felleskatalogen/medications/package-inserts/?uri="+URLEncoder.encode(medicationPatientUri, "utf-8"), new Response.Listener<JSONArray>()
+                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/felleskatalogen/medications/package-inserts/?uri="+URLEncoder.encode(medicationPatientUri, "utf-8"), new Response.Listener<JSONArray>()
                 {
                     @Override
                     public void onResponse(JSONArray response)
@@ -806,6 +855,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             final String medicationAtcCodes = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODES);
             final String medicationBluePrescription = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_BLUE_PRESCRIPTION);
             final String medicationTriangle = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_TRIANGLE);
+            final String medicationBlackTriangle = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_BLACK_TRIANGLE);
             final String medicationDopingStatus = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_DOPING_STATUS);
             final String medicationDopingStatusDescription = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_DOPING_STATUS_DESCRIPTION);
             final String medicationDopingStatusUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_DOPING_STATUS_URI);
@@ -825,6 +875,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             medicationPicturesUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PICTURES_URI);
             medicationPatientUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PATIENT_URI);
             medicationSpcUri = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_SPC_URI);
+            medicationSubstances = medication.get(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCES);
 
             // Medication sections
             try
@@ -872,10 +923,53 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             // Medication is favorite?
             if(medicationIsFavorite(medicationUri)) favoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp);
 
-            // Medication poisoning information and ATC codes
+            // Medication substances, poisoning information and ATC codes
             try
             {
                 int order = 3;
+
+                if(!medicationSubstances.equals("[\"\"]"))
+                {
+                    order++;
+
+                    MenuItem menuItem = mMenu.add(Menu.NONE, Menu.NONE, order, getString(R.string.medication_menu_substances));
+
+                    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+                    {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem)
+                        {
+                            try
+                            {
+                                final JSONArray medicationSubstancesJsonArray = new JSONArray(medicationSubstances);
+
+                                int medicationSubstancesJsonArrayLength = medicationSubstancesJsonArray.length();
+
+                                medicationSubstancesStringArray = new String[medicationSubstancesJsonArrayLength];
+
+                                for(int i = 0; i < medicationSubstancesJsonArrayLength; i++)
+                                {
+                                    medicationSubstancesStringArray[i] = medicationSubstancesJsonArray.getString(i).replace(" ", "");
+                                }
+
+                                new MaterialDialog.Builder(mContext).title(getString(R.string.medication_substances_dialog_title)).items(medicationSubstancesStringArray).itemsCallback(new MaterialDialog.ListCallback()
+                                {
+                                    @Override
+                                    public void onSelection(MaterialDialog materialDialog, View view, int n, CharSequence charSequence)
+                                    {
+                                        mTools.getSubstance(medicationSubstancesStringArray[n]);
+                                    }
+                                }).itemColorRes(R.color.dark_blue).show();
+                            }
+                            catch(Exception e)
+                            {
+                                Log.e("MedicationActivity", Log.getStackTraceString(e));
+                            }
+
+                            return true;
+                        }
+                    });
+                }
 
                 if(!medicationPoisoningUris.equals(""))
                 {
@@ -1105,6 +1199,26 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                 imageButton.setVisibility(View.VISIBLE);
             }
 
+            // Medication has black triangle warning?
+            if(medicationBlackTriangle.equals("yes"))
+            {
+                ImageButton imageButton = (ImageButton) findViewById(R.id.medication_black_triangle);
+
+                imageButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                        intent.putExtra("title", medicationName);
+                        intent.putExtra("uri", "http://www.legemiddelverket.no/Bivirkninger/legemiddelovervaaking/svart_trekant/Sider/default.aspx");
+                        startActivity(intent);
+                    }
+                });
+
+                imageButton.setVisibility(View.VISIBLE);
+            }
+
             // Medication exists with more information?
             if(medicationFullContentReference.equals(""))
             {
@@ -1151,6 +1265,17 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             // Web view
             mWebView.loadDataWithBaseURL("file:///android_asset/", medicationContent, "text/html", "utf-8", null);
+
+            Handler handler = new Handler();
+
+            handler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mWebView.loadUrl("javascript:addPregnancyAndBreastfeedingLinks();");
+                }
+            }, 1000);
         }
 
         @Override
@@ -1197,14 +1322,224 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         }
 
         @JavascriptInterface
-        public void JSshowDialog(final String title, final String message)
+        public void JSshowSynonymDialog(final String id)
         {
             runOnUiThread(new Runnable()
             {
                 @Override
                 public void run()
                 {
-                    new MaterialDialog.Builder(mContext).title(title).content(message).positiveText(getString(R.string.medication_javascript_interface_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    mProgressBar.setVisibility(View.VISIBLE);
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "http://www.felleskatalogen.no/m/medisin/ordbok/json?term="+id, null, new Response.Listener<JSONObject>()
+                    {
+                        @Override
+                        public void onResponse(JSONObject response)
+                        {
+                            mProgressBar.setVisibility(View.GONE);
+
+                            try
+                            {
+                                String title = response.getString("currentSynonym");
+                                String message = response.getString("description");
+
+                                Pattern pattern = Pattern.compile("<span class=\"ordbok (\\d+-\\d)+\">([^<]+)</span>");
+                                Matcher matcher = pattern.matcher(message);
+
+                                ArrayList<String> synonymIdsArrayList = new ArrayList<>();
+                                ArrayList<String> synonymNamesArrayList = new ArrayList<>();
+
+                                int i = 0;
+
+                                while(matcher.find())
+                                {
+                                    synonymIdsArrayList.add(matcher.group(1));
+                                    synonymNamesArrayList.add(matcher.group(2));
+
+                                    i++;
+                                }
+
+                                final String[] synonymIdsStringArrayList = new String[i];
+                                final String[] synonymNamesStringArrayList = new String[i];
+
+                                for(int n = 0; n < synonymIdsStringArrayList.length; n++)
+                                {
+                                    synonymIdsStringArrayList[n] = synonymIdsArrayList.get(n);
+                                    synonymNamesStringArrayList[n] = mTools.ucfirst(synonymNamesArrayList.get(n).replaceAll("\\s", " "));
+                                }
+
+                                message = message.replaceAll("\n", " ").replaceAll("<span[^>]*>", "<font color=\"#009688\"><i>").replaceAll("</span>", "</i></font>");
+
+                                MaterialDialog.Builder synonymDialog = new MaterialDialog.Builder(mContext).title(title).content(Html.fromHtml(message+"<br><br><small><i>"+getString(R.string.medication_synonym_dialog_source)+"</i></small>")).positiveText(getString(R.string.medication_synonym_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                                {
+                                    @Override
+                                    public void onNeutral(MaterialDialog dialog)
+                                    {
+                                        new MaterialDialog.Builder(mContext).title(getString(R.string.medication_synonym_list_dialog_title)).items(synonymNamesStringArrayList).itemsCallback(new MaterialDialog.ListCallback()
+                                        {
+                                            @Override
+                                            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
+                                            {
+                                                mProgressBar.setVisibility(View.VISIBLE);
+
+                                                String id = synonymIdsStringArrayList[i];
+
+                                                RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+                                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "http://www.felleskatalogen.no/m/medisin/ordbok/json?term="+id, null, new Response.Listener<JSONObject>()
+                                                {
+                                                    @Override
+                                                    public void onResponse(JSONObject response)
+                                                    {
+                                                        mProgressBar.setVisibility(View.GONE);
+
+                                                        try
+                                                        {
+                                                            String title = response.getString("currentSynonym");
+                                                            String message = response.getString("description");
+
+                                                            message = message.replaceAll("\n", " ").replaceAll("</?span[^>]*>", "");
+
+                                                            new MaterialDialog.Builder(mContext).title(title).content(Html.fromHtml(message+"<br><br><small><i>"+getString(R.string.medication_synonym_dialog_source)+"</i></small>")).positiveText(getString(R.string.medication_synonym_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                                                        }
+                                                        catch(Exception e)
+                                                        {
+                                                            mTools.showToast(getString(R.string.medication_could_not_get_data), 1);
+
+                                                            Log.e("MedicationActivity", Log.getStackTraceString(e));
+                                                        }
+                                                    }
+                                                }, new Response.ErrorListener()
+                                                {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error)
+                                                    {
+                                                        mProgressBar.setVisibility(View.GONE);
+
+                                                        mTools.showToast(getString(R.string.medication_could_not_get_data), 1);
+
+                                                        Log.e("MedicationActivity", error.toString());
+                                                    }
+                                                });
+
+                                                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                                                requestQueue.add(jsonObjectRequest);
+                                            }
+                                        }).itemColorRes(R.color.teal).show();
+                                    }
+                                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue);
+
+                                if(synonymIdsStringArrayList.length > 0) synonymDialog.neutralText(R.string.medication_synonym_dialog_neutral_button).neutralColorRes(R.color.teal);
+
+                                synonymDialog.show();
+                            }
+                            catch(Exception e)
+                            {
+                                mTools.showToast(getString(R.string.medication_could_not_get_data), 1);
+
+                                Log.e("MedicationActivity", Log.getStackTraceString(e));
+                            }
+                        }
+                    }, new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error)
+                        {
+                            mProgressBar.setVisibility(View.GONE);
+
+                            mTools.showToast(getString(R.string.medication_could_not_get_data), 1);
+
+                            Log.e("MedicationActivity", error.toString());
+                        }
+                    });
+
+                    jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                    requestQueue.add(jsonObjectRequest);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void JSshowPregnancyOrBreastfeedingDialog(final String chapter)
+        {
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        mProgressBar.setVisibility(View.VISIBLE);
+
+                        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+                        JSONArray medicationSubstancesJsonArray = new JSONArray(medicationSubstances);
+
+                        String substances = "";
+
+                        for(int i = 0; i < medicationSubstancesJsonArray.length(); i++)
+                        {
+                            substances += medicationSubstancesJsonArray.getString(i)+"|";
+                        }
+
+                        substances = URLEncoder.encode(substances.replaceAll("\\|$", ""), "utf-8");
+
+                        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("http://www.felleskatalogen.no/m/medisin/nlh/json?kapittel="+chapter+"&substans="+substances, new Response.Listener<JSONArray>()
+                        {
+                            @Override
+                            public void onResponse(JSONArray response)
+                            {
+                                mProgressBar.setVisibility(View.GONE);
+
+                                try
+                                {
+                                    String title = mTools.ucfirst(chapter);
+                                    String message = "";
+
+                                    for(int i = 0; i < response.length(); i++)
+                                    {
+                                        JSONObject jsonObject = response.getJSONObject(i);
+
+                                        String substance = mTools.ucfirst(jsonObject.getString("substansnavn"));
+                                        String description = jsonObject.getString("beskrivelse").replaceAll("<[^>]+>", "")+".";
+
+                                        message += "<b>"+substance+"</b><br>"+description+"<br><br>";
+                                    }
+
+                                    message = message.replaceAll("\\([^\\)]+\\)", "").replaceAll(" \\.", ".")+"<small><i>Kilde: Norsk legemiddelhåndbok</i></small>";
+
+                                    new MaterialDialog.Builder(mContext).title(title).content(Html.fromHtml(message)).positiveText("Lukk").contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                                }
+                                catch(Exception e)
+                                {
+                                    Log.e("MedicationActivity", Log.getStackTraceString(e));
+                                }
+                            }
+                        }, new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error)
+                            {
+                                mProgressBar.setVisibility(View.GONE);
+
+                                mTools.showToast(getString(R.string.medication_could_not_get_data), 1);
+
+                                Log.e("MedicationActivity", error.toString());
+                            }
+                        });
+
+                        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                        requestQueue.add(jsonArrayRequest);
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("MedicationActivity", Log.getStackTraceString(e));
+                    }
                 }
             });
         }

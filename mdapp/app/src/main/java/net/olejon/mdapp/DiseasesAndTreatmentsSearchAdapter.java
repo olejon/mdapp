@@ -168,6 +168,13 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
+                case "oncolex":
+                {
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.oncolex));
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
                 case "tidsskriftet":
                 {
                     viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.tidsskriftet));

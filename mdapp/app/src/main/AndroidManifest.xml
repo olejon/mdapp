@@ -157,15 +157,6 @@
             android:name=".AtcCodesActivity"
             android:parentActivityName=".AtcActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".AtcActivity"/>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/medisin/atc-register/.*"/>
-                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/medisin/atc-register/.*"/>
-                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/m/medisin/atc-register/.*"/>
-                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/m/medisin/atc-register/.*"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".Icd10Activity"
@@ -221,6 +212,11 @@
             android:name=".ClinicalTrialsWebViewActivity"
             android:parentActivityName=".ClinicalTrialsCardsActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsCardsActivity"/>
+        </activity>
+        <activity
+            android:name=".CalculatorsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".NotificationsFromSlvActivity"

@@ -121,7 +121,7 @@ public class Icd10Activity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
-            case R.id.icd10_uri:
+            case R.id.icd10_menu_uri:
             {
                 mTools.openUri("http://helsedirektoratet.no/kvalitet-planlegging/helsefaglige-kodeverk/icd-10/Sider/default.aspx");
                 return true;
@@ -138,7 +138,7 @@ public class Icd10Activity extends ActionBarActivity
     {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        String apiUri = getString(R.string.project_website)+"api/1/icd-10/";
+        String apiUri = getString(R.string.project_website_uri)+"api/1/icd-10/";
 
         if(!cache) requestQueue.getCache().remove(apiUri);
 

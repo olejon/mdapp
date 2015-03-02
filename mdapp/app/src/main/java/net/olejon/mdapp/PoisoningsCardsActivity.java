@@ -179,7 +179,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
 
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -306,7 +306,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            String apiUri = getString(R.string.project_website)+"api/1/poisonings/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
+            String apiUri = getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
 
             if(!cache) requestQueue.getCache().remove(apiUri);
 

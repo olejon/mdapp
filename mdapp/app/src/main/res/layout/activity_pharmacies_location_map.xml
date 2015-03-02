@@ -4,8 +4,10 @@
 
     <android.support.v7.widget.Toolbar android:id="@+id/pharmacies_location_map_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <fragment android:name="com.google.android.gms.maps.MapFragment" android:id="@+id/pharmacies_location_map_map" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_below="@+id/pharmacies_location_map_toolbar"/>
+    <TextView android:id="@+id/pharmacies_location_map_source" android:layout_below="@+id/pharmacies_location_map_toolbar" android:text="@string/pharmacies_location_map_source" style="@style/pharmacies_source"/>
 
-    <View android:layout_below="@+id/pharmacies_location_map_toolbar" style="@style/toolbar_shadow"/>
+    <fragment android:name="com.google.android.gms.maps.MapFragment" android:id="@+id/pharmacies_location_map_map" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_below="@+id/pharmacies_location_map_source"/>
+
+    <View android:layout_below="@+id/pharmacies_location_map_source" style="@style/toolbar_shadow"/>
 
 </RelativeLayout>

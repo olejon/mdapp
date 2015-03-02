@@ -136,7 +136,7 @@ public class LvhActivity extends ActionBarActivity
     {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        String apiUri = getString(R.string.project_website)+"api/1/lvh/";
+        String apiUri = getString(R.string.project_website_uri)+"api/1/lvh/";
 
         if(!cache) requestQueue.getCache().remove(apiUri);
 

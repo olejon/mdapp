@@ -134,7 +134,7 @@ public class ManufacturerActivity extends ActionBarActivity
             mToolbar.setTitle(manufacturerName);
 
             TextView textView = (TextView) findViewById(R.id.manufacturer_medications_count);
-            textView.setText(manufacturerMedicationsCount);
+            textView.setText(manufacturerMedicationsCount+" - "+getString(R.string.manufacturer_source));
 
             textView = (TextView) findViewById(R.id.manufacturer_information);
             textView.setText(Html.fromHtml(manufacturerInformation));

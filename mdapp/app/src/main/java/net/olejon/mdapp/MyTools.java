@@ -177,7 +177,7 @@ class MyTools
         {
             try
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mContext.getString(R.string.project_website)+"?page=redirect&uri="+URLEncoder.encode(uri, "utf-8")));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 mContext.startActivity(intent);
             }
             catch(Exception e)
@@ -246,6 +246,12 @@ class MyTools
         {
             view.setBackgroundDrawable(mContext.getResources().getDrawable(drawable));
         }
+    }
+
+    // Strings
+    public String ucfirst(String string)
+    {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
     // Printing
@@ -338,7 +344,33 @@ class MyTools
         }
     }
 
-    // Substance
+    // Substances
+    public void getSubstance(String name)
+    {
+        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, null, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+sqe(name), null, null, null, null);
+
+        if(cursor.getCount() > 0)
+        {
+            if(cursor.moveToFirst())
+            {
+                String id = cursor.getString(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID));
+
+                Intent intent = new Intent(mContext, SubstanceActivity.class);
+                intent.putExtra("id", Long.parseLong(id));
+                mContext.startActivity(intent);
+            }
+        }
+        else
+        {
+            showToast(mContext.getString(R.string.atc_codes_substance_not_in_felleskatalogen), 1);
+        }
+
+        cursor.close();
+        sqLiteDatabase.close();
+    }
+
     public long getSubstanceIdFromUri(String uri)
     {
         SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();

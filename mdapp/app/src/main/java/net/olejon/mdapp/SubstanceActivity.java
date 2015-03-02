@@ -179,7 +179,7 @@ public class SubstanceActivity extends ActionBarActivity
             mToolbar.setTitle(substanceName);
 
             TextView textView = (TextView) findViewById(R.id.substance_medications_count);
-            textView.setText(substanceMedicationsCount);
+            textView.setText(substanceMedicationsCount+" - "+getString(R.string.substance_source));
 
             if(!substanceAtcCodes.equals(""))
             {

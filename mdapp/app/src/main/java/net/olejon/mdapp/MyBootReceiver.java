@@ -33,14 +33,16 @@ public class MyBootReceiver extends BroadcastReceiver
         if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
         {
             // Start alarms
+            Context applicationContext = context.getApplicationContext();
+
             FelleskatalogenAlarm felleskatalogenAlarm = new FelleskatalogenAlarm();
-            felleskatalogenAlarm.setAlarm(context.getApplicationContext());
+            felleskatalogenAlarm.setAlarm(applicationContext);
 
             MessageAlarm messageAlarm = new MessageAlarm();
-            messageAlarm.setAlarm(context.getApplicationContext());
+            messageAlarm.setAlarm(applicationContext);
 
             NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
-            notificationsFromSlvAlarm.setAlarm(context.getApplicationContext());
+            notificationsFromSlvAlarm.setAlarm(applicationContext);
         }
     }
 }

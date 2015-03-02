@@ -52,7 +52,7 @@
     </style>
 
     <!-- Substance -->
-    <style name="substance_extended_toolbar_layout_base">
+    <style name="substance_medications_count_base">
         <item name="android:elevation">2dp</item>
     </style>
 
@@ -132,6 +132,11 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- ATC -->
+    <style name="atc_source_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
     <!-- ICD-10 -->
     <style name="icd10_list_item_chapter_base">
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -143,6 +148,10 @@
     </style>
 
     <!-- Manufacturers -->
+    <style name="manufacturers_source_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
     <style name="manufacturers_list_item_name_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
@@ -152,7 +161,7 @@
     </style>
 
     <!-- Manufacturer -->
-    <style name="manufacturer_extended_toolbar_layout_base">
+    <style name="manufacturer_medications_count_base">
         <item name="android:elevation">2dp</item>
     </style>
 
@@ -161,6 +170,10 @@
     </style>
 
     <!-- Pharmacies -->
+    <style name="pharmacies_source_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
     <style name="pharmacies_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
@@ -175,6 +188,11 @@
     </style>
 
     <style name="clinicaltrials_cards_card_detail_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Calculators -->
+    <style name="calculators_card_title_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 

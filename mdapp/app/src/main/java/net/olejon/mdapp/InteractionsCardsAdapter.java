@@ -171,7 +171,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
                             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website)+"api/1/interactions/handling/?uri="+ URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+ URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
                             {
                                 @Override
                                 public void onResponse(JSONObject response)

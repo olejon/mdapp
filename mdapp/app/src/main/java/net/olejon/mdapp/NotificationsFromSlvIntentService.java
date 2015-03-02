@@ -68,7 +68,7 @@ public class NotificationsFromSlvIntentService extends IntentService
 
             String device = mTools.getDevice();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website)+"api/1/notifications-from-slv/?first&version_code="+projectVersionCode+"&device="+device, new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/notifications-from-slv/?first&version_code="+projectVersionCode+"&device="+device, new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
