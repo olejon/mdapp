@@ -4,42 +4,46 @@
 
     <android.support.v7.widget.Toolbar android:id="@+id/calculators_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <LinearLayout android:layout_below="@+id/calculators_toolbar" style="@style/calculators_inner_layout">
+    <ScrollView android:layout_below="@+id/calculators_toolbar" style="@style/calculators_inner_layout">
 
-        <android.support.v7.widget.CardView style="@style/calculators_card_layout">
+        <LinearLayout style="@style/calculators_inner_inner_layout">
 
-            <LinearLayout style="@style/calculators_card_inner_layout">
+            <android.support.v7.widget.CardView style="@style/calculators_card_layout">
 
-                <TextView android:text="@string/calculators_bmi_title" style="@style/calculators_card_title"/>
+                <LinearLayout style="@style/calculators_card_inner_layout">
 
-                <EditText android:id="@+id/calculators_bmi_weight" android:hint="@string/calculators_bmi_weight_hint" style="@style/calculators_bmi_weight_edittext"/>
-                <EditText android:id="@+id/calculators_bmi_height" android:hint="@string/calculators_bmi_height_hint" style="@style/calculators_bmi_height_edittext"/>
+                    <TextView android:text="@string/calculators_bmi_title" style="@style/calculators_card_title"/>
 
-                <View style="@style/calculators_card_separator"/>
+                    <EditText android:id="@+id/calculators_bmi_weight" android:hint="@string/calculators_bmi_weight_hint" style="@style/calculators_bmi_weight_edittext"/>
+                    <EditText android:id="@+id/calculators_bmi_height" android:hint="@string/calculators_bmi_height_hint" style="@style/calculators_bmi_height_edittext"/>
 
-                <TextView android:id="@+id/calculators_bmi_button" android:text="@string/calculators_button" style="@style/calculators_button"/>
+                    <View style="@style/calculators_card_separator"/>
 
-            </LinearLayout>
+                    <TextView android:id="@+id/calculators_bmi_button" android:text="@string/calculators_button" style="@style/calculators_button"/>
 
-        </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-        <android.support.v7.widget.CardView style="@style/calculators_card_layout">
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout style="@style/calculators_card_inner_layout">
+            <android.support.v7.widget.CardView style="@style/calculators_card_layout">
 
-                <TextView android:text="@string/calculators_waist_measurement_title" style="@style/calculators_card_title"/>
+                <LinearLayout style="@style/calculators_card_inner_layout">
 
-                <EditText android:id="@+id/calculators_waist_measurement" android:hint="@string/calculators_waist_measurement_hint" style="@style/calculators_waist_measurement_edittext"/>
+                    <TextView android:text="@string/calculators_waist_measurement_title" style="@style/calculators_card_title"/>
 
-                <View style="@style/calculators_card_separator"/>
+                    <EditText android:id="@+id/calculators_waist_measurement" android:hint="@string/calculators_waist_measurement_hint" style="@style/calculators_waist_measurement_edittext"/>
 
-                <TextView android:id="@+id/calculators_waist_measurement_button" android:text="@string/calculators_button" style="@style/calculators_button"/>
+                    <View style="@style/calculators_card_separator"/>
 
-            </LinearLayout>
+                    <TextView android:id="@+id/calculators_waist_measurement_button" android:text="@string/calculators_button" style="@style/calculators_button"/>
 
-        </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-    </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <View android:layout_below="@+id/calculators_toolbar" style="@style/toolbar_shadow"/>
 

@@ -66,9 +66,6 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
         // Settings
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
-        // Notification manager
-        mNotificationManagerCompat = NotificationManagerCompat.from(mContext);
-
         // Connected?
         if(!mTools.isDeviceConnected())
         {
@@ -78,6 +75,9 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
 
             return;
         }
+
+        // Notification manager
+        mNotificationManagerCompat = NotificationManagerCompat.from(mContext);
 
         // Layout
         setContentView(R.layout.activity_notifications_from_slv);
@@ -117,10 +117,11 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
         getNotifications(true);
     }
 
+    // Resume activity
     @Override
-    protected void onPostResume()
+    protected void onResume()
     {
-        super.onPostResume();
+        super.onResume();
 
         mNotificationManagerCompat.cancel(NotificationsFromSlvIntentService.NOTIFICATION_ID);
     }

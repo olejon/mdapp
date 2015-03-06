@@ -26,24 +26,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,9 +54,6 @@ public class AtcCodesActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        // Settings
-        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Intent
         Intent intent = getIntent();
@@ -116,7 +102,7 @@ public class AtcCodesActivity extends ActionBarActivity
         ListView listView = (ListView) findViewById(R.id.atc_codes_list);
 
         // Get substances
-        mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+        /*mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
 
         mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_ATC_CODES, null, FelleskatalogenSQLiteHelper.ATC_CODES_COLUMN_CODE+" LIKE '"+matchedAtcCode+"%'", null, null, null, null);
 
@@ -259,7 +245,7 @@ public class AtcCodesActivity extends ActionBarActivity
             });
 
             listView.setSelection(mAtcCodePosition);
-        }
+        }*/
     }
 
     // Destroy activity

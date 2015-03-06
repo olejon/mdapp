@@ -103,22 +103,22 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
             {
                 case "lvh_urgent":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lvh_urgent));
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
                     break;
                 }
                 case "lvh_symptoms":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lvh_symptoms));
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.stethoscope));
                     break;
                 }
                 case "lvh_injuries":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lvh_injuries));
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_healing_white_24dp));
                     break;
                 }
                 case "lvh_administrative":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lvh_administrative));
+                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_my_library_books_white_24dp));
                     break;
                 }
             }

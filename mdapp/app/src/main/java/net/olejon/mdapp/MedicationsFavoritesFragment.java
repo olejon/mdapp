@@ -75,7 +75,7 @@ public class MedicationsFavoritesFragment extends Fragment
         mTools = new MyTools(mActivity);
 
         // Search
-        mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
+        //mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_medications_favorites_list);

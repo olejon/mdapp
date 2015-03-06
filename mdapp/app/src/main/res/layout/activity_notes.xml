@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notes_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/notes_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+
+    <TextView android:id="@+id/notes_empty" android:layout_below="@+id/notes_toolbar" android:text="@string/notes_empty" style="@style/notes_empty"/>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/notes_cards" android:layout_below="@+id/notes_toolbar" style="@style/notes_cards"/>
+
+    <View android:layout_below="@+id/notes_toolbar" style="@style/toolbar_shadow"/>
+
+    <com.melnykov.fab.FloatingActionButton android:id="@+id/notes_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_add_white_24dp" style="@style/fab_layout"/>
+
+</RelativeLayout>

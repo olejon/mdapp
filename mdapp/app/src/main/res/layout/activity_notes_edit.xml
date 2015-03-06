@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notes_edit_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/notes_edit_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+
+    <ScrollView android:layout_below="@+id/notes_edit_toolbar" style="@style/notes_edit_inner_layout">
+
+        <LinearLayout style="@style/notes_edit_inner_inner_layout">
+
+            <EditText android:id="@+id/notes_edit_title" android:hint="@string/notes_edit_title_hint" style="@style/notes_edit_title_edittext"/>
+            <EditText android:id="@+id/notes_edit_text" android:hint="@string/notes_edit_text_hint" style="@style/notes_edit_text_edittext"/>
+            <EditText android:id="@+id/notes_edit_patient_id" android:hint="@string/notes_edit_patient_id_hint" style="@style/notes_edit_edittext"/>
+            <EditText android:id="@+id/notes_edit_patient_name" android:hint="@string/notes_edit_patient_name_hint" style="@style/notes_edit_edittext"/>
+            <EditText android:id="@+id/notes_edit_patient_doctor" android:hint="@string/notes_edit_patient_doctor_hint" style="@style/notes_edit_edittext"/>
+            <EditText android:id="@+id/notes_edit_patient_department" android:hint="@string/notes_edit_patient_department_hint" style="@style/notes_edit_edittext"/>
+            <EditText android:id="@+id/notes_edit_patient_room" android:hint="@string/notes_edit_patient_room_hint" style="@style/notes_edit_edittext"/>
+
+            <TextView android:text="@string/notes_edit_patient_medications_subheader" style="@style/subheader"/>
+
+            <TextView android:id="@+id/notes_edit_patient_no_medications" android:text="@string/notes_edit_patient_medications_none" style="@style/notes_edit_patient_no_medications"/>
+
+            <LinearLayout android:id="@+id/notes_edit_patient_medications" style="@style/notes_edit_patient_medications_layout"/>
+
+            <Button android:id="@+id/notes_edit_patient_add_medication" android:text="@string/notes_edit_patient_medications" style="@style/notes_edit_button"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View android:layout_below="@+id/notes_edit_toolbar" style="@style/toolbar_shadow"/>
+
+</RelativeLayout>

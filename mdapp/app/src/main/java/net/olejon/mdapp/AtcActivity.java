@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -37,7 +36,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -159,8 +157,8 @@ public class AtcActivity extends ActionBarActivity
     // Get ATC
     private void getAnatomicalGroups()
     {
-        GetAtcTask getAtcTask = new GetAtcTask();
-        getAtcTask.execute();
+        //GetAtcTask getAtcTask = new GetAtcTask();
+        //getAtcTask.execute();
 
         mGroups = "anatomical_groups";
     }
@@ -347,7 +345,7 @@ public class AtcActivity extends ActionBarActivity
         }
     }
 
-    private class GetAtcTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    /*private class GetAtcTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
@@ -383,5 +381,5 @@ public class AtcActivity extends ActionBarActivity
 
             return new SimpleCursorAdapter(mContext, R.layout.activity_atc_anatomical_groups_list_item, mCursor, fromColumns, toViews, 0);
         }
-    }
+    }*/
 }

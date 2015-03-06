@@ -28,10 +28,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,8 +53,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
+
 public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 {
+    private static final int VOICE_SEARCH_REQUEST_CODE = 1;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -79,11 +85,11 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
-        // Layout
-        setContentView(R.layout.activity_diseases_and_treatments);
-
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Layout
+        setContentView(R.layout.activity_diseases_and_treatments);
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_toolbar);
@@ -155,6 +161,23 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
         });
     }
 
+    // Activity result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
+        {
+            ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            String voiceSearchString = voiceSearchArrayList.get(0);
+
+            search(voiceSearchString);
+        }
+    }
+
+    // Pause activity
     @Override
     protected void onPause()
     {
@@ -165,9 +188,9 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 
     // Resume activity
     @Override
-    protected void onPostResume()
+    protected void onResume()
     {
-        super.onPostResume();
+        super.onResume();
 
         getRecentSearches();
     }
@@ -230,6 +253,24 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            case R.id.diseases_and_treatments_menu_voice_search:
+            {
+                String language = (mSearchLanguage.equals("")) ? "en-US" : "nb-NO";
+
+                try
+                {
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
+                }
+                catch(Exception e)
+                {
+                    Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
+                }
+
                 return true;
             }
             case R.id.diseases_and_treatments_menu_clear_recent_searches:

@@ -22,33 +22,23 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -75,11 +65,11 @@ public class PharmaciesActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
-        // Layout
-        setContentView(R.layout.activity_pharmacies);
-
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Layout
+        setContentView(R.layout.activity_pharmacies);
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_toolbar);
@@ -137,8 +127,8 @@ public class PharmaciesActivity extends ActionBarActivity
         mListView = (ListView) findViewById(R.id.pharmacies_list);
 
         // Get pharmacies
-        GetPharmaciesTask getPharmaciesTask = new GetPharmaciesTask();
-        getPharmaciesTask.execute();
+        //GetPharmaciesTask getPharmaciesTask = new GetPharmaciesTask();
+        //getPharmaciesTask.execute();
     }
 
     // Destroy activity
@@ -214,7 +204,7 @@ public class PharmaciesActivity extends ActionBarActivity
     }
 
     // Get pharmacies
-    private class GetPharmaciesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    /*private class GetPharmaciesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
@@ -303,5 +293,5 @@ public class PharmaciesActivity extends ActionBarActivity
 
             return new SimpleCursorAdapter(mContext, R.layout.activity_pharmacies_list_item, mCursor, fromColumns, toViews, 0);
         }
-    }
+    }*/
 }

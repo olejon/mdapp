@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,6 +35,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -66,6 +68,8 @@ import java.util.HashMap;
 
 public class Icd10ChapterActivity extends ActionBarActivity
 {
+    private static final int VOICE_SEARCH_REQUEST_CODE = 1;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -98,11 +102,11 @@ public class Icd10ChapterActivity extends ActionBarActivity
         final String title = intent.getStringExtra("title");
         final int chapter = intent.getIntExtra("chapter", 0);
 
-        // Layout
-        setContentView(R.layout.activity_icd10_chapter);
-
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Layout
+        setContentView(R.layout.activity_icd10_chapter);
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_chapter_toolbar);
@@ -185,6 +189,22 @@ public class Icd10ChapterActivity extends ActionBarActivity
         getData(chapter, true);
     }
 
+    // Activity result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
+        {
+            ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            String voiceSearchString = voiceSearchArrayList.get(0);
+
+            populateListView(voiceSearchString);
+        }
+    }
+
     // Back button
     @Override
     public void onBackPressed()
@@ -219,6 +239,13 @@ public class Icd10ChapterActivity extends ActionBarActivity
 
     // Menu
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_icd10_chapter, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -226,6 +253,22 @@ public class Icd10ChapterActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            case R.id.icd10_chapter_menu_voice_search:
+            {
+                try
+                {
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
+                }
+                catch(Exception e)
+                {
+                    Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                }
+
                 return true;
             }
             default:

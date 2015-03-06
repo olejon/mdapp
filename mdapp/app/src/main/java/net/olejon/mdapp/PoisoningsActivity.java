@@ -29,10 +29,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,8 +54,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
+
 public class PoisoningsActivity extends ActionBarActivity
 {
+    private static final int VOICE_SEARCH_REQUEST_CODE = 1;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -74,11 +80,11 @@ public class PoisoningsActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
-        // Layout
-        setContentView(R.layout.activity_poisonings);
-
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Layout
+        setContentView(R.layout.activity_poisonings);
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
@@ -153,11 +159,27 @@ public class PoisoningsActivity extends ActionBarActivity
         mListView.addHeaderView(listViewHeader, null, false);
     }
 
+    // Activity result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
+        {
+            ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            String voiceSearchString = voiceSearchArrayList.get(0);
+
+            search(voiceSearchString);
+        }
+    }
+
     // Resume activity
     @Override
-    protected void onPostResume()
+    protected void onResume()
     {
-        super.onPostResume();
+        super.onResume();
 
         getRecentSearches();
     }
@@ -227,6 +249,22 @@ public class PoisoningsActivity extends ActionBarActivity
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:+4722591300"));
                 startActivity(intent);
+                return true;
+            }
+            case R.id.poisonings_menu_voice_search:
+            {
+                try
+                {
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
+                }
+                catch(Exception e)
+                {
+                    Log.e("PoisoningsActivity", Log.getStackTraceString(e));
+                }
+
                 return true;
             }
             case R.id.poisonings_menu_clear_recent_searches:

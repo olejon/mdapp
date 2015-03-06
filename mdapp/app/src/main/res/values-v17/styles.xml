@@ -74,12 +74,22 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- Clinical trials -->
+    <style name="clinicaltrials_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
     <!-- Notifications from SLV -->
     <style name="notifications_from_slv_card_top_value_base">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
     <style name="notifications_from_slv_card_message_base" parent="notifications_from_slv_card_value">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Notes -->
+    <style name="notes_card_text_base">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 

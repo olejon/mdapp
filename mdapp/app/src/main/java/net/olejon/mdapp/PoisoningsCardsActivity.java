@@ -91,7 +91,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        searchString = intent.getStringExtra("search").replaceAll("(?i)\\s*depot", "");
+        searchString = intent.getStringExtra("search");
 
         // Layout
         setContentView(R.layout.activity_poisonings_cards);

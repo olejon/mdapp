@@ -22,21 +22,14 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 
 public class MedicationsFragment extends Fragment
@@ -63,15 +56,15 @@ public class MedicationsFragment extends Fragment
         mTools = new MyTools(mActivity);
 
         // Search
-        mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
+        //mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_medications_list);
         mListViewEmpty = viewGroup.findViewById(R.id.main_medications_list_empty);
 
         // Get medications
-        GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
-        getMedicationsTask.execute();
+        //GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
+        //getMedicationsTask.execute();
 
         return viewGroup;
     }
@@ -86,7 +79,7 @@ public class MedicationsFragment extends Fragment
     }
 
     // Get medications
-    private class GetMedicationsTask extends AsyncTask<Void, Void, FelleskatalogenSimpleCursorAdapter>
+    /*private class GetMedicationsTask extends AsyncTask<Void, Void, FelleskatalogenSimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final FelleskatalogenSimpleCursorAdapter felleskatalogenSimpleCursorAdapter)
@@ -159,5 +152,5 @@ public class MedicationsFragment extends Fragment
 
             return new FelleskatalogenSimpleCursorAdapter(mActivity, mCursor, fromColumns, toViews);
         }
-    }
+    }*/
 }

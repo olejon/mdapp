@@ -46,7 +46,7 @@ import org.json.JSONObject;
 
 public class NotificationsFromSlvIntentService extends IntentService
 {
-    public static final int NOTIFICATION_ID = 3;
+    public static final int NOTIFICATION_ID = 2;
 
     public NotificationsFromSlvIntentService()
     {

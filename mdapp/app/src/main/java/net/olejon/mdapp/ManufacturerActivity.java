@@ -23,29 +23,14 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ManufacturerActivity extends ActionBarActivity
 {
@@ -84,8 +69,8 @@ public class ManufacturerActivity extends ActionBarActivity
         mListView.addHeaderView(listViewHeader, null, false);
 
         // Get manufacturer
-        GetManufacturerTask getManufacturerTask = new GetManufacturerTask();
-        getManufacturerTask.execute(manufacturerId);
+        //GetManufacturerTask getManufacturerTask = new GetManufacturerTask();
+        //getManufacturerTask.execute(manufacturerId);
     }
 
     // Menu
@@ -119,7 +104,7 @@ public class ManufacturerActivity extends ActionBarActivity
     }
 
     // Get manufacturer
-    private class GetManufacturerTask extends AsyncTask<Long, Void, HashMap<String, String>>
+    /*private class GetManufacturerTask extends AsyncTask<Long, Void, HashMap<String, String>>
     {
         @Override
         protected void onPostExecute(HashMap<String, String> manufacturer)
@@ -226,5 +211,5 @@ public class ManufacturerActivity extends ActionBarActivity
 
             return manufacturer;
         }
-    }
+    }*/
 }

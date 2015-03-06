@@ -191,17 +191,45 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Calculators -->
-    <style name="calculators_card_title_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <!-- Notifications from SLV -->
     <style name="notifications_from_slv_card_title_base" parent="notifications_from_slv_card_value">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="notifications_from_slv_card_medications_item_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Calculators -->
+    <style name="calculators_card_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Notes -->
+    <style name="notes_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="notes_card_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Notes edit -->
+    <style name="notes_edit_patient_medications_item_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Notes edit medications -->
+    <style name="notes_edit_medications_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="notes_edit_medications_list_item_name_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Tasks -->
+    <style name="tasks_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 

@@ -29,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -85,14 +86,14 @@ public class InteractionsActivity extends ActionBarActivity
         }
         else
         {
-            searchString = intent.getStringExtra("search");
+            searchString = intent.getStringExtra("search").split(" ")[0];
         }
-
-        // Layout
-        setContentView(R.layout.activity_interactions);
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Layout
+        setContentView(R.layout.activity_interactions);
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
@@ -178,9 +179,9 @@ public class InteractionsActivity extends ActionBarActivity
 
     // Resume activity
     @Override
-    protected void onPostResume()
+    protected void onResume()
     {
-        super.onPostResume();
+        super.onResume();
 
         getRecentSearches();
     }
@@ -242,7 +243,7 @@ public class InteractionsActivity extends ActionBarActivity
         {
             case android.R.id.home:
             {
-                finish();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
             case R.id.interactions_menu_clear_recent_searches:

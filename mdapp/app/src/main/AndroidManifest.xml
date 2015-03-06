@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -34,20 +33,6 @@
             android:name=".MedicationActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/medisin/.*-.*-.*"/>
-                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/medisin/.*-.*-.*"/>
-                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/m/medisin/.*-.*-.*"/>
-                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/m/medisin/.*-.*-.*"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".MedicationPicturesActivity"
@@ -68,15 +53,6 @@
             android:name=".SubstanceActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/medisin/substansregister/.*"/>
-                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/medisin/substansregister/.*"/>
-                <data android:scheme="http" android:host="felleskatalogen.no" android:pathPattern="/m/medisin/substansregister/.*"/>
-                <data android:scheme="http" android:host="www.felleskatalogen.no" android:pathPattern="/m/medisin/substansregister/.*"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".DiseasesAndTreatmentsActivity"
@@ -214,11 +190,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsCardsActivity"/>
         </activity>
         <activity
-            android:name=".CalculatorsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
             android:name=".NotificationsFromSlvActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
@@ -227,6 +198,33 @@
             android:name=".NotificationsFromSlvWebViewActivity"
             android:parentActivityName=".NotificationsFromSlvActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotificationsFromSlvActivity"/>
+        </activity>
+        <activity
+            android:name=".CalculatorsActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".NotesActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".NotesEditActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".NotesActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotesActivity"/>
+        </activity>
+        <activity
+            android:name=".NotesEditMedicationsActivity"
+            android:parentActivityName=".NotesEditActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotesEditActivity"/>
+        </activity>
+        <activity
+            android:name=".TasksActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".SettingsActivity"
@@ -261,14 +259,12 @@
             <intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter>
         </receiver>
 
-        <receiver android:name=".FelleskatalogenAlarm" android:process=":felleskatalogenalarm"/>
         <receiver android:name=".MessageAlarm" android:process=":messagealarm"/>
         <receiver android:name=".NotificationsFromSlvAlarm" android:process=":notificationsfromslvalarm"/>
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBl0K_iMW45EKrAzK63lTKFNqf7rYJvOTw"/>
 
-        <service android:name=".FelleskatalogenService"/>
         <service android:name=".MessageIntentService"/>
         <service android:name=".NotificationsFromSlvIntentService"/>
         <service android:name=".WidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>

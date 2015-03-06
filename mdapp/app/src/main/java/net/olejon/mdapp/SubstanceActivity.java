@@ -23,31 +23,16 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SubstanceActivity extends ActionBarActivity
 {
@@ -74,7 +59,7 @@ public class SubstanceActivity extends ActionBarActivity
         Intent intent = getIntent();
         String intentAction = intent.getAction();
 
-        final long substanceId;
+        long substanceId;
 
         if(intentAction != null && intentAction.equals(Intent.ACTION_VIEW))
         {
@@ -111,8 +96,8 @@ public class SubstanceActivity extends ActionBarActivity
             mListView.addHeaderView(listViewHeader, null, false);
 
             // Get substance
-            GetSubstanceTask getSubstanceTask = new GetSubstanceTask();
-            getSubstanceTask.execute(substanceId);
+            //GetSubstanceTask getSubstanceTask = new GetSubstanceTask();
+            //getSubstanceTask.execute(substanceId);
         }
     }
 
@@ -163,7 +148,7 @@ public class SubstanceActivity extends ActionBarActivity
     }
 
     // Get substance
-    private class GetSubstanceTask extends AsyncTask<Long, Void, HashMap<String, String>>
+    /*private class GetSubstanceTask extends AsyncTask<Long, Void, HashMap<String, String>>
     {
         @Override
         protected void onPostExecute(HashMap<String, String> substance)
@@ -306,5 +291,5 @@ public class SubstanceActivity extends ActionBarActivity
 
             return substance;
         }
-    }
+    }*/
 }

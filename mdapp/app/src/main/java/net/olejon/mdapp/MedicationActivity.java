@@ -22,17 +22,11 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -43,7 +37,6 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,8 +51,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -78,16 +69,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -185,6 +172,9 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         }
         else
         {
+            // Input manager
+            mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
             // Layout
             setContentView(R.layout.activity_medication);
 
@@ -194,9 +184,6 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             mEditTextFindInText = (EditText) findViewById(R.id.medication_find_in_text_search);
             mTextViewFindInTextCount = (TextView) findViewById(R.id.medication_find_in_text_search_count);
             mImageButtonFindInText = (ImageButton) findViewById(R.id.medication_find_in_text_search_next);
-
-            // Input manager
-            mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
             // Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.medication_toolbar);
@@ -478,8 +465,8 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
         favoriteMenuItem = menu.findItem(R.id.medication_menu_star);
 
-        GetMedicationTask getMedicationTask = new GetMedicationTask();
-        getMedicationTask.execute(medicationId);
+        //GetMedicationTask getMedicationTask = new GetMedicationTask();
+        //getMedicationTask.execute(medicationId);
 
         return true;
     }
@@ -506,7 +493,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             }
             case R.id.medication_menu_star:
             {
-                addToFavorites(medicationName, medicationManufacturer, medicationType, medicationPrescriptionGroup, medicationUri);
+                //addToFavorites(medicationName, medicationManufacturer, medicationType, medicationPrescriptionGroup, medicationUri);
                 return true;
             }
             case R.id.medication_menu_interactions:
@@ -534,7 +521,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             }
             case R.id.medication_menu_manufacturer_uri:
             {
-                getManufacturerFromUri(medicationManufacturerUri);
+                //getManufacturerFromUri(medicationManufacturerUri);
                 return true;
             }
             case R.id.medication_menu_patient_uri:
@@ -587,6 +574,13 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
                 mInputMethodManager.toggleSoftInputFromWindow(mEditTextFindInText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
 
+                return true;
+            }
+            case R.id.medication_menu_note:
+            {
+                Intent intent = new Intent(mContext, NotesEditActivity.class);
+                intent.putExtra("title", medicationName);
+                startActivity(intent);
                 return true;
             }
             case R.id.medication_menu_print:
@@ -652,7 +646,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     }
 
     // Favorite
-    private void addToFavorites(final String name, final String manufacturer, final String type, final String prescription_group, final String uri)
+    /*private void addToFavorites(final String name, final String manufacturer, final String type, final String prescription_group, final String uri)
     {
         boolean medicationIsFavorite = medicationIsFavorite(medicationUri);
 
@@ -691,7 +685,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
     private boolean medicationIsFavorite(String uri)
     {
-        Cursor cursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, MedicationsFavoritesSQLiteHelper.COLUMN_URI + " = " + mTools.sqe(uri), null, null, null, null);
+        Cursor cursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, MedicationsFavoritesSQLiteHelper.COLUMN_URI+" = "+mTools.sqe(uri), null, null, null, null);
 
         long id = 0;
 
@@ -710,10 +704,10 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
         cursor.close();
 
         return (id != 0);
-    }
+    }*/
 
     // Manufacturer
-    private void getManufacturerFromUri(String uri)
+    /*private void getManufacturerFromUri(String uri)
     {
         SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
 
@@ -746,7 +740,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
         cursor.close();
         sqLiteDatabase.close();
-    }
+    }*/
 
     // Package insert
     private void getPackageInserts()
@@ -846,7 +840,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
     }
 
     // Get medication
-    private class GetMedicationTask extends AsyncTask<Long, Void, HashMap<String, String>>
+    /*private class GetMedicationTask extends AsyncTask<Long, Void, HashMap<String, String>>
     {
         @Override
         protected void onPostExecute(HashMap<String, String> medication)
@@ -1051,7 +1045,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
                             TextView textView = (TextView) layoutInflater.inflate(R.layout.activity_medication_detail_atc_code, null);
 
                             textView.setText(getString(R.string.medication_atc_code)+": "+atcCode);
-                            textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                            textView.setPaintFlags(textView.getPaintFlags()|Paint.UNDERLINE_TEXT_FLAG);
 
                             textView.setOnClickListener(new View.OnClickListener()
                             {
@@ -1087,7 +1081,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             {
                 textView = (TextView) findViewById(R.id.medication_schengen_certificate);
                 textView.setText(getString(R.string.medication_schengen_certificate));
-                textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                textView.setPaintFlags(textView.getPaintFlags()|Paint.UNDERLINE_TEXT_FLAG);
 
                 textView.setOnClickListener(new View.OnClickListener()
                 {
@@ -1111,7 +1105,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             if(medicationDopingStatus.equals("yellow"))
             {
                 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.medication_doping_status_orange), null, null, null);
-                textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                textView.setPaintFlags(textView.getPaintFlags()|Paint.UNDERLINE_TEXT_FLAG);
 
                 textView.setOnClickListener(new View.OnClickListener()
                 {
@@ -1128,7 +1122,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
             else if(medicationDopingStatus.equals("red"))
             {
                 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.medication_doping_status_red), null, null, null);
-                textView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                textView.setPaintFlags(textView.getPaintFlags()|Paint.UNDERLINE_TEXT_FLAG);
 
                 textView.setOnClickListener(new View.OnClickListener()
                 {
@@ -1309,7 +1303,7 @@ public class MedicationActivity extends ActionBarActivity implements AdapterView
 
             return medication;
         }
-    }
+    }*/
 
     // JavaScript interface
     public class JavaScriptInterface

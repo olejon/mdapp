@@ -9,8 +9,9 @@
     <item android:id="@+id/medication_menu_patient_uri" android:orderInCategory="22" app:showAsAction="never" android:title="@string/medication_menu_patient_uri"/>
     <item android:id="@+id/medication_menu_spc_uri" android:orderInCategory="23" app:showAsAction="never" android:title="@string/medication_menu_spc_uri"/>
     <item android:id="@+id/medication_menu_find_in_text" android:orderInCategory="24" app:showAsAction="never" android:title="@string/medication_menu_find_in_text"/>
-    <item android:id="@+id/medication_menu_print" android:orderInCategory="25" app:showAsAction="never" android:title="@string/medication_menu_print"/>
-    <item android:id="@+id/medication_menu_nlh" android:orderInCategory="26" app:showAsAction="never" android:title="@string/medication_menu_nlh"/>
-    <item android:id="@+id/medication_menu_uri" android:orderInCategory="27" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
+    <item android:id="@+id/medication_menu_note" android:orderInCategory="25" app:showAsAction="never" android:title="@string/medication_menu_note"/>
+    <item android:id="@+id/medication_menu_print" android:orderInCategory="26" app:showAsAction="never" android:title="@string/medication_menu_print"/>
+    <item android:id="@+id/medication_menu_nlh" android:orderInCategory="27" app:showAsAction="never" android:title="@string/medication_menu_nlh"/>
+    <item android:id="@+id/medication_menu_uri" android:orderInCategory="28" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
 
 </menu>

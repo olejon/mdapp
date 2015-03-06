@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout style="@style/notifications_from_slv_card_medications_separator_layout">
-    <View style="@style/notifications_from_slv_card_medications_separator"/>
-</LinearLayout>

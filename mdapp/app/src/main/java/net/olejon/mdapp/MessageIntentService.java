@@ -47,7 +47,7 @@ import org.json.JSONObject;
 
 public class MessageIntentService extends IntentService
 {
-    private static final int NOTIFICATION_ID = 2;
+    private static final int NOTIFICATION_ID = 1;
 
     public MessageIntentService()
     {

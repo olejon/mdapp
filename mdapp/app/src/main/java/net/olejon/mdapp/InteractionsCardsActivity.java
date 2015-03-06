@@ -90,7 +90,7 @@ public class InteractionsCardsActivity extends ActionBarActivity
         // Intent
         Intent intent = getIntent();
 
-        searchString = intent.getStringExtra("search").replaceAll("(?i)\\s*depot", "").replaceAll("(?i)\\s*forte", "forte");
+        searchString = intent.getStringExtra("search");
 
         // Layout
         setContentView(R.layout.activity_interactions_cards);

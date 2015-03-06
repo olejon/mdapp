@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/tasks_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/tasks_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+
+    <ListView android:id="@+id/tasks_list" android:layout_below="@+id/tasks_toolbar" style="@style/tasks_list_layout"/>
+    <TextView android:id="@+id/tasks_list_empty" android:layout_below="@+id/tasks_toolbar" android:text="@string/tasks_list_empty" style="@style/tasks_list_empty"/>
+
+    <View android:layout_below="@+id/tasks_toolbar" style="@style/toolbar_shadow"/>
+
+    <com.melnykov.fab.FloatingActionButton android:id="@+id/tasks_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_add_white_24dp" style="@style/fab_layout"/>
+
+</RelativeLayout>

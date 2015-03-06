@@ -60,6 +60,16 @@ public class MedicationWebViewActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
+        // Connected?
+        if(!mTools.isDeviceConnected())
+        {
+            mTools.showToast(getString(R.string.device_not_connected), 1);
+
+            finish();
+
+            return;
+        }
+
         // Intent
         Intent intent = getIntent();
 

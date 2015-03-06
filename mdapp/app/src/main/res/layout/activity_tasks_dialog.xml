@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/tasks_dialog_layout">
+    <EditText android:id="@+id/tasks_dialog_task" android:hint="@string/tasks_dialog_task_hint" style="@style/tasks_dialog_edittext"/>
+</LinearLayout>

@@ -26,41 +26,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.astuetz.PagerSlidingTabStrip;
 import com.melnykov.fab.FloatingActionButton;
-
-import java.io.InputStream;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -76,11 +71,13 @@ public class MainActivity extends ActionBarActivity
 
     private InputMethodManager mInputMethodManager;
 
+    private MenuItem goForwardMenuItem;
     private LinearLayout mDrawer;
     private DrawerLayout mDrawerLayout;
     private ProgressBar mProgressBar;
     private EditText mSearchEditText;
     private ViewPager mViewPager;
+    private WebView mWebView;
     private FloatingActionButton mFloatingActionButton;
 
     private int mDrawerClosed;
@@ -115,28 +112,10 @@ public class MainActivity extends ActionBarActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
-        toolbar.setOnLongClickListener(new View.OnLongClickListener()
-        {
-            @Override
-            public boolean onLongClick(View view)
-            {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_update_felleskatalogen_testing_dialog_title)).content(getString(R.string.main_update_felleskatalogen_testing_dialog_message)).positiveText(getString(R.string.main_update_felleskatalogen_testing_dialog_positive_button)).negativeText(getString(R.string.main_update_felleskatalogen_testing_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
-                {
-                    @Override
-                    public void onPositive(MaterialDialog dialog)
-                    {
-                        updateFelleskatalogen(true);
-                    }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
-
-                return true;
-            }
-        });
-
         mProgressBar = (ProgressBar) findViewById(R.id.main_toolbar_progressbar);
 
         // Search
-        mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
+        /*mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
 
         mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -152,7 +131,7 @@ public class MainActivity extends ActionBarActivity
 
                 return false;
             }
-        });
+        });*/
 
         // Drawer
         mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
@@ -209,19 +188,19 @@ public class MainActivity extends ActionBarActivity
                         startActivity(intent);
                         break;
                     }
-                    case R.id.drawer_item_atc:
+                    /*case R.id.drawer_item_atc:
                     {
                         Intent intent = new Intent(mContext, AtcActivity.class);
                         startActivity(intent);
                         break;
-                    }
+                    }*/
                     case R.id.drawer_item_icd10:
                     {
                         Intent intent = new Intent(mContext, Icd10Activity.class);
                         startActivity(intent);
                         break;
                     }
-                    case R.id.drawer_item_manufacturers:
+                    /*case R.id.drawer_item_manufacturers:
                     {
                         Intent intent = new Intent(mContext, ManufacturersActivity.class);
                         startActivity(intent);
@@ -232,10 +211,10 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, PharmaciesActivity.class);
                         startActivity(intent);
                         break;
-                    }
-                    case R.id.drawer_item_calculators:
+                    }*/
+                    case R.id.drawer_item_clinicaltrials:
                     {
-                        Intent intent = new Intent(mContext, CalculatorsActivity.class);
+                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
                         startActivity(intent);
                         break;
                     }
@@ -245,9 +224,21 @@ public class MainActivity extends ActionBarActivity
                         startActivity(intent);
                         break;
                     }
-                    case R.id.drawer_item_clinicaltrials:
+                    case R.id.drawer_item_calculators:
                     {
-                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
+                        Intent intent = new Intent(mContext, CalculatorsActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_notes:
+                    {
+                        Intent intent = new Intent(mContext, NotesActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_tasks:
+                    {
+                        Intent intent = new Intent(mContext, TasksActivity.class);
                         startActivity(intent);
                         break;
                     }
@@ -279,10 +270,29 @@ public class MainActivity extends ActionBarActivity
         });
 
         // View pager
-        mViewPager = (ViewPager) findViewById(R.id.main_pager);
+        //mViewPager = (ViewPager) findViewById(R.id.main_pager);
+
+        // Web view
+        mWebView = (WebView) findViewById(R.id.main_webview);
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
+
+        mWebView.setWebViewClient(new WebViewClient()
+        {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            {
+                return false;
+            }
+        });
+
+        mWebView.loadUrl("http://www.felleskatalogen.no/m/medisin/");
 
         // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.main_fab);
+        /*mFloatingActionButton = (FloatingActionButton) findViewById(R.id.main_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -293,20 +303,12 @@ public class MainActivity extends ActionBarActivity
 
                 mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
             }
-        });
+        });*/
 
         // Alarms
         Context applicationContext = getApplicationContext();
 
-        boolean felleskatalogenAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 1, new Intent(applicationContext, FelleskatalogenAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
-
-        if(!felleskatalogenAlarmIsStarted)
-        {
-            FelleskatalogenAlarm felleskatalogenAlarm = new FelleskatalogenAlarm();
-            felleskatalogenAlarm.setAlarm(applicationContext);
-        }
-
-        boolean messageAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(applicationContext, MessageIntentService.class), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean messageAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 1, new Intent(applicationContext, MessageIntentService.class), PendingIntent.FLAG_NO_CREATE) != null);
 
         if(!messageAlarmIsStarted)
         {
@@ -314,7 +316,7 @@ public class MainActivity extends ActionBarActivity
             messageAlarm.setAlarm(applicationContext);
         }
 
-        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 3, new Intent(applicationContext, NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
+        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(applicationContext, NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
 
         if(!notificationsFromSlvAlarmIsStarted)
         {
@@ -340,27 +342,31 @@ public class MainActivity extends ActionBarActivity
             }, 1000);
         }
 
-        // Get Felleskatalogen
-        if(!mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED")) getFelleskatalogen();
+        // Dialog
+        new MaterialDialog.Builder(mContext).title(getString(R.string.main_dialog_title)).content(getString(R.string.main_dialog_message)).positiveText(getString(R.string.main_dialog_positive_button)).neutralText(getString(R.string.main_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+        {
+            @Override
+            public void onPositive(MaterialDialog dialog)
+            {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onNeutral(MaterialDialog dialog)
+            {
+                mTools.openUri("http://www.felleskatalogen.no/m/medisin/kontakt-oss");
+            }
+        }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).autoDismiss(false).show();
     }
 
     // Resume activity
     @Override
-    protected void onPostResume()
+    protected void onResume()
     {
-        super.onPostResume();
+        super.onResume();
 
-        // Felleskatalogen
-        if(mTools.getSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED"))
-        {
-            mTools.setSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED", false);
-
-            mNotificationManagerCompat.cancel(FelleskatalogenService.NOTIFICATION_ID);
-
-            mTools.showToast(getString(R.string.main_sqlite_database_felleskatalogen_has_been_updated), 1);
-
-            getFelleskatalogen();
-        }
+        // Connected?
+        if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.main_not_connected), 1);
 
         // Rate
         if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG"))
@@ -446,9 +452,13 @@ public class MainActivity extends ActionBarActivity
         {
             mDrawerLayout.closeDrawers();
         }
-        else if(!mSearchEditText.getText().toString().equals(""))
+        /*else if(!mSearchEditText.getText().toString().equals(""))
         {
             mSearchEditText.setText("");
+        }*/
+        else if(mWebView.canGoBack())
+        {
+            mWebView.goBack();
         }
         else
         {
@@ -477,6 +487,9 @@ public class MainActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        goForwardMenuItem = menu.findItem(R.id.main_menu_go_forward);
+
         return true;
     }
 
@@ -485,17 +498,17 @@ public class MainActivity extends ActionBarActivity
     {
         switch(item.getItemId())
         {
-            case R.id.main_menu_scan_barcode:
+            case R.id.main_menu_go_forward:
+            {
+                mWebView.goForward();
+                return true;
+            }
+            /*case R.id.main_menu_scan_barcode:
             {
                 Intent intent = new Intent(mContext, BarcodeScannerActivity.class);
                 startActivity(intent);
                 return true;
-            }
-            case R.id.main_menu_update_felleskatalogen:
-            {
-                updateFelleskatalogen(false);
-                return true;
-            }
+            }*/
             case R.id.main_menu_uri:
             {
                 mTools.openUri("http://www.felleskatalogen.no/");
@@ -589,112 +602,5 @@ public class MainActivity extends ActionBarActivity
         mFloatingActionButton.startAnimation(animation);
 
         mFloatingActionButton.setVisibility(View.VISIBLE);
-    }
-
-    // Update Felleskatalogen
-    private void updateFelleskatalogen(boolean testing)
-    {
-        String intentAction = (testing) ? "testing" : "manually";
-
-        Intent intent = new Intent(mContext, FelleskatalogenService.class);
-        intent.setAction(intentAction);
-
-        intent.putExtra(FelleskatalogenService.FELLESKATALOGEN_SERVICE_RESULT_RECEIVER_INTENT_EXTRA, new ResultReceiver(new Handler())
-        {
-            @Override
-            protected void onReceiveResult(int resultCode, Bundle resultData)
-            {
-                mTools.showToast(getString(R.string.main_sqlite_database_felleskatalogen_has_been_updated), 1);
-
-                if(SQLITE_DATABASE_FELLESKATALOGEN.isOpen()) getFelleskatalogen();
-
-                mTools.setSharedPreferencesBoolean("SQLITE_DATABASE_FELLESKATALOGEN_HAS_BEEN_UPDATED", false);
-            }
-        });
-
-        startService(intent);
-    }
-
-    // Get Felleskatalogen
-    private void getFelleskatalogen()
-    {
-        GetFelleskatalogenTask getFelleskatalogenTask = new GetFelleskatalogenTask();
-        getFelleskatalogenTask.execute();
-    }
-
-    private class GetFelleskatalogenTask extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute()
-        {
-            if(!mTools.getSharedPreferencesBoolean(FelleskatalogenSQLiteHelper.DB_HAS_BEEN_CREATED))
-            {
-                mProgressBar.setVisibility(View.VISIBLE);
-
-                mTools.showToast(getString(R.string.main_loading), 1);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void success)
-        {
-            mProgressBar.setVisibility(View.GONE);
-
-            PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-            mViewPager.setAdapter(pagerAdapter);
-            mViewPager.setOffscreenPageLimit(3);
-            mViewPager.setPageTransformer(true, new ViewPagerTransformer());
-
-            PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.main_tabs);
-            pagerSlidingTabStrip.setViewPager(mViewPager);
-
-            pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
-            {
-                @Override
-                public void onPageSelected(int position)
-                {
-                    VIEW_PAGER_POSITION = position;
-
-                    mSearchEditText.setText("");
-
-                    animateFab();
-                }
-            });
-
-            animateFab();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids)
-        {
-            if(!mTools.getSharedPreferencesBoolean(FelleskatalogenSQLiteHelper.DB_HAS_BEEN_CREATED))
-            {
-                try
-                {
-                    InputStream inputStream = getAssets().open(FelleskatalogenSQLiteHelper.DB_ZIPPED_NAME);
-
-                    FelleskatalogenSQLiteCopyHelper felleskatalogenSQLiteCopyHelper = new FelleskatalogenSQLiteCopyHelper(mContext);
-                    felleskatalogenSQLiteCopyHelper.copy(inputStream);
-                }
-                catch(Exception e)
-                {
-                    runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            updateFelleskatalogen(true);
-                        }
-                    });
-
-                    Log.e("MainActivity", Log.getStackTraceString(e));
-                }
-            }
-
-            SQLITE_DATABASE_FELLESKATALOGEN = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-            return null;
-        }
     }
 }

@@ -120,7 +120,7 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
 
                     final String uri = medicationJsonObject.getString("uri");
 
-                    LinearLayout linearLayout = (LinearLayout) mLayoutInflater.inflate(R.layout.activity_notifications_from_slv_card_medications_separator, null);
+                    LinearLayout linearLayout = (LinearLayout) mLayoutInflater.inflate(R.layout.card_item_separator, null);
                     viewHolder.medications.addView(linearLayout);
 
                     TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_notifications_from_slv_card_medications_item, null);

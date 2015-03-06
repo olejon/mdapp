@@ -28,9 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -282,7 +280,7 @@ class MyTools
     // Medication
     public long getMedicationIdFromUri(String uri)
     {
-        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+        /*SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
 
         String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID};
 
@@ -303,9 +301,9 @@ class MyTools
         }
 
         cursor.close();
-        sqLiteDatabase.close();
+        sqLiteDatabase.close();*/
 
-        return id;
+        return 0;
     }
 
     public void getMedicationWithFullContent(String uri)
@@ -345,7 +343,7 @@ class MyTools
     }
 
     // Substances
-    public void getSubstance(String name)
+    /*public void getSubstance(String name)
     {
         SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
 
@@ -369,11 +367,11 @@ class MyTools
 
         cursor.close();
         sqLiteDatabase.close();
-    }
+    }*/
 
     public long getSubstanceIdFromUri(String uri)
     {
-        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+        /*SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
 
         String[] queryColumns = {FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID};
 
@@ -394,9 +392,9 @@ class MyTools
         }
 
         cursor.close();
-        sqLiteDatabase.close();
+        sqLiteDatabase.close();*/
 
-        return id;
+        return 0;
     }
 
     // Widget

@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -303,7 +302,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             }
             case R.id.nasjonale_retningslinjer_webview_menu_go_forward:

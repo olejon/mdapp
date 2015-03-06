@@ -2,11 +2,6 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/settings_category_felleskatalogen">
-        <CheckBoxPreference android:key="SQLITE_DATABASE_FELLESKATALOGEN_UPDATE_ONLY_ON_WIFI" android:defaultValue="true" android:title="@string/settings_checkbox_sqlite_database_felleskatalogen_update_only_on_wifi_title" android:summary="@string/settings_checkbox_sqlite_database_felleskatalogen_update_only_on_wifi_summary"/>
-        <CheckBoxPreference android:key="SHOW_ATC_CODES_BELOW_MEDICATION_NAME" android:defaultValue="false" android:title="@string/settings_checkbox_show_atc_codes_below_medication_name_title" android:summary="@string/settings_checkbox_show_atc_codes_below_medication_name_summary"/>
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/settings_category_notifications_from_slv">
         <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_summary"/>
     </PreferenceCategory>
