@@ -22,23 +22,32 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -58,6 +67,7 @@ public class PharmaciesActivity extends ActionBarActivity
     private EditText mToolbarSearchEditText;
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
+    private View mListViewEmpty;
 
     // Create activity
     @Override
@@ -125,10 +135,11 @@ public class PharmaciesActivity extends ActionBarActivity
 
         // List
         mListView = (ListView) findViewById(R.id.pharmacies_list);
+        mListViewEmpty = findViewById(R.id.pharmacies_list_empty);
 
-        // Get pharmacies
-        //GetPharmaciesTask getPharmaciesTask = new GetPharmaciesTask();
-        //getPharmaciesTask.execute();
+        // Get municipalities
+        GetMunicipalitiesTask getMunicipalitiesTask = new GetMunicipalitiesTask();
+        getMunicipalitiesTask.execute();
     }
 
     // Destroy activity
@@ -175,13 +186,6 @@ public class PharmaciesActivity extends ActionBarActivity
 
     // Menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_pharmacies, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -189,11 +193,6 @@ public class PharmaciesActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.pharmacies_menu_uri:
-            {
-                mTools.openUri("http://www.felleskatalogen.no/medisin/apotek/alle");
                 return true;
             }
             default:
@@ -204,23 +203,24 @@ public class PharmaciesActivity extends ActionBarActivity
     }
 
     // Get pharmacies
-    /*private class GetPharmaciesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    private class GetMunicipalitiesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
         {
             mListView.setAdapter(simpleCursorAdapter);
-
-            View listViewEmpty = findViewById(R.id.pharmacies_list_empty);
-            mListView.setEmptyView(listViewEmpty);
+            mListView.setEmptyView(mListViewEmpty);
 
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
+                    TextView municipalityNameTextView = (TextView) view.findViewById(R.id.pharmacies_list_item_municipality);
+                    String municipalityName = municipalityNameTextView.getText().toString();
+
                     Intent intent = new Intent(mContext, PharmaciesLocationActivity.class);
-                    intent.putExtra("id", id);
+                    intent.putExtra("name", municipalityName);
                     startActivity(intent);
                 }
             });
@@ -247,13 +247,11 @@ public class PharmaciesActivity extends ActionBarActivity
                 {
                     if(mSqLiteDatabase != null)
                     {
-                        String[] queryColumns = {FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_ID, FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_LOCATION};
-
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_PHARMACIES, queryColumns, null, null, null, null, null);
+                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, null, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME);
 
                         String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_PHARMACIES, queryColumns, FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_LOCATION+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, null);
+                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME);
                     }
 
                     return null;
@@ -283,15 +281,13 @@ public class PharmaciesActivity extends ActionBarActivity
         @Override
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
-            mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, null, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME);
 
-            String[] queryColumns = {FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_ID, FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_LOCATION};
-            mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_PHARMACIES, queryColumns, null, null, null, null, null);
-
-            String[] fromColumns = {FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_LOCATION};
-            int[] toViews = {R.id.pharmacies_list_item_location};
+            String[] fromColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
+            int[] toViews = {R.id.pharmacies_list_item_municipality};
 
             return new SimpleCursorAdapter(mContext, R.layout.activity_pharmacies_list_item, mCursor, fromColumns, toViews, 0);
         }
-    }*/
+    }
 }

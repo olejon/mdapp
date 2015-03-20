@@ -4,7 +4,7 @@
 
     <android.support.v7.widget.Toolbar android:id="@+id/notes_edit_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <ScrollView android:layout_below="@+id/notes_edit_toolbar" style="@style/notes_edit_inner_layout">
+    <ScrollView android:id="@+id/notes_edit_inner_layout" android:layout_below="@+id/notes_edit_toolbar" style="@style/notes_edit_inner_layout">
 
         <LinearLayout style="@style/notes_edit_inner_inner_layout">
 
@@ -16,13 +16,10 @@
             <EditText android:id="@+id/notes_edit_patient_department" android:hint="@string/notes_edit_patient_department_hint" style="@style/notes_edit_edittext"/>
             <EditText android:id="@+id/notes_edit_patient_room" android:hint="@string/notes_edit_patient_room_hint" style="@style/notes_edit_edittext"/>
 
-            <TextView android:text="@string/notes_edit_patient_medications_subheader" style="@style/subheader"/>
+            <TextView android:id="@+id/notes_edit_patient_medications" style="@style/notes_edit_medications_textview"/>
 
-            <TextView android:id="@+id/notes_edit_patient_no_medications" android:text="@string/notes_edit_patient_medications_none" style="@style/notes_edit_patient_no_medications"/>
-
-            <LinearLayout android:id="@+id/notes_edit_patient_medications" style="@style/notes_edit_patient_medications_layout"/>
-
-            <Button android:id="@+id/notes_edit_patient_add_medication" android:text="@string/notes_edit_patient_medications" style="@style/notes_edit_button"/>
+            <Button android:id="@+id/notes_edit_patient_add_medication" android:text="@string/notes_edit_patient_add_medication" style="@style/notes_edit_button"/>
+            <Button android:id="@+id/notes_edit_patient_medications_interactions" android:text="@string/notes_edit_patient_medications_interactions" style="@style/notes_edit_patient_medications_interactions_button"/>
 
         </LinearLayout>
 

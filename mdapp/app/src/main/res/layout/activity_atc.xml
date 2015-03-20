@@ -4,10 +4,8 @@
 
     <android.support.v7.widget.Toolbar android:id="@+id/atc_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <TextView android:id="@+id/atc_source" android:layout_below="@+id/atc_toolbar" android:text="@string/atc_source" style="@style/atc_source"/>
+    <ListView android:id="@+id/atc_list" android:layout_below="@+id/atc_toolbar" style="@style/atc_list_layout"/>
 
-    <ListView android:id="@+id/atc_list" android:layout_below="@+id/atc_source" style="@style/atc_list_layout"/>
-
-    <View android:layout_below="@+id/atc_source" style="@style/toolbar_shadow"/>
+    <View android:layout_below="@+id/atc_toolbar" style="@style/toolbar_shadow"/>
 
 </RelativeLayout>

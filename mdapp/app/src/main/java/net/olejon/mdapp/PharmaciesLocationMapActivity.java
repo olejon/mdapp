@@ -26,8 +26,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,7 +43,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
 
 public class PharmaciesLocationMapActivity extends ActionBarActivity implements OnMapReadyCallback
 {
@@ -43,13 +53,8 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
 
     private final MyTools mTools = new MyTools(mContext);
 
-    private ArrayList<String> mPharmaciesNamesArrayList = new ArrayList<>();
-    private ArrayList<String> mPharmaciesCoordinatesArrayList = new ArrayList<>();
-
     private String mPharmacyName;
-    private String mPharmacyCoordinates;
-
-    private boolean mPharmacyMultipleCoordinates;
+    private String mPharmacyAddress;
 
     // Create activity
     @Override
@@ -61,26 +66,26 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
         if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         mPharmacyName = intent.getStringExtra("name");
-        mPharmaciesNamesArrayList = intent.getStringArrayListExtra("names");
-        mPharmacyMultipleCoordinates = intent.getBooleanExtra("multiple_coordinates", false);
+        mPharmacyAddress = intent.getStringExtra("address");
 
-        if(mPharmacyMultipleCoordinates)
+        // Location
+        if(mPharmacyAddress.startsWith("Postboks") || mPharmacyAddress.startsWith("Serviceboks"))
         {
-            mPharmaciesCoordinatesArrayList = intent.getStringArrayListExtra("coordinates");
-        }
-        else
-        {
-            mPharmacyCoordinates = intent.getStringExtra("coordinates");
+            mTools.showToast(getString(R.string.pharmacies_location_map_post_box_location), 1);
+
+            finish();
+
+            return;
         }
 
         // Layout
         setContentView(R.layout.activity_pharmacies_location_map);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_map_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_map_toolbar);
         toolbar.setTitle(mPharmacyName);
 
         setSupportActionBar(toolbar);
@@ -111,43 +116,58 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
 
     // Map
     @Override
-    public void onMapReady(GoogleMap googleMap)
+    public void onMapReady(final GoogleMap googleMap)
     {
         googleMap.setMyLocationEnabled(true);
 
-        int mPharmaciesCoordinatesArrayListSize = mPharmaciesCoordinatesArrayList.size();
-
-        if(mPharmacyMultipleCoordinates)
+        try
         {
-            for(int i = 0; i < mPharmaciesCoordinatesArrayListSize; i++)
+            mTools.showToast(getString(R.string.pharmacies_location_map_locating), 0);
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
             {
-                String pharmacyName = mPharmaciesNamesArrayList.get(i);
-                String[] pharmacyCoordinates = mPharmaciesCoordinatesArrayList.get(i).split(",");
+                @Override
+                public void onResponse(JSONObject response)
+                {
+                    try
+                    {
+                        double latitude = response.getDouble("latitude");
+                        double longitude = response.getDouble("longitude");
 
-                double latitude = Double.parseDouble(pharmacyCoordinates[0]);
-                double longitude = Double.parseDouble(pharmacyCoordinates[1]);
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+                    }
+                    catch(Exception e)
+                    {
+                        mTools.showToast(getString(R.string.pharmacies_location_map_exact_location_not_found), 1);
 
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(pharmacyName));
-            }
+                        Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
 
-            String[] cameraPharmacyCoordinates = mPharmaciesCoordinatesArrayList.get(0).split(",");
+                        finish();
+                    }
+                }
+            }, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    mTools.showToast(getString(R.string.pharmacies_location_map_exact_location_not_found), 1);
 
-            double cameraLatitude = Double.parseDouble(cameraPharmacyCoordinates[0]);
-            double cameraLongitude = Double.parseDouble(cameraPharmacyCoordinates[1]);
+                    Log.e("PharmaciesLocationMap", error.toString());
 
-            float cameraZoom = (mPharmaciesCoordinatesArrayListSize >= 16) ? 10 : 12;
+                    finish();
+                }
+            });
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(cameraLatitude, cameraLongitude), cameraZoom));
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            requestQueue.add(jsonObjectRequest);
         }
-        else
+        catch(Exception e)
         {
-            String[] pharmacyCoordinates = mPharmacyCoordinates.split(",");
-
-            double latitude = Double.parseDouble(pharmacyCoordinates[0]);
-            double longitude = Double.parseDouble(pharmacyCoordinates[1]);
-
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+            Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
         }
     }
 }

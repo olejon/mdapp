@@ -23,10 +23,9 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,32 +34,34 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.net.URLEncoder;
 
 public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLocationAdapter.PharmaciesViewHolder>
 {
     private final Context mContext;
 
-    private final JSONArray mPharmacies;
+    private final MyTools mTools;
+
+    private final Cursor mCursor;
 
     private int lastPosition = -1;
 
-    public PharmaciesLocationAdapter(Context context, JSONArray jsonArray)
+    public PharmaciesLocationAdapter(Context context, Cursor cursor)
     {
         mContext = context;
 
-        mPharmacies = jsonArray;
+        mTools = new MyTools(mContext);
+
+        mCursor = cursor;
     }
 
     static class PharmaciesViewHolder extends RecyclerView.ViewHolder
     {
         private final CardView card;
         private final TextView name;
-        private final TextView information;
-        private final TextView button;
+        private final TextView address;
+        private final TextView mapButton;
+        private final TextView contactButton;
 
         public PharmaciesViewHolder(View view)
         {
@@ -68,8 +69,9 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
 
             card = (CardView) view.findViewById(R.id.pharmacies_location_card);
             name = (TextView) view.findViewById(R.id.pharmacies_location_card_name);
-            information = (TextView) view.findViewById(R.id.pharmacies_location_card_information);
-            button = (TextView) view.findViewById(R.id.pharmacies_location_card_button);
+            address = (TextView) view.findViewById(R.id.pharmacies_location_card_address);
+            mapButton = (TextView) view.findViewById(R.id.pharmacies_location_card_map_button);
+            contactButton = (TextView) view.findViewById(R.id.pharmacies_location_card_contact_button);
         }
     }
 
@@ -77,54 +79,56 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
     public PharmaciesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_pharmacies_location_card, viewGroup, false);
-
         return new PharmaciesViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(PharmaciesViewHolder viewHolder, int i)
     {
-        try
+        if(mCursor.moveToPosition(i))
         {
-            final JSONObject pharmacyJsonObject = mPharmacies.getJSONObject(i);
-
-            final String name = pharmacyJsonObject.getString("name");
-            final String coordinates = pharmacyJsonObject.getString("coordinates");
-
-            final ArrayList<String> namesArrayList = new ArrayList<>();
-            namesArrayList.add(name);
+            final String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_NAME));
+            final String address = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_ADDRESS));
 
             viewHolder.name.setText(name);
+            viewHolder.address.setText(address);
 
-            viewHolder.information.setText(Html.fromHtml(pharmacyJsonObject.getString("information")));
-            viewHolder.information.setMovementMethod(LinkMovementMethod.getInstance());
-
-            viewHolder.button.setOnClickListener(new View.OnClickListener()
+            viewHolder.mapButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
                     Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
                     intent.putExtra("name", name);
-                    intent.putExtra("names", namesArrayList);
-                    intent.putExtra("coordinates", coordinates);
-                    intent.putExtra("multiple_coordinates", false);
+                    intent.putExtra("address", address);
                     mContext.startActivity(intent);
                 }
             });
 
+            viewHolder.contactButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    try
+                    {
+                        mTools.openUri("http://www.gulesider.no/finn:"+URLEncoder.encode(name, "utf-8"));
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("PharmaciesLocation", Log.getStackTraceString(e));
+                    }
+                }
+            });
+
             animateView(viewHolder.card, i);
-        }
-        catch(Exception e)
-        {
-            Log.e("PharmaciesLocation", Log.getStackTraceString(e));
         }
     }
 
     @Override
     public int getItemCount()
     {
-        return mPharmacies.length();
+        return (mCursor == null) ? 0 : mCursor.getCount();
     }
 
     private void animateView(View view, int position)

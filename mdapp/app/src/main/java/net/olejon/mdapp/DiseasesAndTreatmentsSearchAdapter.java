@@ -41,6 +41,8 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 {
     private final Context mContext;
 
+    private final MyTools mTools;
+
     private final JSONArray mResults;
 
     private final String mSearch;
@@ -50,6 +52,8 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
     public DiseasesAndTreatmentsSearchAdapter(Context context, JSONArray results, String search)
     {
         mContext = context;
+
+        mTools = new MyTools(mContext);
 
         mResults = results;
 
@@ -78,7 +82,6 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
     public DiseasesAndTreatmentsSearchViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_diseases_and_treatments_search_card, viewGroup, false);
-
         return new DiseasesAndTreatmentsSearchViewHolder(view);
     }
 
@@ -100,98 +103,98 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
             {
                 case "pubmed":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pubmed));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.pubmed);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "webofscience":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.webofscience));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.webofscience);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "medlineplus":
-                {         
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.medlineplus));
+                {
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.medlineplus);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "wikipedia":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.wikipedia));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.wikipedia);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "uptodate":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.uptodate));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.uptodate);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "bmj":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.bmj));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.bmj);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "nhi":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nhi));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.nhi);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "sml":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.sml));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.sml);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "forskning":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.forskning));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.forskning);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "helsebiblioteket":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.helsebiblioteket));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.helsebiblioteket);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "oncolex":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.oncolex));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.oncolex);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "tidsskriftet":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.tidsskriftet));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.tidsskriftet);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "helsenorge":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.helsenorge));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.helsenorge);
                     viewHolder.text.setText(text);
 
                     break;
                 }
                 case "brukerhandboken":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.brukerhandboken));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.brukerhandboken);
                     viewHolder.text.setText(text);
 
                     break;

@@ -2,8 +2,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/main_menu_go_forward" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_keyboard_arrow_right_white_24dp" android:title="@string/main_menu_go_forward"/>
-    <!-- <item android:id="@+id/main_menu_scan_barcode" android:orderInCategory="2" app:showAsAction="ifRoom" android:icon="@drawable/ic_action_barcode_1" android:title="@string/main_menu_scan_barcode"/> -->
-    <item android:id="@+id/main_menu_uri" android:orderInCategory="3" app:showAsAction="never" android:title="@string/main_menu_uri"/>
+    <item android:id="@+id/main_menu_scan_barcode" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_action_barcode" android:title="@string/main_menu_scan_barcode"/>
+    <item android:id="@+id/main_menu_donate" android:orderInCategory="2" app:showAsAction="never" android:title="@string/main_menu_donate"/>
 
 </menu>

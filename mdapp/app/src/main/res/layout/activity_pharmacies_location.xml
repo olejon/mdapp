@@ -11,11 +11,9 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <TextView android:id="@+id/pharmacies_location_source" android:layout_below="@+id/pharmacies_location_toolbar" android:text="@string/pharmacies_location_source" style="@style/pharmacies_source"/>
+    <android.support.v7.widget.RecyclerView android:id="@+id/pharmacies_location_cards" android:layout_below="@+id/pharmacies_location_toolbar" style="@style/pharmacies_location_cards"/>
 
-    <android.support.v7.widget.RecyclerView android:id="@+id/pharmacies_location_cards" android:layout_below="@+id/pharmacies_location_source" style="@style/pharmacies_location_cards"/>
-
-    <View android:layout_below="@+id/pharmacies_location_source" style="@style/toolbar_shadow"/>
+    <View android:layout_below="@+id/pharmacies_location_toolbar" style="@style/toolbar_shadow"/>
 
     <com.melnykov.fab.FloatingActionButton android:id="@+id/pharmacies_location_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 

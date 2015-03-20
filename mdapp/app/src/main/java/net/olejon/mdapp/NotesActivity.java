@@ -54,7 +54,6 @@ public class NotesActivity extends ActionBarActivity
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
-    private FloatingActionButton mFloatingActionButton;
     private TextView mEmptyTextView;
     private RecyclerView mRecyclerView;
 
@@ -86,9 +85,9 @@ public class NotesActivity extends ActionBarActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        floatingActionButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -97,6 +96,11 @@ public class NotesActivity extends ActionBarActivity
                 startActivity(intent);
             }
         });
+
+        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+        floatingActionButton.startAnimation(animation);
+
+        floatingActionButton.setVisibility(View.VISIBLE);
     }
 
     // Pause activity
@@ -299,15 +303,15 @@ public class NotesActivity extends ActionBarActivity
                 mEmptyTextView.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
 
-                if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                if(mTools.isTablet())
+                {
+                    int spanCount = (mCursor.getCount() == 1) ? 1 : 2;
+
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+                }
 
                 mRecyclerView.setAdapter(new NotesAdapter(mContext, mCursor));
             }
-
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
-
-            mFloatingActionButton.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -316,7 +320,7 @@ public class NotesActivity extends ActionBarActivity
             mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
 
             String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
-            mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, null);
+            mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
 
             String[] fromColumns = {NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
             int[] toViews = {R.id.notes_card_title, R.id.notes_card_text};

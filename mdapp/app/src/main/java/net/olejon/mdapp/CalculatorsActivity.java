@@ -127,6 +127,11 @@ public class CalculatorsActivity extends ActionBarActivity
                 return false;
             }
         });
+
+        // Information dialog
+        boolean hideInformationDialog = mTools.getSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG");
+
+        if(!hideInformationDialog) showInformationDialog();
     }
 
     // Menu
@@ -148,15 +153,7 @@ public class CalculatorsActivity extends ActionBarActivity
             }
             case R.id.calculators_menu_information:
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_information_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_information_dialog_message))).positiveText(getString(R.string.calculators_information_dialog_positive_button)).neutralText(getString(R.string.calculators_information_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
-                {
-                    @Override
-                    public void onNeutral(MaterialDialog dialog)
-                    {
-                        mTools.openUri("https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
-                    }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
-
+                showInformationDialog();
                 return true;
             }
             default:
@@ -164,6 +161,27 @@ public class CalculatorsActivity extends ActionBarActivity
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    // Information dialog
+    private void showInformationDialog()
+    {
+        new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_information_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_information_dialog_message))).positiveText(getString(R.string.calculators_information_dialog_positive_button)).neutralText(getString(R.string.calculators_information_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+        {
+            @Override
+            public void onPositive(MaterialDialog dialog)
+            {
+                mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
+            }
+
+            @Override
+            public void onNeutral(MaterialDialog dialog)
+            {
+                mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
+
+                mTools.openUri("https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
+            }
+        }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
     }
 
     // Calculations
@@ -209,7 +227,7 @@ public class CalculatorsActivity extends ActionBarActivity
                 @Override
                 public void onNeutral(MaterialDialog dialog)
                 {
-                    mTools.openUri("https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
+                    showInformationDialog();
                 }
             }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
         }
@@ -255,7 +273,7 @@ public class CalculatorsActivity extends ActionBarActivity
                 @Override
                 public void onNeutral(MaterialDialog dialog)
                 {
-                    mTools.openUri("https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
+                    showInformationDialog();
                 }
             }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
         }

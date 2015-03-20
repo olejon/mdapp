@@ -5,11 +5,16 @@
     <LinearLayout style="@style/pharmacies_location_card_inner_layout">
 
         <TextView android:id="@+id/pharmacies_location_card_name" style="@style/pharmacies_location_card_name"/>
-        <TextView android:id="@+id/pharmacies_location_card_information" style="@style/pharmacies_location_card_information"/>
+        <TextView android:id="@+id/pharmacies_location_card_address" style="@style/pharmacies_location_card_information"/>
 
         <View style="@style/colored_card_separator"/>
 
-        <TextView android:id="@+id/pharmacies_location_card_button" android:text="@string/pharmacies_location_card_show_on_map" style="@style/pharmacies_location_card_button"/>
+        <LinearLayout style="@style/pharmacies_location_card_buttons_layout">
+
+            <TextView android:id="@+id/pharmacies_location_card_map_button" android:text="@string/pharmacies_location_card_map" style="@style/pharmacies_location_card_map_button"/>
+            <TextView android:id="@+id/pharmacies_location_card_contact_button" android:text="@string/pharmacies_location_card_contact" style="@style/pharmacies_location_card_contact_button"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

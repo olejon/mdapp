@@ -22,22 +22,31 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -45,6 +54,8 @@ import com.melnykov.fab.FloatingActionButton;
 public class NotesEditMedicationsActivity extends ActionBarActivity
 {
     private final Context mContext = this;
+
+    private final MyTools mTools = new MyTools(mContext);
 
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
@@ -123,8 +134,8 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
         mListView = (ListView) findViewById(R.id.notes_edit_medications_list);
 
         // Get medications
-        //GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
-        //getMedicationsTask.execute();
+        GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
+        getMedicationsTask.execute();
     }
 
     // Destroy activity
@@ -162,7 +173,7 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             }
             default:
@@ -173,7 +184,7 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
     }
 
     // Get medications
-    /*private class GetMedicationsTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    private class GetMedicationsTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
@@ -188,19 +199,17 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
-                    String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_URI};
-                    mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+id, null, null, null, null);
+                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+                    mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+id, null, null, null, null);
 
                     if(mCursor.moveToFirst())
                     {
-                        String name = mCursor.getString(mCursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME));
-                        String manufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER));
-                        String uri = mCursor.getString(mCursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_URI));
+                        String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
+                        String manufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER));
 
                         Intent intent = new Intent();
                         intent.putExtra("name", name);
                         intent.putExtra("manufacturer", manufacturer);
-                        intent.putExtra("uri", uri);
                         setResult(RESULT_OK, intent);
                         finish();
                     }
@@ -229,13 +238,13 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
                 {
                     if(mSqLiteDatabase != null)
                     {
-                        String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_URI};
+                        String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
 
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, null);
+                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, null);
 
                         String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, null);
+                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, null);
                     }
 
                     return null;
@@ -265,15 +274,15 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
         @Override
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
-            mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 
-            String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_URI};
-            mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, null);
+            String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
 
-            String[] fromColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+            String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
             int[] toViews = {R.id.notes_edit_medications_list_item_name, R.id.notes_edit_medications_list_item_manufacturer};
 
             return new SimpleCursorAdapter(mContext, R.layout.activity_notes_edit_medications_list_item, mCursor, fromColumns, toViews, 0);
         }
-    }*/
+    }
 }

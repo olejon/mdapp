@@ -29,19 +29,11 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import android.widget.SimpleCursorAdapter;
 
 public class AtcActivity extends ActionBarActivity
 {
@@ -56,14 +48,13 @@ public class AtcActivity extends ActionBarActivity
 
     private ListView mListView;
 
-    private String mGroups = "anatomical_groups";
-
+    private String mGroup;
+    private String mAnatomicalGroupsCode;
     private String mPharmacologicGroupsTitle;
-    private String mPharmacologicGroupsData;
+    private String mPharmacologicGroupsCode;
     private String mTherapeuticGroupsTitle;
-    private String mTherapeuticGroupsData;
+    private String mTherapeuticGroupsCode;
     private String mSubstancesGroupsTitle;
-    private String mSubstancesGroupsData;
 
     // Create activity
     @Override
@@ -100,7 +91,7 @@ public class AtcActivity extends ActionBarActivity
     @Override
     public void onBackPressed()
     {
-        switch(mGroups)
+        switch(mGroup)
         {
             case "pharmacologic_groups":
             {
@@ -126,13 +117,6 @@ public class AtcActivity extends ActionBarActivity
 
     // Menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_atc, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -140,11 +124,6 @@ public class AtcActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.atc_menu_uri:
-            {
-                mTools.openUri("http://www.felleskatalogen.no/m/medisin/atc-register");
                 return true;
             }
             default:
@@ -157,229 +136,130 @@ public class AtcActivity extends ActionBarActivity
     // Get ATC
     private void getAnatomicalGroups()
     {
-        //GetAtcTask getAtcTask = new GetAtcTask();
-        //getAtcTask.execute();
+        mToolbar.setTitle(getString(R.string.atc_title));
 
-        mGroups = "anatomical_groups";
+        mGroup = "anatomical_groups";
+
+        mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_ANATOMICAL_GROUPS, null, null, null, null, null, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE);
+
+        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
+        int[] toViews = new int[] {R.id.atc_anatomical_groups_list_item_code, R.id.atc_anatomical_groups_list_item_name};
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_anatomical_groups_list_item, mCursor, fromColumns, toViews, 0);
+
+        mListView.setAdapter(simpleCursorAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                if(mCursor.moveToPosition(i))
+                {
+                    mAnatomicalGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE));
+
+                    mPharmacologicGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME));
+
+                    getPharmacologicGroups();
+                }
+            }
+        });
     }
 
     private void getPharmacologicGroups()
     {
         mToolbar.setTitle(mPharmacologicGroupsTitle);
 
-        try
+        mGroup = "pharmacologic_groups";
+
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_PHARMACOLOGIC_GROUPS, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mAnatomicalGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE);
+
+        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
+        int[] toViews = new int[] {R.id.atc_pharmacologic_groups_list_item_code, R.id.atc_pharmacologic_groups_list_item_name};
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_pharmacologic_groups_list_item, mCursor, fromColumns, toViews, 0);
+
+        mListView.setAdapter(simpleCursorAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-            final JSONArray dataJsonArray = new JSONArray(mPharmacologicGroupsData);
-
-            String[] fromColumns = new String[] {"code", "name"};
-            int[] toViews = new int[] {R.id.atc_pharmacologic_groups_list_item_code, R.id.atc_pharmacologic_groups_list_item_name};
-
-            final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
-
-            for(int i = 0; i < dataJsonArray.length(); i++)
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                HashMap<String, String> item = new HashMap<>();
-
-                JSONObject itemJsonObject = dataJsonArray.getJSONObject(i);
-
-                String code = itemJsonObject.getString("code");
-                String name = itemJsonObject.getString("name");
-
-                item.put("code", code);
-                item.put("name", name);
-
-                itemsArrayList.add(item);
-            }
-
-            SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_atc_pharmacologic_groups_list_item, fromColumns, toViews);
-
-            mListView.setAdapter(simpleAdapter);
-
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                if(mCursor.moveToPosition(i))
                 {
-                    try
-                    {
-                        JSONObject itemJsonObject = dataJsonArray.getJSONObject(i);
+                    mPharmacologicGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE));
 
-                        mTherapeuticGroupsTitle = itemJsonObject.getString("name");
-                        mTherapeuticGroupsData = itemJsonObject.getString("therapeutic_groups");
+                    mTherapeuticGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME));
 
-                        getTherapeuticGroups();
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("AtcActivity", Log.getStackTraceString(e));
-                    }
+                    getTherapeuticGroups();
                 }
-            });
-
-            mGroups = "pharmacologic_groups";
-        }
-        catch(Exception e)
-        {
-            Log.e("AtcActivity", Log.getStackTraceString(e));
-        }
+            }
+        });
     }
 
     private void getTherapeuticGroups()
     {
         mToolbar.setTitle(mTherapeuticGroupsTitle);
 
-        try
+        mGroup = "therapeutic_groups";
+
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_THERAPEUTIC_GROUPS, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mPharmacologicGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE);
+
+        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
+        int[] toViews = new int[] {R.id.atc_therapeutic_groups_list_item_code, R.id.atc_therapeutic_groups_list_item_name};
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_therapeutic_groups_list_item, mCursor, fromColumns, toViews, 0);
+
+        mListView.setAdapter(simpleCursorAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-            final JSONArray dataJsonArray = new JSONArray(mTherapeuticGroupsData);
-
-            String[] fromColumns = new String[] {"code", "name"};
-            int[] toViews = new int[] {R.id.atc_therapeutic_groups_list_item_code, R.id.atc_therapeutic_groups_list_item_name};
-
-            final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
-
-            for(int i = 0; i < dataJsonArray.length(); i++)
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                HashMap<String, String> item = new HashMap<>();
-
-                JSONObject itemJsonObject = dataJsonArray.getJSONObject(i);
-
-                String code = itemJsonObject.getString("code");
-                String name = itemJsonObject.getString("name");
-
-                item.put("code", code);
-                item.put("name", name);
-
-                itemsArrayList.add(item);
-            }
-
-            SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_atc_therapeutic_groups_list_item, fromColumns, toViews);
-
-            mListView.setAdapter(simpleAdapter);
-
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                if(mCursor.moveToPosition(i))
                 {
-                    try
-                    {
-                        JSONObject itemJsonObject = dataJsonArray.getJSONObject(i);
+                    mTherapeuticGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE));
 
-                        mSubstancesGroupsTitle = itemJsonObject.getString("name");
-                        mSubstancesGroupsData = itemJsonObject.getString("substances_groups");
+                    mSubstancesGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME));
 
-                        getSubstancesGroups();
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("AtcActivity", Log.getStackTraceString(e));
-                    }
+                    getSubstancesGroups();
                 }
-            });
-
-            mGroups = "therapeutic_groups";
-        }
-        catch(Exception e)
-        {
-            Log.e("AtcActivity", Log.getStackTraceString(e));
-        }
+            }
+        });
     }
 
     private void getSubstancesGroups()
     {
         mToolbar.setTitle(mSubstancesGroupsTitle);
 
-        try
+        mGroup = "substances_groups";
+
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_SUBSTANCES_GROUPS, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mTherapeuticGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE);
+
+        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
+        int[] toViews = new int[] {R.id.atc_substances_groups_list_item_code, R.id.atc_substances_groups_list_item_name};
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_substances_groups_list_item, mCursor, fromColumns, toViews, 0);
+
+        mListView.setAdapter(simpleCursorAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
-            final JSONArray dataJsonArray = new JSONArray(mSubstancesGroupsData);
-
-            String[] fromColumns = new String[] {"code", "name"};
-            int[] toViews = new int[] {R.id.atc_substances_groups_list_item_code, R.id.atc_substances_groups_list_item_name};
-
-            final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
-
-            for(int i = 0; i < dataJsonArray.length(); i++)
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
-                HashMap<String, String> item = new HashMap<>();
+                if(mCursor.moveToPosition(i))
+                {
+                    String code = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE));
 
-                JSONObject itemJsonObject = dataJsonArray.getJSONObject(i);
-
-                String code = itemJsonObject.getString("code");
-                String name = itemJsonObject.getString("name");
-
-                item.put("code", code);
-                item.put("name", name);
-
-                itemsArrayList.add(item);
+                    Intent intent = new Intent(mContext, AtcCodesActivity.class);
+                    intent.putExtra("code", code);
+                    startActivity(intent);
+                }
             }
-
-            SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_atc_substances_groups_list_item, fromColumns, toViews);
-
-            mListView.setAdapter(simpleAdapter);
-
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-                {
-                    try
-                    {
-                        JSONObject itemJsonObject = dataJsonArray.getJSONObject(i);
-
-                        Intent intent = new Intent(mContext, AtcCodesActivity.class);
-                        intent.putExtra("code", itemJsonObject.getString("code"));
-                        startActivity(intent);
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("AtcActivity", Log.getStackTraceString(e));
-                    }
-                }
-            });
-
-            mGroups = "substances_groups";
-        }
-        catch(Exception e)
-        {
-            Log.e("AtcActivity", Log.getStackTraceString(e));
-        }
+        });
     }
-
-    /*private class GetAtcTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
-    {
-        @Override
-        protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
-        {
-            mToolbar.setTitle(getString(R.string.atc_title));
-
-            mListView.setAdapter(simpleCursorAdapter);
-
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-                {
-                    mPharmacologicGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow("anatomical_group_name"));
-                    mPharmacologicGroupsData = mCursor.getString(mCursor.getColumnIndexOrThrow("anatomical_group_details"));
-
-                    if(mCursor.moveToPosition(i)) getPharmacologicGroups();
-                }
-            });
-
-            mGroups = "anatomical_groups";
-        }
-
-        @Override
-        protected SimpleCursorAdapter doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-            mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_ATC, null, null, null, null, null, null);
-
-            String[] fromColumns = {FelleskatalogenSQLiteHelper.ATC_COLUMN_ANATOMICAL_GROUP_LETTER, FelleskatalogenSQLiteHelper.ATC_COLUMN_ANATOMICAL_GROUP_NAME};
-            int[] toViews = {R.id.atc_anatomical_groups_list_item_letter, R.id.atc_anatomical_groups_list_item_name};
-
-            return new SimpleCursorAdapter(mContext, R.layout.activity_atc_anatomical_groups_list_item, mCursor, fromColumns, toViews, 0);
-        }
-    }*/
 }

@@ -68,7 +68,7 @@ public class MedicationPicturesActivity extends ActionBarActivity
         if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String medicationName = intent.getStringExtra("name");
 

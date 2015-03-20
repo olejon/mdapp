@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -54,6 +55,7 @@ public class InteractionsWebViewActivity extends ActionBarActivity
     private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -73,14 +75,14 @@ public class InteractionsWebViewActivity extends ActionBarActivity
         setContentView(R.layout.activity_interactions_webview);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String pageTitle = intent.getStringExtra("title");
 
         pageUri = intent.getStringExtra("uri");
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_webview_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_webview_toolbar);
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
@@ -156,6 +158,7 @@ public class InteractionsWebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {

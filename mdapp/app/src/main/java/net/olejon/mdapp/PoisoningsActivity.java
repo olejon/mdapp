@@ -80,6 +80,11 @@ public class PoisoningsActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
+        // Intent
+        final Intent intent = getIntent();
+
+        final String searchString = intent.getStringExtra("search");
+
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -87,7 +92,7 @@ public class PoisoningsActivity extends ActionBarActivity
         setContentView(R.layout.activity_poisonings);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
         toolbar.setTitle(getString(R.string.poisonings_title));
 
         setSupportActionBar(toolbar);
@@ -157,6 +162,9 @@ public class PoisoningsActivity extends ActionBarActivity
 
         View listViewHeader = getLayoutInflater().inflate(R.layout.activity_poisonings_list_subheader, mListView, false);
         mListView.addHeaderView(listViewHeader, null, false);
+
+        // Search
+        if(searchString != null) search(searchString.split(" ")[0]);
     }
 
     // Activity result
@@ -366,7 +374,6 @@ public class PoisoningsActivity extends ActionBarActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
-
             mCursor = mSqLiteDatabase.query(PoisoningsSQLiteHelper.TABLE, null, null, null, null, null, PoisoningsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
             String[] fromColumns = {PoisoningsSQLiteHelper.COLUMN_STRING};

@@ -23,14 +23,23 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import java.net.URLEncoder;
 
 public class ManufacturerActivity extends ActionBarActivity
 {
@@ -38,10 +47,10 @@ public class ManufacturerActivity extends ActionBarActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
-    private Toolbar mToolbar;
-    private ListView mListView;
+    private SQLiteDatabase mSqLiteDatabase;
+    private Cursor mCursor;
 
-    private String manufacturerUri;
+    private String manufacturerName;
 
     // Create activity
     @Override
@@ -50,27 +59,82 @@ public class ManufacturerActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
+
         final long manufacturerId = intent.getLongExtra("id", 0);
 
         // Layout
         setContentView(R.layout.activity_manufacturer);
 
-        // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.manufacturer_toolbar);
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // List
-        mListView = (ListView) findViewById(R.id.manufacturer_list);
-
-        View listViewHeader = getLayoutInflater().inflate(R.layout.activity_manufacturer_list_header, mListView, false);
-        mListView.addHeaderView(listViewHeader, null, false);
-
         // Get manufacturer
-        //GetManufacturerTask getManufacturerTask = new GetManufacturerTask();
-        //getManufacturerTask.execute(manufacturerId);
+        mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+        String[] manufacturersQueryColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME};
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, manufacturersQueryColumns, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID+" = "+manufacturerId, null, null, null, null);
+
+        if(mCursor.moveToFirst())
+        {
+            manufacturerName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME));
+
+            String[] medicationsQueryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE};
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, medicationsQueryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(manufacturerName), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+
+            String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE};
+            int[] toViews = {R.id.manufacturer_list_item_name, R.id.manufacturer_list_item_substance};
+
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_manufacturer_list_item, mCursor, fromColumns, toViews, 0);
+
+            // Toolbar
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.manufacturer_toolbar);
+            toolbar.setTitle(manufacturerName);
+
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            // Medications count
+            int medicationsCount = mCursor.getCount();
+
+            String medications = (medicationsCount == 1) ? getString(R.string.manufacturer_medication) : getString(R.string.manufacturer_medications);
+
+            TextView medicationsCountTextView = (TextView) findViewById(R.id.manufacturer_medications_count);
+            medicationsCountTextView.setText(medicationsCount+" "+medications);
+
+            // List
+            ListView listView = (ListView) findViewById(R.id.manufacturer_list);
+            listView.setAdapter(simpleCursorAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                {
+                    if(mCursor.moveToPosition(i))
+                    {
+                        long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+                        Intent intent = new Intent(mContext, MedicationActivity.class);
+
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        {
+                            if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                        }
+
+                        intent.putExtra("id", id);
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
+    }
+
+    // Destroy activity
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
     }
 
     // Menu
@@ -91,10 +155,16 @@ public class ManufacturerActivity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
-            case R.id.manufacturer_menu_uri:
+            case R.id.manufacturer_menu_contact:
             {
-                mTools.openUri(manufacturerUri);
-                return true;
+                try
+                {
+                    mTools.openUri("http://www.gulesider.no/finn:"+URLEncoder.encode(manufacturerName.replaceAll(" .*", ""), "utf-8"));
+                }
+                catch(Exception e)
+                {
+                    Log.e("ManufacturerActivity", Log.getStackTraceString(e));
+                }
             }
             default:
             {
@@ -102,114 +172,4 @@ public class ManufacturerActivity extends ActionBarActivity
             }
         }
     }
-
-    // Get manufacturer
-    /*private class GetManufacturerTask extends AsyncTask<Long, Void, HashMap<String, String>>
-    {
-        @Override
-        protected void onPostExecute(HashMap<String, String> manufacturer)
-        {
-            final String manufacturerName = manufacturer.get(FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_NAME);
-            final String manufacturerInformation = manufacturer.get(FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_INFORMATION);
-            final String manufacturerMedications = manufacturer.get(FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_MEDICATIONS);
-            final String manufacturerMedicationsCount = manufacturer.get(FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_MEDICATIONS_COUNT);
-
-            manufacturerUri = manufacturer.get(FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_URI);
-
-            mToolbar.setTitle(manufacturerName);
-
-            TextView textView = (TextView) findViewById(R.id.manufacturer_medications_count);
-            textView.setText(manufacturerMedicationsCount+" - "+getString(R.string.manufacturer_source));
-
-            textView = (TextView) findViewById(R.id.manufacturer_information);
-            textView.setText(Html.fromHtml(manufacturerInformation));
-            textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-            if(!manufacturerMedications.equals(""))
-            {
-                try
-                {
-                    final JSONArray medicationsJsonArray = new JSONArray(manufacturerMedications);
-
-                    String[] fromColumns = new String[] {"name"};
-                    int[] toViews = new int[] {R.id.manufacturer_list_item_name};
-
-                    ArrayList<HashMap<String, String>> medications = new ArrayList<>();
-
-                    for(int i = 0; i < medicationsJsonArray.length(); i++)
-                    {
-                        HashMap<String, String> medication = new HashMap<>();
-
-                        JSONObject jsonObject = medicationsJsonArray.getJSONObject(i);
-
-                        medication.put("name", jsonObject.getString("name"));
-
-                        medications.add(medication);
-                    }
-
-                    SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, medications, R.layout.activity_manufacturer_list_item, fromColumns, toViews);
-
-                    mListView.setAdapter(simpleAdapter);
-
-                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-                    {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-                        {
-                            try
-                            {
-                                int index = i - 1;
-
-                                String uri = medicationsJsonArray.getJSONObject(index).getString("uri");
-
-                                mTools.getMedicationWithFullContent(uri);
-                            }
-                            catch(Exception e)
-                            {
-                                mTools.showToast(getString(R.string.manufacturer_could_not_find_medication), 1);
-
-                                Log.e("ManufacturerActivity", Log.getStackTraceString(e));
-                            }
-                        }
-                    });
-                }
-                catch(Exception e)
-                {
-                    Log.e("ManufacturerActivity", Log.getStackTraceString(e));
-                }
-            }
-        }
-
-        @Override
-        protected HashMap<String, String> doInBackground(Long... longs)
-        {
-            SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-            Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MANUFACTURERS, null, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_ID+" = "+longs[0], null, null, null, null);
-
-            String[] columns = cursor.getColumnNames();
-
-            HashMap<String, String> manufacturer = new HashMap<>();
-
-            if(cursor.moveToFirst())
-            {
-                for(String column : columns)
-                {
-                    try
-                    {
-                        manufacturer.put(column, cursor.getString(cursor.getColumnIndexOrThrow(column)));
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("ManufacturerActivity", Log.getStackTraceString(e));
-                    }
-                }
-            }
-
-            cursor.close();
-            sqLiteDatabase.close();
-
-            return manufacturer;
-        }
-    }*/
 }

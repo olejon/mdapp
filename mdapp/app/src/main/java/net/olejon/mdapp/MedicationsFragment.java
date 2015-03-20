@@ -21,79 +21,110 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MedicationsFragment extends Fragment
 {
-    private Activity mActivity;
+    private Context mContext;
 
     private MyTools mTools;
 
     private Cursor mCursor;
 
-    private EditText mSearchEditText;
+    private InputMethodManager mInputMethodManager;
 
+    private EditText mSearchEditText;
     private ListView mListView;
     private View mListViewEmpty;
 
     // Create fragment view
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medications, container, false);
 
-        mActivity = getActivity();
+        // Context
+        mContext = viewGroup.getContext();
 
-        mTools = new MyTools(mActivity);
+        // Tools
+        mTools = new MyTools(mContext);
+
+        // Input manager
+        mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Search
-        //mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
+        mSearchEditText = (EditText) getActivity().findViewById(R.id.main_search_edittext);
+
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+            {
+                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_medications_list);
         mListViewEmpty = viewGroup.findViewById(R.id.main_medications_list_empty);
 
         // Get medications
-        //GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
-        //getMedicationsTask.execute();
+        GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
+        getMedicationsTask.execute();
 
         return viewGroup;
     }
 
-    // Destroy fragment view
+    // Destroy fragment
     @Override
-    public void onDestroyView()
+    public void onDestroy()
     {
-        super.onDestroyView();
+        super.onDestroy();
 
         if(mCursor != null && !mCursor.isClosed()) mCursor.close();
     }
 
     // Get medications
-    /*private class GetMedicationsTask extends AsyncTask<Void, Void, FelleskatalogenSimpleCursorAdapter>
+    private class GetMedicationsTask extends AsyncTask<Void, Void, MedicationsSimpleCursorAdapter>
     {
         @Override
-        protected void onPostExecute(final FelleskatalogenSimpleCursorAdapter felleskatalogenSimpleCursorAdapter)
+        protected void onPostExecute(final MedicationsSimpleCursorAdapter medicationsSimpleCursorAdapter)
         {
-            mListView.setAdapter(felleskatalogenSimpleCursorAdapter);
-
+            mListView.setAdapter(medicationsSimpleCursorAdapter);
             mListView.setEmptyView(mListViewEmpty);
 
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+                public void onItemClick(AdapterView<?> adapterView, View view, final int i, long id)
                 {
-                    Intent intent = new Intent(mActivity, MedicationActivity.class);
+                    Intent intent = new Intent(mContext, MedicationActivity.class);
 
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     {
@@ -108,9 +139,9 @@ public class MedicationsFragment extends Fragment
             mSearchEditText.addTextChangedListener(new TextWatcher()
             {
                 @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+                public void onTextChanged(final CharSequence charSequence, int i, int i2, int i3)
                 {
-                    if(MainActivity.VIEW_PAGER_POSITION == 0) felleskatalogenSimpleCursorAdapter.getFilter().filter(charSequence);
+                    if(MainActivity.VIEW_PAGER_POSITION == 0) medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
                 }
 
                 @Override
@@ -120,37 +151,32 @@ public class MedicationsFragment extends Fragment
                 public void afterTextChanged(Editable editable) { }
             });
 
-            felleskatalogenSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
+            medicationsSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
             {
                 @Override
                 public Cursor runQuery(CharSequence charSequence)
                 {
-                    if(MainActivity.SQLITE_DATABASE_FELLESKATALOGEN != null && MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.isOpen())
-                    {
-                        String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_TYPE, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP};
+                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
 
-                        if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, null);
+                    if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
 
-                        String query = charSequence.toString().trim();
+                    String query = charSequence.toString().trim();
 
-                        return MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, null);
-                    }
-
-                    return null;
+                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
                 }
             });
         }
 
         @Override
-        protected FelleskatalogenSimpleCursorAdapter doInBackground(Void... voids)
+        protected MedicationsSimpleCursorAdapter doInBackground(Void... voids)
         {
-            String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_TYPE, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP};
-            mCursor = MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, null);
+            String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+            mCursor = MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
 
-            String[] fromColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_TYPE, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP};
-            int[] toViews = {R.id.main_medications_list_item_name, R.id.main_medications_list_item_type, R.id.main_medications_list_item_manufacturer, R.id.main_medications_list_item_prescription_group};
+            String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+            int[] toViews = {R.id.main_medications_list_item_prescription_group, R.id.main_medications_list_item_name, R.id.main_medications_list_item_substance, R.id.main_medications_list_item_manufacturer};
 
-            return new FelleskatalogenSimpleCursorAdapter(mActivity, mCursor, fromColumns, toViews);
+            return new MedicationsSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
         }
-    }*/
+    }
 }

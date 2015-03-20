@@ -47,7 +47,8 @@ public class MedicationPictureActivity extends ActionBarActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
+
         final String uri = intent.getStringExtra("uri");
 
         // Layout

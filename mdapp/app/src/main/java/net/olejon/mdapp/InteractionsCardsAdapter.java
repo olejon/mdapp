@@ -102,7 +102,6 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
     public InteractionsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_interactions_card, viewGroup, false);
-
         return new InteractionsViewHolder(view);
     }
 
@@ -124,32 +123,32 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 case "red":
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_error_white_24dp));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_error_white_24dp);
 
                     break;
                 }
                 case "orange":
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_warning_white_24dp));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_orange));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_warning_white_24dp);
 
                     break;
                 }
                 case "green":
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_check_white_24dp));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_green));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_check_white_24dp);
 
                     break;
                 }
                 default:
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_error_white_24dp));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_error_white_24dp);
 
                     break;
                 }

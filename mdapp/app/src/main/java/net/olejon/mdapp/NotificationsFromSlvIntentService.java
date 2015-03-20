@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -70,6 +71,7 @@ public class NotificationsFromSlvIntentService extends IntentService
 
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/notifications-from-slv/?first&version_code="+projectVersionCode+"&device="+device, new Response.Listener<JSONArray>()
             {
+                @SuppressLint("InlinedApi")
                 @Override
                 public void onResponse(JSONArray response)
                 {

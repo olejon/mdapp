@@ -50,7 +50,7 @@ public class LvhCategoriesActivity extends ActionBarActivity
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String categoryColor = intent.getStringExtra("color");
         final String categoryIcon = intent.getStringExtra("icon");

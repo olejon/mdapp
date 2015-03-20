@@ -4,23 +4,19 @@
 
     <RelativeLayout style="@style/main_layout">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/main_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
-            <ProgressBar android:id="@+id/main_toolbar_progressbar" style="@style/toolbar_progressbar"/>
-        </android.support.v7.widget.Toolbar>
+        <android.support.v7.widget.Toolbar android:id="@+id/main_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-        <!-- <LinearLayout android:id="@+id/main_search" android:layout_below="@+id/main_toolbar" style="@style/main_search">
+        <LinearLayout android:id="@+id/main_search" android:layout_below="@+id/main_toolbar" style="@style/main_search">
             <EditText android:id="@+id/main_search_edittext" android:hint="@string/main_search_hint" style="@style/main_search_edittext"/>
         </LinearLayout>
 
         <com.astuetz.PagerSlidingTabStrip android:id="@+id/main_tabs" android:layout_below="@+id/main_search" style="@style/main_tabs"/>
 
-        <android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_tabs" style="@style/main_pager"/> -->
+        <android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_tabs" style="@style/main_pager"/>
 
-        <WebView android:id="@+id/main_webview" android:layout_below="@+id/main_toolbar" style="@style/main_webview"/>
+        <View android:layout_below="@+id/main_tabs" style="@style/toolbar_shadow"/>
 
-        <View android:layout_below="@+id/main_toolbar" style="@style/toolbar_shadow"/>
-
-        <!-- <com.melnykov.fab.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/> -->
+        <com.melnykov.fab.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 
     </RelativeLayout>
 
@@ -32,16 +28,25 @@
 
             <LinearLayout style="@style/main_drawer_inner_inner">
 
+                <TextView android:text="@string/drawer_subheader_encyclopedias" style="@style/drawer_subheader"/>
+
+                <TextView android:id="@+id/drawer_item_nlh" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_nlh" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_felleskatalogen" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_felleskatalogen" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+                <TextView android:id="@+id/drawer_item_bmj" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_bmj" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+
+                <View style="@style/drawer_separator"/>
+
+                <TextView android:text="@string/drawer_subheader_resources" style="@style/drawer_subheader"/>
+
                 <TextView android:id="@+id/drawer_item_diseases_and_treatments" android:drawableStart="@drawable/ic_local_hospital_grey600_24dp" android:drawableLeft="@drawable/ic_local_hospital_grey600_24dp" android:text="@string/drawer_item_diseases_and_treatments" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_lvh" android:drawableStart="@drawable/ic_healing_grey600_24dp" android:drawableLeft="@drawable/ic_healing_grey600_24dp" android:text="@string/drawer_item_lvh" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_interactions" android:drawableStart="@drawable/ic_warning_grey600_24dp" android:drawableLeft="@drawable/ic_warning_grey600_24dp" android:text="@string/drawer_item_interactions" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_poisonings" android:drawableStart="@drawable/ic_error_grey600_24dp" android:drawableLeft="@drawable/ic_error_grey600_24dp" android:text="@string/drawer_item_poisonings" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_nasjonale_retningslinjer" android:drawableStart="@drawable/ic_format_list_bulleted_grey600_24dp" android:drawableLeft="@drawable/ic_format_list_bulleted_grey600_24dp" android:text="@string/drawer_item_nasjonale_retningslinjer" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
-                <!-- <TextView android:id="@+id/drawer_item_atc" android:drawableStart="@drawable/ic_my_library_books_grey600_24dp" android:drawableLeft="@drawable/ic_my_library_books_grey600_24dp" android:text="@string/drawer_item_atc" android:onClick="onDrawerItemClick" style="@style/drawer_item"/> -->
+                <TextView android:id="@+id/drawer_item_atc" android:drawableStart="@drawable/ic_my_library_books_grey600_24dp" android:drawableLeft="@drawable/ic_my_library_books_grey600_24dp" android:text="@string/drawer_item_atc" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_icd10" android:drawableStart="@drawable/ic_view_list_grey600_24dp" android:drawableLeft="@drawable/ic_view_list_grey600_24dp" android:text="@string/drawer_item_icd10" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
-                <!-- <TextView android:id="@+id/drawer_item_manufacturers" android:drawableStart="@drawable/ic_business_grey600_24dp" android:drawableLeft="@drawable/ic_business_grey600_24dp" android:text="@string/drawer_item_manufacturers" android:onClick="onDrawerItemClick" style="@style/drawer_item"/> -->
-                <!-- <TextView android:id="@+id/drawer_item_pharmacies" android:drawableStart="@drawable/ic_local_pharmacy_grey600_24dp" android:drawableLeft="@drawable/ic_local_pharmacy_grey600_24dp" android:text="@string/drawer_item_pharmacies" android:onClick="onDrawerItemClick" style="@style/drawer_item"/> -->
+                <TextView android:id="@+id/drawer_item_manufacturers" android:drawableStart="@drawable/ic_business_grey600_24dp" android:drawableLeft="@drawable/ic_business_grey600_24dp" android:text="@string/drawer_item_manufacturers" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+                <TextView android:id="@+id/drawer_item_pharmacies" android:drawableStart="@drawable/ic_local_pharmacy_grey600_24dp" android:drawableLeft="@drawable/ic_local_pharmacy_grey600_24dp" android:text="@string/drawer_item_pharmacies" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_clinicaltrials" android:drawableStart="@drawable/ic_content_paste_grey600_24dp" android:drawableLeft="@drawable/ic_content_paste_grey600_24dp" android:text="@string/drawer_item_clinicaltrials" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_notifications_from_slv" android:drawableStart="@drawable/ic_notifications_grey600_24dp" android:drawableLeft="@drawable/ic_notifications_grey600_24dp" android:text="@string/drawer_item_notifications_from_slv" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 

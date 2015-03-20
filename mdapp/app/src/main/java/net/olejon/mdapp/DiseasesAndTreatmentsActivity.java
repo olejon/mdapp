@@ -92,7 +92,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
         setContentView(R.layout.activity_diseases_and_treatments);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_toolbar);
         toolbar.setTitle(getString(R.string.diseases_and_treatments_title));
 
         setSupportActionBar(toolbar);

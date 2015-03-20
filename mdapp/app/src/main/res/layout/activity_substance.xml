@@ -4,11 +4,11 @@
 
     <android.support.v7.widget.Toolbar android:id="@+id/substance_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <TextView android:id="@+id/substance_medications_count" android:layout_below="@+id/substance_toolbar" style="@style/substance_medications_count"/>
+    <TextView android:id="@+id/substance_atc_code" android:layout_below="@+id/substance_toolbar" style="@style/substance_atc_code"/>
 
-    <ListView android:id="@+id/substance_list" android:layout_below="@+id/substance_medications_count" style="@style/substance_list_layout"/>
-    <TextView android:id="@+id/substance_list_empty" android:layout_below="@+id/substance_medications_count" android:text="@string/substance_list_empty" style="@style/substance_list_empty"/>
+    <ListView android:id="@+id/substance_list" android:layout_below="@+id/substance_atc_code" style="@style/substance_list_layout"/>
+    <TextView android:id="@+id/substance_list_empty" android:layout_below="@+id/substance_atc_code" android:text="@string/substance_list_empty" style="@style/substance_list_empty"/>
 
-    <View android:layout_below="@+id/substance_medications_count" style="@style/toolbar_shadow"/>
+    <View android:layout_below="@+id/substance_atc_code" style="@style/toolbar_shadow"/>
 
 </RelativeLayout>

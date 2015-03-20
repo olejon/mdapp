@@ -48,10 +48,10 @@ class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
     @Override
     public void onCreate()
     {
-        mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getWritableDatabase();
+        mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
 
-        String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_URI};
-        mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+        String[] favoritesQueryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+        mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, favoritesQueryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
     }
 
     @Override
@@ -66,26 +66,38 @@ class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
     {
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
 
-        if(mCursor.moveToPosition(i))
+        try
         {
-            try
+            if(mCursor.moveToPosition(i))
             {
-                String name = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_NAME));
-                String manufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER));
-                String uri = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_URI));
+                String medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_NAME));
+                String medicationManufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER));
 
-                remoteViews.setTextViewText(R.id.widget_list_item_name, name);
-                remoteViews.setTextViewText(R.id.widget_list_item_manufacturer, manufacturer);
+                remoteViews.setTextViewText(R.id.widget_list_item_name, medicationName);
+                remoteViews.setTextViewText(R.id.widget_list_item_manufacturer, medicationManufacturer);
 
-                Intent intent = new Intent();
-                intent.putExtra("id", mTools.getMedicationIdFromUri(uri));
+                SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 
-                remoteViews.setOnClickFillInIntent(R.id.widget_list_item, intent);
+                String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+
+                if(cursor.moveToFirst())
+                {
+                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+                    Intent intent = new Intent();
+                    intent.putExtra("id", id);
+
+                    remoteViews.setOnClickFillInIntent(R.id.widget_list_item, intent);
+                }
+
+                cursor.close();
+                sqLiteDatabase.close();
             }
-            catch(Exception e)
-            {
-                Log.e("WidgetListFactory", Log.getStackTraceString(e));
-            }
+        }
+        catch(Exception e)
+        {
+            Log.e("WidgetListFactory", Log.getStackTraceString(e));
         }
 
         return remoteViews;
@@ -122,8 +134,5 @@ class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
     }
 
     @Override
-    public void onDataSetChanged()
-    {
-
-    }
+    public void onDataSetChanged() { }
 }

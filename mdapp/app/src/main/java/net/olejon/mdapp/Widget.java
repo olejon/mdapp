@@ -53,6 +53,7 @@ public class Widget extends AppWidgetProvider
             PendingIntent launchMainActivityPendingIntent = PendingIntent.getActivity(context, appWidgetId, launchMainActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             Intent launchMedicationActivityIntent = new Intent(context, MedicationActivity.class);
+            launchMedicationActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent launchMedicationActivityPendingIntent = PendingIntent.getActivity(context, 0, launchMedicationActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             remoteViews.setOnClickPendingIntent(R.id.widget_toolbar, launchMainActivityPendingIntent);

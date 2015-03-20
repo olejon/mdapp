@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -43,8 +42,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
 
     private final MyTools mTools;
 
-    private final LayoutInflater mLayoutInflater;
-
     private final JSONArray mNotifications;
 
     private int lastPosition = -1;
@@ -54,8 +51,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
         mContext = context;
 
         mTools = new MyTools(mContext);
-
-        mLayoutInflater =  (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mNotifications = jsonArray;
     }
@@ -67,7 +62,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
         private final TextView date;
         private final TextView type;
         private final TextView message;
-        private final LinearLayout medications;
         private final View uriSeparator;
         private final TextView uri;
 
@@ -80,7 +74,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
             date = (TextView) view.findViewById(R.id.notifications_from_slv_card_date);
             type = (TextView) view.findViewById(R.id.notifications_from_slv_card_type);
             message = (TextView) view.findViewById(R.id.notifications_from_slv_card_message);
-            medications = (LinearLayout) view.findViewById(R.id.notifications_from_slv_card_medications);
             uriSeparator = view.findViewById(R.id.notifications_from_slv_card_uri_separator);
             uri = (TextView) view.findViewById(R.id.notifications_from_slv_card_button);
         }
@@ -90,7 +83,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
     public NotificationViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notifications_from_slv_card, viewGroup, false);
-
         return new NotificationViewHolder(view);
     }
 
@@ -105,39 +97,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
             viewHolder.date.setText(notificationsJsonObject.getString("date"));
             viewHolder.type.setText(notificationsJsonObject.getString("type"));
             viewHolder.message.setText(notificationsJsonObject.getString("message"));
-
-            viewHolder.medications.removeAllViews();
-
-            final JSONArray medicationsJsonArray = notificationsJsonObject.getJSONArray("medications");
-
-            int medicationsCount = medicationsJsonArray.length();
-
-            if(medicationsCount != 0)
-            {
-                for(int n = 0; n < medicationsCount; n++)
-                {
-                    final JSONObject medicationJsonObject = medicationsJsonArray.getJSONObject(n);
-
-                    final String uri = medicationJsonObject.getString("uri");
-
-                    LinearLayout linearLayout = (LinearLayout) mLayoutInflater.inflate(R.layout.card_item_separator, null);
-                    viewHolder.medications.addView(linearLayout);
-
-                    TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_notifications_from_slv_card_medications_item, null);
-                    textView.setText(medicationJsonObject.getString("name"));
-
-                    textView.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            mTools.getMedicationWithFullContent(uri);
-                        }
-                    });
-
-                    viewHolder.medications.addView(textView);
-                }
-            }
 
             final String title = notificationsJsonObject.getString("title");
             final String uri = notificationsJsonObject.getString("uri");
@@ -159,8 +118,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                     {
                         if(uri.matches("^https?://.*?\\.pdf$"))
                         {
-                            mTools.showToast(mContext.getString(R.string.notifications_from_slv_downloading_pdf), 1);
-
                             mTools.downloadFile(title, uri);
                         }
                         else
@@ -180,8 +137,6 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                     {
                         if(uri.matches("^https?://.*?\\.pdf$"))
                         {
-                            mTools.showToast(mContext.getString(R.string.notifications_from_slv_downloading_pdf), 1);
-
                             mTools.downloadFile(title, uri);
                         }
                         else

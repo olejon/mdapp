@@ -75,7 +75,6 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
     public PoisoningsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_poisonings_card, viewGroup, false);
-
         return new PoisoningsViewHolder(view);
     }
 

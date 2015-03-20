@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -69,6 +70,7 @@ public class MessageIntentService extends IntentService
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
         {
+            @SuppressLint("InlinedApi")
             @Override
             public void onResponse(JSONObject response)
             {

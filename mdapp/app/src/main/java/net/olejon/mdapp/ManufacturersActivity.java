@@ -22,23 +22,32 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -58,6 +67,7 @@ public class ManufacturersActivity extends ActionBarActivity
     private EditText mToolbarSearchEditText;
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
+    private View mListViewEmpty;
 
     // Create activity
     @Override
@@ -125,10 +135,11 @@ public class ManufacturersActivity extends ActionBarActivity
 
         // List
         mListView = (ListView) findViewById(R.id.manufacturers_list);
+        mListViewEmpty = findViewById(R.id.manufacturers_list_empty);
 
         // Get manufacturers
-        //GetManufacturersTask getManufacturersTask = new GetManufacturersTask();
-        //getManufacturersTask.execute();
+        GetManufacturersTask getManufacturersTask = new GetManufacturersTask();
+        getManufacturersTask.execute();
     }
 
     // Destroy activity
@@ -175,13 +186,6 @@ public class ManufacturersActivity extends ActionBarActivity
 
     // Menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_manufacturers, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -189,11 +193,6 @@ public class ManufacturersActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.manufacturers_menu_uri:
-            {
-                mTools.openUri("http://www.felleskatalogen.no/medisin/firmaer/alle");
                 return true;
             }
             default:
@@ -204,15 +203,13 @@ public class ManufacturersActivity extends ActionBarActivity
     }
 
     // Get manufacturers
-    /*private class GetManufacturersTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    private class GetManufacturersTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
         {
             mListView.setAdapter(simpleCursorAdapter);
-
-            View listViewEmpty = findViewById(R.id.manufacturers_list_empty);
-            mListView.setEmptyView(listViewEmpty);
+            mListView.setEmptyView(mListViewEmpty);
 
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
@@ -247,13 +244,11 @@ public class ManufacturersActivity extends ActionBarActivity
                 {
                     if(mSqLiteDatabase != null)
                     {
-                        String[] queryColumns = {FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_ID, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_MEDICATIONS_COUNT};
-
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MANUFACTURERS, queryColumns, null, null, null, null, null);
+                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, null, null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME);
 
                         String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MANUFACTURERS, queryColumns, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, null);
+                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME);
                     }
 
                     return null;
@@ -283,15 +278,13 @@ public class ManufacturersActivity extends ActionBarActivity
         @Override
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
-            mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, null, null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" COLLATE NOCASE");
 
-            String[] queryColumns = {FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_ID, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_MEDICATIONS_COUNT};
-            mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MANUFACTURERS, queryColumns, null, null, null, null, null);
-
-            String[] fromColumns = {FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_NAME, FelleskatalogenSQLiteHelper.MANUFACTURERS_COLUMN_MEDICATIONS_COUNT};
-            int[] toViews = {R.id.manufacturers_list_item_name, R.id.manufacturers_list_item_medications_count};
+            String[] fromColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME};
+            int[] toViews = {R.id.manufacturers_list_item};
 
             return new SimpleCursorAdapter(mContext, R.layout.activity_manufacturers_list_item, mCursor, fromColumns, toViews, 0);
         }
-    }*/
+    }
 }

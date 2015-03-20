@@ -26,24 +26,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class NotesEditActivity extends ActionBarActivity
 {
@@ -60,6 +61,8 @@ public class NotesEditActivity extends ActionBarActivity
     private EditText mPatientDoctorEditText;
     private EditText mPatientDepartmentEditText;
     private EditText mPatientRoomEditText;
+    private TextView mPatientMedicationsTextView;
+    private Button mPatientMedicationsInteractionsButton;
 
     private JSONArray mPatientMedicationsJsonArray = new JSONArray();
 
@@ -71,7 +74,7 @@ public class NotesEditActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String noteTitle = intent.getStringExtra("title");
 
@@ -90,7 +93,7 @@ public class NotesEditActivity extends ActionBarActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Text fields and buttons
+        // Elements
         mTitleEditText = (EditText) findViewById(R.id.notes_edit_title);
         mTextEditText = (EditText) findViewById(R.id.notes_edit_text);
         mPatientIdEditText = (EditText) findViewById(R.id.notes_edit_patient_id);
@@ -98,12 +101,14 @@ public class NotesEditActivity extends ActionBarActivity
         mPatientDoctorEditText = (EditText) findViewById(R.id.notes_edit_patient_doctor);
         mPatientDepartmentEditText = (EditText) findViewById(R.id.notes_edit_patient_department);
         mPatientRoomEditText = (EditText) findViewById(R.id.notes_edit_patient_room);
+        mPatientMedicationsTextView = (TextView) findViewById(R.id.notes_edit_patient_medications);
+        mPatientMedicationsInteractionsButton = (Button) findViewById(R.id.notes_edit_patient_medications_interactions);
 
         if(noteTitle != null && !noteTitle.equals("")) mTitleEditText.setText(noteTitle);
 
-        Button patientMedicationButton = (Button) findViewById(R.id.notes_edit_patient_add_medication);
+        Button patientAddMedicationButton = (Button) findViewById(R.id.notes_edit_patient_add_medication);
 
-        patientMedicationButton.setOnClickListener(new View.OnClickListener()
+        patientAddMedicationButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -115,6 +120,21 @@ public class NotesEditActivity extends ActionBarActivity
 
         // Note
         getNote();
+
+        // Tip dialog
+        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("NOTES_EDIT_HIDE_TIP_DIALOG");
+
+        if(!hideTipDialog)
+        {
+            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_tip_dialog_title)).content(getString(R.string.notes_edit_tip_dialog_message)).positiveText(getString(R.string.notes_edit_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+            {
+                @Override
+                public void onPositive(MaterialDialog dialog)
+                {
+                    mTools.setSharedPreferencesBoolean("NOTES_EDIT_HIDE_TIP_DIALOG", true);
+                }
+            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+        }
     }
 
     // Activity result
@@ -129,15 +149,14 @@ public class NotesEditActivity extends ActionBarActivity
             {
                 String name = data.getStringExtra("name");
                 String manufacturer = data.getStringExtra("manufacturer");
-                String uri = data.getStringExtra("uri");
 
                 try
                 {
-                    JSONObject patientMedicationjsonObject = new JSONObject("{\"name\":\""+name+"\",\"manufacturer\":\""+manufacturer+"\",\"uri\":\""+uri+"\"}");
+                    JSONObject patientMedicationJsonObject = new JSONObject("{\"name\":\""+name+"\",\"manufacturer\":\""+manufacturer+"\"}");
 
-                    mPatientMedicationsJsonArray.put(patientMedicationjsonObject);
+                    mPatientMedicationsJsonArray.put(patientMedicationJsonObject);
 
-                    getMedications(mPatientMedicationsJsonArray);
+                    getMedications();
                 }
                 catch(Exception e)
                 {
@@ -179,12 +198,13 @@ public class NotesEditActivity extends ActionBarActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             }
             case R.id.notes_edit_menu_save:
             {
-                editNote();
+                saveNote();
+                return true;
             }
             default:
             {
@@ -198,9 +218,10 @@ public class NotesEditActivity extends ActionBarActivity
     {
         if(noteId != 0)
         {
-            SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
 
-            Cursor cursor = sqLiteDatabase.query(NotesSQLiteHelper.TABLE, null, NotesSQLiteHelper.COLUMN_ID+" = "+noteId, null, null, null, null);
+            String[] queryColumns = {NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT, NotesSQLiteHelper.COLUMN_PATIENT_ID, NotesSQLiteHelper.COLUMN_PATIENT_NAME, NotesSQLiteHelper.COLUMN_PATIENT_DOCTOR, NotesSQLiteHelper.COLUMN_PATIENT_DEPARTMENT, NotesSQLiteHelper.COLUMN_PATIENT_ROOM, NotesSQLiteHelper.COLUMN_PATIENT_MEDICATIONS};
+            Cursor cursor = sqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, NotesSQLiteHelper.COLUMN_ID+" = "+noteId, null, null, null, null);
 
             if(cursor.moveToFirst())
             {
@@ -223,11 +244,9 @@ public class NotesEditActivity extends ActionBarActivity
 
                 try
                 {
-                    JSONArray patientMedicationsJsonArray = new JSONArray(patientMedications);
+                    mPatientMedicationsJsonArray = new JSONArray(patientMedications);
 
-                    mPatientMedicationsJsonArray = patientMedicationsJsonArray;
-
-                    getMedications(patientMedicationsJsonArray);
+                    getMedications();
                 }
                 catch(Exception e)
                 {
@@ -241,7 +260,7 @@ public class NotesEditActivity extends ActionBarActivity
     }
 
     // Edit note
-    private void editNote()
+    private void saveNote()
     {
         String title = mTitleEditText.getText().toString().trim();
         String text = mTextEditText.getText().toString().trim();
@@ -295,9 +314,7 @@ public class NotesEditActivity extends ActionBarActivity
         if(delete)
         {
             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
-
             sqLiteDatabase.delete(NotesSQLiteHelper.TABLE, NotesSQLiteHelper.COLUMN_ID+" = "+noteId, null);
-
             sqLiteDatabase.close();
 
             mTools.showToast(getString(R.string.notes_edit_deleted), 1);
@@ -318,46 +335,106 @@ public class NotesEditActivity extends ActionBarActivity
     }
 
     // Get medications
-    private void getMedications(JSONArray medicationsJsonArray)
+    private void getMedications()
     {
         try
         {
-            int medicationsJsonArrayLength = medicationsJsonArray.length();
+            int medicationsJsonArrayLength = mPatientMedicationsJsonArray.length();
 
             if(medicationsJsonArrayLength > 0)
             {
-                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                mPatientMedicationsTextView.setVisibility(View.VISIBLE);
+                mPatientMedicationsInteractionsButton.setVisibility(View.VISIBLE);
 
-                TextView noMedicationsTextView = (TextView) findViewById(R.id.notes_edit_patient_no_medications);
-                noMedicationsTextView.setVisibility(View.GONE);
+                final ArrayList<String> medicationsNamesArrayList = new ArrayList<>();
+                final ArrayList<String> medicationsManufacturersArrayList = new ArrayList<>();
 
-                LinearLayout medicationsLinearLayout = (LinearLayout) findViewById(R.id.notes_edit_patient_medications);
-                medicationsLinearLayout.setVisibility(View.VISIBLE);
+                final String[] medicationsNamesStringArrayList = new String[medicationsJsonArrayLength];
 
                 for(int i = 0; i < medicationsJsonArrayLength; i++)
                 {
-                    JSONObject medicationJsonObject = medicationsJsonArray.getJSONObject(i);
+                    JSONObject medicationJsonObject = mPatientMedicationsJsonArray.getJSONObject(i);
 
-                    final String name = medicationJsonObject.getString("name");
-                    final String uri = medicationJsonObject.getString("uri");
+                    String name = medicationJsonObject.getString("name");
+                    String manufacturer = medicationJsonObject.getString("manufacturer");
 
-                    LinearLayout separatorLinearLayout = (LinearLayout) layoutInflater.inflate(R.layout.card_item_separator, null);
-                    medicationsLinearLayout.addView(separatorLinearLayout);
+                    medicationsNamesArrayList.add(name);
+                    medicationsManufacturersArrayList.add(manufacturer);
 
-                    TextView medicationTextView = (TextView) layoutInflater.inflate(R.layout.activity_notes_edit_patient_medications_item, null);
-                    medicationTextView.setText(name);
-
-                    medicationTextView.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            mTools.getMedicationWithFullContent(uri);
-                        }
-                    });
-
-                    medicationsLinearLayout.addView(medicationTextView);
+                    medicationsNamesStringArrayList[i] = name;
                 }
+
+                String medicationsNames = "";
+
+                for(int n = 0; n < medicationsNamesArrayList.size(); n++)
+                {
+                    medicationsNames += medicationsNamesArrayList.get(n)+", ";
+                }
+
+                medicationsNames = medicationsNames.replaceAll(", $", "");
+
+                mPatientMedicationsTextView.setText(Html.fromHtml("<u>"+medicationsNames+"</u>"));
+
+                mPatientMedicationsTextView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_medications_dialog_title)).items(medicationsNamesStringArrayList).itemsCallback(new MaterialDialog.ListCallback()
+                        {
+                            @Override
+                            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
+                            {
+                                String medicationName = medicationsNamesArrayList.get(i);
+                                String medicationManufacturer = medicationsManufacturersArrayList.get(i);
+
+                                SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+                                String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+                                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+
+                                if(cursor.moveToFirst())
+                                {
+                                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+                                    Intent intent = new Intent(mContext, MedicationActivity.class);
+
+                                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                    {
+                                        if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                                    }
+
+                                    intent.putExtra("id", id);
+                                    startActivity(intent);
+                                }
+
+                                cursor.close();
+                                sqLiteDatabase.close();
+                            }
+                        }).itemColorRes(R.color.dark_blue).show();
+                    }
+                });
+
+                mPatientMedicationsInteractionsButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        String medicationsInteractions = "";
+
+                        for(int n = 0; n < medicationsNamesArrayList.size(); n++)
+                        {
+                            medicationsInteractions += medicationsNamesArrayList.get(n).split(" ")[0]+" ";
+                        }
+
+                        medicationsInteractions = medicationsInteractions.trim();
+
+                        Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
+                        intent.putExtra("search", medicationsInteractions);
+                        startActivity(intent);
+                    }
+                });
             }
         }
         catch(Exception e)

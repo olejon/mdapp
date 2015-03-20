@@ -76,7 +76,7 @@ public class InteractionsActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String searchString;
 
@@ -96,7 +96,7 @@ public class InteractionsActivity extends ActionBarActivity
         setContentView(R.layout.activity_interactions);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
         toolbar.setTitle(getString(R.string.interactions_title));
 
         setSupportActionBar(toolbar);

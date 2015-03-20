@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -67,6 +68,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
     private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -86,7 +88,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
         setContentView(R.layout.activity_icd10_webview);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         pageTitle = intent.getStringExtra("title");
 
@@ -95,7 +97,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
         pageSearchUri = pageUri;
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_webview_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_webview_toolbar);
         toolbar.setTitle(getString(R.string.icd10_webview_title)+": "+pageTitle);
 
         setSupportActionBar(toolbar);
@@ -218,6 +220,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {

@@ -25,17 +25,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -44,10 +49,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
-
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 
 public class PharmaciesLocationActivity extends ActionBarActivity
 {
@@ -60,18 +61,12 @@ public class PharmaciesLocationActivity extends ActionBarActivity
 
     private InputMethodManager mInputMethodManager;
 
-    private Toolbar mToolbar;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
     private FloatingActionButton mFloatingActionButton;
     private RecyclerView mRecyclerView;
 
-    private JSONArray mPharmacies = new JSONArray();
-
-    private final ArrayList<String> mPharmaciesNamesArrayList = new ArrayList<>();
-    private final ArrayList<String> mPharmaciesCoordinatesArrayList = new ArrayList<>();
-
-    private String mLocationName;
+    private String mMunicipalityName;
 
     // Create activity
     @Override
@@ -80,8 +75,9 @@ public class PharmaciesLocationActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        Intent intent = getIntent();
-        final long locationId = intent.getLongExtra("id", 0);
+        final Intent intent = getIntent();
+
+        mMunicipalityName = intent.getStringExtra("name");
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -90,9 +86,10 @@ public class PharmaciesLocationActivity extends ActionBarActivity
         setContentView(R.layout.activity_pharmacies_location);
 
         // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.pharmacies_location_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_toolbar);
+        toolbar.setTitle(mMunicipalityName);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_location_toolbar_search_layout);
@@ -144,12 +141,12 @@ public class PharmaciesLocationActivity extends ActionBarActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.pharmacies_location_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, mPharmacies));
+        mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, mCursor));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Get pharmacies
-        //GetPharmaciesTask getPharmaciesTask = new GetPharmaciesTask();
-        //getPharmaciesTask.execute(locationId);
+        GetPharmaciesTask getPharmaciesTask = new GetPharmaciesTask();
+        getPharmaciesTask.execute();
     }
 
     // Destroy activity
@@ -196,13 +193,6 @@ public class PharmaciesLocationActivity extends ActionBarActivity
 
     // Menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_pharmacies_location, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -212,15 +202,6 @@ public class PharmaciesLocationActivity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
-            case R.id.pharmacies_menu_locations:
-            {
-                Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
-                intent.putExtra("name", mLocationName);
-                intent.putExtra("names", mPharmaciesNamesArrayList);
-                intent.putExtra("coordinates", mPharmaciesCoordinatesArrayList);
-                intent.putExtra("multiple_coordinates", true);
-                mContext.startActivity(intent);
-            }
             default:
             {
                 return super.onOptionsItemSelected(item);
@@ -229,92 +210,67 @@ public class PharmaciesLocationActivity extends ActionBarActivity
     }
 
     // Get pharmacies
-    /*private class GetPharmaciesTask extends AsyncTask<Long, Void, Void>
+    private class GetPharmaciesTask extends AsyncTask<Void, Void, Void>
     {
         @Override
         protected void onPostExecute(Void success)
         {
-            if(mCursor.moveToFirst())
+            if(mTools.isTablet())
             {
-                try
+                int spanCount = (mCursor.getCount() == 1) ? 1 : 2;
+
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+            }
+
+            mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, mCursor));
+
+            if(mCursor.getCount() >= 4)
+            {
+                mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
                 {
-                    mLocationName = mCursor.getString(mCursor.getColumnIndexOrThrow("location"));
-
-                    mToolbar.setTitle(mLocationName);
-
-                    mPharmacies = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow("details")));
-
-                    int mPharmaciesLength = mPharmacies.length();
-
-                    if(mTools.isTablet())
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
                     {
-                        int spanCount = (mPharmaciesLength == 1) ? 1 : 2;
+                        String searchString = charSequence.toString().trim();
 
-                        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-                    }
-
-                    mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, mPharmacies));
-
-                    for(int i = 0; i < mPharmaciesLength; i++)
-                    {
-                        JSONObject pharmacyJsonObject = mPharmacies.getJSONObject(i);
-
-                        String name  = pharmacyJsonObject.getString("name");
-                        String coordinates = pharmacyJsonObject.getString("coordinates");
-
-                        mPharmaciesNamesArrayList.add(name);
-                        mPharmaciesCoordinatesArrayList.add(coordinates);
-                    }
-
-                    mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
-                    {
-                        @Override
-                        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+                        for(int n = 0; n < mCursor.getCount(); n++)
                         {
-                            String searchString = charSequence.toString().trim();
-
-                            for(int n = 0; n < mPharmaciesNamesArrayList.size(); n++)
+                            if(mCursor.moveToPosition(n))
                             {
-                                String name = mPharmaciesNamesArrayList.get(n);
+                                String pharmacyName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_NAME));
 
-                                if(name.matches("(?i).*?"+searchString+".*"))
+                                if(pharmacyName.matches("(?i).*?"+searchString+".*"))
                                 {
                                     mRecyclerView.scrollToPosition(n);
                                     break;
                                 }
                             }
                         }
-
-                        @Override
-                        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
-
-                        @Override
-                        public void afterTextChanged(Editable editable) { }
-                    });
-
-                    if(mPharmaciesLength >= 4)
-                    {
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-                        mFloatingActionButton.startAnimation(animation);
-
-                        mFloatingActionButton.setVisibility(View.VISIBLE);
                     }
-                }
-                catch(Exception e)
-                {
-                    Log.e("PharmaciesLocation", Log.getStackTraceString(e));
-                }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) { }
+                });
+
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+                mFloatingActionButton.startAnimation(animation);
+
+                mFloatingActionButton.setVisibility(View.VISIBLE);
             }
         }
 
         @Override
-        protected Void doInBackground(Long... longs)
+        protected Void doInBackground(Void... voids)
         {
-            mSqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
+            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 
-            mCursor = mSqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_PHARMACIES, null, FelleskatalogenSQLiteHelper.PHARMACIES_COLUMN_ID+" = "+longs[0], null, null, null, null);
+            String[] queryColumns = {SlDataSQLiteHelper.PHARMACIES_COLUMN_NAME, SlDataSQLiteHelper.PHARMACIES_COLUMN_ADDRESS};
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_PHARMACIES, queryColumns, SlDataSQLiteHelper.PHARMACIES_COLUMN_MUNICIPALITY+" = "+mTools.sqe(mMunicipalityName), null, null, null, null);
 
             return null;
         }
-    }*/
+    }
 }

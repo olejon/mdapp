@@ -51,7 +51,6 @@ public class TasksActivity extends ActionBarActivity
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
-    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     // Create activity
@@ -71,9 +70,9 @@ public class TasksActivity extends ActionBarActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.tasks_fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.tasks_fab);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        floatingActionButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -105,11 +104,31 @@ public class TasksActivity extends ActionBarActivity
             }
         });
 
+        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+        floatingActionButton.startAnimation(animation);
+
+        floatingActionButton.setVisibility(View.VISIBLE);
+
         // List
         mListView = (ListView) findViewById(R.id.tasks_list);
 
         // Get tasks
         getTasks();
+
+        // Tip dialog
+        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG");
+
+        if(!hideTipDialog)
+        {
+            new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_tip_dialog_title)).content(getString(R.string.tasks_tip_dialog_message)).positiveText(getString(R.string.tasks_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+            {
+                @Override
+                public void onPositive(MaterialDialog dialog)
+                {
+                    mTools.setSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG", true);
+                }
+            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+        }
     }
 
     // Destroy activity
@@ -191,11 +210,6 @@ public class TasksActivity extends ActionBarActivity
                     }
                 }
             });
-
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
-
-            mFloatingActionButton.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -203,7 +217,8 @@ public class TasksActivity extends ActionBarActivity
         {
             mSqLiteDatabase = new TasksSQLiteHelper(mContext).getReadableDatabase();
 
-            mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, null, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK);
+            String[] queryColumns = {TasksSQLiteHelper.COLUMN_ID, TasksSQLiteHelper.COLUMN_TASK, TasksSQLiteHelper.COLUMN_COMPLETED};
+            mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, queryColumns, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK+" COLLATE NOCASE");
 
             String[] fromColumns = {TasksSQLiteHelper.COLUMN_TASK};
             int[] toViews = {R.id.tasks_list_item_task};
@@ -219,7 +234,7 @@ public class TasksActivity extends ActionBarActivity
 
         String tasks = (removed == 1) ? getString(R.string.tasks_task) : getString(R.string.tasks_tasks);
 
-        mTools.showToast(removed+" "+tasks+" "+getString(R.string.tasks_removed), 1);
+        mTools.showToast(removed+" "+tasks+" "+getString(R.string.tasks_removed), 0);
 
         getTasks();
     }

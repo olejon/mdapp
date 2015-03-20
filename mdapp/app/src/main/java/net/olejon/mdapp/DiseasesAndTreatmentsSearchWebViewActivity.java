@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -57,6 +58,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -76,7 +78,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
@@ -86,7 +88,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         setContentView(R.layout.activity_diseases_and_treatments_search_webview);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_webview_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_webview_toolbar);
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
@@ -116,10 +118,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
             {
                 if(url.matches("^https?://.*?\\.pdf$"))
                 {
-                    mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_downloading_pdf), 1);
-
                     mTools.downloadFile(pageTitle, url);
-
                     return true;
                 }
 
@@ -221,6 +220,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     }
 
     // Pause activity
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {

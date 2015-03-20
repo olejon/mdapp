@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -72,6 +73,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
     private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -91,7 +93,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
         setContentView(R.layout.activity_nasjonale_retningslinjer_webview);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String pageSearch = intent.getStringExtra("search");
 
@@ -122,12 +124,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
             {
                 if(url.matches("^https?://.*?\\.pdf$"))
                 {
-                    String fileTitle = view.getTitle();
-
-                    mTools.showToast(getString(R.string.nasjonale_retningslinjer_webview_downloading_pdf), 1);
-
-                    mTools.downloadFile(fileTitle, url);
-
+                    mTools.downloadFile(view.getTitle(), url);
                     return true;
                 }
 
@@ -260,6 +257,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {

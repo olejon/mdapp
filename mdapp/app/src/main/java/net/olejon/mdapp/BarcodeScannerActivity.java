@@ -23,6 +23,10 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -103,9 +107,9 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
             {
                 try
                 {
-                    String uri = response.getString("uri");
+                    String medicationName = response.getString("name");
 
-                    if(uri.equals(""))
+                    if(medicationName.equals(""))
                     {
                         mTools.showToast(getString(R.string.barcode_scanner_no_results), 1);
 
@@ -113,7 +117,28 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
                     }
                     else
                     {
-                        mTools.getMedicationWithFullContent(uri);
+                        SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+                        String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+                        Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+medicationName+"%")+" COLLATE NOCASE", null, null, null, null);
+
+                        if(cursor.moveToFirst())
+                        {
+                            long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+                            Intent intent = new Intent(mContext, MedicationActivity.class);
+
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            {
+                                if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                            }
+
+                            intent.putExtra("id", id);
+                            startActivity(intent);
+                        }
+
+                        cursor.close();
+                        sqLiteDatabase.close();
 
                         finish();
                     }

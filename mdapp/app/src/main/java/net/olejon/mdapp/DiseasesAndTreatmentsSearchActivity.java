@@ -104,7 +104,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
         }
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         mSearchLanguage = intent.getStringExtra("language");
 

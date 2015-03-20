@@ -14,8 +14,8 @@
 
                     <TextView android:text="@string/calculators_bmi_title" style="@style/calculators_card_title"/>
 
-                    <EditText android:id="@+id/calculators_bmi_weight" android:hint="@string/calculators_bmi_weight_hint" style="@style/calculators_bmi_weight_edittext"/>
-                    <EditText android:id="@+id/calculators_bmi_height" android:hint="@string/calculators_bmi_height_hint" style="@style/calculators_bmi_height_edittext"/>
+                    <EditText android:id="@+id/calculators_bmi_weight" android:inputType="number" android:hint="@string/calculators_bmi_weight_hint" style="@style/calculators_bmi_weight_edittext"/>
+                    <EditText android:id="@+id/calculators_bmi_height" android:inputType="number" android:hint="@string/calculators_bmi_height_hint" style="@style/calculators_bmi_height_edittext"/>
 
                     <View style="@style/calculators_card_separator"/>
 
@@ -31,7 +31,7 @@
 
                     <TextView android:text="@string/calculators_waist_measurement_title" style="@style/calculators_card_title"/>
 
-                    <EditText android:id="@+id/calculators_waist_measurement" android:hint="@string/calculators_waist_measurement_hint" style="@style/calculators_waist_measurement_edittext"/>
+                    <EditText android:id="@+id/calculators_waist_measurement" android:inputType="number" android:hint="@string/calculators_waist_measurement_hint" style="@style/calculators_waist_measurement_edittext"/>
 
                     <View style="@style/calculators_card_separator"/>
 

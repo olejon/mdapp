@@ -32,7 +32,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -43,10 +42,12 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MedicationsFavoritesFragment extends Fragment
 {
     private Activity mActivity;
+
     private Context mContext;
 
     private MyTools mTools;
@@ -55,7 +56,6 @@ public class MedicationsFavoritesFragment extends Fragment
     private Cursor mCursor;
 
     private EditText mSearchEditText;
-
     private ListView mListView;
     private View mListViewEmpty;
 
@@ -72,10 +72,10 @@ public class MedicationsFavoritesFragment extends Fragment
         mContext = viewGroup.getContext();
 
         // Tools
-        mTools = new MyTools(mActivity);
+        mTools = new MyTools(mContext);
 
         // Search
-        //mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
+        mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_medications_favorites_list);
@@ -84,7 +84,6 @@ public class MedicationsFavoritesFragment extends Fragment
         return viewGroup;
     }
 
-    // Resume fragment
     @Override
     public void onResume()
     {
@@ -146,62 +145,48 @@ public class MedicationsFavoritesFragment extends Fragment
         getFavorites();
     }
 
-    private class GetMedicationFromFavoriteUriTask extends AsyncTask<Long, Void, Long>
-    {
-        @Override
-        protected void onPostExecute(Long id)
-        {
-            Intent intent = new Intent(mActivity, MedicationActivity.class);
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
-                if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            }
-
-            intent.putExtra("id", id);
-            mActivity.startActivity(intent);
-        }
-
-        @Override
-        protected Long doInBackground(Long... longs)
-        {
-            mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, MedicationsFavoritesSQLiteHelper.COLUMN_ID+" = "+longs[0], null, null, null, null);
-
-            long id = 0;
-
-            if(mCursor.moveToFirst())
-            {
-                try
-                {
-                    id = mTools.getMedicationIdFromUri(mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_URI)));
-                }
-                catch(Exception e)
-                {
-                    Log.e("MedicationsFavorites", Log.getStackTraceString(e));
-                }
-            }
-
-            return id;
-        }
-    }
-
     // Get medications
-    private class GetMedicationsFavoritesTask extends AsyncTask<Void, Void, MedicationsFavoritesSimpleCursorAdapter>
+    private class GetMedicationsFavoritesTask extends AsyncTask<Void, Void, MedicationsSimpleCursorAdapter>
     {
         @Override
-        protected void onPostExecute(final MedicationsFavoritesSimpleCursorAdapter medicationsFavoritesSimpleCursorAdapter)
+        protected void onPostExecute(final MedicationsSimpleCursorAdapter medicationsSimpleCursorAdapter)
         {
-            mListView.setAdapter(medicationsFavoritesSimpleCursorAdapter);
-
+            mListView.setAdapter(medicationsSimpleCursorAdapter);
             mListView.setEmptyView(mListViewEmpty);
 
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
                 {
-                    GetMedicationFromFavoriteUriTask getMedicationFromFavoriteUriTask = new GetMedicationFromFavoriteUriTask();
-                    getMedicationFromFavoriteUriTask.execute(id);
+                    TextView medicationNameTextView = (TextView) view.findViewById(R.id.main_medications_list_item_name);
+                    TextView medicationManufacturerTextView = (TextView) view.findViewById(R.id.main_medications_list_item_manufacturer);
+
+                    String medicationName = medicationNameTextView.getText().toString();
+                    String medicationManufacturer = medicationManufacturerTextView.getText().toString();
+
+                    SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+                    Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+
+                    if(cursor.moveToFirst())
+                    {
+                        long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+                        Intent intent = new Intent(mContext, MedicationActivity.class);
+
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        {
+                            if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                        }
+
+                        intent.putExtra("id", id);
+                        startActivity(intent);
+                    }
+
+                    cursor.close();
+                    sqLiteDatabase.close();
                 }
             });
 
@@ -210,7 +195,7 @@ public class MedicationsFavoritesFragment extends Fragment
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
                 {
-                    if(MainActivity.VIEW_PAGER_POSITION == 2) medicationsFavoritesSimpleCursorAdapter.getFilter().filter(charSequence);
+                    if(MainActivity.VIEW_PAGER_POSITION == 2) medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
                 }
 
                 @Override
@@ -220,18 +205,16 @@ public class MedicationsFavoritesFragment extends Fragment
                 public void afterTextChanged(Editable editable) { }
             });
 
-            medicationsFavoritesSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
+            medicationsSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
             {
                 @Override
                 public Cursor runQuery(CharSequence charSequence)
                 {
-                    String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_TYPE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP};
-
-                    if(charSequence.length() == 0) return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+                    if(charSequence.length() == 0) return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
 
                     String query = charSequence.toString().trim();
 
-                    return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+                    return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
                 }
             });
 
@@ -239,17 +222,15 @@ public class MedicationsFavoritesFragment extends Fragment
         }
 
         @Override
-        protected MedicationsFavoritesSimpleCursorAdapter doInBackground(Void... voids)
+        protected MedicationsSimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getWritableDatabase();
+            mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, null, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
 
-            String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_TYPE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP};
-            mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+            String[] fromColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+            int[] toViews = {R.id.main_medications_list_item_prescription_group, R.id.main_medications_list_item_name, R.id.main_medications_list_item_substance, R.id.main_medications_list_item_manufacturer};
 
-            String[] fromColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, MedicationsFavoritesSQLiteHelper.COLUMN_TYPE, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP};
-            int[] toViews = {R.id.main_medications_favorites_list_item_name, R.id.main_medications_favorites_list_item_manufacturer, R.id.main_medications_favorites_list_item_type, R.id.main_medications_favorites_list_item_prescription_group};
-
-            return new MedicationsFavoritesSimpleCursorAdapter(mActivity, mCursor, fromColumns, toViews);
+            return new MedicationsSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
         }
     }
 }

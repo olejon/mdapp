@@ -2,16 +2,13 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/medication_menu_star" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_star_outline_white_24dp" android:title="@string/medication_menu_star"/>
+    <item android:id="@+id/medication_menu_favorite" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_star_outline_white_24dp" android:title="@string/medication_menu_favorite"/>
     <item android:id="@+id/medication_menu_interactions" android:orderInCategory="2" app:showAsAction="never" android:title="@string/medication_menu_interactions"/>
-    <item android:id="@+id/medication_menu_pictures_uri" android:orderInCategory="3" app:showAsAction="never" android:title="@string/medication_menu_pictures_uri"/>
-    <item android:id="@+id/medication_menu_manufacturer_uri" android:orderInCategory="21" app:showAsAction="never" android:title="@string/medication_menu_manufacturer_uri"/>
-    <item android:id="@+id/medication_menu_patient_uri" android:orderInCategory="22" app:showAsAction="never" android:title="@string/medication_menu_patient_uri"/>
-    <item android:id="@+id/medication_menu_spc_uri" android:orderInCategory="23" app:showAsAction="never" android:title="@string/medication_menu_spc_uri"/>
-    <item android:id="@+id/medication_menu_find_in_text" android:orderInCategory="24" app:showAsAction="never" android:title="@string/medication_menu_find_in_text"/>
-    <item android:id="@+id/medication_menu_note" android:orderInCategory="25" app:showAsAction="never" android:title="@string/medication_menu_note"/>
-    <item android:id="@+id/medication_menu_print" android:orderInCategory="26" app:showAsAction="never" android:title="@string/medication_menu_print"/>
-    <item android:id="@+id/medication_menu_nlh" android:orderInCategory="27" app:showAsAction="never" android:title="@string/medication_menu_nlh"/>
-    <item android:id="@+id/medication_menu_uri" android:orderInCategory="28" app:showAsAction="never" android:title="@string/medication_menu_uri"/>
+    <item android:id="@+id/medication_menu_poisonings" android:orderInCategory="3" app:showAsAction="never" android:title="@string/medication_menu_poisonings"/>
+    <item android:id="@+id/medication_menu_atc" android:orderInCategory="4" app:showAsAction="never" android:title=""/>
+    <item android:id="@+id/medication_menu_manufacturer" android:orderInCategory="5" app:showAsAction="never" android:title="@string/medication_menu_manufacturer"/>
+    <item android:id="@+id/medication_menu_slv" android:orderInCategory="6" app:showAsAction="never" android:title="@string/medication_menu_slv"/>
+    <item android:id="@+id/medication_menu_note" android:orderInCategory="7" app:showAsAction="never" android:title="@string/medication_menu_note"/>
+    <item android:id="@+id/medication_menu_print" android:orderInCategory="8" app:showAsAction="never" android:title="@string/medication_menu_print"/>
 
 </menu>

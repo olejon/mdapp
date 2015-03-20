@@ -2,7 +2,14 @@
 
 <resources>
 
+    <!-- Main -->
     <style name="main_tabs_base_base">
+        <item name="pstsShouldExpand">false</item>
+        <item name="pstsTabPaddingLeftRight">16dp</item>
+    </style>
+
+    <!-- Medication -->
+    <style name="medication_tabs_base_base">
         <item name="pstsShouldExpand">false</item>
         <item name="pstsTabPaddingLeftRight">16dp</item>
     </style>

@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/medication_content_list_item_section" style="@style/medication_content_list_item_layout"/>

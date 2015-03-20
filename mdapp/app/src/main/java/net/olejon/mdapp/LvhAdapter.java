@@ -42,6 +42,8 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
 {
     private final Context mContext;
 
+    private final MyTools mTools;
+
     private final LayoutInflater mLayoutInflater;
 
     private final JSONArray mCategories;
@@ -51,6 +53,8 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
     public LvhAdapter(Context context, JSONArray jsonArray)
     {
         mContext = context;
+
+        mTools = new MyTools(mContext);
 
         mLayoutInflater =  (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -79,7 +83,6 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
     public CategoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_card, viewGroup, false);
-
         return new CategoryViewHolder(view);
     }
 
@@ -101,7 +104,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     icon = "lvh_urgent";
 
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_favorite_white_24dp);
 
                     break;
                 }
@@ -111,7 +114,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     icon = "lvh_symptoms";
 
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.purple));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.stethoscope));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_stethoscope);
 
                     break;
                 }
@@ -121,7 +124,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     icon = "lvh_injuries";
 
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_healing_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_healing_white_24dp);
 
                     break;
                 }
@@ -131,7 +134,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     icon = "lvh_administrative";
 
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.teal));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_my_library_books_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_my_library_books_white_24dp);
 
                     break;
                 }
@@ -141,7 +144,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     icon = "lvh_administrative";
 
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.teal));
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_my_library_books_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_my_library_books_white_24dp);
                 }
             }
 

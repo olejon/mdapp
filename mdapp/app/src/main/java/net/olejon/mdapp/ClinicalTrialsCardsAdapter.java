@@ -77,7 +77,6 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
     public ClinicalTrialsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_clinicaltrials_card, viewGroup, false);
-
         return new ClinicalTrialsViewHolder(view);
     }
 

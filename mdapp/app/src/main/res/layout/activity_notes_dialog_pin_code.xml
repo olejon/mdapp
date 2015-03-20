@@ -3,6 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notes_dialog_pin_code_layout">
 
     <TextView android:text="@string/notes_dialog_pin_code_message" style="@style/notes_dialog_pin_code_message"/>
-    <EditText android:id="@+id/notes_dialog_pin_code" android:hint="@string/notes_dialog_pin_code_hint" style="@style/notes_dialog_pin_code_edittext"/>
+    <EditText android:id="@+id/notes_dialog_pin_code" android:inputType="number" android:hint="@string/notes_dialog_pin_code_hint" style="@style/notes_dialog_pin_code_edittext"/>
 
 </LinearLayout>

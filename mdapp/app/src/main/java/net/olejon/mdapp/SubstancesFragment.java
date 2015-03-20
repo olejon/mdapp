@@ -21,68 +21,99 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class SubstancesFragment extends Fragment
 {
-    private Activity mActivity;
+    private Context mContext;
+
+    private final MyTools mTools = new MyTools(mContext);
 
     private Cursor mCursor;
 
-    private EditText mSearchEditText;
+    private InputMethodManager mInputMethodManager;
 
+    private EditText mSearchEditText;
     private ListView mListView;
     private View mListViewEmpty;
 
     // Create fragment view
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_substances, container, false);
 
-        // Activity
-        mActivity = getActivity();
+        // Context
+        mContext = viewGroup.getContext();
+
+        // Input manager
+        mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Search
-        //mSearchEditText = (EditText) mActivity.findViewById(R.id.main_search_edittext);
+        mSearchEditText = (EditText) getActivity().findViewById(R.id.main_search_edittext);
+
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+            {
+                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_substances_list);
         mListViewEmpty = viewGroup.findViewById(R.id.main_substances_list_empty);
 
         // Get substances
-        //GetSubstancesTask getSubstancesTask = new GetSubstancesTask();
-        //getSubstancesTask.execute();
+        GetSubstancesTask getSubstancesTask = new GetSubstancesTask();
+        getSubstancesTask.execute();
 
         return viewGroup;
     }
 
-    // Destroy fragment view
+    // Destroy fragment
     @Override
-    public void onDestroyView()
+    public void onDestroy()
     {
-        super.onDestroyView();
+        super.onDestroy();
 
         if(mCursor != null && !mCursor.isClosed()) mCursor.close();
     }
 
     // Get substances
-    /*private class GetSubstancesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    private class GetSubstancesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
         protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
         {
             mListView.setAdapter(simpleCursorAdapter);
-
             mListView.setEmptyView(mListViewEmpty);
 
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -90,9 +121,9 @@ public class SubstancesFragment extends Fragment
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
-                    Intent intent = new Intent(mActivity, SubstanceActivity.class);
-                    intent.putExtra("id", id);
-                    startActivity(intent);
+                        Intent intent = new Intent(mContext, SubstanceActivity.class);
+                        intent.putExtra("id", id);
+                        startActivity(intent);
                 }
             });
 
@@ -116,18 +147,11 @@ public class SubstancesFragment extends Fragment
                 @Override
                 public Cursor runQuery(CharSequence charSequence)
                 {
-                    if(MainActivity.SQLITE_DATABASE_FELLESKATALOGEN != null && MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.isOpen())
-                    {
-                        String[] queryColumns = {FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_MEDICATIONS_COUNT};
+                    if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, null, null, null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME);
 
-                        if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, queryColumns, null, null, null, null, null);
+                    String query = charSequence.toString().trim();
 
-                        String query = charSequence.toString().trim();
-
-                        return MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, queryColumns, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" LIKE '%"+query.replace("'", "")+"%'", null, null, null, null);
-                    }
-
-                    return null;
+                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME);
                 }
             });
         }
@@ -135,13 +159,12 @@ public class SubstancesFragment extends Fragment
         @Override
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
-            String[] queryColumns = {FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_MEDICATIONS_COUNT};
-            mCursor = MainActivity.SQLITE_DATABASE_FELLESKATALOGEN.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, queryColumns, null, null, null, null, null);
+            mCursor = MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, null, null, null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME);
 
-            String[] fromColumns = {FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_MEDICATIONS_COUNT};
-            int[] toViews = {R.id.main_substances_list_item_name, R.id.main_substances_list_item_medications_count};
+            String[] fromColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE};
+            int[] toViews = {R.id.main_substances_list_item_name, R.id.main_substances_list_item_atc_code};
 
-            return new SimpleCursorAdapter(mActivity, R.layout.fragment_substances_list_item, mCursor, fromColumns, toViews, 0);
+            return new SimpleCursorAdapter(mContext, R.layout.fragment_substances_list_item, mCursor, fromColumns, toViews, 0);
         }
-    }*/
+    }
 }

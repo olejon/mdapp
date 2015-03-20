@@ -79,7 +79,7 @@ public class ClinicalTrialsActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String searchString;
 
@@ -99,7 +99,7 @@ public class ClinicalTrialsActivity extends ActionBarActivity
         setContentView(R.layout.activity_clinicaltrials);
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.clinicaltrials_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.clinicaltrials_toolbar);
         toolbar.setTitle(getString(R.string.clinicaltrials_title));
 
         setSupportActionBar(toolbar);

@@ -22,7 +22,6 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,7 @@ public class WelcomeFirstFragment extends Fragment
 
     // Create fragment view
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_first, container, false);
 

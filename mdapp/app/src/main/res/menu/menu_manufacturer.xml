@@ -2,6 +2,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/manufacturer_menu_uri" android:orderInCategory="1" app:showAsAction="never" android:title="@string/manufacturer_menu_uri"/>
+    <item android:id="@+id/manufacturer_menu_contact" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_local_phone_white_24dp" android:title="@string/manufacturer_menu_contact"/>
 
 </menu>

@@ -89,7 +89,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
         }
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         searchString = intent.getStringExtra("search");
 

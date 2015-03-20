@@ -43,6 +43,8 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
 {
     private final Context mContext;
 
+    private final MyTools mTools;
+
     private final LayoutInflater mLayoutInflater;
 
     private final JSONArray mCategories;
@@ -55,6 +57,8 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
     public LvhCategoriesAdapter(Context context, JSONArray jsonArray, String color, String icon)
     {
         mContext = context;
+
+        mTools = new MyTools(mContext);
 
         mLayoutInflater =  (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -86,7 +90,6 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
     public CategoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_categories_card, viewGroup, false);
-
         return new CategoryViewHolder(view);
     }
 
@@ -103,22 +106,22 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
             {
                 case "lvh_urgent":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_favorite_white_24dp);
                     break;
                 }
                 case "lvh_symptoms":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.stethoscope));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_stethoscope);
                     break;
                 }
                 case "lvh_injuries":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_healing_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_healing_white_24dp);
                     break;
                 }
                 case "lvh_administrative":
                 {
-                    viewHolder.icon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_my_library_books_white_24dp));
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_my_library_books_white_24dp);
                     break;
                 }
             }

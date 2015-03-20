@@ -21,6 +21,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -55,6 +56,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
     private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -71,7 +73,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
         }
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
@@ -105,10 +107,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
             {
                 if(url.matches("^https?://.*?\\.pdf$"))
                 {
-                    mTools.showToast(getString(R.string.medication_webview_downloading_pdf), 1);
-
                     mTools.downloadFile(pageTitle, url);
-
                     return true;
                 }
 
@@ -168,6 +167,7 @@ public class MedicationWebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {

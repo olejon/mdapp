@@ -32,7 +32,6 @@ import android.database.DatabaseUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.print.PrintAttributes;
@@ -42,12 +41,14 @@ import android.print.PrintManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.List;
 
+@SuppressWarnings({"deprecation", "SameParameterValue"})
 class MyTools
 {
     private final Context mContext;
@@ -197,6 +198,8 @@ class MyTools
         request.setTitle(title);
 
         downloadManager.enqueue(request);
+
+        showToast(mContext.getString(R.string.mytools_downloading), 1);
     }
 
     // Get device
@@ -236,13 +239,30 @@ class MyTools
     // Set view background
     public void setBackgroundDrawable(View view, int drawable)
     {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            view.setBackground(mContext.getResources().getDrawable(drawable, null));
+        }
+        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
         {
             view.setBackground(mContext.getResources().getDrawable(drawable));
         }
         else
         {
             view.setBackgroundDrawable(mContext.getResources().getDrawable(drawable));
+        }
+    }
+
+    // Set image drawable
+    public void setImageDrawable(ImageView imageView, int drawable)
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            imageView.setImageDrawable(mContext.getResources().getDrawable(drawable, null));
+        }
+        else
+        {
+            imageView.setImageDrawable(mContext.getResources().getDrawable(drawable));
         }
     }
 
@@ -275,126 +295,6 @@ class MyTools
         {
             showToast(mContext.getString(R.string.mytools_printing_not_supported), 1);
         }
-    }
-
-    // Medication
-    public long getMedicationIdFromUri(String uri)
-    {
-        /*SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-        String[] queryColumns = {FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID};
-
-        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_MEDICATIONS, queryColumns, FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_URI+" = "+sqe(uri), null, null, null, null);
-
-        long id = 0;
-
-        if(cursor.moveToFirst())
-        {
-            try
-            {
-                id = cursor.getLong(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.MEDICATIONS_COLUMN_ID));
-            }
-            catch(Exception e)
-            {
-                Log.e("MyTools", Log.getStackTraceString(e));
-            }
-        }
-
-        cursor.close();
-        sqLiteDatabase.close();*/
-
-        return 0;
-    }
-
-    public void getMedicationWithFullContent(String uri)
-    {
-        GetMedicationWithFullContentTask getMedicationWithFullContentTask = new GetMedicationWithFullContentTask();
-        getMedicationWithFullContentTask.execute(uri);
-    }
-
-    private class GetMedicationWithFullContentTask extends AsyncTask<String, Void, Long>
-    {
-        @Override
-        protected void onPostExecute(Long id)
-        {
-            if(id == 0)
-            {
-                showToast(mContext.getString(R.string.mytools_could_not_find_medication), 1);
-            }
-            else
-            {
-                Intent intent = new Intent(mContext, MedicationActivity.class);
-
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    if(getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                }
-
-                intent.putExtra("id", id);
-                mContext.startActivity(intent);
-            }
-        }
-
-        @Override
-        protected Long doInBackground(String... strings)
-        {
-            return getMedicationIdFromUri(strings[0]);
-        }
-    }
-
-    // Substances
-    /*public void getSubstance(String name)
-    {
-        SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, null, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+sqe(name), null, null, null, null);
-
-        if(cursor.getCount() > 0)
-        {
-            if(cursor.moveToFirst())
-            {
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID));
-
-                Intent intent = new Intent(mContext, SubstanceActivity.class);
-                intent.putExtra("id", Long.parseLong(id));
-                mContext.startActivity(intent);
-            }
-        }
-        else
-        {
-            showToast(mContext.getString(R.string.atc_codes_substance_not_in_felleskatalogen), 1);
-        }
-
-        cursor.close();
-        sqLiteDatabase.close();
-    }*/
-
-    public long getSubstanceIdFromUri(String uri)
-    {
-        /*SQLiteDatabase sqLiteDatabase = new FelleskatalogenSQLiteHelper(mContext).getReadableDatabase();
-
-        String[] queryColumns = {FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID};
-
-        Cursor cursor = sqLiteDatabase.query(FelleskatalogenSQLiteHelper.TABLE_SUBSTANCES, queryColumns, FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_URI+" = "+sqe(uri), null, null, null, null);
-
-        long id = 0;
-
-        if(cursor.moveToFirst())
-        {
-            try
-            {
-                id = cursor.getLong(cursor.getColumnIndexOrThrow(FelleskatalogenSQLiteHelper.SUBSTANCES_COLUMN_ID));
-            }
-            catch(Exception e)
-            {
-                Log.e("MyTools", Log.getStackTraceString(e));
-            }
-        }
-
-        cursor.close();
-        sqLiteDatabase.close();*/
-
-        return 0;
     }
 
     // Widget

@@ -22,7 +22,6 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -56,20 +55,19 @@ public class WelcomeActivity extends ActionBarActivity
         PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
+
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setPageTransformer(true, new ViewPagerTransformer());
 
         ImageView imageView = (ImageView) findViewById(R.id.welcome_pager_indicator_page_1);
-        imageView.setImageDrawable(getResources().getDrawable(R.drawable.welcome_indicator_active));
+        mTools.setImageDrawable(imageView, R.drawable.welcome_indicator_active);
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             private LinearLayout linearLayout;
             private ImageView imageView;
             private TextView textView;
-            private final Drawable inactiveDrawable = getResources().getDrawable(R.drawable.welcome_indicator_inactive);
-            private final Drawable activeDrawable = getResources().getDrawable(R.drawable.welcome_indicator_active);
 
             @Override
             public void onPageSelected(int position)
@@ -81,11 +79,11 @@ public class WelcomeActivity extends ActionBarActivity
                 for(int i = 0; i < linearLayout.getChildCount(); i++)
                 {
                     imageView = (ImageView) linearLayout.getChildAt(i);
-                    imageView.setImageDrawable(inactiveDrawable);
+                    mTools.setImageDrawable(imageView, R.drawable.welcome_indicator_inactive);
                 }
 
                 imageView = (ImageView) linearLayout.getChildAt(position);
-                imageView.setImageDrawable(activeDrawable);
+                mTools.setImageDrawable(imageView, R.drawable.welcome_indicator_active);
             }
 
             @Override

@@ -84,7 +84,6 @@ public class MedicationPicturesAdapter extends RecyclerView.Adapter<MedicationPi
     public MedicationViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_medication_pictures_card, viewGroup, false);
-
         return new MedicationViewHolder(view);
     }
 

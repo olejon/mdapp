@@ -1,8 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturers_list_item_layout">
-
-    <TextView android:id="@+id/manufacturers_list_item_name" style="@style/manufacturers_list_item_name"/>
-    <TextView android:id="@+id/manufacturers_list_item_medications_count" style="@style/manufacturers_list_item_medications_count"/>
-
-</LinearLayout>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/manufacturers_list_item" style="@style/manufacturers_list_item"/>

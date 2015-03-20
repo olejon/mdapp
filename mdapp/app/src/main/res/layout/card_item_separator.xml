@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout style="@style/card_item_separator_layout">
-    <View style="@style/card_item_separator"/>
-</LinearLayout>

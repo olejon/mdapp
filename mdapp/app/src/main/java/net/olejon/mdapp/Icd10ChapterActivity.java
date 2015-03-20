@@ -97,7 +97,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
         if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
 
         // Intent
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         final String title = intent.getStringExtra("title");
         final int chapter = intent.getIntExtra("chapter", 0);
