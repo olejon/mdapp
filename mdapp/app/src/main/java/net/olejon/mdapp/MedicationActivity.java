@@ -207,9 +207,25 @@ public class MedicationActivity extends ActionBarActivity
             }
             case R.id.medication_menu_note:
             {
-                Intent intent = new Intent(mContext, NotesEditActivity.class);
-                intent.putExtra("title", medicationName);
-                startActivity(intent);
+                if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
+                {
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_note_dialog_title)).content(getString(R.string.medication_note_dialog_message)).positiveText(getString(R.string.medication_note_dialog_positive_button)).negativeText(getString(R.string.medication_note_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                    {
+                        @Override
+                        public void onPositive(MaterialDialog dialog)
+                        {
+                            Intent intent = new Intent(mContext, NotesActivity.class);
+                            startActivity(intent);
+                        }
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                }
+                else
+                {
+                    Intent intent = new Intent(mContext, NotesEditActivity.class);
+                    intent.putExtra("title", medicationName);
+                    startActivity(intent);
+                }
+
                 return true;
             }
             case R.id.medication_menu_manufacturer:

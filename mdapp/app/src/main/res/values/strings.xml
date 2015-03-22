@@ -56,6 +56,10 @@
     <string name="medication_not_connected_dialog_message">Du må være tilkoblet Internett for å laste Legemiddelhåndboka og Felleskatalogen</string>
     <string name="medication_not_connected_dialog_positive_button">Prøv på nytt</string>
     <string name="medication_not_connected_dialog_negative_button">Lukk</string>
+    <string name="medication_note_dialog_title">Ingen PIN-kode</string>
+    <string name="medication_note_dialog_message">Før du kan opprette notater må du opprette en PIN-kode.</string>
+    <string name="medication_note_dialog_positive_button">Opprett PIN-kode</string>
+    <string name="medication_note_dialog_negative_button">Avbryt</string>
     <string name="medication_menu_favorite">Lagre som favoritt</string>
     <string name="medication_menu_interactions">Interaksjonsanalyse</string>
     <string name="medication_menu_poisonings">Forgiftningsinformasjon</string>
@@ -212,6 +216,7 @@
     <string name="atc_title">ATC-register</string>
 
     <!-- ATC codes -->
+    <string name="atc_codes_list_empty">Ingen substanser</string>
     <string name="atc_codes_substance_not_a_substance">Ikke en substans</string>
     <string name="atc_codes_could_not_find_substance">Kunne ikke finne substans</string>
     <string name="atc_codes_dialog_title">Velg substans</string>
@@ -453,7 +458,9 @@
     <string name="drawer_subheader_other">Annet</string>
     <string name="drawer_item_nlh">Legemiddelhåndboka</string>
     <string name="drawer_item_felleskatalogen">Felleskatalogen</string>
+    <string name="drawer_item_uptodate">UpToDate</string>
     <string name="drawer_item_bmj">BMJ Best Practice</string>
+    <string name="drawer_item_encyclopedias">Vis alle</string>
     <string name="drawer_item_diseases_and_treatments">Sykdommer og behandlinger</string>
     <string name="drawer_item_lvh">Legevakthåndboken</string>
     <string name="drawer_item_nasjonale_retningslinjer">Nasjonale retningslinjer</string>

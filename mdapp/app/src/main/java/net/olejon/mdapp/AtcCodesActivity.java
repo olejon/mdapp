@@ -36,9 +36,6 @@ import android.widget.ListView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class AtcCodesActivity extends ActionBarActivity
 {
     private final Context mContext = this;
@@ -74,6 +71,9 @@ public class AtcCodesActivity extends ActionBarActivity
         // List
         ListView listView = (ListView) findViewById(R.id.atc_codes_list);
 
+        View listViewEmpty = findViewById(R.id.atc_codes_list_empty);
+        listView.setEmptyView(listViewEmpty);
+
         // Get substances
         mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
         mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_CODES, null, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE+" LIKE "+mTools.sqe(atcCodes+"%"), null, null, null, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE);
@@ -98,18 +98,9 @@ public class AtcCodesActivity extends ActionBarActivity
                     {
                         mTools.showToast(getString(R.string.atc_codes_substance_not_a_substance), 1);
                     }
-                    else if(substanceName.matches("^\\w+ og \\w+$"))
+                    else if(substanceName.contains(" / "))
                     {
-                        Pattern pattern = Pattern.compile("^(\\w+) og (\\w+)$");
-                        Matcher matcher = pattern.matcher(substanceName);
-
-                        final String[] substancesNamesStringArray = {"", ""};
-
-                        while(matcher.find())
-                        {
-                            substancesNamesStringArray[0] = mTools.ucfirst(matcher.group(1));
-                            substancesNamesStringArray[1] = mTools.ucfirst(matcher.group(2));
-                        }
+                        final String[] substancesNamesStringArray = substanceName.split(" / ");
 
                         new MaterialDialog.Builder(mContext).title(getString(R.string.atc_codes_dialog_title)).items(substancesNamesStringArray).itemsCallback(new MaterialDialog.ListCallback()
                         {
@@ -117,32 +108,6 @@ public class AtcCodesActivity extends ActionBarActivity
                             public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
                             {
                                 getSubstance(substancesNamesStringArray[i]);
-                            }
-                        }).itemColorRes(R.color.dark_blue).show();
-                    }
-                    else if(substanceName.matches("^\\w+, .*og \\w+$"))
-                    {
-                        final String[] substancesNamesStringArray = substanceName.split(" ");
-                        final String[] substancesNamesListStringArray = new String[substancesNamesStringArray.length - 1];
-
-                        int n = 0;
-
-                        for(String substance : substancesNamesStringArray)
-                        {
-                            if(!substance.equals("og"))
-                            {
-                                substancesNamesListStringArray[n] = mTools.ucfirst(substance).replace(",", "");
-
-                                n++;
-                            }
-                        }
-
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.atc_codes_dialog_title)).items(substancesNamesListStringArray).itemsCallback(new MaterialDialog.ListCallback()
-                        {
-                            @Override
-                            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
-                            {
-                                getSubstance(substancesNamesListStringArray[i]);
                             }
                         }).itemColorRes(R.color.dark_blue).show();
                     }
@@ -203,7 +168,7 @@ public class AtcCodesActivity extends ActionBarActivity
         SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 
         String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID};
-        Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+substanceName+"%")+" COLLATE NOCASE", null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID);
+        Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(substanceName), null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID);
 
         if(cursor.moveToFirst())
         {
@@ -215,7 +180,20 @@ public class AtcCodesActivity extends ActionBarActivity
         }
         else
         {
-            mTools.showToast(getString(R.string.atc_codes_could_not_find_substance), 1);
+            cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+substanceName+"%"), null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID);
+
+            if(cursor.moveToFirst())
+            {
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID));
+
+                Intent intent = new Intent(mContext, SubstanceActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+            }
+            else
+            {
+                mTools.showToast(getString(R.string.atc_codes_could_not_find_substance), 1);
+            }
         }
 
         cursor.close();

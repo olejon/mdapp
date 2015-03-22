@@ -41,6 +41,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 public class MainWebViewActivity extends ActionBarActivity
 {
     private final Context mContext = this;
@@ -161,6 +163,24 @@ public class MainWebViewActivity extends ActionBarActivity
         cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
 
         mWebView.loadUrl(pageUri);
+
+        // Tip dialog
+        if(pageUri.equals("http://www.uptodate.com/contents/search") || pageUri.equals("http://bestpractice.bmj.com/"))
+        {
+            boolean hideTipDialog = mTools.getSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG");
+
+            if(!hideTipDialog)
+            {
+                new MaterialDialog.Builder(mContext).title("Tips").content("Merk at du vil få treff fra både UpToDate og BMJ Best Practice dersom du søker på engelsk i seksjonen Sykdommer og behandlinger.").positiveText("OK").callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onPositive(MaterialDialog dialog)
+                    {
+                        mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG", true);
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            }
+        }
     }
 
     // Resume activity

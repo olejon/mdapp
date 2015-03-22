@@ -132,6 +132,11 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- ATC codes -->
+    <style name="atc_codes_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- ICD-10 -->
     <style name="icd10_list_item_chapter_base">
         <item name="android:fontFamily">sans-serif-medium</item>

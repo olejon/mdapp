@@ -121,9 +121,9 @@ public class SubstancesFragment extends Fragment
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
-                        Intent intent = new Intent(mContext, SubstanceActivity.class);
-                        intent.putExtra("id", id);
-                        startActivity(intent);
+                    Intent intent = new Intent(mContext, SubstanceActivity.class);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
                 }
             });
 

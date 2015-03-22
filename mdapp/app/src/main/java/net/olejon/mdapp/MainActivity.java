@@ -152,6 +152,14 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onDrawerClosed(View drawerView)
             {
+                TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
+                TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
+                TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
+
+                upToDateTextView.setVisibility(View.GONE);
+                bmjTextView.setVisibility(View.GONE);
+                encyclopediasTextView.setVisibility(View.VISIBLE);
+
                 switch(mDrawerClosed)
                 {
                     case R.id.drawer_item_nlh:
@@ -167,6 +175,14 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_felleskatalogen));
                         intent.putExtra("uri", "http://www.felleskatalogen.no/m/medisin/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_uptodate:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_uptodate));
+                        intent.putExtra("uri", "http://www.uptodate.com/contents/search");
                         startActivity(intent);
                         break;
                     }
@@ -460,7 +476,26 @@ public class MainActivity extends ActionBarActivity
     {
         mDrawerClosed = view.getId();
 
-        mDrawerLayout.closeDrawers();
+        if(mDrawerClosed == R.id.drawer_item_encyclopedias)
+        {
+            TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
+            TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
+            TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
+
+            encyclopediasTextView.setVisibility(View.GONE);
+
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.drawer_item);
+
+            upToDateTextView.startAnimation(animation);
+            bmjTextView.startAnimation(animation);
+
+            upToDateTextView.setVisibility(View.VISIBLE);
+            bmjTextView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mDrawerLayout.closeDrawers();
+        }
     }
 
     // View pager

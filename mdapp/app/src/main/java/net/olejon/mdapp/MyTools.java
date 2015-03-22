@@ -266,12 +266,6 @@ class MyTools
         }
     }
 
-    // Strings
-    public String ucfirst(String string)
-    {
-        return string.substring(0, 1).toUpperCase() + string.substring(1);
-    }
-
     // Printing
     public void printDocument(WebView webView, String title)
     {

@@ -1432,6 +1432,25 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="atc_codes_list_empty" parent="atc_codes_list_empty_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingTop">64dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="atc_codes_list_empty_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="atc_codes_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -2642,7 +2661,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">16dp</item>
     </style>
 
@@ -2668,6 +2687,10 @@
     </style>
 
     <style name="drawer_item_base"/>
+
+    <style name="drawer_item_encyclopedia" parent="drawer_item">
+        <item name="android:visibility">gone</item>
+    </style>
 
     <style name="drawer_version_text">
         <item name="android:layout_width">match_parent</item>
