@@ -44,7 +44,7 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
 
     private final Cursor mCursor;
 
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public PharmaciesLocationAdapter(Context context, Cursor cursor)
     {
@@ -112,7 +112,10 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
                 {
                     try
                     {
-                        mTools.openUri("http://www.gulesider.no/finn:"+URLEncoder.encode(name, "utf-8"));
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", name);
+                        intent.putExtra("uri", "http://www.gulesider.no/finn:"+URLEncoder.encode(name, "utf-8"));
+                        mContext.startActivity(intent);
                     }
                     catch(Exception e)
                     {
@@ -133,9 +136,9 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
 
     private void animateView(View view, int position)
     {
-        if(position > lastPosition)
+        if(position > mLastPosition)
         {
-            lastPosition = position;
+            mLastPosition = position;
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
             view.startAnimation(animation);

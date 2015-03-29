@@ -85,7 +85,7 @@ public class CalculatorsActivity extends ActionBarActivity
             {
                 if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    inputMethodManager.toggleSoftInputFromWindow(bmiEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
 
                     calculateBmi();
 
@@ -117,7 +117,7 @@ public class CalculatorsActivity extends ActionBarActivity
             {
                 if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    inputMethodManager.toggleSoftInputFromWindow(waistMeasurementEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
 
                     calculateWaistMeasurement();
 

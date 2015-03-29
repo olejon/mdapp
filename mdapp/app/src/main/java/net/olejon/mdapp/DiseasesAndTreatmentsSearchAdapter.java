@@ -47,7 +47,7 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
     private final String mSearch;
 
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public DiseasesAndTreatmentsSearchAdapter(Context context, JSONArray results, String search)
     {
@@ -171,13 +171,6 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
-                case "oncolex":
-                {
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.oncolex);
-                    viewHolder.text.setText(text);
-
-                    break;
-                }
                 case "tidsskriftet":
                 {
                     mTools.setImageDrawable(viewHolder.icon, R.drawable.tidsskriftet);
@@ -185,9 +178,9 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
                     break;
                 }
-                case "helsenorge":
+                case "oncolex":
                 {
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.helsenorge);
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.oncolex);
                     viewHolder.text.setText(text);
 
                     break;
@@ -195,6 +188,13 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
                 case "brukerhandboken":
                 {
                     mTools.setImageDrawable(viewHolder.icon, R.drawable.brukerhandboken);
+                    viewHolder.text.setText(text);
+
+                    break;
+                }
+                case "helsenorge":
+                {
+                    mTools.setImageDrawable(viewHolder.icon, R.drawable.helsenorge);
                     viewHolder.text.setText(text);
 
                     break;
@@ -230,9 +230,9 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
 
     private void animateView(View view, int position)
     {
-        if(position > lastPosition)
+        if(position > mLastPosition)
         {
-            lastPosition = position;
+            mLastPosition = position;
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
             view.startAnimation(animation);

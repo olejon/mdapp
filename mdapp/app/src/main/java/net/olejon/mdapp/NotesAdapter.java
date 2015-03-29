@@ -39,7 +39,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private final Cursor mCursor;
 
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public NotesAdapter(Context context, Cursor cursor)
     {
@@ -107,9 +107,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private void animateView(View view, int position)
     {
-        if(position > lastPosition)
+        if(position > mLastPosition)
         {
-            lastPosition = position;
+            mLastPosition = position;
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
             view.startAnimation(animation);

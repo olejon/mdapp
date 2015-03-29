@@ -20,11 +20,6 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
-    <!-- Medication pictures -->
-    <style name="medication_pictures_card_detail_base">
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
     <!-- Diseases and treatments -->
     <style name="diseases_and_treatments_list_information_base">
         <item name="android:fontFamily">sans-serif-light</item>
@@ -50,6 +45,11 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- Clinical trials -->
+    <style name="clinicaltrials_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
     <!-- ATC -->
     <style name="atc_list_item_code_base">
         <item name="android:fontFamily">sans-serif-condensed</item>
@@ -67,11 +67,6 @@
     <!-- ICD-10 chapter -->
     <style name="icd10_chapter_list_item_code_base">
         <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <!-- Clinical trials -->
-    <style name="clinicaltrials_list_information_base">
-        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <!-- Notifications from SLV -->

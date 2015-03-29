@@ -75,7 +75,12 @@ public class MedicationFelleskatalogenFragment extends Fragment
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(url.matches("^https?://.*?\\.pdf$"))
+                if(!mTools.isDeviceConnected())
+                {
+                    mTools.showToast(getString(R.string.device_not_connected), 0);
+                    return true;
+                }
+                else if(url.matches("^https?://.*?\\.pdf$"))
                 {
                     mTools.downloadFile(view.getTitle(), url);
                     return true;
@@ -117,7 +122,6 @@ public class MedicationFelleskatalogenFragment extends Fragment
     }
 
     // Pause fragment
-    @SuppressWarnings("deprecation")
     @Override
     public void onPause()
     {
@@ -125,6 +129,10 @@ public class MedicationFelleskatalogenFragment extends Fragment
 
         WEBVIEW.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 }

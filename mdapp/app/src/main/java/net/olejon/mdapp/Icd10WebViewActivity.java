@@ -151,8 +151,8 @@ public class Icd10WebViewActivity extends ActionBarActivity
                         mWebView.loadUrl("javascript:var offset = $('div.codeDetail').offset(); window.scrollTo(0, offset.top);");
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                        mWebView.startAnimation(animation);
 
+                        mWebView.startAnimation(animation);
                         mWebView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -166,7 +166,7 @@ public class Icd10WebViewActivity extends ActionBarActivity
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+pageUri, null, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+pageUri, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)
@@ -220,7 +220,6 @@ public class Icd10WebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
-    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {
@@ -228,7 +227,11 @@ public class Icd10WebViewActivity extends ActionBarActivity
 
         mWebView.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 
     // Back button

@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -48,7 +47,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -68,6 +66,8 @@ public class ManufacturersActivity extends ActionBarActivity
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
     private View mListViewEmpty;
+
+    private boolean mActivityPaused = false;
 
     // Create activity
     @Override
@@ -91,22 +91,6 @@ public class ManufacturersActivity extends ActionBarActivity
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.manufacturers_toolbar_search_layout);
         mToolbarSearchEditText = (EditText) findViewById(R.id.manufacturers_toolbar_search);
 
-        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
         ImageButton imageButton = (ImageButton) findViewById(R.id.manufacturers_toolbar_clear_search);
 
         imageButton.setOnClickListener(new View.OnClickListener()
@@ -129,7 +113,7 @@ public class ManufacturersActivity extends ActionBarActivity
                 mToolbarSearchLayout.setVisibility(View.VISIBLE);
                 mToolbarSearchEditText.requestFocus();
 
-                mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
             }
         });
 
@@ -140,6 +124,15 @@ public class ManufacturersActivity extends ActionBarActivity
         // Get manufacturers
         GetManufacturersTask getManufacturersTask = new GetManufacturersTask();
         getManufacturersTask.execute();
+    }
+
+    // Pause activity
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mActivityPaused = true;
     }
 
     // Destroy activity
@@ -176,7 +169,7 @@ public class ManufacturersActivity extends ActionBarActivity
             mToolbarSearchLayout.setVisibility(View.VISIBLE);
             mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
             return true;
         }
@@ -244,11 +237,11 @@ public class ManufacturersActivity extends ActionBarActivity
                 {
                     if(mSqLiteDatabase != null)
                     {
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, null, null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME);
+                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, null, null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" COLLATE NOCASE");
 
                         String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME);
+                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" COLLATE NOCASE");
                     }
 
                     return null;
@@ -256,23 +249,26 @@ public class ManufacturersActivity extends ActionBarActivity
             });
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
 
+            mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            Handler handler = new Handler();
-
-            handler.postDelayed(new Runnable()
+            if(!mActivityPaused)
             {
-                @Override
-                public void run()
-                {
-                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                    mToolbarSearchEditText.requestFocus();
+                Handler handler = new Handler();
 
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-                }
-            }, 500);
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                        mToolbarSearchEditText.requestFocus();
+
+                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+                    }
+                }, 500);
+            }
         }
 
         @Override

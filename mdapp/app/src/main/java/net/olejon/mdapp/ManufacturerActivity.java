@@ -159,7 +159,10 @@ public class ManufacturerActivity extends ActionBarActivity
             {
                 try
                 {
-                    mTools.openUri("http://www.gulesider.no/finn:"+URLEncoder.encode(manufacturerName.replaceAll(" .*", ""), "utf-8"));
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                    intent.putExtra("title", manufacturerName);
+                    intent.putExtra("uri", "http://www.gulesider.no/finn:"+URLEncoder.encode(manufacturerName.replaceAll(" .*", ""), "utf-8"));
+                    startActivity(intent);
                 }
                 catch(Exception e)
                 {

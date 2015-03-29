@@ -68,7 +68,7 @@ public class MessageIntentService extends IntentService
 
         String device = mTools.getDevice();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, new Response.Listener<JSONObject>()
         {
             @SuppressLint("InlinedApi")
             @Override

@@ -47,7 +47,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -112,22 +111,6 @@ public class MainActivity extends ActionBarActivity
 
         // Search
         mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
-
-        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
 
         // Drawer
         mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
@@ -212,6 +195,12 @@ public class MainActivity extends ActionBarActivity
                         startActivity(intent);
                         break;
                     }
+                    case R.id.drawer_item_clinicaltrials:
+                    {
+                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
                     case R.id.drawer_item_interactions:
                     {
                         Intent intent = new Intent(mContext, InteractionsActivity.class);
@@ -245,12 +234,6 @@ public class MainActivity extends ActionBarActivity
                     case R.id.drawer_item_pharmacies:
                     {
                         Intent intent = new Intent(mContext, PharmaciesActivity.class);
-                        startActivity(intent);
-                        break;
-                    }
-                    case R.id.drawer_item_clinicaltrials:
-                    {
-                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
                         startActivity(intent);
                         break;
                     }
@@ -318,7 +301,7 @@ public class MainActivity extends ActionBarActivity
             {
                 mSearchEditText.requestFocus();
 
-                mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                mInputMethodManager.showSoftInput(mSearchEditText, 0);
             }
         });
 
@@ -351,6 +334,18 @@ public class MainActivity extends ActionBarActivity
     protected void onResume()
     {
         super.onResume();
+
+        // Input manager
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mInputMethodManager.hideSoftInputFromWindow(mDrawerLayout.getWindowToken(), 0);
+            }
+        }, 250);
 
         // Rate
         if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_140"))
@@ -431,7 +426,7 @@ public class MainActivity extends ActionBarActivity
         {
             mSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.showSoftInput(mSearchEditText, 0);
 
             return true;
         }
@@ -591,8 +586,8 @@ public class MainActivity extends ActionBarActivity
             });
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
 
+            mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mTools.getSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN"))

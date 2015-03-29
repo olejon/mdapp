@@ -74,6 +74,8 @@ public class PoisoningsActivity extends ActionBarActivity
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
+    private boolean mActivityPaused = false;
+
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -108,7 +110,7 @@ public class PoisoningsActivity extends ActionBarActivity
             {
                 if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                     search(mToolbarSearchEditText.getText().toString().trim());
 
@@ -140,7 +142,7 @@ public class PoisoningsActivity extends ActionBarActivity
             {
                 if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
                 {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                     search(mToolbarSearchEditText.getText().toString());
                 }
@@ -149,7 +151,7 @@ public class PoisoningsActivity extends ActionBarActivity
                     mToolbarSearchLayout.setVisibility(View.VISIBLE);
                     mToolbarSearchEditText.requestFocus();
 
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                 }
             }
         });
@@ -192,6 +194,15 @@ public class PoisoningsActivity extends ActionBarActivity
         getRecentSearches();
     }
 
+    // Pause activity
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mActivityPaused = true;
+    }
+
     // Destroy activity
     @Override
     protected void onDestroy()
@@ -226,7 +237,7 @@ public class PoisoningsActivity extends ActionBarActivity
             mToolbarSearchLayout.setVisibility(View.VISIBLE);
             mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
             return true;
         }
@@ -254,8 +265,7 @@ public class PoisoningsActivity extends ActionBarActivity
             }
             case R.id.poisonings_menu_call:
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:+4722591300"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
                 startActivity(intent);
                 return true;
             }
@@ -331,8 +341,8 @@ public class PoisoningsActivity extends ActionBarActivity
             });
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
 
+            mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             // Tip dialog
@@ -340,7 +350,7 @@ public class PoisoningsActivity extends ActionBarActivity
 
             if(hideTipDialog)
             {
-                if(mCursor.getCount() > 0)
+                if(!mActivityPaused && mCursor.getCount() > 0)
                 {
                     Handler handler = new Handler();
 
@@ -352,7 +362,7 @@ public class PoisoningsActivity extends ActionBarActivity
                             mToolbarSearchLayout.setVisibility(View.VISIBLE);
                             mToolbarSearchEditText.requestFocus();
 
-                            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                         }
                     }, 500);
                 }

@@ -126,7 +126,7 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
 
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)

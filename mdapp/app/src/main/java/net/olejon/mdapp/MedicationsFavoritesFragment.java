@@ -34,7 +34,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,8 +107,7 @@ public class MedicationsFavoritesFragment extends Fragment
     {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        MenuInflater menuInflater = mActivity.getMenuInflater();
-        menuInflater.inflate(R.menu.menu_medications_favorites_context, menu);
+        mActivity.getMenuInflater().inflate(R.menu.menu_medications_favorites_context, menu);
     }
 
     @Override

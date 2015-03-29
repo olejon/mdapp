@@ -79,7 +79,12 @@ public class MedicationNlhFragment extends Fragment
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(url.matches(".*/[^#]+#[^/]+$"))
+                if(!mTools.isDeviceConnected())
+                {
+                    mTools.showToast(getString(R.string.device_not_connected), 0);
+                    return true;
+                }
+                else if(url.matches(".*/[^#]+#[^/]+$"))
                 {
                     WEBVIEW.loadUrl(url.replaceAll("#[^/]+$", ""));
                     return true;
@@ -126,7 +131,6 @@ public class MedicationNlhFragment extends Fragment
     }
 
     // Pause fragment
-    @SuppressWarnings("deprecation")
     @Override
     public void onPause()
     {
@@ -134,6 +138,10 @@ public class MedicationNlhFragment extends Fragment
 
         WEBVIEW.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 }

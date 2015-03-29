@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -54,6 +55,8 @@ public class NotesActivity extends ActionBarActivity
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
+    private InputMethodManager mInputMethodManager;
+
     private TextView mEmptyTextView;
     private RecyclerView mRecyclerView;
 
@@ -63,6 +66,9 @@ public class NotesActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Input manager
+        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Layout
         setContentView(R.layout.activity_notes);
@@ -98,8 +104,8 @@ public class NotesActivity extends ActionBarActivity
         });
 
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-        floatingActionButton.startAnimation(animation);
 
+        floatingActionButton.startAnimation(animation);
         floatingActionButton.setVisibility(View.VISIBLE);
     }
 
@@ -152,6 +158,13 @@ public class NotesActivity extends ActionBarActivity
                     dialog.dismiss();
 
                     finish();
+                }
+            }).showListener(new DialogInterface.OnShowListener()
+            {
+                @Override
+                public void onShow(DialogInterface dialogInterface)
+                {
+                    mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 }
             }).cancelListener(new DialogInterface.OnCancelListener()
             {
@@ -274,6 +287,13 @@ public class NotesActivity extends ActionBarActivity
                             finish();
                         }
                     }).contentColorRes(R.color.black).positiveColorRes(R.color.red).neutralColorRes(R.color.dark_blue).show();
+                }
+            }).showListener(new DialogInterface.OnShowListener()
+            {
+                @Override
+                public void onShow(DialogInterface dialogInterface)
+                {
+                    mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                 }
             }).cancelListener(new DialogInterface.OnCancelListener()
             {

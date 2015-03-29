@@ -48,7 +48,6 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.List;
 
-@SuppressWarnings({"deprecation", "SameParameterValue"})
 class MyTools
 {
     private final Context mContext;
@@ -88,6 +87,7 @@ class MyTools
         return sharedPreferences.getBoolean(preference, false);
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void setSharedPreferencesBoolean(String preference, boolean bool)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
@@ -245,10 +245,12 @@ class MyTools
         }
         else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
         {
+            //noinspection deprecation
             view.setBackground(mContext.getResources().getDrawable(drawable));
         }
         else
         {
+            //noinspection deprecation
             view.setBackgroundDrawable(mContext.getResources().getDrawable(drawable));
         }
     }
@@ -262,6 +264,7 @@ class MyTools
         }
         else
         {
+            //noinspection deprecation
             imageView.setImageDrawable(mContext.getResources().getDrawable(drawable));
         }
     }
@@ -273,6 +276,7 @@ class MyTools
         {
             PrintManager printManager = (PrintManager) mContext.getSystemService(Context.PRINT_SERVICE);
 
+            @SuppressWarnings("deprecation")
             PrintDocumentAdapter printDocumentAdapter = webView.createPrintDocumentAdapter();
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) printDocumentAdapter = webView.createPrintDocumentAdapter(title);

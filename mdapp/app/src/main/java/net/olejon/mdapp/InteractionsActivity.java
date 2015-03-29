@@ -69,6 +69,8 @@ public class InteractionsActivity extends ActionBarActivity
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
+    private boolean mActivityPaused = false;
+
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -112,7 +114,7 @@ public class InteractionsActivity extends ActionBarActivity
             {
                 if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                     search(mToolbarSearchEditText.getText().toString());
 
@@ -162,7 +164,7 @@ public class InteractionsActivity extends ActionBarActivity
             {
                 if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
                 {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                     search(mToolbarSearchEditText.getText().toString());
                 }
@@ -171,7 +173,7 @@ public class InteractionsActivity extends ActionBarActivity
                     mToolbarSearchLayout.setVisibility(View.VISIBLE);
                     mToolbarSearchEditText.requestFocus();
 
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                 }
             }
         });
@@ -184,6 +186,15 @@ public class InteractionsActivity extends ActionBarActivity
         super.onResume();
 
         getRecentSearches();
+    }
+
+    // Pause activity
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mActivityPaused = true;
     }
 
     // Destroy activity
@@ -220,7 +231,7 @@ public class InteractionsActivity extends ActionBarActivity
             mToolbarSearchLayout.setVisibility(View.VISIBLE);
             mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
             return true;
         }
@@ -314,11 +325,11 @@ public class InteractionsActivity extends ActionBarActivity
             });
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
 
+            mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            if(mCursor.getCount() > 0)
+            if(!mActivityPaused && mCursor.getCount() > 0)
             {
                 Handler handler = new Handler();
 
@@ -330,7 +341,7 @@ public class InteractionsActivity extends ActionBarActivity
                         mToolbarSearchLayout.setVisibility(View.VISIBLE);
                         mToolbarSearchEditText.requestFocus();
 
-                        mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                     }
                 }, 500);
             }

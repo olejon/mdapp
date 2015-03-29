@@ -52,7 +52,7 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
     private final String mColor;
     private final String mIcon;
 
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public LvhCategoriesAdapter(Context context, JSONArray jsonArray, String color, String icon)
     {
@@ -173,9 +173,9 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
 
     private void animateView(View view, int position)
     {
-        if(position > lastPosition)
+        if(position > mLastPosition)
         {
-            lastPosition = position;
+            mLastPosition = position;
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
             view.startAnimation(animation);

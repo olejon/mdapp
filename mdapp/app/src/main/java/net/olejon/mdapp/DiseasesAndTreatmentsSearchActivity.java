@@ -82,10 +82,10 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
     private int mFirstSmlPosition;
     private int mFirstForskningPosition;
     private int mFirstHelsebiblioteketPosition;
-    private int mFirstOncolexPosition;
     private int mFirstTidsskriftetPosition;
-    private int mFirstHelsenorgePosition;
+    private int mFirstOncolexPosition;
     private int mFirstBrukerhandbokenPosition;
+    private int mFirstHelsenorgePosition;
 
     // Create activity
     @Override
@@ -171,7 +171,7 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -343,19 +343,6 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
                 }
                 case 6:
                 {
-                    if(mFirstOncolexPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstOncolexPosition);
-                    }
-
-                    break;
-                }
-                case 7:
-                {
                     if(mFirstTidsskriftetPosition == 0)
                     {
                         mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
@@ -367,20 +354,20 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
                     break;
                 }
-                case 8:
+                case 7:
                 {
-                    if(mFirstHelsenorgePosition == 0)
+                    if(mFirstOncolexPosition == 0)
                     {
                         mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
                     }
                     else
                     {
-                        mRecyclerView.scrollToPosition(mFirstHelsenorgePosition);
+                        mRecyclerView.scrollToPosition(mFirstOncolexPosition);
                     }
 
                     break;
                 }
-                case 9:
+                case 8:
                 {
                     if(mFirstBrukerhandbokenPosition == 0)
                     {
@@ -389,6 +376,19 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
                     else
                     {
                         mRecyclerView.scrollToPosition(mFirstBrukerhandbokenPosition);
+                    }
+
+                    break;
+                }
+                case 9:
+                {
+                    if(mFirstHelsenorgePosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstHelsenorgePosition);
                     }
 
                     break;
@@ -424,10 +424,10 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
         mFirstSmlPosition = 0;
         mFirstForskningPosition = 0;
         mFirstHelsebiblioteketPosition = 0;
-        mFirstOncolexPosition = 0;
         mFirstTidsskriftetPosition = 0;
-        mFirstHelsenorgePosition = 0;
+        mFirstOncolexPosition = 0;
         mFirstBrukerhandbokenPosition = 0;
+        mFirstHelsenorgePosition = 0;
 
         try
         {
@@ -470,13 +470,13 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
 
                             if(mFirstHelsebiblioteketPosition == 0 && type.equals("helsebiblioteket")) mFirstHelsebiblioteketPosition = i;
 
-                            if(mFirstOncolexPosition == 0 && type.equals("oncolex")) mFirstOncolexPosition = i;
-
                             if(mFirstTidsskriftetPosition == 0 && type.equals("tidsskriftet")) mFirstTidsskriftetPosition = i;
 
-                            if(mFirstHelsenorgePosition == 0 && type.equals("helsenorge")) mFirstHelsenorgePosition = i;
+                            if(mFirstOncolexPosition == 0 && type.equals("oncolex")) mFirstOncolexPosition = i;
 
                             if(mFirstBrukerhandbokenPosition == 0 && type.equals("brukerhandboken")) mFirstBrukerhandbokenPosition = i;
+
+                            if(mFirstHelsenorgePosition == 0 && type.equals("helsenorge")) mFirstHelsenorgePosition = i;
                         }
                         catch(Exception e)
                         {

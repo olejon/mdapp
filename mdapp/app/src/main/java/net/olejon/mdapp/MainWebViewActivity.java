@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -118,6 +119,12 @@ public class MainWebViewActivity extends ActionBarActivity
                     mTools.downloadFile(view.getTitle(), url);
                     return true;
                 }
+                else if(url.startsWith("tel:"))
+                {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                }
 
                 return false;
             }
@@ -146,8 +153,8 @@ public class MainWebViewActivity extends ActionBarActivity
                         mWebViewAnimationHasBeenShown = true;
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                        mWebView.startAnimation(animation);
 
+                        mWebView.startAnimation(animation);
                         mWebView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -193,7 +200,6 @@ public class MainWebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
-    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {
@@ -201,7 +207,11 @@ public class MainWebViewActivity extends ActionBarActivity
 
         mWebView.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 
     // Back button

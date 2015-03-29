@@ -105,8 +105,8 @@ public class TasksActivity extends ActionBarActivity
         });
 
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-        floatingActionButton.startAnimation(animation);
 
+        floatingActionButton.startAnimation(animation);
         floatingActionButton.setVisibility(View.VISIBLE);
 
         // List

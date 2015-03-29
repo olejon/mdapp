@@ -59,7 +59,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
     private final JSONArray mInteractions;
 
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public InteractionsCardsAdapter(Context context, ProgressBar progressBar, JSONArray jsonArray)
     {
@@ -170,7 +170,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
                             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+ URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+ URLEncoder.encode(uri, "utf-8"), new Response.Listener<JSONObject>()
                             {
                                 @Override
                                 public void onResponse(JSONObject response)
@@ -257,9 +257,9 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
     private void animateView(View view, int position)
     {
-        if(position > lastPosition)
+        if(position > mLastPosition)
         {
-            lastPosition = position;
+            mLastPosition = position;
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
             view.startAnimation(animation);

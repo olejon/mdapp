@@ -23,6 +23,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -587,6 +588,13 @@ public class MedicationActivity extends ActionBarActivity
 
                         @Override
                         public void onNegative(MaterialDialog dialog)
+                        {
+                            finish();
+                        }
+                    }).cancelListener(new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface)
                         {
                             finish();
                         }

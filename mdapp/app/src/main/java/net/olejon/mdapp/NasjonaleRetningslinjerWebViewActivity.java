@@ -161,8 +161,8 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
                         mWebView.loadUrl("javascript:var offset = $('div.searchfield').offset(); window.scrollTo(0, offset.top + 48);");
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                        mWebView.startAnimation(animation);
 
+                        mWebView.startAnimation(animation);
                         mWebView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -181,7 +181,7 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
 
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(pageSearch, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(pageSearch, "utf-8"), new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -257,7 +257,6 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
-    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {
@@ -265,7 +264,11 @@ public class NasjonaleRetningslinjerWebViewActivity extends ActionBarActivity
 
         mWebView.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 
     // Back button

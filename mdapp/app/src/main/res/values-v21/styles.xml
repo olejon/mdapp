@@ -46,11 +46,6 @@
         <item name="android:elevation">2dp</item>
     </style>
 
-    <!-- Medication pictures -->
-    <style name="medication_pictures_card_name_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <!-- Substance -->
     <style name="substance_atc_code_base">
         <item name="android:elevation">2dp</item>
@@ -132,6 +127,19 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- Clinical trials cards -->
+    <style name="clinicaltrials_cards_no_clinicaltrials_information_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="clinicaltrials_cards_card_detail_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- ATC codes -->
     <style name="atc_codes_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -167,19 +175,6 @@
 
     <!-- Pharmacies -->
     <style name="pharmacies_list_empty_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <!-- Clinical trials cards -->
-    <style name="clinicaltrials_cards_no_clinicaltrials_information_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <style name="clinicaltrials_cards_card_title_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <style name="clinicaltrials_cards_card_detail_title_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
@@ -250,7 +245,7 @@
     </style>
 
     <!-- List view -->
-    <style name="listview_base" parent="android:Widget.Material.Light.ListView" />
+    <style name="listview_base" parent="android:Widget.Material.Light.ListView"/>
 
     <!-- Cards -->
     <style name="card_button_base">

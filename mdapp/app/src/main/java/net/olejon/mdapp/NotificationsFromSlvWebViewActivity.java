@@ -132,8 +132,8 @@ public class NotificationsFromSlvWebViewActivity extends ActionBarActivity
                         mWebViewAnimationHasBeenShown = true;
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                        mWebView.startAnimation(animation);
 
+                        mWebView.startAnimation(animation);
                         mWebView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -159,7 +159,6 @@ public class NotificationsFromSlvWebViewActivity extends ActionBarActivity
     }
 
     // Pause activity
-    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {
@@ -167,7 +166,11 @@ public class NotificationsFromSlvWebViewActivity extends ActionBarActivity
 
         mWebView.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 
     // Back button

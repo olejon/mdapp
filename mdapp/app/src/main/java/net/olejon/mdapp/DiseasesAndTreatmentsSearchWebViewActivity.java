@@ -35,6 +35,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -104,12 +105,22 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAppCachePath(getCacheDir().getAbsolutePath());
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        if(pageUri.contains("webofknowledge") || pageUri.contains("brukerhandboken")) webSettings.setUseWideViewPort(true);
+        //noinspection deprecation
+        webSettings.setSavePassword(false);
 
-        if(pageUri.contains("brukerhandboken")) webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:35.0) Gecko/20100101 Firefox/35.0");
+        if(pageUri.contains("webofknowledge"))
+        {
+            webSettings.setUseWideViewPort(true);
 
-        if(pageUri.contains("webofknowledge")) mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_this_can_take_some_time), 1);
+            mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_this_can_take_some_time), 1);
+        }
+
+        if(pageUri.contains("brukerhandboken")) webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0");
 
         mWebView.setWebViewClient(new WebViewClient()
         {
@@ -128,6 +139,18 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         mWebView.setWebChromeClient(new WebChromeClient()
         {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result)
+            {
+                if(pageUri.contains("webofknowledge"))
+                {
+                    result.confirm();
+                    return true;
+                }
+
+                return false;
+            }
+
             @Override
             public void onProgressChanged(WebView view, int newProgress)
             {
@@ -182,8 +205,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
                         }
 
                         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                        mWebView.startAnimation(animation);
 
+                        mWebView.startAnimation(animation);
                         mWebView.setVisibility(View.VISIBLE);
                     }
 
@@ -205,7 +228,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
 
-        if(pageUri.contains("webofknowledge") || pageUri.contains("brukerhandboken")) mWebView.setInitialScale(100);
+        if(pageUri.contains("webofknowledge")) mWebView.setInitialScale(100);
 
         mWebView.loadUrl(pageUri);
     }
@@ -220,7 +243,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     }
 
     // Pause activity
-    @SuppressWarnings("deprecation")
     @Override
     protected void onPause()
     {
@@ -228,7 +250,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
 
         mWebView.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) CookieSyncManager.getInstance().sync();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+        {
+            //noinspection deprecation
+            CookieSyncManager.getInstance().sync();
+        }
     }
 
     // Back button

@@ -30,17 +30,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class MedicationsFragment extends Fragment
 {
@@ -49,8 +45,6 @@ public class MedicationsFragment extends Fragment
     private MyTools mTools;
 
     private Cursor mCursor;
-
-    private InputMethodManager mInputMethodManager;
 
     private EditText mSearchEditText;
     private ListView mListView;
@@ -68,27 +62,8 @@ public class MedicationsFragment extends Fragment
         // Tools
         mTools = new MyTools(mContext);
 
-        // Input manager
-        mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-
         // Search
         mSearchEditText = (EditText) getActivity().findViewById(R.id.main_search_edittext);
-
-        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.toggleSoftInputFromWindow(mSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
 
         // List
         mListView = (ListView) viewGroup.findViewById(R.id.main_medications_list);

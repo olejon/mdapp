@@ -41,16 +41,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
         <activity
-            android:name=".MedicationPicturesActivity"
-            android:parentActivityName=".MedicationActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationActivity"/>
-        </activity>
-        <activity
-            android:name=".MedicationPictureActivity"
-            android:parentActivityName=".MedicationPicturesActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationPicturesActivity"/>
-        </activity>
-        <activity
             android:name=".MedicationWebViewActivity"
             android:parentActivityName=".MedicationActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationActivity"/>
@@ -91,16 +81,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhCategoriesActivity"/>
         </activity>
         <activity
-            android:name=".NasjonaleRetningslinjerActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".NasjonaleRetningslinjerWebViewActivity"
-            android:parentActivityName=".NasjonaleRetningslinjerActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NasjonaleRetningslinjerActivity"/>
-        </activity>
-        <activity
             android:name=".InteractionsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
@@ -129,6 +109,31 @@
             android:name=".PoisoningsWebViewActivity"
             android:parentActivityName=".PoisoningsCardsActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsCardsActivity"/>
+        </activity>
+        <activity
+            android:name=".NasjonaleRetningslinjerActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".NasjonaleRetningslinjerWebViewActivity"
+            android:parentActivityName=".NasjonaleRetningslinjerActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NasjonaleRetningslinjerActivity"/>
+        </activity>
+        <activity
+            android:name=".ClinicalTrialsActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".ClinicalTrialsCardsActivity"
+            android:parentActivityName=".ClinicalTrialsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsActivity"/>
+        </activity>
+        <activity
+            android:name=".ClinicalTrialsWebViewActivity"
+            android:parentActivityName=".ClinicalTrialsCardsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsCardsActivity"/>
         </activity>
         <activity
             android:name=".AtcActivity"
@@ -179,21 +184,6 @@
             android:name=".PharmaciesLocationMapActivity"
             android:parentActivityName=".PharmaciesLocationActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesLocationActivity"/>
-        </activity>
-        <activity
-            android:name=".ClinicalTrialsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".ClinicalTrialsCardsActivity"
-            android:parentActivityName=".ClinicalTrialsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsActivity"/>
-        </activity>
-        <activity
-            android:name=".ClinicalTrialsWebViewActivity"
-            android:parentActivityName=".ClinicalTrialsCardsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsCardsActivity"/>
         </activity>
         <activity
             android:name=".NotificationsFromSlvActivity"

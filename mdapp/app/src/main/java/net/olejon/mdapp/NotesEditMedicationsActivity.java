@@ -38,7 +38,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -47,7 +46,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -88,22 +86,6 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.notes_edit_medications_toolbar_search_layout);
         mToolbarSearchEditText = (EditText) findViewById(R.id.notes_edit_medications_toolbar_search);
 
-        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
         ImageButton imageButton = (ImageButton) findViewById(R.id.notes_edit_medications_toolbar_clear_search);
 
         imageButton.setOnClickListener(new View.OnClickListener()
@@ -126,7 +108,7 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
                 mToolbarSearchLayout.setVisibility(View.VISIBLE);
                 mToolbarSearchEditText.requestFocus();
 
-                mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
             }
         });
 
@@ -148,6 +130,21 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
         if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
     }
 
+    // Back button
+    @Override
+    public void onBackPressed()
+    {
+        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+        {
+            mToolbarSearchLayout.setVisibility(View.GONE);
+            mToolbarSearchEditText.setText("");
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+
     // Search button
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
@@ -157,7 +154,7 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
             mToolbarSearchLayout.setVisibility(View.VISIBLE);
             mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
             return true;
         }
@@ -252,8 +249,8 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
             });
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
 
+            mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             Handler handler = new Handler();
@@ -266,7 +263,7 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
                     mToolbarSearchLayout.setVisibility(View.VISIBLE);
                     mToolbarSearchEditText.requestFocus();
 
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                 }
             }, 500);
         }

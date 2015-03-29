@@ -77,8 +77,6 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 
     private boolean mActivityPaused = false;
 
-    private int mSearchSelectedLanguage = 0;
-
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -108,7 +106,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
             {
                 if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                     search(mToolbarSearchEditText.getText().toString().trim());
 
@@ -177,15 +175,6 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
         }
     }
 
-    // Pause activity
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mActivityPaused = true;
-    }
-
     // Resume activity
     @Override
     protected void onResume()
@@ -193,6 +182,15 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
         super.onResume();
 
         getRecentSearches();
+    }
+
+    // Pause activity
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mActivityPaused = true;
     }
 
     // Destroy activity
@@ -226,11 +224,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
     {
         if(keyCode == KeyEvent.KEYCODE_SEARCH)
         {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.requestFocus();
-
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-
+            showSearchLanguageDialog();
             return true;
         }
 
@@ -303,16 +297,14 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 
     private void showSearchLanguageDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_language_dialog_title)).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallbackSingleChoice(mSearchSelectedLanguage, new MaterialDialog.ListCallback()
+        new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_language_dialog_title)).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice()
         {
             @Override
-            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text)
+            public boolean onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
             {
-                if(which == 0)
+                if(i == 0)
                 {
                     mSearchLanguage = "";
-
-                    mSearchSelectedLanguage = 0;
 
                     mToolbarSearchEditText.setHint(getString(R.string.diseases_and_treatments_toolbar_search_english_hint));
                 }
@@ -320,12 +312,12 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
                 {
                     mSearchLanguage = "no";
 
-                    mSearchSelectedLanguage = 1;
-
                     mToolbarSearchEditText.setHint(getString(R.string.diseases_and_treatments_toolbar_search_norwegian_hint));
                 }
 
                 showSearch();
+
+                return true;
             }
         }).show();
     }
@@ -335,7 +327,16 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
         mToolbarSearchLayout.setVisibility(View.VISIBLE);
         mToolbarSearchEditText.requestFocus();
 
-        mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+            }
+        }, 125);
     }
 
     private void search(String string)

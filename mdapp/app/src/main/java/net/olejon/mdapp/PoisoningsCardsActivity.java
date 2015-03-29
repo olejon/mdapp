@@ -179,7 +179,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
 
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -261,8 +261,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
             }
             case R.id.poisonings_cards_menu_call:
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:+4722591300"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
                 startActivity(intent);
                 return true;
             }

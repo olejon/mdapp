@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/medication_picture_layout">
-
-    <it.sephiroth.android.library.imagezoom.ImageViewTouch android:id="@+id/medication_picture_picture" android:contentDescription="@string/image_content_description" style="@style/medication_picture_picture"/>
-
-</LinearLayout>

@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -69,6 +68,8 @@ public class PharmaciesActivity extends ActionBarActivity
     private ListView mListView;
     private View mListViewEmpty;
 
+    private boolean mActivityPaused = false;
+
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,22 +91,6 @@ public class PharmaciesActivity extends ActionBarActivity
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_toolbar_search_layout);
         mToolbarSearchEditText = (EditText) findViewById(R.id.pharmacies_toolbar_search);
-
-        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
 
         ImageButton imageButton = (ImageButton) findViewById(R.id.pharmacies_toolbar_clear_search);
 
@@ -129,7 +114,7 @@ public class PharmaciesActivity extends ActionBarActivity
                 mToolbarSearchLayout.setVisibility(View.VISIBLE);
                 mToolbarSearchEditText.requestFocus();
 
-                mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
             }
         });
 
@@ -140,6 +125,15 @@ public class PharmaciesActivity extends ActionBarActivity
         // Get municipalities
         GetMunicipalitiesTask getMunicipalitiesTask = new GetMunicipalitiesTask();
         getMunicipalitiesTask.execute();
+    }
+
+    // Pause activity
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mActivityPaused = true;
     }
 
     // Destroy activity
@@ -176,7 +170,7 @@ public class PharmaciesActivity extends ActionBarActivity
             mToolbarSearchLayout.setVisibility(View.VISIBLE);
             mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
             return true;
         }
@@ -259,23 +253,26 @@ public class PharmaciesActivity extends ActionBarActivity
             });
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-            mFloatingActionButton.startAnimation(animation);
 
+            mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            Handler handler = new Handler();
-
-            handler.postDelayed(new Runnable()
+            if(!mActivityPaused)
             {
-                @Override
-                public void run()
-                {
-                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                    mToolbarSearchEditText.requestFocus();
+                Handler handler = new Handler();
 
-                    mInputMethodManager.toggleSoftInputFromWindow(mToolbarSearchEditText.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-                }
-            }, 500);
+                handler.postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                        mToolbarSearchEditText.requestFocus();
+
+                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+                    }
+                }, 500);
+            }
         }
 
         @Override

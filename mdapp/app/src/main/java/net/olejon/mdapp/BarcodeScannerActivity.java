@@ -100,7 +100,7 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/barcode/?search="+barcode, null, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/barcode/?search="+barcode, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)

@@ -42,7 +42,7 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
 
     private final JSONArray mClinicalTrials;
 
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public ClinicalTrialsCardsAdapter(Context context, JSONArray jsonArray)
     {
@@ -138,9 +138,9 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
 
     private void animateView(View view, int position)
     {
-        if(position > lastPosition)
+        if(position > mLastPosition)
         {
-            lastPosition = position;
+            mLastPosition = position;
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
             view.startAnimation(animation);
