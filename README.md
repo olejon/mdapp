@@ -8,3 +8,5 @@ With LegeAppen you can replace lots of apps and websites with just one app.
 * [Project website](http://www.olejon.net/code/mdapp/)
 
 _“Human knowledge belongs to the world”_
+
+[![Image](https://www.paypalobjects.com/no_NO/i/btn/btn_donate_LG.gif)](http://www.olejon.net/code/mdapp/?page=donate)
