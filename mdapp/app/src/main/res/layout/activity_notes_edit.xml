@@ -17,9 +17,7 @@
             <EditText android:id="@+id/notes_edit_patient_room" android:hint="@string/notes_edit_patient_room_hint" style="@style/notes_edit_edittext"/>
 
             <TextView android:id="@+id/notes_edit_patient_medications" style="@style/notes_edit_medications_textview"/>
-
             <Button android:id="@+id/notes_edit_patient_add_medication" android:text="@string/notes_edit_patient_add_medication" style="@style/notes_edit_button"/>
-            <Button android:id="@+id/notes_edit_patient_medications_interactions" android:text="@string/notes_edit_patient_medications_interactions" style="@style/notes_edit_patient_medications_interactions_button"/>
 
         </LinearLayout>
 

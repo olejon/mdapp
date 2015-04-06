@@ -3,7 +3,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/poisonings_cards_menu_call" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_local_phone_white_24dp" android:title="@string/poisonings_cards_menu_call"/>
-    <item android:id="@+id/poisonings_cards_menu_helsenorge_uri" android:orderInCategory="2" app:showAsAction="never" android:title="@string/poisonings_cards_menu_helsenorge_uri"/>
-    <item android:id="@+id/poisonings_cards_menu_helsebiblioteket_uri" android:orderInCategory="3" app:showAsAction="never" android:title="@string/poisonings_cards_menu_helsebiblioteket_uri"/>
 
 </menu>

@@ -346,9 +346,7 @@ public class PoisoningsActivity extends ActionBarActivity
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             // Tip dialog
-            boolean hideTipDialog = mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG");
-
-            if(hideTipDialog)
+            if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG"))
             {
                 if(!mActivityPaused && mCursor.getCount() > 0)
                 {

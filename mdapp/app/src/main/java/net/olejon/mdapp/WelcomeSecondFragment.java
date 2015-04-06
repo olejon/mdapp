@@ -69,7 +69,7 @@ public class WelcomeSecondFragment extends Fragment
 
     private void animateTextView(TextView textView)
     {
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_page_guide);
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_guide);
 
         textView.setVisibility(View.VISIBLE);
         textView.startAnimation(animation);

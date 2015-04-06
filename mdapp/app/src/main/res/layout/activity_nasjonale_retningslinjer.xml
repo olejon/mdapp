@@ -6,7 +6,11 @@
 
         <LinearLayout android:id="@+id/nasjonale_retningslinjer_toolbar_search_layout" style="@style/toolbar_search_layout">
             <EditText android:id="@+id/nasjonale_retningslinjer_toolbar_search" android:hint="@string/nasjonale_retningslinjer_toolbar_search_hint" style="@style/nasjonale_retningslinjer_toolbar_search_edittext"/>
-            <ImageButton android:id="@+id/nasjonale_retningslinjer_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_clear_search_button"/>
+            <ImageButton android:id="@+id/nasjonale_retningslinjer_toolbar_clear_search" android:src="@drawable/ic_clear_white_24dp" android:contentDescription="@string/image_content_description" style="@style/toolbar_button"/>
+        </LinearLayout>
+
+        <LinearLayout style="@style/toolbar_progressbar_layout">
+            <ProgressBar android:id="@+id/nasjonale_retningslinjer_toolbar_progressbar" style="@style/toolbar_progressbar"/>
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>

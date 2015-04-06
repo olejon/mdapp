@@ -135,10 +135,14 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onDrawerClosed(View drawerView)
             {
+                TextView brukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
+                TextView analyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
                 TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
                 TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
                 TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
 
+                brukerhandbokenTextView.setVisibility(View.GONE);
+                analyseoversiktenTextView.setVisibility(View.GONE);
                 upToDateTextView.setVisibility(View.GONE);
                 bmjTextView.setVisibility(View.GONE);
                 encyclopediasTextView.setVisibility(View.VISIBLE);
@@ -158,6 +162,22 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_felleskatalogen));
                         intent.putExtra("uri", "http://www.felleskatalogen.no/m/medisin/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_brukerhandboken:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_brukerhandboken));
+                        intent.putExtra("uri", "http://brukerhandboken.no/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_analyseoversikten:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_analyseoversikten));
+                        intent.putExtra("uri", "http://www.analyseoversikten.no/");
                         startActivity(intent);
                         break;
                     }
@@ -281,7 +301,10 @@ public class MainActivity extends ActionBarActivity
                     }
                     case R.id.drawer_item_report_issue:
                     {
-                        mTools.openUri(getString(R.string.project_report_issue_uri));
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_report_issue));
+                        intent.putExtra("uri", getString(R.string.project_report_issue_uri));
+                        startActivity(intent);
                         break;
                     }
                 }
@@ -473,6 +496,8 @@ public class MainActivity extends ActionBarActivity
 
         if(mDrawerClosed == R.id.drawer_item_encyclopedias)
         {
+            TextView brukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
+            TextView analyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
             TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
             TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
             TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
@@ -481,9 +506,13 @@ public class MainActivity extends ActionBarActivity
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.drawer_item);
 
+            brukerhandbokenTextView.startAnimation(animation);
+            analyseoversiktenTextView.startAnimation(animation);
             upToDateTextView.startAnimation(animation);
             bmjTextView.startAnimation(animation);
 
+            brukerhandbokenTextView.setVisibility(View.VISIBLE);
+            analyseoversiktenTextView.setVisibility(View.VISIBLE);
             upToDateTextView.setVisibility(View.VISIBLE);
             bmjTextView.setVisibility(View.VISIBLE);
         }

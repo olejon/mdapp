@@ -9,8 +9,6 @@
         <TextView android:id="@+id/diseases_and_treatments_search_card_title" android:layout_alignParentTop="true" style="@style/diseases_and_treatments_search_card_title"/>
         <TextView android:id="@+id/diseases_and_treatments_search_card_text" android:layout_below="@+id/diseases_and_treatments_search_card_title" style="@style/diseases_and_treatments_search_card_text"/>
 
-        <ImageView android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:src="@drawable/ic_keyboard_arrow_right_grey600_24dp" android:contentDescription="@string/image_content_description" style="@style/diseases_and_treatments_search_card_right_icon"/>
-
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

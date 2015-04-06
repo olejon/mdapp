@@ -107,7 +107,7 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
                     mContext.startActivity(intent);
@@ -119,7 +119,7 @@ public class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCards
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
                     mContext.startActivity(intent);

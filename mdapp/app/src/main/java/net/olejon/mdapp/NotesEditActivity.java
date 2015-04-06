@@ -62,7 +62,6 @@ public class NotesEditActivity extends ActionBarActivity
     private EditText mPatientDepartmentEditText;
     private EditText mPatientRoomEditText;
     private TextView mPatientMedicationsTextView;
-    private Button mPatientMedicationsInteractionsButton;
 
     private JSONArray mPatientMedicationsJsonArray = new JSONArray();
 
@@ -102,7 +101,6 @@ public class NotesEditActivity extends ActionBarActivity
         mPatientDepartmentEditText = (EditText) findViewById(R.id.notes_edit_patient_department);
         mPatientRoomEditText = (EditText) findViewById(R.id.notes_edit_patient_room);
         mPatientMedicationsTextView = (TextView) findViewById(R.id.notes_edit_patient_medications);
-        mPatientMedicationsInteractionsButton = (Button) findViewById(R.id.notes_edit_patient_medications_interactions);
 
         if(noteTitle != null && !noteTitle.equals("")) mTitleEditText.setText(noteTitle);
 
@@ -120,21 +118,6 @@ public class NotesEditActivity extends ActionBarActivity
 
         // Note
         getNote();
-
-        // Tip dialog
-        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("NOTES_EDIT_HIDE_TIP_DIALOG");
-
-        if(!hideTipDialog)
-        {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_tip_dialog_title)).content(getString(R.string.notes_edit_tip_dialog_message)).positiveText(getString(R.string.notes_edit_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
-            {
-                @Override
-                public void onPositive(MaterialDialog dialog)
-                {
-                    mTools.setSharedPreferencesBoolean("NOTES_EDIT_HIDE_TIP_DIALOG", true);
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-        }
     }
 
     // Activity result
@@ -164,6 +147,13 @@ public class NotesEditActivity extends ActionBarActivity
                 }
             }
         }
+    }
+
+    // Back button
+    @Override
+    public void onBackPressed()
+    {
+        showSaveNoteDialog();
     }
 
     // Menu
@@ -198,7 +188,7 @@ public class NotesEditActivity extends ActionBarActivity
         {
             case android.R.id.home:
             {
-                finish();
+                showSaveNoteDialog();
                 return true;
             }
             case R.id.notes_edit_menu_save:
@@ -242,15 +232,18 @@ public class NotesEditActivity extends ActionBarActivity
                 mPatientDepartmentEditText.setText(patientDepartment);
                 mPatientRoomEditText.setText(patientRoom);
 
-                try
+                if(patientMedications != null && !patientMedications.equals(""))
                 {
-                    mPatientMedicationsJsonArray = new JSONArray(patientMedications);
+                    try
+                    {
+                        mPatientMedicationsJsonArray = new JSONArray(patientMedications);
 
-                    getMedications();
-                }
-                catch(Exception e)
-                {
-                    Log.e("NotesEditActivity", Log.getStackTraceString(e));
+                        getMedications();
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("NotesEditActivity", Log.getStackTraceString(e));
+                    }
                 }
             }
 
@@ -259,7 +252,7 @@ public class NotesEditActivity extends ActionBarActivity
         }
     }
 
-    // Edit note
+    // Save note
     private void saveNote()
     {
         String title = mTitleEditText.getText().toString().trim();
@@ -287,7 +280,14 @@ public class NotesEditActivity extends ActionBarActivity
             contentValues.put(NotesSQLiteHelper.COLUMN_PATIENT_DEPARTMENT, patientDepartment);
             contentValues.put(NotesSQLiteHelper.COLUMN_PATIENT_ROOM, patientRoom);
 
-            if(mPatientMedicationsJsonArray.length() > 0) contentValues.put(NotesSQLiteHelper.COLUMN_PATIENT_MEDICATIONS, mPatientMedicationsJsonArray.toString());
+            if(mPatientMedicationsJsonArray.length() == 0)
+            {
+                contentValues.put(NotesSQLiteHelper.COLUMN_PATIENT_MEDICATIONS, "");
+            }
+            else
+            {
+                contentValues.put(NotesSQLiteHelper.COLUMN_PATIENT_MEDICATIONS, mPatientMedicationsJsonArray.toString());
+            }
 
             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
 
@@ -306,6 +306,24 @@ public class NotesEditActivity extends ActionBarActivity
 
             finish();
         }
+    }
+
+    private void showSaveNoteDialog()
+    {
+        new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_save_dialog_title)).content(getString(R.string.notes_edit_save_dialog_message)).positiveText(getString(R.string.notes_edit_save_dialog_positive_button)).neutralText(getString(R.string.notes_edit_save_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+        {
+            @Override
+            public void onPositive(MaterialDialog dialog)
+            {
+                saveNote();
+            }
+
+            @Override
+            public void onNeutral(MaterialDialog dialog)
+            {
+                finish();
+            }
+        }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.red).show();
     }
 
     // Delete note
@@ -341,15 +359,21 @@ public class NotesEditActivity extends ActionBarActivity
         {
             int medicationsJsonArrayLength = mPatientMedicationsJsonArray.length();
 
-            if(medicationsJsonArrayLength > 0)
+            if(medicationsJsonArrayLength == 0)
+            {
+                mPatientMedicationsTextView.setVisibility(View.GONE);
+            }
+            else
             {
                 mPatientMedicationsTextView.setVisibility(View.VISIBLE);
-                mPatientMedicationsInteractionsButton.setVisibility(View.VISIBLE);
 
                 final ArrayList<String> medicationsNamesArrayList = new ArrayList<>();
                 final ArrayList<String> medicationsManufacturersArrayList = new ArrayList<>();
 
-                final String[] medicationsNamesStringArrayList = new String[medicationsJsonArrayLength];
+                final String[] medicationsNamesStringArrayList = new String[medicationsJsonArrayLength + 2];
+
+                medicationsNamesStringArrayList[0] = getString(R.string.notes_edit_medications_dialog_interactions);
+                medicationsNamesStringArrayList[1] = getString(R.string.notes_edit_medications_dialog_remove_all);
 
                 for(int i = 0; i < medicationsJsonArrayLength; i++)
                 {
@@ -361,7 +385,7 @@ public class NotesEditActivity extends ActionBarActivity
                     medicationsNamesArrayList.add(name);
                     medicationsManufacturersArrayList.add(manufacturer);
 
-                    medicationsNamesStringArrayList[i] = name;
+                    medicationsNamesStringArrayList[i + 2] = name;
                 }
 
                 String medicationsNames = "";
@@ -385,54 +409,66 @@ public class NotesEditActivity extends ActionBarActivity
                             @Override
                             public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
                             {
-                                String medicationName = medicationsNamesArrayList.get(i);
-                                String medicationManufacturer = medicationsManufacturersArrayList.get(i);
-
-                                SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
-                                String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-                                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
-
-                                if(cursor.moveToFirst())
+                                if(i == 0)
                                 {
-                                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+                                    String medicationsInteractions = "";
 
-                                    Intent intent = new Intent(mContext, MedicationActivity.class);
-
-                                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                    for(int n = 0; n < medicationsNamesArrayList.size(); n++)
                                     {
-                                        if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                                        medicationsInteractions += medicationsNamesArrayList.get(n).split(" ")[0]+" ";
                                     }
 
-                                    intent.putExtra("id", id);
+                                    medicationsInteractions = medicationsInteractions.trim();
+
+                                    Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
+                                    intent.putExtra("search", medicationsInteractions);
                                     startActivity(intent);
                                 }
+                                else if(i == 1)
+                                {
+                                    try
+                                    {
+                                        mPatientMedicationsJsonArray = new JSONArray("[]");
 
-                                cursor.close();
-                                sqLiteDatabase.close();
+                                        getMedications();
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Log.e("NotesEditActivity", Log.getStackTraceString(e));
+                                    }
+                                }
+                                else
+                                {
+                                    int position = i - 2;
+
+                                    String medicationName = medicationsNamesArrayList.get(position);
+                                    String medicationManufacturer = medicationsManufacturersArrayList.get(position);
+
+                                    SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+                                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+                                    Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+
+                                    if(cursor.moveToFirst())
+                                    {
+                                        long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+                                        Intent intent = new Intent(mContext, MedicationActivity.class);
+
+                                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                        {
+                                            if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                                        }
+
+                                        intent.putExtra("id", id);
+                                        startActivity(intent);
+                                    }
+
+                                    cursor.close();
+                                    sqLiteDatabase.close();
+                                }
                             }
                         }).itemColorRes(R.color.dark_blue).show();
-                    }
-                });
-
-                mPatientMedicationsInteractionsButton.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        String medicationsInteractions = "";
-
-                        for(int n = 0; n < medicationsNamesArrayList.size(); n++)
-                        {
-                            medicationsInteractions += medicationsNamesArrayList.get(n).split(" ")[0]+" ";
-                        }
-
-                        medicationsInteractions = medicationsInteractions.trim();
-
-                        Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
-                        intent.putExtra("search", medicationsInteractions);
-                        startActivity(intent);
                     }
                 });
             }

@@ -34,6 +34,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -48,10 +49,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.melnykov.fab.FloatingActionButton;
+
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -69,6 +81,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
 
     private InputMethodManager mInputMethodManager;
 
+    private ProgressBar mProgressBar;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
     private FloatingActionButton mFloatingActionButton;
@@ -126,6 +139,9 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 mToolbarSearchEditText.setText("");
             }
         });
+
+        // Progress bar
+        mProgressBar = (ProgressBar) findViewById(R.id.nasjonale_retningslinjer_toolbar_progressbar);
 
         // Floating action button
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.nasjonale_retningslinjer_fab);
@@ -276,11 +292,6 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 clearRecentSearches();
                 return true;
             }
-            case R.id.nasjonale_retningslinjer_menu_uri:
-            {
-                mTools.openUri("https://helsedirektoratet.no/retningslinjer#Default=%7B%22k%22%3A%22%22%2C%22r%22%3A%5B%7B%22n%22%3A%22HDDocumentType%22%2C%22t%22%3A%5B%22%5C%22%C7%82%C7%824e61736a6f6e616c65206661676c696765207265746e696e67736c696e6a6572%5C%22%22%2C%22equals(%5C%22Nasjonale%20faglige%20retningslinjer%5C%22)%22%5D%2C%22o%22%3A%22and%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D%5D%7D");
-                return true;
-            }
             default:
             {
                 return super.onOptionsItemSelected(item);
@@ -289,22 +300,106 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
     }
 
     // Search
-    private void search(String string)
+    private void search(final String searchString)
     {
-        if(string.equals("")) return;
+        if(searchString.equals("")) return;
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING, string);
+        mToolbarSearchLayout.setVisibility(View.GONE);
+        mToolbarSearchEditText.setText("");
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        mSqLiteDatabase.delete(NasjonaleRetningslinjerSQLiteHelper.TABLE, NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(string)+" COLLATE NOCASE", null);
-        mSqLiteDatabase.insert(NasjonaleRetningslinjerSQLiteHelper.TABLE, null, contentValues);
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
         try
         {
-            Intent intent = new Intent(mContext, NasjonaleRetningslinjerWebViewActivity.class);
-            intent.putExtra("search", string);
-            intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#Default=%7B%22k%22%3A%22"+URLEncoder.encode(string.toLowerCase(), "utf-8")+"%22%2C%22r%22%3A%5B%7B%22n%22%3A%22HDDocumentType%22%2C%22t%22%3A%5B%22%5C%22%C7%82%C7%824e61736a6f6e616c65206661676c696765207265746e696e67736c696e6a6572%5C%22%22%2C%22equals(%5C%22Nasjonale%20faglige%20retningslinjer%5C%22)%22%5D%2C%22o%22%3A%22and%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D%5D%7D");
-            startActivity(intent);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONObject>()
+            {
+                @Override
+                public void onResponse(JSONObject response)
+                {
+                    mProgressBar.setVisibility(View.GONE);
+
+                    try
+                    {
+                        final String correctSearchString = response.getString("correct");
+
+                        if(correctSearchString.equals(""))
+                        {
+                            saveRecentSearch(searchString);
+
+                            try
+                            {
+                                Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                                intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+searchString+"\"");
+                                intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                                startActivity(intent);
+                            }
+                            catch(Exception e)
+                            {
+                                Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+                            }
+                        }
+                        else
+                        {
+                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                            {
+                                @Override
+                                public void onPositive(MaterialDialog dialog)
+                                {
+                                    saveRecentSearch(correctSearchString);
+
+                                    try
+                                    {
+                                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+correctSearchString+"\"");
+                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(correctSearchString.toLowerCase(), "utf-8"));
+                                        startActivity(intent);
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+                                    }
+                                }
+
+                                @Override
+                                public void onNegative(MaterialDialog dialog)
+                                {
+                                    saveRecentSearch(searchString);
+
+                                    try
+                                    {
+                                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+searchString+"\"");
+                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                                        startActivity(intent);
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+                                    }
+                                }
+                            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+                    }
+                }
+            }, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    mProgressBar.setVisibility(View.GONE);
+
+                    Log.e("NasjonaleRetningslinjer", error.toString());
+                }
+            });
+
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            requestQueue.add(jsonObjectRequest);
         }
         catch(Exception e)
         {
@@ -312,10 +407,13 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
         }
     }
 
-    private void getRecentSearches()
+    private void saveRecentSearch(String searchString)
     {
-        GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-        getRecentSearchesTask.execute();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING, searchString);
+
+        mSqLiteDatabase.delete(NasjonaleRetningslinjerSQLiteHelper.TABLE, NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+        mSqLiteDatabase.insert(NasjonaleRetningslinjerSQLiteHelper.TABLE, null, contentValues);
     }
 
     private void clearRecentSearches()
@@ -325,6 +423,12 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
         mTools.showToast(getString(R.string.nasjonale_retningslinjer_recent_searches_removed), 0);
 
         getRecentSearches();
+    }
+
+    private void getRecentSearches()
+    {
+        GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
+        getRecentSearchesTask.execute();
     }
 
     private class GetRecentSearchesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>

@@ -103,7 +103,7 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, ClinicalTrialsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
                     mContext.startActivity(intent);
@@ -115,7 +115,7 @@ public class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTri
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, ClinicalTrialsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
                     mContext.startActivity(intent);

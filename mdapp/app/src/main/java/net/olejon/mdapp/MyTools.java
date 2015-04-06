@@ -165,27 +165,6 @@ class MyTools
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    // Open URI
-    public void openUri(String uri)
-    {
-        if(uri.equals(""))
-        {
-            showToast(mContext.getString(R.string.mytools_open_uri_invalid), 1);
-        }
-        else
-        {
-            try
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                mContext.startActivity(intent);
-            }
-            catch(Exception e)
-            {
-                Log.e("MyTools", Log.getStackTraceString(e));
-            }
-        }
-    }
-
     // Download file
     public void downloadFile(String title, String uri)
     {

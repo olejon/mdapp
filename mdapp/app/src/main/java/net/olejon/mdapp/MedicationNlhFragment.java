@@ -35,6 +35,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 public class MedicationNlhFragment extends Fragment
@@ -63,6 +65,10 @@ public class MedicationNlhFragment extends Fragment
 
         // Progress bar
         final ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.medication_toolbar_progressbar_horizontal);
+
+        // Toolbar
+        final LinearLayout toolbarSearchLayout = (LinearLayout) activity.findViewById(R.id.medication_toolbar_search_layout);
+        final EditText toolbarSearchEditText = (EditText) activity.findViewById(R.id.medication_toolbar_search);
 
         // Web view
         WEBVIEW = (WebView) viewGroup.findViewById(R.id.medication_nlh_content);
@@ -112,6 +118,9 @@ public class MedicationNlhFragment extends Fragment
                 {
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(newProgress);
+
+                    toolbarSearchLayout.setVisibility(View.GONE);
+                    toolbarSearchEditText.setText("");
                 }
             }
         });

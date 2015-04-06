@@ -140,7 +140,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
             {
                 try
                 {
-                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.poisonings_cards_search)+": \""+searchString+"\"");
                     intent.putExtra("uri", "https://helsenorge.no/sok/giftinformasjon/?k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
                     mContext.startActivity(intent);
@@ -159,7 +159,7 @@ public class PoisoningsCardsActivity extends ActionBarActivity
             {
                 try
                 {
-                    Intent intent = new Intent(mContext, PoisoningsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.poisonings_cards_search)+": \""+searchString+"\"");
                     intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/alle-anbefalinger?cx=005475784484624053973%3A3bnj2dj_uei&ie=UTF-8&q="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&sa=S%C3%B8k");
                     mContext.startActivity(intent);
@@ -263,32 +263,6 @@ public class PoisoningsCardsActivity extends ActionBarActivity
             {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
                 startActivity(intent);
-                return true;
-            }
-            case R.id.poisonings_cards_menu_helsenorge_uri:
-            {
-                try
-                {
-                    mTools.openUri("https://helsenorge.no/sok/giftinformasjon/?k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
-                }
-                catch(Exception e)
-                {
-                    Log.e("PoisoningsCardsActivity", Log.getStackTraceString(e));
-                }
-
-                return true;
-            }
-            case R.id.poisonings_cards_menu_helsebiblioteket_uri:
-            {
-                try
-                {
-                    mTools.openUri("http://www.helsebiblioteket.no/forgiftninger/alle-anbefalinger?cx=005475784484624053973%3A3bnj2dj_uei&ie=UTF-8&q="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&sa=S%C3%B8k");
-                }
-                catch(Exception e)
-                {
-                    Log.e("PoisoningsCardsActivity", Log.getStackTraceString(e));
-                }
-
                 return true;
             }
             default:

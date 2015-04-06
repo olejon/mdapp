@@ -2,7 +2,13 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/medication_inner_layout" style="@style/medication_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/medication_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+    <android.support.v7.widget.Toolbar android:id="@+id/medication_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+
+        <LinearLayout android:id="@+id/medication_toolbar_search_layout" style="@style/toolbar_search_layout">
+            <EditText android:id="@+id/medication_toolbar_search" android:hint="@string/main_webview_toolbar_search_hint" style="@style/main_webview_toolbar_search_edittext"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
 
     <ProgressBar android:id="@+id/medication_toolbar_progressbar_horizontal" android:layout_alignParentTop="true" android:max="100" style="@style/toolbar_progressbar_horizontal"/>
 

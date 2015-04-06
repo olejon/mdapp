@@ -11,6 +11,11 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- Main web view -->
+    <style name="main_webview_toolbar_search_count_textview_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
     <!-- Medication -->
     <style name="medication_prescription_group_base">
         <item name="android:fontFamily">sans-serif-light</item>

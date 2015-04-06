@@ -222,7 +222,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, InteractionsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", "PubMed");
                     intent.putExtra("uri", pubmedSearchUri);
                     mContext.startActivity(intent);
@@ -234,7 +234,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, InteractionsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", title);
                     intent.putExtra("uri", uri);
                     mContext.startActivity(intent);

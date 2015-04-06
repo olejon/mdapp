@@ -48,6 +48,9 @@ public class WelcomeActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
+        // Transition
+        overridePendingTransition(R.anim.welcome_start, 0);
+
         // Layout
         setContentView(R.layout.activity_welcome);
 

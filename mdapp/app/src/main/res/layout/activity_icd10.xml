@@ -2,13 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/icd10_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/icd10_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
-        <ProgressBar android:id="@+id/icd10_toolbar_progressbar" style="@style/toolbar_progressbar"/>
-    </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.Toolbar android:id="@+id/icd10_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/icd10_swipe_refresh_layout" android:layout_below="@+id/icd10_toolbar" style="@style/swipe_refresh_layout">
-        <ListView android:id="@+id/icd10_list" style="@style/icd10_list_layout"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <ListView android:id="@+id/icd10_list" android:layout_below="@+id/icd10_toolbar" style="@style/icd10_list_layout"/>
 
     <View android:layout_below="@+id/icd10_toolbar" style="@style/toolbar_shadow"/>
 

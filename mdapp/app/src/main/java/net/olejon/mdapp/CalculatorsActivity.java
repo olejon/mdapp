@@ -22,6 +22,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -129,9 +130,7 @@ public class CalculatorsActivity extends ActionBarActivity
         });
 
         // Information dialog
-        boolean hideInformationDialog = mTools.getSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG");
-
-        if(!hideInformationDialog) showInformationDialog();
+        if(!mTools.getSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG")) showInformationDialog();
     }
 
     // Menu
@@ -179,7 +178,10 @@ public class CalculatorsActivity extends ActionBarActivity
             {
                 mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
 
-                mTools.openUri("https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
+                Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                intent.putExtra("title", getString(R.string.calculators_information_dialog_title));
+                intent.putExtra("uri", "https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
+                startActivity(intent);
             }
         }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
     }
@@ -190,98 +192,115 @@ public class CalculatorsActivity extends ActionBarActivity
         EditText weightEditText = (EditText) findViewById(R.id.calculators_bmi_weight);
         EditText heightEditText = (EditText) findViewById(R.id.calculators_bmi_height);
 
-        try
-        {
-            float weight = Float.parseFloat(weightEditText.getText().toString());
-            float height = Float.parseFloat(heightEditText.getText().toString());
+        String weightEditTextValue = weightEditText.getText().toString();
+        String heightEditTextValue = heightEditText.getText().toString();
 
-            float result = (weight) / ((height / 100) * (height / 100));
-
-            String interpretation = "<font color=\"#4caf50\">"+getString(R.string.calculators_bmi_normal_weight)+"</font>";
-
-            if(result < 18)
-            {
-                interpretation = "<font color=\"#ff9800\">"+getString(R.string.calculators_bmi_under_weight)+"</font>";
-            }
-            else if(result >= 25 && result < 30)
-            {
-                interpretation = "<font color=\"#ff9800\">"+getString(R.string.calculators_bmi_over_weight)+"</font>";
-            }
-            else if(result >= 30 && result < 35)
-            {
-                interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_1_weight)+"</font>";
-            }
-            else if(result >= 35 && result < 40)
-            {
-                interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_2_weight)+"</font>";
-            }
-            else if(result >= 40)
-            {
-                interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_3_weight)+"</font>";
-            }
-
-            String bmi = String.format("%.1f", result);
-
-            new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_bmi_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_bmi_dialog_message_first)+"<br><b>"+bmi+"</b><br><br>"+getString(R.string.calculators_bmi_dialog_message_second)+"<br><b>"+interpretation+"</b><br><br><small><i>"+getString(R.string.calculators_bmi_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_bmi_dialog_positive_button)).neutralText(getString(R.string.calculators_bmi_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
-            {
-                @Override
-                public void onNeutral(MaterialDialog dialog)
-                {
-                    showInformationDialog();
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
-        }
-        catch(Exception e)
+        if(weightEditTextValue.equals("") || heightEditTextValue.equals(""))
         {
             mTools.showToast(getString(R.string.calculators_bmi_invalid_values), 1);
+        }
+        else
+        {
+            try
+            {
+                float weight = Float.parseFloat(weightEditTextValue);
+                float height = Float.parseFloat(heightEditTextValue);
 
-            Log.e("CalculatorsActivity", Log.getStackTraceString(e));
+                float result = (weight) / ((height / 100) * (height / 100));
+
+                String interpretation = "<font color=\"#4caf50\">"+getString(R.string.calculators_bmi_normal_weight)+"</font>";
+
+                if(result < 18)
+                {
+                    interpretation = "<font color=\"#ff9800\">"+getString(R.string.calculators_bmi_under_weight)+"</font>";
+                }
+                else if(result >= 25 && result < 30)
+                {
+                    interpretation = "<font color=\"#ff9800\">"+getString(R.string.calculators_bmi_over_weight)+"</font>";
+                }
+                else if(result >= 30 && result < 35)
+                {
+                    interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_1_weight)+"</font>";
+                }
+                else if(result >= 35 && result < 40)
+                {
+                    interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_2_weight)+"</font>";
+                }
+                else if(result >= 40)
+                {
+                    interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_3_weight)+"</font>";
+                }
+
+                String bmi = String.format("%.1f", result);
+
+                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_bmi_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_bmi_dialog_message_first)+"<br><b>"+bmi+"</b><br><br>"+getString(R.string.calculators_bmi_dialog_message_second)+"<br><b>"+interpretation+"</b><br><br><small><i>"+getString(R.string.calculators_bmi_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_bmi_dialog_positive_button)).neutralText(getString(R.string.calculators_bmi_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onNeutral(MaterialDialog dialog)
+                    {
+                        showInformationDialog();
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+            }
+            catch(Exception e)
+            {
+                mTools.showToast(getString(R.string.calculators_bmi_invalid_values), 1);
+
+                Log.e("CalculatorsActivity", Log.getStackTraceString(e));
+            }
         }
     }
 
     private void calculateWaistMeasurement()
     {
-        EditText weightEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
+        EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
 
-        try
-        {
-            String value = weightEditText.getText().toString();
+        String waistMeasurementEditTextValue = waistMeasurementEditText.getText().toString();
 
-            int waistMeasurement = Integer.parseInt(value);
-
-            String interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font>";
-
-            if(waistMeasurement > 80 && waistMeasurement <= 88)
-            {
-                interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#ff9800\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_over_weight)+"</b></font>";
-            }
-            else if(waistMeasurement > 88 && waistMeasurement <= 94)
-            {
-                interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
-            }
-            else if(waistMeasurement > 94 && waistMeasurement <= 102)
-            {
-                interpretation = "<font color=\"#ff9800\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_over_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
-            }
-            else if(waistMeasurement > 102)
-            {
-                interpretation = "<font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
-            }
-
-            new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_waist_measurement_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_waist_measurement_dialog_message_first)+"<br><b>"+value+" cm</b><br><br>"+getString(R.string.calculators_waist_measurement_dialog_message_second)+"<br>"+interpretation+"<br><br><small><i>"+getString(R.string.calculators_waist_measurement_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_waist_measurement_dialog_positive_button)).neutralText(getString(R.string.calculators_waist_measurement_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
-            {
-                @Override
-                public void onNeutral(MaterialDialog dialog)
-                {
-                    showInformationDialog();
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
-        }
-        catch(Exception e)
+        if(waistMeasurementEditTextValue.equals(""))
         {
             mTools.showToast(getString(R.string.calculators_waist_measurement_invalid_value), 1);
+        }
+        else
+        {
+            try
+            {
+                int waistMeasurement = Integer.parseInt(waistMeasurementEditTextValue);
 
-            Log.e("CalculatorsActivity", Log.getStackTraceString(e));
+                String interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font>";
+
+                if(waistMeasurement > 80 && waistMeasurement <= 88)
+                {
+                    interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#ff9800\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_over_weight)+"</b></font>";
+                }
+                else if(waistMeasurement > 88 && waistMeasurement <= 94)
+                {
+                    interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
+                }
+                else if(waistMeasurement > 94 && waistMeasurement <= 102)
+                {
+                    interpretation = "<font color=\"#ff9800\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_over_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
+                }
+                else if(waistMeasurement > 102)
+                {
+                    interpretation = "<font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
+                }
+
+                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_waist_measurement_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_waist_measurement_dialog_message_first)+"<br><b>"+waistMeasurementEditTextValue+" cm</b><br><br>"+getString(R.string.calculators_waist_measurement_dialog_message_second)+"<br>"+interpretation+"<br><br><small><i>"+getString(R.string.calculators_waist_measurement_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_waist_measurement_dialog_positive_button)).neutralText(getString(R.string.calculators_waist_measurement_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onNeutral(MaterialDialog dialog)
+                    {
+                        showInformationDialog();
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+            }
+            catch(Exception e)
+            {
+                mTools.showToast(getString(R.string.calculators_waist_measurement_invalid_value), 1);
+
+                Log.e("CalculatorsActivity", Log.getStackTraceString(e));
+            }
         }
     }
 }

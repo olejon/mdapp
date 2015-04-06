@@ -78,13 +78,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="main_webview">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
     <style name="main_medications_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -257,6 +250,25 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="main_webview_toolbar_search_edittext" parent="toolbar_search_edittext">
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:inputType">textAutoCorrect</item>
+    </style>
+
+    <style name="main_webview_toolbar_search_count_textview" parent="main_webview_toolbar_search_count_textview_base">
+        <item name="android:layout_width">128dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="main_webview_toolbar_search_count_textview_base"/>
+
     <style name="main_webview_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -364,20 +376,6 @@
     <style name="medication_felleskatalogen_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
-    <!-- Medication web view -->
-    <style name="medication_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="medication_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -606,7 +604,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">52dp</item>
-        <item name="android:layout_marginRight">28dp</item>
         <item name="android:paddingBottom">2dp</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -619,17 +616,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">52dp</item>
-        <item name="android:layout_marginRight">28dp</item>
         <item name="android:paddingTop">2dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/dark_grey</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_card_right_icon">
-        <item name="android:layout_width">24dp</item>
-        <item name="android:layout_height">24dp</item>
     </style>
 
     <!-- Diseases and treatments search web view-->
@@ -780,20 +771,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
-    </style>
-
-    <!-- Legevakthåndboken web view -->
-    <style name="lvh_categories_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="lvh_categories_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        i<item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
     <!-- Interactions -->
@@ -977,20 +954,6 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
-    <!-- Interactions web view -->
-    <style name="interactions_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="interactions_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
     <!-- Poisonings -->
     <style name="poisonings_layout">
         <item name="android:layout_width">match_parent</item>
@@ -1167,20 +1130,6 @@
         <item name="android:textColor">@color/teal</item>
     </style>
 
-    <!-- Poisonings web view -->
-    <style name="poisonings_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="poisonings_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
     <!-- Nasjonale retningslinjer -->
     <style name="nasjonale_retningslinjer_layout">
         <item name="android:layout_width">match_parent</item>
@@ -1245,20 +1194,6 @@
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
-    </style>
-
-    <!-- Nasjonale retningslinjer web view -->
-    <style name="nasjonale_retningslinjer_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="nasjonale_retningslinjer_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
     <!-- Clinical trials -->
@@ -1440,20 +1375,6 @@
         <item name="android:textColor">@color/teal</item>
     </style>
 
-    <!-- Clinical trials web view -->
-    <style name="clinicaltrials_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="clinicaltrials_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
     <!-- ATC -->
     <style name="atc_layout">
         <item name="android:layout_width">match_parent</item>
@@ -1598,8 +1519,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingBottom">2dp</item>
-        <item name="android:drawableLeft">@drawable/ic_view_list_grey600_24dp</item>
-        <item name="android:drawablePadding">8dp</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -1680,20 +1599,6 @@
         <item name="android:layout_weight">1</item>
         <item name="android:paddingLeft">2dp</item>
         <item name="android:textSize">16sp</item>
-    </style>
-
-    <!-- ICD-10 web view -->
-    <style name="icd10_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="icd10_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
     <!-- Manufacturers -->
@@ -2010,20 +1915,6 @@
         <item name="android:textColor">@color/teal</item>
     </style>
 
-    <!-- Notifications from SLV web view -->
-    <style name="notifications_from_slv_webview_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="notifications_from_slv_webview_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
     <!-- Calculators -->
     <style name="calculators_layout">
         <item name="android:layout_width">match_parent</item>
@@ -2275,10 +2166,6 @@
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="notes_edit_patient_medications_interactions_button" parent="notes_edit_button">
-        <item name="android:visibility">gone</item>
     </style>
 
     <!-- Notes edit medications -->
@@ -2679,13 +2566,13 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="toolbar_clear_search_button">
+    <style name="toolbar_button">
         <item name="android:layout_width">96dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:background">@drawable/main_toolbar_clear_search</item>
+        <item name="android:background">@drawable/toolbar_button</item>
     </style>
 
     <style name="toolbar_shadow">

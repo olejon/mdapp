@@ -29,6 +29,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,11 +39,19 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -59,13 +68,18 @@ public class MedicationActivity extends ActionBarActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private InputMethodManager mInputMethodManager;
+
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
     private Toolbar mToolbar;
     private MenuItem mFavoriteMenuItem;
     private MenuItem mAtcCodeMenuItem;
+    private LinearLayout mToolbarSearchLayout;
+    private EditText mToolbarSearchEditText;
     private ViewPager mViewPager;
+    private WebView mWebView;
 
     private long medicationId;
     private String medicationPrescriptionGroup;
@@ -96,6 +110,9 @@ public class MedicationActivity extends ActionBarActivity
             return;
         }
 
+        // Input manager
+        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
         // Layout
         setContentView(R.layout.activity_medication);
 
@@ -106,8 +123,59 @@ public class MedicationActivity extends ActionBarActivity
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.medication_toolbar_search_layout);
+        mToolbarSearchEditText = (EditText) findViewById(R.id.medication_toolbar_search);
+
         // View pager
         mViewPager = (ViewPager) findViewById(R.id.medication_pager);
+
+        // Find in text
+        mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+            {
+                String find = mToolbarSearchEditText.getText().toString().trim();
+
+                if(find.equals(""))
+                {
+                    mWebView.clearMatches();
+                }
+                else
+                {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    {
+                        mWebView.findAllAsync(find);
+                    }
+                    else
+                    {
+                        //noinspection deprecation
+                        mWebView.findAll(find);
+                    }
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+            {
+                if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     // Destroy activity
@@ -127,6 +195,13 @@ public class MedicationActivity extends ActionBarActivity
         if(MedicationNlhFragment.WEBVIEW == null || MedicationFelleskatalogenFragment.WEBVIEW == null)
         {
             super.onBackPressed();
+        }
+        else if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+        {
+            mToolbarSearchLayout.setVisibility(View.GONE);
+            mToolbarSearchEditText.setText("");
+
+            mWebView.clearMatches();
         }
         else
         {
@@ -178,6 +253,36 @@ public class MedicationActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            case R.id.medication_menu_find_in_text:
+            {
+                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+                {
+                    mWebView.findNext(true);
+
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+                }
+                else
+                {
+                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                    mToolbarSearchEditText.requestFocus();
+
+                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+                }
+
+                if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
+                {
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                    {
+                        @Override
+                        public void onPositive(MaterialDialog dialog)
+                        {
+                            mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
+                        }
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                }
+
                 return true;
             }
             case R.id.medication_menu_favorite:
@@ -238,7 +343,7 @@ public class MedicationActivity extends ActionBarActivity
             {
                 try
                 {
-                    Intent intent = new Intent(mContext, MedicationWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.medication_menu_slv));
                     intent.putExtra("uri", "http://www.legemiddelverket.no/Legemiddelsoek/Sider/default.aspx?searchquery="+URLEncoder.encode(medicationName, "utf-8"));
                     startActivity(intent);
@@ -470,22 +575,12 @@ public class MedicationActivity extends ActionBarActivity
                 {
                     case "A":
                     {
-                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.main_medications_list_item_circle_red);
+                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.medication_prescription_group_red);
                         break;
                     }
                     case "B":
                     {
-                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.main_medications_list_item_circle_orange);
-                        break;
-                    }
-                    case "C":
-                    {
-                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.main_medications_list_item_circle_green);
-                        break;
-                    }
-                    case "F":
-                    {
-                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.main_medications_list_item_circle_green);
+                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.medication_prescription_group_orange);
                         break;
                     }
                 }
@@ -550,6 +645,20 @@ public class MedicationActivity extends ActionBarActivity
                     mViewPager.setAdapter(pagerAdapter);
                     mViewPager.setPageTransformer(true, new ViewPagerTransformer());
 
+                    mWebView = MedicationNlhFragment.WEBVIEW;
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    {
+                        mWebView.setFindListener(new WebView.FindListener()
+                        {
+                            @Override
+                            public void onFindResultReceived(int i, int i2, boolean b)
+                            {
+                                if(i2 == 0) mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
+                            }
+                        });
+                    }
+
                     PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.medication_tabs);
                     pagerSlidingTabStrip.setViewPager(mViewPager);
 
@@ -559,12 +668,19 @@ public class MedicationActivity extends ActionBarActivity
                         public void onPageSelected(int position)
                         {
                             mViewPagerPosition = position;
+
+                            mToolbarSearchLayout.setVisibility(View.GONE);
+                            mToolbarSearchEditText.setText("");
+
+                            mWebView.clearMatches();
+
+                            mWebView = (mViewPagerPosition == 0) ? MedicationNlhFragment.WEBVIEW : MedicationFelleskatalogenFragment.WEBVIEW;
+
+                            mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
                         }
                     });
 
-                    boolean hideMedicationTipDialog = mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_140");
-
-                    if(!hideMedicationTipDialog)
+                    if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_140"))
                     {
                         new MaterialDialog.Builder(mContext).title(getString(R.string.medication_tip_dialog_title)).content(getString(R.string.medication_tip_dialog_message)).positiveText(getString(R.string.medication_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
                         {

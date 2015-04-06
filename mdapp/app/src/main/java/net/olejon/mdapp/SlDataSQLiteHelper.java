@@ -28,7 +28,7 @@ import android.util.Log;
 
 class SlDataSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final int DB_VERSION = 16;
+    private static final int DB_VERSION = 22;
 
     public static final String DB_NAME = "data.db";
 
@@ -41,6 +41,7 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
     public static final String TABLE_ATC_THERAPEUTIC_GROUPS = "atc_therapeutic_groups";
     public static final String TABLE_ATC_SUBSTANCES_GROUPS = "atc_substances_groups";
     public static final String TABLE_ATC_CODES = "atc_codes";
+    public static final String TABLE_ICD_10 = "icd_10";
     public static final String TABLE_MANUFACTURERS = "manufacturers";
     public static final String TABLE_MUNICIPALITIES = "municipalities";
     public static final String TABLE_PHARMACIES = "pharmacies";
@@ -76,6 +77,12 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
     private static final String ATC_CODES_COLUMN_ID = "_id";
     public static final String ATC_CODES_COLUMN_CODE = "code";
     public static final String ATC_CODES_COLUMN_NAME = "name";
+
+    public static final String ICD_10_COLUMN_ID = "_id";
+    public static final String ICD_10_COLUMN_CHAPTER = "chapter";
+    public static final String ICD_10_COLUMN_CODES = "codes";
+    public static final String ICD_10_COLUMN_NAME = "name";
+    public static final String ICD_10_COLUMN_DATA = "data";
 
     public static final String MANUFACTURERS_COLUMN_ID = "_id";
     public static final String MANUFACTURERS_COLUMN_NAME = "name";
@@ -115,6 +122,7 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
                 db.execSQL("CREATE TABLE "+TABLE_ATC_THERAPEUTIC_GROUPS+"("+ATC_THERAPEUTIC_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" TEXT, "+ATC_THERAPEUTIC_GROUPS_COLUMN_NAME+" TEXT);");
                 db.execSQL("CREATE TABLE "+TABLE_ATC_SUBSTANCES_GROUPS+"("+ATC_SUBSTANCES_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" TEXT, "+ATC_SUBSTANCES_GROUPS_COLUMN_NAME+" TEXT);");
                 db.execSQL("CREATE TABLE "+TABLE_ATC_CODES+"("+ATC_CODES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_CODES_COLUMN_CODE+" TEXT, "+ATC_CODES_COLUMN_NAME+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ICD_10+"("+ICD_10_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ICD_10_COLUMN_CHAPTER+" TEXT, "+ICD_10_COLUMN_CODES+" TEXT, "+ICD_10_COLUMN_NAME+" TEXT, "+ICD_10_COLUMN_DATA+" TEXT);");
                 db.execSQL("CREATE TABLE "+TABLE_MANUFACTURERS+"("+MANUFACTURERS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MANUFACTURERS_COLUMN_NAME+" TEXT);");
                 db.execSQL("CREATE TABLE "+TABLE_MUNICIPALITIES+"("+MUNICIPALITIES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MUNICIPALITIES_COLUMN_NAME+" TEXT);");
                 db.execSQL("CREATE TABLE "+TABLE_PHARMACIES+"("+PHARMACIES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+PHARMACIES_COLUMN_NAME+" TEXT, "+PHARMACIES_COLUMN_MUNICIPALITY+" TEXT, "+PHARMACIES_COLUMN_ADDRESS+" TEXT);");
@@ -142,6 +150,7 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_THERAPEUTIC_GROUPS);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_SUBSTANCES_GROUPS);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_CODES);
+                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ICD_10);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_MANUFACTURERS);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_MUNICIPALITIES);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_PHARMACIES);

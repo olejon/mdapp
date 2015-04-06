@@ -122,7 +122,7 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                         }
                         else
                         {
-                            Intent intent = new Intent(mContext, NotificationsFromSlvWebViewActivity.class);
+                            Intent intent = new Intent(mContext, MainWebViewActivity.class);
                             intent.putExtra("title", title);
                             intent.putExtra("uri", uri);
                             mContext.startActivity(intent);
@@ -141,7 +141,7 @@ public class NotificationsFromSlvAdapter extends RecyclerView.Adapter<Notificati
                         }
                         else
                         {
-                            Intent intent = new Intent(mContext, NotificationsFromSlvWebViewActivity.class);
+                            Intent intent = new Intent(mContext, MainWebViewActivity.class);
                             intent.putExtra("title", title);
                             intent.putExtra("uri", uri);
                             mContext.startActivity(intent);

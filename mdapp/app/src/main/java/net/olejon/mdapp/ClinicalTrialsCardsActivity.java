@@ -35,7 +35,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -138,7 +137,7 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
             {
                 try
                 {
-                    Intent intent = new Intent(mContext, ClinicalTrialsWebViewActivity.class);
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
                     intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?term="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&no_unk=Y");
                     mContext.startActivity(intent);
@@ -222,13 +221,6 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
 
     // Menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_clinicaltrials_cards, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -236,19 +228,6 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.clinicaltrials_cards_menu_uri:
-            {
-                try
-                {
-                    mTools.openUri("https://clinicaltrials.gov/ct2/results?term="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&no_unk=Y");
-                }
-                catch(Exception e)
-                {
-                    Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
-                }
-
                 return true;
             }
             default:

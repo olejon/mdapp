@@ -55,6 +55,7 @@ public class WelcomeFourthFragment extends Fragment
                 mTools.setSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN", true);
 
                 mActivity.finish();
+                mActivity.overridePendingTransition(0, R.anim.welcome_finish);
             }
         });
 

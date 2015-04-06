@@ -41,11 +41,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
         <activity
-            android:name=".MedicationWebViewActivity"
-            android:parentActivityName=".MedicationActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MedicationActivity"/>
-        </activity>
-        <activity
             android:name=".SubstanceActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
@@ -76,11 +71,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhActivity"/>
         </activity>
         <activity
-            android:name=".LvhCategoriesWebViewActivity"
-            android:parentActivityName=".LvhCategoriesActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhCategoriesActivity"/>
-        </activity>
-        <activity
             android:name=".InteractionsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
@@ -89,11 +79,6 @@
             android:name=".InteractionsCardsActivity"
             android:parentActivityName=".InteractionsActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".InteractionsActivity"/>
-        </activity>
-        <activity
-            android:name=".InteractionsWebViewActivity"
-            android:parentActivityName=".InteractionsCardsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".InteractionsCardsActivity"/>
         </activity>
         <activity
             android:name=".PoisoningsActivity"
@@ -106,19 +91,9 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsActivity"/>
         </activity>
         <activity
-            android:name=".PoisoningsWebViewActivity"
-            android:parentActivityName=".PoisoningsCardsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsCardsActivity"/>
-        </activity>
-        <activity
             android:name=".NasjonaleRetningslinjerActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".NasjonaleRetningslinjerWebViewActivity"
-            android:parentActivityName=".NasjonaleRetningslinjerActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NasjonaleRetningslinjerActivity"/>
         </activity>
         <activity
             android:name=".ClinicalTrialsActivity"
@@ -129,11 +104,6 @@
             android:name=".ClinicalTrialsCardsActivity"
             android:parentActivityName=".ClinicalTrialsActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsActivity"/>
-        </activity>
-        <activity
-            android:name=".ClinicalTrialsWebViewActivity"
-            android:parentActivityName=".ClinicalTrialsCardsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsCardsActivity"/>
         </activity>
         <activity
             android:name=".AtcActivity"
@@ -154,11 +124,6 @@
             android:name=".Icd10ChapterActivity"
             android:parentActivityName=".Icd10Activity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
-        </activity>
-        <activity
-            android:name=".Icd10WebViewActivity"
-            android:parentActivityName=".Icd10ChapterActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10ChapterActivity"/>
         </activity>
         <activity
             android:name=".ManufacturersActivity"
@@ -189,11 +154,6 @@
             android:name=".NotificationsFromSlvActivity"
             android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".NotificationsFromSlvWebViewActivity"
-            android:parentActivityName=".NotificationsFromSlvActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotificationsFromSlvActivity"/>
         </activity>
         <activity
             android:name=".CalculatorsActivity"

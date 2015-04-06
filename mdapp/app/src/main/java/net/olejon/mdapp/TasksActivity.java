@@ -23,6 +23,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -35,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -58,6 +60,9 @@ public class TasksActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Input manager
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Layout
         setContentView(R.layout.activity_tasks);
@@ -100,6 +105,13 @@ public class TasksActivity extends ActionBarActivity
                             getTasks();
                         }
                     }
+                }).showListener(new DialogInterface.OnShowListener()
+                {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface)
+                    {
+                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                    }
                 }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
             }
         });
@@ -116,9 +128,7 @@ public class TasksActivity extends ActionBarActivity
         getTasks();
 
         // Tip dialog
-        boolean hideTipDialog = mTools.getSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG");
-
-        if(!hideTipDialog)
+        if(!mTools.getSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG"))
         {
             new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_tip_dialog_title)).content(getString(R.string.tasks_tip_dialog_message)).positiveText(getString(R.string.tasks_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
             {

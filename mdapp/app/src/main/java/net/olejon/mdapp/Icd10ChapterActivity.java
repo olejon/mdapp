@@ -23,12 +23,14 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -50,10 +52,11 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -72,20 +75,29 @@ public class Icd10ChapterActivity extends ActionBarActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private SQLiteDatabase mSqLiteDatabase;
+    private Cursor mCursor;
+
     private InputMethodManager mInputMethodManager;
 
+    private Toolbar mToolbar;
     private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
     private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
+    private View mListViewEmpty;
 
-    private JSONArray mResponse;
+    private String mTitle;
 
-    private ArrayList<String> mCodesArrayList;
+    private long mChapterId;
 
     private boolean mActivityPaused = false;
+
+    private JSONArray mData;
+
+    private ArrayList<String> mCodesArrayList;
+    private ArrayList<String> mNamesArrayList;
 
     // Create activity
     @Override
@@ -93,14 +105,10 @@ public class Icd10ChapterActivity extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
 
-        // Connected?
-        if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
-
         // Intent
         final Intent intent = getIntent();
 
-        final String title = intent.getStringExtra("title");
-        final int chapter = intent.getIntExtra("chapter", 0);
+        mChapterId = intent.getLongExtra("chapter", 0);
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -109,10 +117,10 @@ public class Icd10ChapterActivity extends ActionBarActivity
         setContentView(R.layout.activity_icd10_chapter);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_chapter_toolbar);
-        toolbar.setTitle(title);
+        mToolbar = (Toolbar) findViewById(R.id.icd10_chapter_toolbar);
+        mToolbar.setTitle("");
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_chapter_toolbar_search_layout);
@@ -120,37 +128,15 @@ public class Icd10ChapterActivity extends ActionBarActivity
 
         ImageButton imageButton = (ImageButton) findViewById(R.id.icd10_chapter_toolbar_clear_search);
 
-        imageButton.setOnClickListener(new View.OnClickListener()
-        {
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 mToolbarSearchEditText.setText("");
             }
         });
 
         // Progress bar
         mProgressBar = (ProgressBar) findViewById(R.id.icd10_chapter_toolbar_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        // Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.icd10_chapter_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_green, R.color.accent_purple, R.color.accent_orange);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-                {
-                    mToolbarSearchLayout.setVisibility(View.GONE);
-                    mToolbarSearchEditText.setText("");
-                }
-
-                getData(chapter, false);
-            }
-        });
 
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.icd10_chapter_fab);
 
@@ -168,9 +154,11 @@ public class Icd10ChapterActivity extends ActionBarActivity
 
         // List
         mListView = (ListView) findViewById(R.id.icd10_chapter_list);
+        mListViewEmpty = findViewById(R.id.icd10_chapter_list_empty);
 
         // Get data
-        getData(chapter, true);
+        GetDataTask getDataTask = new GetDataTask();
+        getDataTask.execute();
     }
 
     // Activity result
@@ -196,6 +184,16 @@ public class Icd10ChapterActivity extends ActionBarActivity
         super.onPause();
 
         mActivityPaused = true;
+    }
+
+    // Destroy activity
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
     }
 
     // Back button
@@ -277,17 +275,18 @@ public class Icd10ChapterActivity extends ActionBarActivity
         final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
 
         mCodesArrayList = new ArrayList<>();
+        mNamesArrayList = new ArrayList<>();
 
         String[] fromColumns = new String[] {"code", "name"};
         int[] toViews = new int[] {R.id.icd10_chapter_list_item_code, R.id.icd10_chapter_list_item_name};
 
         try
         {
-            for(int i = 0; i < mResponse.length(); i++)
+            for(int i = 0; i < mData.length(); i++)
             {
                 HashMap<String, String> item = new HashMap<>();
 
-                JSONObject itemJsonObject = mResponse.getJSONObject(i);
+                JSONObject itemJsonObject = mData.getJSONObject(i);
 
                 String code = itemJsonObject.getString("code");
                 String name = itemJsonObject.getString("name");
@@ -300,8 +299,9 @@ public class Icd10ChapterActivity extends ActionBarActivity
                     itemsArrayList.add(item);
 
                     mCodesArrayList.add(code);
+                    mNamesArrayList.add(name);
                 }
-                else if(name.matches("(?i).*?"+searchString+".*") || code.matches("(?i).*?"+searchString+".*"))
+                else if(code.matches("(?i).*?"+searchString+".*") || name.matches("(?i).*?"+searchString+".*"))
                 {
                     item.put("code", code);
                     item.put("name", name);
@@ -309,6 +309,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
                     itemsArrayList.add(item);
 
                     mCodesArrayList.add(code);
+                    mNamesArrayList.add(name);
                 }
             }
         }
@@ -320,102 +321,152 @@ public class Icd10ChapterActivity extends ActionBarActivity
         SimpleAdapter simpleAdapter = new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_icd10_chapter_list_item, fromColumns, toViews);
 
         mListView.setAdapter(simpleAdapter);
-
-        View listViewEmpty = findViewById(R.id.icd10_chapter_list_empty);
-        mListView.setEmptyView(listViewEmpty);
     }
 
     // Get data
-    private void getData(int chapter, boolean cache)
+    private class GetDataTask extends AsyncTask<Void, Void, Void>
     {
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
-        String apiUri = getString(R.string.project_website_uri)+"api/1/icd-10/chapter/?chapter="+chapter;
-
-        if(!cache) requestQueue.getCache().remove(apiUri);
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
+        @Override
+        protected void onPostExecute(Void success)
         {
-            @Override
-            public void onResponse(JSONArray response)
+            mToolbar.setTitle(mTitle);
+
+            mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
             {
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
-
-                mResponse = response;
-
-                mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
                 {
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+                    populateListView(charSequence.toString().trim());
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3)
+                {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable)
+                {
+                }
+            });
+
+            mListView.setEmptyView(mListViewEmpty);
+
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
+                {
+                    mToolbarSearchLayout.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.VISIBLE);
+
+                    try
                     {
-                        populateListView(charSequence.toString().trim());
+                        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri) + "api/1/icd-10/search/?uri=" + URLEncoder.encode("http://www.icd10data.com/Search.aspx?search=" + mCodesArrayList.get(i), "utf-8"), new Response.Listener<JSONObject>()
+                        {
+                            @Override
+                            public void onResponse(JSONObject response)
+                            {
+                                try
+                                {
+                                    mProgressBar.setVisibility(View.GONE);
+                                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
+
+                                    String uri = response.getString("uri");
+
+                                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                                    intent.putExtra("title", mNamesArrayList.get(i));
+                                    intent.putExtra("uri", uri);
+                                    startActivity(intent);
+                                }
+                                catch(Exception e)
+                                {
+                                    mProgressBar.setVisibility(View.GONE);
+
+                                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
+                                    mTools.showToast(getString(R.string.icd10_chapter_could_not_find_code), 1);
+
+                                    Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                                }
+                            }
+                        }, new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error)
+                            {
+                                mProgressBar.setVisibility(View.GONE);
+                                mToolbarSearchLayout.setVisibility(View.VISIBLE);
+
+                                mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
+                                mTools.showToast(getString(R.string.icd10_chapter_could_not_find_code), 1);
+
+                                Log.e("Icd10ChapterActivity", error.toString());
+                            }
+                        });
+
+                        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                        requestQueue.add(jsonObjectRequest);
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
                     }
 
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+                }
+            });
 
-                    @Override
-                    public void afterTextChanged(Editable editable) { }
-                });
+            populateListView(null);
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
 
-                mFloatingActionButton.startAnimation(animation);
-                mFloatingActionButton.setVisibility(View.VISIBLE);
+            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.setVisibility(View.VISIBLE);
 
-                populateListView(null);
+            if(!mActivityPaused)
+            {
+                Handler handler = new Handler();
 
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                handler.postDelayed(new Runnable()
                 {
                     @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                    public void run()
                     {
-                        try
-                        {
-                            Intent intent = new Intent(mContext, Icd10WebViewActivity.class);
-                            intent.putExtra("title", mCodesArrayList.get(i));
-                            intent.putExtra("uri", "http://www.icd10data.com/Search.aspx?search="+URLEncoder.encode(mCodesArrayList.get(i), "utf-8"));
-                            startActivity(intent);
-                        }
-                        catch(Exception e)
-                        {
-                            Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
-                        }
+                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                        mToolbarSearchEditText.requestFocus();
+
+                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                     }
-                });
+                }, 500);
+            }
+        }
 
-                if(!mActivityPaused)
+        @Override
+        protected Void doInBackground(Void... voids)
+        {
+            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+            String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_ID, SlDataSQLiteHelper.ICD_10_COLUMN_NAME, SlDataSQLiteHelper.ICD_10_COLUMN_DATA};
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, SlDataSQLiteHelper.ICD_10_COLUMN_ID+" = "+mChapterId, null, null, null, null);
+
+            if(mCursor.moveToFirst())
+            {
+                try
                 {
-                    Handler handler = new Handler();
-
-                    handler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                            mToolbarSearchEditText.requestFocus();
-
-                            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                        }
-                    }, 500);
+                    mTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ICD_10_COLUMN_NAME));
+                    mData = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ICD_10_COLUMN_DATA)));
+                }
+                catch (Exception e)
+                {
+                    Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
                 }
             }
-        }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
 
-                Log.e("Icd10ChapterActivity", error.toString());
-            }
-        });
-
-        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        requestQueue.add(jsonArrayRequest);
+            return null;
+        }
     }
 }

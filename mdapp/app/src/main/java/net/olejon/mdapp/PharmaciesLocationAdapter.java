@@ -40,8 +40,6 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
 {
     private final Context mContext;
 
-    private final MyTools mTools;
-
     private final Cursor mCursor;
 
     private int mLastPosition = -1;
@@ -49,8 +47,6 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
     public PharmaciesLocationAdapter(Context context, Cursor cursor)
     {
         mContext = context;
-
-        mTools = new MyTools(mContext);
 
         mCursor = cursor;
     }

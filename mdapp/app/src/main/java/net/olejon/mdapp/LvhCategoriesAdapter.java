@@ -147,7 +147,7 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
                     @Override
                     public void onClick(View view)
                     {
-                        Intent intent = new Intent(mContext, LvhCategoriesWebViewActivity.class);
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", name);
                         intent.putExtra("uri", uri);
                         mContext.startActivity(intent);
