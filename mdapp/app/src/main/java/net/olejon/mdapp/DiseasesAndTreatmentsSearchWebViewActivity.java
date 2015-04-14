@@ -76,7 +76,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     // Create activity
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -184,7 +184,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:37.0) Gecko/20100101 Firefox/37.0");
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
         else if(pageUri.contains("webofknowledge.com"))
@@ -336,7 +336,14 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
             mWebView.setInitialScale(100);
         }
 
-        mWebView.loadUrl(pageUri);
+        if(savedInstanceState == null)
+        {
+            mWebView.loadUrl(pageUri);
+        }
+        else
+        {
+            mWebView.restoreState(savedInstanceState);
+        }
     }
 
     // Resume activity
@@ -354,6 +361,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
     {
         super.onPause();
 
+        mToolbarSearchLayout.setVisibility(View.GONE);
+        mToolbarSearchEditText.setText("");
+
+        mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
         mWebView.pauseTimers();
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
@@ -361,6 +373,15 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
             //noinspection deprecation
             CookieSyncManager.getInstance().sync();
         }
+    }
+
+    // Save activity
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        mWebView.saveState(outState);
     }
 
     // Back button

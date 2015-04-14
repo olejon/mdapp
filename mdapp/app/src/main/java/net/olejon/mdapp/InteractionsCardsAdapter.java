@@ -124,7 +124,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_error_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
 
                     break;
                 }
@@ -132,7 +132,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_orange));
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_warning_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_warning_white_24dp);
 
                     break;
                 }
@@ -140,7 +140,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_green));
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_check_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_check_white_24dp);
 
                     break;
                 }
@@ -148,7 +148,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 {
                     viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_error_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
 
                     break;
                 }
@@ -170,7 +170,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
 
                             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+ URLEncoder.encode(uri, "utf-8"), new Response.Listener<JSONObject>()
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+URLEncoder.encode(uri, "utf-8"), new Response.Listener<JSONObject>()
                             {
                                 @Override
                                 public void onResponse(JSONObject response)

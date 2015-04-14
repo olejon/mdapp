@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.vending.billing.IInAppBillingService;
 
 import org.json.JSONObject;
@@ -46,9 +47,15 @@ import java.util.ArrayList;
 
 public class DonateActivity extends ActionBarActivity
 {
-    private final MyTools mTools = new MyTools(this);
+    private final Context mContext = this;
+
+    private final MyTools mTools = new MyTools(mContext);
 
     private IInAppBillingService mIInAppBillingService;
+
+    private Button mMakeSmallDonationButton;
+    private Button mMakeMediumDonationButton;
+    private Button mMakeBigDonationButton;
 
     // Create activity
     @Override
@@ -81,15 +88,38 @@ public class DonateActivity extends ActionBarActivity
         intent.setPackage("com.android.vending");
 
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-    }
 
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+        // Buttons
+        mMakeSmallDonationButton = (Button) findViewById(R.id.donate_make_small_donation);
+        mMakeMediumDonationButton = (Button) findViewById(R.id.donate_make_medium_donation);
+        mMakeBigDonationButton = (Button) findViewById(R.id.donate_make_big_donation);
 
-        if(mIInAppBillingService != null) unbindService(mServiceConnection);
+        mMakeSmallDonationButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                makeDonation("small_donation");
+            }
+        });
+
+        mMakeMediumDonationButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                makeDonation("medium_donation");
+            }
+        });
+
+        mMakeBigDonationButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                makeDonation("big_donation");
+            }
+        });
     }
 
     // Activity result
@@ -115,11 +145,18 @@ public class DonateActivity extends ActionBarActivity
                 catch(Exception e)
                 {
                     mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
-
-                    Log.e("DonateActivity", Log.getStackTraceString(e));
                 }
             }
         }
+    }
+
+    // Destroy activity
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if(mServiceConnection != null) unbindService(mServiceConnection);
     }
 
     // Menu
@@ -164,9 +201,7 @@ public class DonateActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
-
-            Log.e("DonateActivity", Log.getStackTraceString(e));
+            new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -178,9 +213,7 @@ public class DonateActivity extends ActionBarActivity
         }
         catch(Exception e)
         {
-            mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
-
-            Log.e("DonateActivity", Log.getStackTraceString(e));
+            new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -207,14 +240,12 @@ public class DonateActivity extends ActionBarActivity
             }
             else
             {
-                mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
+                new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }
         }
         catch(Exception e)
         {
-            mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
-
-            Log.e("DonateActivity", Log.getStackTraceString(e));
+            new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -222,9 +253,9 @@ public class DonateActivity extends ActionBarActivity
     private class GetProductsTask extends AsyncTask<Void, Void, Bundle>
     {
         @Override
-        protected void onPostExecute(Bundle skuDetails)
+        protected void onPostExecute(Bundle skuDetailsBundle)
         {
-            if(skuDetails == null)
+            if(skuDetailsBundle == null)
             {
                 mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
             }
@@ -232,15 +263,11 @@ public class DonateActivity extends ActionBarActivity
             {
                 try
                 {
-                    int responseCode = skuDetails.getInt("RESPONSE_CODE");
+                    int responseCode = skuDetailsBundle.getInt("RESPONSE_CODE");
 
                     if(responseCode == 0)
                     {
-                        Button makeSmallDonationButton = (Button) findViewById(R.id.donate_make_small_donation);
-                        Button makeMediumDonationButton = (Button) findViewById(R.id.donate_make_medium_donation);
-                        Button makeBigDonationButton = (Button) findViewById(R.id.donate_make_big_donation);
-
-                        ArrayList<String> responseArrayList = skuDetails.getStringArrayList("DETAILS_LIST");
+                        ArrayList<String> responseArrayList = skuDetailsBundle.getStringArrayList("DETAILS_LIST");
 
                         for(String details : responseArrayList)
                         {
@@ -253,47 +280,17 @@ public class DonateActivity extends ActionBarActivity
                             {
                                 case "small_donation":
                                 {
-                                    makeSmallDonationButton.setText(getString(R.string.donate_donate)+" "+price);
-
-                                    makeSmallDonationButton.setOnClickListener(new View.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(View view)
-                                        {
-                                            makeDonation("small_donation");
-                                        }
-                                    });
-
+                                    mMakeSmallDonationButton.setText(getString(R.string.donate_donate)+" "+price);
                                     break;
                                 }
                                 case "medium_donation":
                                 {
-                                    makeMediumDonationButton.setText(getString(R.string.donate_donate)+" "+price);
-
-                                    makeMediumDonationButton.setOnClickListener(new View.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(View view)
-                                        {
-                                            makeDonation("medium_donation");
-                                        }
-                                    });
-
+                                    mMakeMediumDonationButton.setText(getString(R.string.donate_donate)+" "+price);
                                     break;
                                 }
                                 case "big_donation":
                                 {
-                                    makeBigDonationButton.setText(getString(R.string.donate_donate)+" "+price);
-
-                                    makeBigDonationButton.setOnClickListener(new View.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(View view)
-                                        {
-                                            makeDonation("big_donation");
-                                        }
-                                    });
-
+                                    mMakeBigDonationButton.setText(getString(R.string.donate_donate)+" "+price);
                                     break;
                                 }
                             }
@@ -303,8 +300,6 @@ public class DonateActivity extends ActionBarActivity
                 catch(Exception e)
                 {
                     mTools.showToast(getString(R.string.donate_something_went_wrong), 1);
-
-                    Log.e("DonateActivity", Log.getStackTraceString(e));
                 }
             }
         }
@@ -321,7 +316,7 @@ public class DonateActivity extends ActionBarActivity
             Bundle skusBundle = new Bundle();
             skusBundle.putStringArrayList("ITEM_ID_LIST", skusArrayList);
 
-            Bundle skuDetailsBundle;
+            Bundle skuDetailsBundle = null;
 
             try
             {
@@ -330,8 +325,6 @@ public class DonateActivity extends ActionBarActivity
             catch(Exception e)
             {
                 Log.e("DonateActivity", Log.getStackTraceString(e));
-
-                skuDetailsBundle = null;
             }
 
             return skuDetailsBundle;

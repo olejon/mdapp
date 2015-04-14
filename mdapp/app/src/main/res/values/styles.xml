@@ -698,7 +698,6 @@
         <item name="android:paddingRight">@dimen/card_item_padding_right_left</item>
         <item name="android:paddingBottom">@dimen/card_item_padding_top_bottom</item>
         <item name="android:paddingLeft">@dimen/card_item_padding_right_left</item>
-        <item name="android:clickable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/lvh_card_categories_item</item>
         <item name="android:drawableRight">@drawable/ic_keyboard_arrow_right_white_24dp</item>
@@ -1503,6 +1502,11 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="icd10_toolbar_search_edittext" parent="toolbar_search_edittext">
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:inputType">textAutoCorrect</item>
+    </style>
+
     <style name="icd10_list_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -1538,6 +1542,62 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">2dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- ICD-10 search -->
+    <style name="icd10_search_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="icd10_search_list_empty" parent="icd10_search_list_empty_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingTop">64dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="icd10_search_list_empty_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="icd10_search_list_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="icd10_search_list_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
+    </style>
+
+    <style name="icd10_search_list_item_code" parent="icd10_search_list_item_code_base">
+        <item name="android:layout_width">134dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="icd10_search_list_item_code_base"/>
+
+    <style name="icd10_search_list_item_name">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingLeft">2dp</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -1824,6 +1884,82 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <!-- Scales -->
+    <style name="scales_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="scales_cards">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+    </style>
+
+    <style name="scales_card_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">2dp</item>
+    </style>
+
+    <style name="scales_card_inner_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="scales_card_title" parent="scales_card_title_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/card_title</item>
+    </style>
+
+    <style name="scales_card_title_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="scales_card_image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:minHeight">256dp</item>
+        <item name="android:maxHeight">384dp</item>
+    </style>
+
+    <style name="scales_card_button" parent="card_button">
+        <item name="android:textColor">@color/teal</item>
+    </style>
+
+    <!-- Scale -->
+    <style name="scale_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="scale_image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
     <!-- Notifications from SLV -->
     <style name="notifications_from_slv_layout">
         <item name="android:layout_width">match_parent</item>
@@ -1935,15 +2071,18 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="calculators_card_layout">
+    <style name="calculators_card_layout" parent="calculators_card_layout_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">4dp</item>
-        <item name="android:layout_marginRight">8dp</item>
         <item name="android:layout_marginBottom">4dp</item>
-        <item name="android:layout_marginLeft">8dp</item>
         <item name="cardCornerRadius">2dp</item>
         <item name="cardElevation">2dp</item>
+    </style>
+
+    <style name="calculators_card_layout_base">
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
     </style>
 
     <style name="calculators_card_inner_layout">
@@ -1988,6 +2127,14 @@
     </style>
 
     <style name="calculators_waist_measurement_edittext" parent="calculators_edittext">
+        <item name="android:imeOptions">actionGo</item>
+    </style>
+
+    <style name="calculators_corrected_qt_time_qt_interval_edittext" parent="calculators_edittext">
+        <item name="android:imeOptions">actionNext</item>
+    </style>
+
+    <style name="calculators_corrected_qt_time_rr_interval_edittext" parent="calculators_edittext">
         <item name="android:imeOptions">actionGo</item>
     </style>
 
@@ -2416,7 +2563,6 @@
         <item name="android:layout_margin">@dimen/welcome_page_button_margin</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:padding">12dp</item>
-        <item name="android:clickable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/welcome_button</item>
         <item name="android:textSize">14sp</item>
@@ -2438,7 +2584,6 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:clickable">true</item>
         <item name="android:background">@color/background</item>
     </style>
 
@@ -2617,7 +2762,6 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:padding">8dp</item>
-        <item name="android:clickable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/card_button</item>
         <item name="android:textSize">14sp</item>
@@ -2717,7 +2861,6 @@
         <item name="android:layout_height">48dp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:clickable">true</item>
         <item name="android:background">@drawable/toolbar</item>
         <item name="android:drawableLeft">@drawable/ic_local_hospital_white_24dp</item>
         <item name="android:drawablePadding">12dp</item>

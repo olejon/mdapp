@@ -51,6 +51,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -257,7 +258,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -364,7 +365,7 @@ public class Icd10ChapterActivity extends ActionBarActivity
                     {
                         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri) + "api/1/icd-10/search/?uri=" + URLEncoder.encode("http://www.icd10data.com/Search.aspx?search=" + mCodesArrayList.get(i), "utf-8"), new Response.Listener<JSONObject>()
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), new Response.Listener<JSONObject>()
                         {
                             @Override
                             public void onResponse(JSONObject response)
@@ -416,7 +417,6 @@ public class Icd10ChapterActivity extends ActionBarActivity
                     {
                         Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
                     }
-
                 }
             });
 

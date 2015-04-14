@@ -69,6 +69,12 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
+    <!-- ICD-10 search -->
+
+    <style name="icd10_search_list_item_code_base">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
     <!-- ICD-10 chapter -->
     <style name="icd10_chapter_list_item_code_base">
         <item name="android:fontFamily">sans-serif-condensed</item>

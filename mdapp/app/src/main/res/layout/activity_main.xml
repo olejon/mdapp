@@ -52,6 +52,7 @@
                 <TextView android:id="@+id/drawer_item_icd10" android:drawableStart="@drawable/ic_view_list_grey600_24dp" android:drawableLeft="@drawable/ic_view_list_grey600_24dp" android:text="@string/drawer_item_icd10" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_manufacturers" android:drawableStart="@drawable/ic_business_grey600_24dp" android:drawableLeft="@drawable/ic_business_grey600_24dp" android:text="@string/drawer_item_manufacturers" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_pharmacies" android:drawableStart="@drawable/ic_local_pharmacy_grey600_24dp" android:drawableLeft="@drawable/ic_local_pharmacy_grey600_24dp" android:text="@string/drawer_item_pharmacies" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+                <TextView android:id="@+id/drawer_item_scales" android:drawableStart="@drawable/ic_assessment_grey600_24dp" android:drawableLeft="@drawable/ic_assessment_grey600_24dp" android:text="@string/drawer_item_scales" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_notifications_from_slv" android:drawableStart="@drawable/ic_notifications_grey600_24dp" android:drawableLeft="@drawable/ic_notifications_grey600_24dp" android:text="@string/drawer_item_notifications_from_slv" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 
                 <View style="@style/drawer_separator"/>

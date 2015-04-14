@@ -72,7 +72,7 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
         mPharmacyAddress = intent.getStringExtra("address");
 
         // Location
-        if(mPharmacyAddress.startsWith("Postboks") || mPharmacyAddress.startsWith("Serviceboks"))
+        if(mPharmacyAddress.startsWith("Boks") || mPharmacyAddress.startsWith("Pb.") || mPharmacyAddress.startsWith("Postboks") || mPharmacyAddress.startsWith("Serviceboks"))
         {
             mTools.showToast(getString(R.string.pharmacies_location_map_post_box_location), 1);
 

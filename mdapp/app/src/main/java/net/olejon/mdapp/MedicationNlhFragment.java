@@ -45,7 +45,7 @@ public class MedicationNlhFragment extends Fragment
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medication_nlh, container, false);
 
@@ -85,7 +85,7 @@ public class MedicationNlhFragment extends Fragment
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(!mTools.isDeviceConnected())
+                if(! mTools.isDeviceConnected())
                 {
                     mTools.showToast(getString(R.string.device_not_connected), 0);
                     return true;
@@ -125,7 +125,14 @@ public class MedicationNlhFragment extends Fragment
             }
         });
 
-        WEBVIEW.loadUrl(pageUri);
+        if(savedInstanceState == null)
+        {
+            WEBVIEW.loadUrl(pageUri);
+        }
+        else
+        {
+            WEBVIEW.restoreState(savedInstanceState);
+        }
 
         return viewGroup;
     }
@@ -152,5 +159,14 @@ public class MedicationNlhFragment extends Fragment
             //noinspection deprecation
             CookieSyncManager.getInstance().sync();
         }
+    }
+
+    // Save fragment
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        WEBVIEW.saveState(outState);
     }
 }

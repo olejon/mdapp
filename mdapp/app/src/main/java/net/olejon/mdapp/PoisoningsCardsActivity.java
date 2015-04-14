@@ -261,8 +261,16 @@ public class PoisoningsCardsActivity extends ActionBarActivity
             }
             case R.id.poisonings_cards_menu_call:
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
-                startActivity(intent);
+                try
+                {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
+                    startActivity(intent);
+                }
+                catch(Exception e)
+                {
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                }
+
                 return true;
             }
             default:

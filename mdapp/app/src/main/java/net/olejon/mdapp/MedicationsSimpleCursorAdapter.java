@@ -30,13 +30,9 @@ import android.widget.TextView;
 
 public class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
 {
-    private final MyTools mTools;
-
     public MedicationsSimpleCursorAdapter(Context context, Cursor c, String[] from, int[] to)
     {
         super(context, R.layout.fragment_medications_list_item, c, from, to, 0);
-
-        mTools = new MyTools(context);
     }
 
     @Override
@@ -52,22 +48,22 @@ public class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
         {
             case "A":
             {
-                mTools.setBackgroundDrawable(textView, R.drawable.main_medications_list_item_circle_red);
+                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_red);
                 break;
             }
             case "B":
             {
-                mTools.setBackgroundDrawable(textView, R.drawable.main_medications_list_item_circle_orange);
+                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_orange);
                 break;
             }
             case "C":
             {
-                mTools.setBackgroundDrawable(textView, R.drawable.main_medications_list_item_circle_green);
+                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_green);
                 break;
             }
             case "F":
             {
-                mTools.setBackgroundDrawable(textView, R.drawable.main_medications_list_item_circle_green);
+                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_green);
                 break;
             }
         }

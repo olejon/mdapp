@@ -34,7 +34,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -144,7 +143,7 @@ public class PoisoningsActivity extends ActionBarActivity
                 {
                     mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-                    search(mToolbarSearchEditText.getText().toString());
+                    search(mToolbarSearchEditText.getText().toString().trim());
                 }
                 else
                 {
@@ -265,8 +264,16 @@ public class PoisoningsActivity extends ActionBarActivity
             }
             case R.id.poisonings_menu_call:
             {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
-                startActivity(intent);
+                try
+                {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
+                    startActivity(intent);
+                }
+                catch(Exception e)
+                {
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                }
+
                 return true;
             }
             case R.id.poisonings_menu_voice_search:
@@ -280,7 +287,7 @@ public class PoisoningsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("PoisoningsActivity", Log.getStackTraceString(e));
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;

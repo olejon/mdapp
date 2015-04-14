@@ -33,7 +33,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +49,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -79,20 +79,6 @@ public class ClinicalTrialsActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        // Intent
-        final Intent intent = getIntent();
-
-        final String searchString;
-
-        if(intent.getStringExtra("search") == null)
-        {
-            searchString = "";
-        }
-        else
-        {
-            searchString = intent.getStringExtra("search");
-        }
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -138,15 +124,6 @@ public class ClinicalTrialsActivity extends ActionBarActivity
                 mToolbarSearchEditText.setText("");
             }
         });
-
-        if(!searchString.equals(""))
-        {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.setText(searchString+" ");
-            mToolbarSearchEditText.setSelection(mToolbarSearchEditText.getText().length());
-
-            mTools.showToast("Skriv eventuelt inn andre preparater å sjekke opp mot", 1);
-        }
 
         // List
         mListView = (ListView) findViewById(R.id.clinicaltrials_list);
@@ -287,7 +264,7 @@ public class ClinicalTrialsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("ClinicalTrialsActivity", Log.getStackTraceString(e));
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;

@@ -80,16 +80,7 @@ public class InteractionsActivity extends ActionBarActivity
         // Intent
         final Intent intent = getIntent();
 
-        final String searchString;
-
-        if(intent.getStringExtra("search") == null)
-        {
-            searchString = "";
-        }
-        else
-        {
-            searchString = intent.getStringExtra("search").split(" ")[0];
-        }
+        final String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").split(" ")[0];
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -142,7 +133,7 @@ public class InteractionsActivity extends ActionBarActivity
             mToolbarSearchEditText.setText(searchString+" ");
             mToolbarSearchEditText.setSelection(mToolbarSearchEditText.getText().length());
 
-            mTools.showToast("Skriv eventuelt inn andre preparater å sjekke opp mot", 1);
+            mTools.showToast(getString(R.string.interactions_search_other_medications_or_substances), 1);
         }
 
         // List

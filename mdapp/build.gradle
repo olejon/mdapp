@@ -1,19 +1,20 @@
-buildscript {
-
-    repositories {
+buildscript
+{
+    repositories
+    {
         jcenter()
     }
 
-    dependencies {
+    dependencies
+    {
         classpath 'com.android.tools.build:gradle:1.1.0'
     }
-
 }
 
-allprojects {
-
-    repositories {
+allprojects
+{
+    repositories
+    {
         jcenter()
     }
-
 }

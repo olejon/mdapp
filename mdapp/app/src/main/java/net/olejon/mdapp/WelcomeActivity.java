@@ -64,7 +64,7 @@ public class WelcomeActivity extends ActionBarActivity
         viewPager.setPageTransformer(true, new ViewPagerTransformer());
 
         ImageView imageView = (ImageView) findViewById(R.id.welcome_pager_indicator_page_1);
-        mTools.setImageDrawable(imageView, R.drawable.welcome_indicator_active);
+        imageView.setImageResource(R.drawable.welcome_indicator_active);
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
@@ -82,11 +82,11 @@ public class WelcomeActivity extends ActionBarActivity
                 for(int i = 0; i < linearLayout.getChildCount(); i++)
                 {
                     imageView = (ImageView) linearLayout.getChildAt(i);
-                    mTools.setImageDrawable(imageView, R.drawable.welcome_indicator_inactive);
+                    imageView.setImageResource(R.drawable.welcome_indicator_inactive);
                 }
 
                 imageView = (ImageView) linearLayout.getChildAt(position);
-                mTools.setImageDrawable(imageView, R.drawable.welcome_indicator_active);
+                imageView.setImageResource(R.drawable.welcome_indicator_active);
             }
 
             @Override

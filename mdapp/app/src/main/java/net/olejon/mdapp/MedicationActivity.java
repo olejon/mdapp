@@ -139,18 +139,21 @@ public class MedicationActivity extends ActionBarActivity
 
                 if(find.equals(""))
                 {
-                    mWebView.clearMatches();
+                    if(mWebView != null) mWebView.clearMatches();
                 }
                 else
                 {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     {
-                        mWebView.findAllAsync(find);
+                        if(mWebView != null) mWebView.findAllAsync(find);
                     }
                     else
                     {
-                        //noinspection deprecation
-                        mWebView.findAll(find);
+                        if(mWebView != null)
+                        {
+                            //noinspection deprecation
+                            mWebView.findAll(find);
+                        }
                     }
                 }
             }
@@ -170,12 +173,25 @@ public class MedicationActivity extends ActionBarActivity
                 if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
                     mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
                     return true;
                 }
 
                 return false;
             }
         });
+    }
+
+    // Pause activity
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mToolbarSearchLayout.setVisibility(View.GONE);
+        mToolbarSearchEditText.setText("");
+
+        mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
     }
 
     // Destroy activity
@@ -401,7 +417,7 @@ public class MedicationActivity extends ActionBarActivity
         {
             sqLiteDatabase.delete(MedicationsFavoritesSQLiteHelper.TABLE, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null);
 
-            mFavoriteMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp);
+            mFavoriteMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp).setTitle(getString(R.string.medication_menu_add_favorite));
 
             snackbarString = getString(R.string.medication_favorite_removed);
         }
@@ -420,7 +436,7 @@ public class MedicationActivity extends ActionBarActivity
             intent.setAction("update");
             mContext.sendBroadcast(intent);
 
-            mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp);
+            mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
 
             snackbarString = getString(R.string.medication_favorite_saved);
         }
@@ -564,7 +580,7 @@ public class MedicationActivity extends ActionBarActivity
 
                 mToolbar.setTitle(medicationName);
 
-                if(isFavorite()) mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp);
+                if(isFavorite()) mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
 
                 mAtcCodeMenuItem.setTitle(getString(R.string.medication_menu_atc)+" ("+medicationAtcCode+")");
 
@@ -575,12 +591,12 @@ public class MedicationActivity extends ActionBarActivity
                 {
                     case "A":
                     {
-                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.medication_prescription_group_red);
+                        prescriptionGroupButton.setBackgroundResource(R.drawable.medication_prescription_group_red);
                         break;
                     }
                     case "B":
                     {
-                        mTools.setBackgroundDrawable(prescriptionGroupButton, R.drawable.medication_prescription_group_orange);
+                        prescriptionGroupButton.setBackgroundResource(R.drawable.medication_prescription_group_orange);
                         break;
                     }
                 }

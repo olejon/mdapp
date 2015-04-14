@@ -27,22 +27,46 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.melnykov.fab.FloatingActionButton;
+
+import java.util.ArrayList;
 
 public class Icd10Activity extends ActionBarActivity
 {
+    private static final int VOICE_SEARCH_REQUEST_CODE = 1;
+
     private final Context mContext = this;
 
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
+    private InputMethodManager mInputMethodManager;
+
+    private LinearLayout mToolbarSearchLayout;
+    private EditText mToolbarSearchEditText;
+    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     // Create activity
@@ -50,6 +74,9 @@ public class Icd10Activity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Input manager
+        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Layout
         setContentView(R.layout.activity_icd10);
@@ -61,12 +88,84 @@ public class Icd10Activity extends ActionBarActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_toolbar_search_layout);
+        mToolbarSearchEditText = (EditText) findViewById(R.id.icd10_toolbar_search);
+
+        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+            {
+                if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
+                    search(mToolbarSearchEditText.getText().toString().trim());
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        ImageButton imageButton = (ImageButton) findViewById(R.id.icd10_toolbar_clear_search);
+
+        imageButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mToolbarSearchEditText.setText("");
+            }
+        });
+
         // List
         mListView = (ListView) findViewById(R.id.icd10_list);
+
+        // Floating action button
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.icd10_fab);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+                {
+                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
+                    search(mToolbarSearchEditText.getText().toString().trim());
+                }
+                else
+                {
+                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                    mToolbarSearchEditText.requestFocus();
+
+                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+                }
+            }
+        });
 
         // Get chapters
         GetChaptersTask getChaptersTask = new GetChaptersTask();
         getChaptersTask.execute();
+    }
+
+    // Activity result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
+        {
+            ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            String voiceSearchString = voiceSearchArrayList.get(0);
+
+            search(voiceSearchString);
+        }
     }
 
     // Destroy activity
@@ -79,7 +178,46 @@ public class Icd10Activity extends ActionBarActivity
         if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
     }
 
+    // Back button
+    @Override
+    public void onBackPressed()
+    {
+        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+        {
+            mToolbarSearchLayout.setVisibility(View.GONE);
+            mToolbarSearchEditText.setText("");
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+
+    // Search button
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_SEARCH)
+        {
+            mToolbarSearchLayout.setVisibility(View.VISIBLE);
+            mToolbarSearchEditText.requestFocus();
+
+            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
+    }
+
     // Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_icd10, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -90,11 +228,37 @@ public class Icd10Activity extends ActionBarActivity
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
+            case R.id.icd10_menu_voice_search:
+            {
+                try
+                {
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
+                }
+                catch(Exception e)
+                {
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                }
+
+                return true;
+            }
             default:
             {
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    // Search
+    private void search(String searchString)
+    {
+        if(searchString.equals("")) return;
+
+        Intent intent = new Intent(mContext, Icd10SearchActivity.class);
+        intent.putExtra("search", searchString);
+        startActivity(intent);
     }
 
     // Get chapters
@@ -110,6 +274,9 @@ public class Icd10Activity extends ActionBarActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
+                    mToolbarSearchLayout.setVisibility(View.GONE);
+                    mToolbarSearchEditText.setText("");
+
                     if(mCursor.moveToPosition(i))
                     {
                         Intent intent = new Intent(mContext, Icd10ChapterActivity.class);
@@ -118,6 +285,11 @@ public class Icd10Activity extends ActionBarActivity
                     }
                 }
             });
+
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+
+            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.setVisibility(View.VISIBLE);
         }
 
         @Override

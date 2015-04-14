@@ -209,18 +209,6 @@ public class MainActivity extends ActionBarActivity
                         startActivity(intent);
                         break;
                     }
-                    case R.id.drawer_item_nasjonale_retningslinjer:
-                    {
-                        Intent intent = new Intent(mContext, NasjonaleRetningslinjerActivity.class);
-                        startActivity(intent);
-                        break;
-                    }
-                    case R.id.drawer_item_clinicaltrials:
-                    {
-                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
-                        startActivity(intent);
-                        break;
-                    }
                     case R.id.drawer_item_interactions:
                     {
                         Intent intent = new Intent(mContext, InteractionsActivity.class);
@@ -230,6 +218,18 @@ public class MainActivity extends ActionBarActivity
                     case R.id.drawer_item_poisonings:
                     {
                         Intent intent = new Intent(mContext, PoisoningsActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_nasjonale_retningslinjer:
+                    {
+                        Intent intent = new Intent(mContext, NasjonaleRetningslinjerActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_clinicaltrials:
+                    {
+                        Intent intent = new Intent(mContext, ClinicalTrialsActivity.class);
                         startActivity(intent);
                         break;
                     }
@@ -254,6 +254,12 @@ public class MainActivity extends ActionBarActivity
                     case R.id.drawer_item_pharmacies:
                     {
                         Intent intent = new Intent(mContext, PharmaciesActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_scales:
+                    {
+                        Intent intent = new Intent(mContext, ScalesActivity.class);
                         startActivity(intent);
                         break;
                     }

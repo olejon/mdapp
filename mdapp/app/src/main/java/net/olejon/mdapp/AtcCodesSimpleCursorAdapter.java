@@ -34,8 +34,6 @@ class AtcCodesSimpleCursorAdapter extends SimpleCursorAdapter
 {
     private final Context mContext;
 
-    private final MyTools mTools;
-
     private final String mAtcCode;
 
     public AtcCodesSimpleCursorAdapter(String atcCode, Context context, Cursor c, String[] from, int[] to)
@@ -43,8 +41,6 @@ class AtcCodesSimpleCursorAdapter extends SimpleCursorAdapter
         super(context, R.layout.activity_atc_codes_list_item, c, from, to, 0);
 
         mContext = context;
-
-        mTools = new MyTools(mContext);
 
         mAtcCode = atcCode;
     }
@@ -63,7 +59,7 @@ class AtcCodesSimpleCursorAdapter extends SimpleCursorAdapter
 
         if(atcCode.equals(mAtcCode))
         {
-            mTools.setBackgroundDrawable(linearLayout, R.drawable.atc_codes_code);
+            linearLayout.setBackgroundResource(R.drawable.atc_codes_code);
 
             atcCodeTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
 

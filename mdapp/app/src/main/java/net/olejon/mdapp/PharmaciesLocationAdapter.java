@@ -34,6 +34,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.net.URLEncoder;
 
 public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLocationAdapter.PharmaciesViewHolder>
@@ -42,6 +44,8 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
 
     private final Cursor mCursor;
 
+    private boolean isGoogleMapsInstalled = false;
+
     private int mLastPosition = -1;
 
     public PharmaciesLocationAdapter(Context context, Cursor cursor)
@@ -49,6 +53,17 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
         mContext = context;
 
         mCursor = cursor;
+
+        try
+        {
+            mContext.getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+
+            isGoogleMapsInstalled = true;
+        }
+        catch(Exception e)
+        {
+            Log.e("PharmaciesLocation", Log.getStackTraceString(e));
+        }
     }
 
     static class PharmaciesViewHolder extends RecyclerView.ViewHolder
@@ -94,10 +109,17 @@ public class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLo
                 @Override
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
-                    intent.putExtra("name", name);
-                    intent.putExtra("address", address);
-                    mContext.startActivity(intent);
+                    if(isGoogleMapsInstalled)
+                    {
+                        Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
+                        intent.putExtra("name", name);
+                        intent.putExtra("address", address);
+                        mContext.startActivity(intent);
+                    }
+                    else
+                    {
+                        new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.device_not_supported_dialog_title)).content(mContext.getString(R.string.device_not_supported_dialog_message)).positiveText(mContext.getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    }
                 }
             });
 

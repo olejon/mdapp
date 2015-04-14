@@ -66,6 +66,7 @@ public class CalculatorsActivity extends ActionBarActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // BMI
+        final EditText bmiEditText = (EditText) findViewById(R.id.calculators_bmi_height);
         final TextView bmiButton = (TextView) findViewById(R.id.calculators_bmi_button);
 
         bmiButton.setOnClickListener(new View.OnClickListener()
@@ -73,11 +74,11 @@ public class CalculatorsActivity extends ActionBarActivity
             @Override
             public void onClick(View view)
             {
+                inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
+
                 calculateBmi();
             }
         });
-
-        final EditText bmiEditText = (EditText) findViewById(R.id.calculators_bmi_height);
 
         bmiEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -98,6 +99,7 @@ public class CalculatorsActivity extends ActionBarActivity
         });
 
         // Waist measurement
+        final EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
         final TextView waistMeasurementButton = (TextView) findViewById(R.id.calculators_waist_measurement_button);
 
         waistMeasurementButton.setOnClickListener(new View.OnClickListener()
@@ -105,11 +107,11 @@ public class CalculatorsActivity extends ActionBarActivity
             @Override
             public void onClick(View view)
             {
+                inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
+
                 calculateWaistMeasurement();
             }
         });
-
-        final EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
 
         waistMeasurementEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -129,8 +131,38 @@ public class CalculatorsActivity extends ActionBarActivity
             }
         });
 
-        // Information dialog
-        if(!mTools.getSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG")) showInformationDialog();
+        // Corrected QT time
+        final EditText correctedQtTimeEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
+        final TextView correctedQtTimeButton = (TextView) findViewById(R.id.calculators_corrected_qt_time_button);
+
+        correctedQtTimeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
+
+                calculateCorrectedQtTime();
+            }
+        });
+
+        correctedQtTimeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+            {
+                if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
+
+                    calculateCorrectedQtTime();
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     // Menu
@@ -203,10 +235,10 @@ public class CalculatorsActivity extends ActionBarActivity
         {
             try
             {
-                float weight = Float.parseFloat(weightEditTextValue);
-                float height = Float.parseFloat(heightEditTextValue);
+                double weight = Double.parseDouble(weightEditTextValue);
+                double height = Double.parseDouble(heightEditTextValue);
 
-                float result = (weight) / ((height / 100) * (height / 100));
+                double result = (weight) / ((height / 100) * (height / 100));
 
                 String interpretation = "<font color=\"#4caf50\">"+getString(R.string.calculators_bmi_normal_weight)+"</font>";
 
@@ -298,6 +330,48 @@ public class CalculatorsActivity extends ActionBarActivity
             catch(Exception e)
             {
                 mTools.showToast(getString(R.string.calculators_waist_measurement_invalid_value), 1);
+
+                Log.e("CalculatorsActivity", Log.getStackTraceString(e));
+            }
+        }
+    }
+
+    private void calculateCorrectedQtTime()
+    {
+        EditText qtIntervalEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_qt_interval);
+        EditText rrIntervalEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
+
+        String qtIntervalEditTextValue = qtIntervalEditText.getText().toString();
+        String rrIntervalEditTextValue = rrIntervalEditText.getText().toString();
+
+        if(qtIntervalEditTextValue.equals("") || rrIntervalEditTextValue.equals(""))
+        {
+            mTools.showToast(getString(R.string.calculators_corrected_qt_time_invalid_values), 1);
+        }
+        else
+        {
+            try
+            {
+                double qtInterval = Double.parseDouble(qtIntervalEditTextValue) * 0.001;
+                double rrInterval = Double.parseDouble(rrIntervalEditTextValue) * 0.001;
+
+                int result = (int) Math.round(qtInterval / Math.sqrt(rrInterval) * 1000);
+
+                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_corrected_qt_time_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_corrected_qt_time_dialog_message_first)+"<br><b>"+result+" ms</b><br><br><small><i>"+getString(R.string.calculators_corrected_qt_time_dialog_message_second)+"</i></small>")).positiveText(getString(R.string.calculators_corrected_qt_time_dialog_positive_button)).neutralText(getString(R.string.calculators_corrected_qt_time_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onNeutral(MaterialDialog dialog)
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.calculators_corrected_qt_time_dialog_title));
+                        intent.putExtra("uri", "http://tidsskriftet.no/article/218317");
+                        startActivity(intent);
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+            }
+            catch(Exception e)
+            {
+                mTools.showToast(getString(R.string.calculators_corrected_qt_time_invalid_values), 1);
 
                 Log.e("CalculatorsActivity", Log.getStackTraceString(e));
             }

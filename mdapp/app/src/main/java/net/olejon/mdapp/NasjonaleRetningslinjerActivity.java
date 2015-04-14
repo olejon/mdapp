@@ -282,7 +282,7 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;

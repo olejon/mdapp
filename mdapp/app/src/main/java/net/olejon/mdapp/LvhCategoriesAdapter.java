@@ -43,8 +43,6 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
 {
     private final Context mContext;
 
-    private final MyTools mTools;
-
     private final LayoutInflater mLayoutInflater;
 
     private final JSONArray mCategories;
@@ -57,8 +55,6 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
     public LvhCategoriesAdapter(Context context, JSONArray jsonArray, String color, String icon)
     {
         mContext = context;
-
-        mTools = new MyTools(mContext);
 
         mLayoutInflater =  (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -106,22 +102,22 @@ public class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdap
             {
                 case "lvh_urgent":
                 {
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_favorite_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_favorite_white_24dp);
                     break;
                 }
                 case "lvh_symptoms":
                 {
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_stethoscope);
+                    viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
                     break;
                 }
                 case "lvh_injuries":
                 {
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_healing_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_healing_white_24dp);
                     break;
                 }
                 case "lvh_administrative":
                 {
-                    mTools.setImageDrawable(viewHolder.icon, R.drawable.ic_my_library_books_white_24dp);
+                    viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
                     break;
                 }
             }

@@ -33,7 +33,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -262,7 +261,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
                 }
                 catch(Exception e)
                 {
-                    Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -319,7 +318,7 @@ public class DiseasesAndTreatmentsActivity extends ActionBarActivity
 
                 return true;
             }
-        }).show();
+        }).contentColorRes(R.color.black).show();
     }
 
     private void showSearch()

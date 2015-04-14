@@ -150,6 +150,11 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- ICD-10 search -->
+    <style name="icd10_search_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- ICD-10 chapter -->
     <style name="icd10_chapter_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -175,6 +180,11 @@
 
     <!-- Pharmacies -->
     <style name="pharmacies_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Scales -->
+    <style name="scales_card_title_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 

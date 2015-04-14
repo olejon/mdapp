@@ -91,7 +91,11 @@ public class TasksActivity extends ActionBarActivity
 
                         String task = taskEditText.getText().toString().trim();
 
-                        if(!task.equals(""))
+                        if(task.equals(""))
+                        {
+                            mTools.showToast("Du må fylle ut navn på oppgaven", 1);
+                        }
+                        else
                         {
                             ContentValues contentValues = new ContentValues();
 
@@ -102,8 +106,16 @@ public class TasksActivity extends ActionBarActivity
 
                             mSqLiteDatabase.insert(TasksSQLiteHelper.TABLE, null, contentValues);
 
+                            dialog.dismiss();
+
                             getTasks();
                         }
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog)
+                    {
+                        dialog.dismiss();
                     }
                 }).showListener(new DialogInterface.OnShowListener()
                 {
@@ -112,7 +124,7 @@ public class TasksActivity extends ActionBarActivity
                     {
                         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
                     }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).autoDismiss(false).show();
             }
         });
 

@@ -41,6 +41,23 @@
 
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView style="@style/calculators_card_layout">
+
+                <LinearLayout style="@style/calculators_card_inner_layout">
+
+                    <TextView android:text="@string/calculators_corrected_qt_time_title" style="@style/calculators_card_title"/>
+
+                    <EditText android:id="@+id/calculators_corrected_qt_time_qt_interval" android:inputType="number" android:hint="@string/calculators_corrected_qt_time_qt_interval_hint" style="@style/calculators_corrected_qt_time_qt_interval_edittext"/>
+                    <EditText android:id="@+id/calculators_corrected_qt_time_rr_interval" android:inputType="number" android:hint="@string/calculators_corrected_qt_time_rr_interval_hint" style="@style/calculators_corrected_qt_time_rr_interval_edittext"/>
+
+                    <View style="@style/calculators_card_separator"/>
+
+                    <TextView android:id="@+id/calculators_corrected_qt_time_button" android:text="@string/calculators_button" style="@style/calculators_button"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
 
     </ScrollView>

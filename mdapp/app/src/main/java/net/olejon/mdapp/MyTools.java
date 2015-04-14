@@ -39,9 +39,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
@@ -215,39 +213,6 @@ class MyTools
         mToast.show();
     }
 
-    // Set view background
-    public void setBackgroundDrawable(View view, int drawable)
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            view.setBackground(mContext.getResources().getDrawable(drawable, null));
-        }
-        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-        {
-            //noinspection deprecation
-            view.setBackground(mContext.getResources().getDrawable(drawable));
-        }
-        else
-        {
-            //noinspection deprecation
-            view.setBackgroundDrawable(mContext.getResources().getDrawable(drawable));
-        }
-    }
-
-    // Set image drawable
-    public void setImageDrawable(ImageView imageView, int drawable)
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            imageView.setImageDrawable(mContext.getResources().getDrawable(drawable, null));
-        }
-        else
-        {
-            //noinspection deprecation
-            imageView.setImageDrawable(mContext.getResources().getDrawable(drawable));
-        }
-    }
-
     // Printing
     public void printDocument(WebView webView, String title)
     {
@@ -255,7 +220,7 @@ class MyTools
         {
             PrintManager printManager = (PrintManager) mContext.getSystemService(Context.PRINT_SERVICE);
 
-            @SuppressWarnings("deprecation")
+            //noinspection deprecation
             PrintDocumentAdapter printDocumentAdapter = webView.createPrintDocumentAdapter();
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) printDocumentAdapter = webView.createPrintDocumentAdapter(title);

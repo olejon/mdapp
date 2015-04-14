@@ -74,7 +74,7 @@ public class MainWebViewActivity extends ActionBarActivity
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -178,7 +178,7 @@ public class MainWebViewActivity extends ActionBarActivity
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:37.0) Gecko/20100101 Firefox/37.0");
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
         else if(pageUri.contains("interaksjoner.no"))
@@ -203,8 +203,16 @@ public class MainWebViewActivity extends ActionBarActivity
                 }
                 else if(url.startsWith("tel:"))
                 {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-                    startActivity(intent);
+                    try
+                    {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                        startActivity(intent);
+                    }
+                    catch(Exception e)
+                    {
+                        new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    }
+
                     return true;
                 }
 
@@ -304,12 +312,20 @@ public class MainWebViewActivity extends ActionBarActivity
 
         cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
+        cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("http://www.gulesider.no/", "cookiesAccepted=true");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
 
         if(pageUri.contains("brukerhandboken.no")) mWebView.setInitialScale(100);
 
-        mWebView.loadUrl(pageUri);
+        if(savedInstanceState == null)
+        {
+            mWebView.loadUrl(pageUri);
+        }
+        else
+        {
+            mWebView.restoreState(savedInstanceState);
+        }
 
         // Tip dialog
         if(pageUri.equals("http://m.legemiddelhandboka.no/") || pageUri.equals("http://brukerhandboken.no/") || pageUri.equals("http://www.uptodate.com/contents/search") || pageUri.equals("http://bestpractice.bmj.com/"))
@@ -343,6 +359,11 @@ public class MainWebViewActivity extends ActionBarActivity
     {
         super.onPause();
 
+        mToolbarSearchLayout.setVisibility(View.GONE);
+        mToolbarSearchEditText.setText("");
+
+        mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
         mWebView.pauseTimers();
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
@@ -350,6 +371,15 @@ public class MainWebViewActivity extends ActionBarActivity
             //noinspection deprecation
             CookieSyncManager.getInstance().sync();
         }
+    }
+
+    // Save activity
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        mWebView.saveState(outState);
     }
 
     // Back button

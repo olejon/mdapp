@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/icd10_search_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/icd10_search_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+        <ProgressBar android:id="@+id/icd10_search_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+    </android.support.v7.widget.Toolbar>
+
+    <ListView android:id="@+id/icd10_search_list" android:layout_below="@+id/icd10_search_toolbar" style="@style/icd10_search_list_layout"/>
+    <TextView android:id="@+id/icd10_search_list_empty" android:layout_below="@+id/icd10_search_toolbar" android:text="@string/icd10_search_list_empty" style="@style/icd10_search_list_empty"/>
+
+    <View android:layout_below="@+id/icd10_search_toolbar" style="@style/toolbar_shadow"/>
+
+</RelativeLayout>

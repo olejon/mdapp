@@ -121,6 +121,11 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
         <activity
+            android:name=".Icd10SearchActivity"
+            android:parentActivityName=".Icd10Activity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
+        </activity>
+        <activity
             android:name=".Icd10ChapterActivity"
             android:parentActivityName=".Icd10Activity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
@@ -149,6 +154,16 @@
             android:name=".PharmaciesLocationMapActivity"
             android:parentActivityName=".PharmaciesLocationActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesLocationActivity"/>
+        </activity>
+        <activity
+            android:name=".ScalesActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".ScaleActivity"
+            android:parentActivityName=".ScalesActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ScalesActivity"/>
         </activity>
         <activity
             android:name=".NotificationsFromSlvActivity"
@@ -204,26 +219,26 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
 
-        <receiver android:name=".Widget" android:label="@string/widget_title">
+        <receiver android:name=".Widget" android:process=":widget" android:label="@string/widget_title">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget"/>
         </receiver>
 
-        <receiver android:name=".MyBootReceiver">
+        <receiver android:name=".MyBootReceiver" android:process=":mybootreceiver">
             <intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter>
         </receiver>
 
         <receiver android:name=".MessageAlarm" android:process=":messagealarm"/>
         <receiver android:name=".NotificationsFromSlvAlarm" android:process=":notificationsfromslvalarm"/>
 
+        <service android:name=".MessageIntentService" android:process=":messageintentservice"/>
+        <service android:name=".NotificationsFromSlvIntentService" android:process=":notificationsfromslvintentservice"/>
+        <service android:name=".WidgetService" android:process=":widgetservice" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBl0K_iMW45EKrAzK63lTKFNqf7rYJvOTw"/>
-
-        <service android:name=".MessageIntentService"/>
-        <service android:name=".NotificationsFromSlvIntentService"/>
-        <service android:name=".WidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
     </application>
 
