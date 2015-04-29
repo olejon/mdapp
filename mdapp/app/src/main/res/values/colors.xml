@@ -6,6 +6,7 @@
     <color name="light_blue">#4FC3F7</color>
     <color name="lighter_blue">#B3E5FC</color>
     <color name="dark_blue">#0288D1</color>
+    <color name="darker_blue">#0277BD</color>
     <color name="accent_blue">#40C4FF</color>
     <color name="green">#4CAF50</color>
     <color name="dark_green">#388E3C</color>
@@ -23,9 +24,10 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="highlight">#40FFFFFF</color>
+    <color name="hint">#BFFFFFFF</color>
+    <color name="background">#F5F5F5</color>
+    <color name="main_drawer">#40000000</color>
     <color name="card_separator">#E0E0E0</color>
     <color name="colored_card_separator">#80FFFFFF</color>
-    <color name="background">#F5F5F5</color>
-    <color name="hint">#BFFFFFFF</color>
 
 </resources>

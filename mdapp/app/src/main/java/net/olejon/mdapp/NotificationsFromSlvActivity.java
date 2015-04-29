@@ -27,7 +27,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -45,7 +45,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 
-public class NotificationsFromSlvActivity extends ActionBarActivity
+public class NotificationsFromSlvActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -86,6 +86,8 @@ public class NotificationsFromSlvActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.notifications_from_slv_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar

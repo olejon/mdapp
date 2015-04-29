@@ -30,7 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,7 +50,7 @@ import android.widget.SimpleCursorAdapter;
 
 import com.melnykov.fab.FloatingActionButton;
 
-public class ManufacturersActivity extends ActionBarActivity
+public class ManufacturersActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -86,6 +86,8 @@ public class ManufacturersActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.manufacturers_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.manufacturers_toolbar_search_layout);

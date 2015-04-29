@@ -30,7 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +40,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class SubstanceActivity extends ActionBarActivity
+public class SubstanceActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -86,6 +86,8 @@ public class SubstanceActivity extends ActionBarActivity
             toolbar.setTitle(substanceName);
 
             setSupportActionBar(toolbar);
+
+            //noinspection ConstantConditions
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             // ATC code

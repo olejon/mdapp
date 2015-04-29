@@ -30,7 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -51,7 +51,7 @@ import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 
-public class PharmaciesActivity extends ActionBarActivity
+public class PharmaciesActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -87,6 +87,8 @@ public class PharmaciesActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.pharmacies_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_toolbar_search_layout);

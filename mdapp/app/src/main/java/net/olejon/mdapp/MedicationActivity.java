@@ -37,7 +37,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -62,7 +62,7 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.net.URLEncoder;
 
-public class MedicationActivity extends ActionBarActivity
+public class MedicationActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -121,6 +121,8 @@ public class MedicationActivity extends ActionBarActivity
         mToolbar.setTitle("");
 
         setSupportActionBar(mToolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.medication_toolbar_search_layout);

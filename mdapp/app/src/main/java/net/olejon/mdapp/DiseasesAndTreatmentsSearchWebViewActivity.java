@@ -24,9 +24,10 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +53,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivity
+public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -108,6 +109,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search_layout);
@@ -169,7 +172,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
         // Web view
         mWebView = (WebView) findViewById(R.id.diseases_and_treatments_search_webview_content);
 
-        WebSettings webSettings = mWebView.getSettings();
+        final WebSettings webSettings = mWebView.getSettings();
+
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
@@ -199,9 +203,33 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends ActionBarActivit
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(url.matches("^https?://.*?\\.pdf$"))
+                if(url.contains("login.pva.uib.no"))
+                {
+                    webSettings.setDefaultTextEncodingName("iso-8859-15");
+                }
+                else if(url.matches("^https?://.*?\\.pdf$"))
                 {
                     mTools.downloadFile(pageTitle, url);
+                    return true;
+                }
+                else if(url.startsWith("mailto:"))
+                {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                    startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
+                    return true;
+                }
+                else if(url.startsWith("tel:"))
+                {
+                    try
+                    {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                        startActivity(intent);
+                    }
+                    catch(Exception e)
+                    {
+                        new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    }
+
                     return true;
                 }
 

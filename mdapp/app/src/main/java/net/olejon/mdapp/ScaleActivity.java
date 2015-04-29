@@ -24,13 +24,13 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
-public class ScaleActivity extends ActionBarActivity
+public class ScaleActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 

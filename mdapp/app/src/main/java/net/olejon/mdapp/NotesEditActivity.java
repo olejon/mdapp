@@ -28,7 +28,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -46,7 +46,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class NotesEditActivity extends ActionBarActivity
+public class NotesEditActivity extends AppCompatActivity
 {
     private static final int MEDICATION_REQUEST_CODE = 1;
 
@@ -90,6 +90,8 @@ public class NotesEditActivity extends ActionBarActivity
         toolbar.setTitle(title);
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Elements

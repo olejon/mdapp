@@ -29,7 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -48,7 +48,7 @@ import android.widget.LinearLayout;
 
 import com.melnykov.fab.FloatingActionButton;
 
-public class PharmaciesLocationActivity extends ActionBarActivity
+public class PharmaciesLocationActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -88,6 +88,8 @@ public class PharmaciesLocationActivity extends ActionBarActivity
         toolbar.setTitle(mMunicipalityName);
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_location_toolbar_search_layout);

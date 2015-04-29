@@ -27,7 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +52,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class MainWebViewActivity extends ActionBarActivity
+public class MainWebViewActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -105,6 +105,8 @@ public class MainWebViewActivity extends ActionBarActivity
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.main_webview_toolbar_search_layout);
@@ -166,7 +168,8 @@ public class MainWebViewActivity extends ActionBarActivity
         // Web view
         mWebView = (WebView) findViewById(R.id.main_webview_content);
 
-        WebSettings webSettings = mWebView.getSettings();
+        final WebSettings webSettings = mWebView.getSettings();
+
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
@@ -199,6 +202,12 @@ public class MainWebViewActivity extends ActionBarActivity
                 else if(url.matches("^https?://.*?\\.pdf$"))
                 {
                     mTools.downloadFile(view.getTitle(), url);
+                    return true;
+                }
+                else if(url.startsWith("mailto:"))
+                {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                    startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
                     return true;
                 }
                 else if(url.startsWith("tel:"))
@@ -338,6 +347,20 @@ public class MainWebViewActivity extends ActionBarActivity
                     public void onPositive(MaterialDialog dialog)
                     {
                         mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG", true);
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            }
+        }
+        else if(pageUri.equals("http://legehandboka.no/"))
+        {
+            if(!mTools.getSharedPreferencesBoolean("MAIN_WEBVIEW_NEL_DIALOG"))
+            {
+                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_nel_dialog_title)).content(getString(R.string.main_webview_nel_dialog_message)).positiveText(getString(R.string.main_webview_nel_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                {
+                    @Override
+                    public void onPositive(MaterialDialog dialog)
+                    {
+                        mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_NEL_DIALOG", true);
                     }
                 }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }

@@ -32,7 +32,7 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -68,7 +68,7 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class NasjonaleRetningslinjerActivity extends ActionBarActivity
+public class NasjonaleRetningslinjerActivity extends AppCompatActivity
 {
     private static final int VOICE_SEARCH_REQUEST_CODE = 1;
 
@@ -106,6 +106,8 @@ public class NasjonaleRetningslinjerActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.nasjonale_retningslinjer_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.nasjonale_retningslinjer_toolbar_search_layout);

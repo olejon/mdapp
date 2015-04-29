@@ -31,7 +31,7 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -68,7 +68,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Icd10ChapterActivity extends ActionBarActivity
+public class Icd10ChapterActivity extends AppCompatActivity
 {
     private static final int VOICE_SEARCH_REQUEST_CODE = 1;
 
@@ -122,6 +122,8 @@ public class Icd10ChapterActivity extends ActionBarActivity
         mToolbar.setTitle("");
 
         setSupportActionBar(mToolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_chapter_toolbar_search_layout);

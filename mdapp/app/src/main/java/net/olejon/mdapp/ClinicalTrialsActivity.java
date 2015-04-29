@@ -31,7 +31,7 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -54,7 +54,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class ClinicalTrialsActivity extends ActionBarActivity
+public class ClinicalTrialsActivity extends AppCompatActivity
 {
     private static final int VOICE_SEARCH_REQUEST_CODE = 1;
 
@@ -91,6 +91,8 @@ public class ClinicalTrialsActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.clinicaltrials_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.clinicaltrials_toolbar_search_layout);

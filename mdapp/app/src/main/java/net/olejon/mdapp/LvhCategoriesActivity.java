@@ -24,7 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -34,7 +34,7 @@ import android.view.MenuItem;
 
 import org.json.JSONArray;
 
-public class LvhCategoriesActivity extends ActionBarActivity
+public class LvhCategoriesActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -77,6 +77,8 @@ public class LvhCategoriesActivity extends ActionBarActivity
         toolbar.setTitle(categoryTitle);
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Recycler view

@@ -28,7 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -56,7 +56,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
-public class ClinicalTrialsCardsActivity extends ActionBarActivity
+public class ClinicalTrialsCardsActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -99,6 +99,8 @@ public class ClinicalTrialsCardsActivity extends ActionBarActivity
         mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
 
         setSupportActionBar(mToolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar

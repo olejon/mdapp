@@ -25,7 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -40,7 +40,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class CalculatorsActivity extends ActionBarActivity
+public class CalculatorsActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -63,6 +63,8 @@ public class CalculatorsActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.calculators_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // BMI

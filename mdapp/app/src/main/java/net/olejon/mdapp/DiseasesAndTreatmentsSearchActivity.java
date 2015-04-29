@@ -29,7 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -58,7 +58,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
-public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener
+public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
     private final Context mContext = this;
 
@@ -118,6 +118,8 @@ public class DiseasesAndTreatmentsSearchActivity extends ActionBarActivity imple
         mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search)+": \""+searchString+"\"");
 
         setSupportActionBar(mToolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar

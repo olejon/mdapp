@@ -2,7 +2,7 @@
 
 <resources>
 
-    <!-- Theme -->
+    <!-- Themes -->
     <style name="app_theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/dark_blue</item>
@@ -21,6 +21,8 @@
     <style name="toolbar_theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlActivated">@color/white</item>
     </style>
+
+    <style name="main_theme" parent="app_theme"/>
 
     <style name="main_search_theme" parent="app_theme">
         <item name="colorControlNormal">@color/white</item>
@@ -2577,14 +2579,16 @@
     <style name="main_drawer_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <style name="main_drawer" parent="main_drawer_base">
         <item name="android:layout_width">@dimen/main_drawer</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:orientation">vertical</item>
+        <item name="android:fitsSystemWindows">true</item>
         <item name="android:background">@color/background</item>
+        <item name="insetForeground">@color/main_drawer</item>
     </style>
 
     <style name="main_drawer_base"/>
@@ -2592,6 +2596,7 @@
     <style name="main_drawer_inner">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
         <item name="android:fadeScrollbars">false</item>
     </style>
@@ -2600,15 +2605,42 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">16dp</item>
     </style>
 
-    <style name="drawer_banner">
+    <style name="main_drawer_banner">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">144dp</item>
         <item name="android:scaleType">fitXY</item>
+    </style>
+
+    <style name="main_drawer_version_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="drawer_subheader" parent="subheader">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="drawer_separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="drawer_item" parent="drawer_item_base">
@@ -2627,36 +2659,8 @@
 
     <style name="drawer_item_base"/>
 
-    <style name="drawer_item_encyclopedia" parent="drawer_item">
+    <style name="drawer_item_gone" parent="drawer_item">
         <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="drawer_version_text">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/dark_grey</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="drawer_separator">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:background">@color/light_grey</item>
-    </style>
-
-    <style name="drawer_subheader" parent="subheader">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:textColor">@color/dark_grey</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <!-- Toolbar -->
@@ -2667,7 +2671,7 @@
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
         <item name="theme">@style/toolbar_theme</item>
-        <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="toolbar_base"/>
@@ -2784,55 +2788,11 @@
         <item name="android:layout_marginBottom">16dp</item>
         <item name="android:visibility">gone</item>
         <item name="fab_colorNormal">@color/blue</item>
-        <item name="fab_colorPressed">@color/light_blue</item>
-        <item name="fab_colorRipple">@color/light_blue</item>
+        <item name="fab_colorPressed">@color/dark_blue</item>
+        <item name="fab_colorRipple">@color/darker_blue</item>
     </style>
 
     <style name="fab_layout_base"/>
-
-    <style name="fab_mini_1_layout">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
-        <item name="fab_type">mini</item>
-        <item name="fab_colorNormal">@color/background</item>
-        <item name="fab_colorPressed">@color/light_grey</item>
-        <item name="fab_colorRipple">@color/light_grey</item>
-    </style>
-
-    <style name="fab_mini_2_layout">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
-        <item name="fab_type">mini</item>
-        <item name="fab_colorNormal">@color/background</item>
-        <item name="fab_colorPressed">@color/light_grey</item>
-        <item name="fab_colorRipple">@color/light_grey</item>
-    </style>
-
-    <style name="fab_mini_text" parent="fab_mini_text_base">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">28dp</item>
-        <item name="android:layout_marginRight">76dp</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@drawable/fab_mini</item>
-        <item name="android:alpha">0.88</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="fab_mini_text_base"/>
-
-    <style name="fab_mini_1_text" parent="fab_mini_text">
-        <item name="android:layout_marginBottom">96dp</item>
-    </style>
-
-    <style name="fab_mini_2_text" parent="fab_mini_text">
-        <item name="android:layout_marginBottom">152dp</item>
-    </style>
 
     <!-- Subheaders -->
     <style name="subheader" parent="subheader_base">

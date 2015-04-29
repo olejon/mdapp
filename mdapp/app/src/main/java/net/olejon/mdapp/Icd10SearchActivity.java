@@ -28,7 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -54,7 +54,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Icd10SearchActivity extends ActionBarActivity
+public class Icd10SearchActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -90,6 +90,8 @@ public class Icd10SearchActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.icd10_search_search)+": \""+mSearchString+"\"");
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar

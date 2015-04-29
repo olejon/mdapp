@@ -2,6 +2,12 @@
 
 <resources>
 
+    <!-- Themes -->
+    <style name="main_theme" parent="app_theme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <!-- Main -->
     <style name="main_updating_progressbar_base" parent="android:Widget.Material.Light.ProgressBar.Inverse"/>
 
@@ -260,11 +266,6 @@
     <!-- Cards -->
     <style name="card_button_base">
         <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <!-- Floating action button -->
-    <style name="fab_mini_text_base">
-        <item name="android:elevation">2dp</item>
     </style>
 
     <!-- Subheaders -->

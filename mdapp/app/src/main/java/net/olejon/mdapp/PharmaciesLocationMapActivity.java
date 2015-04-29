@@ -24,7 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -47,7 +47,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
-public class PharmaciesLocationMapActivity extends ActionBarActivity implements OnMapReadyCallback
+public class PharmaciesLocationMapActivity extends AppCompatActivity implements OnMapReadyCallback
 {
     private final Context mContext = this;
 
@@ -89,6 +89,8 @@ public class PharmaciesLocationMapActivity extends ActionBarActivity implements 
         toolbar.setTitle(mPharmacyName);
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Map

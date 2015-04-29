@@ -27,7 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +35,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class AtcActivity extends ActionBarActivity
+public class AtcActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -69,6 +69,8 @@ public class AtcActivity extends ActionBarActivity
         mToolbar = (Toolbar) findViewById(R.id.atc_toolbar);
 
         setSupportActionBar(mToolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // List

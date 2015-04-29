@@ -29,7 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -49,7 +49,7 @@ import android.widget.SimpleCursorAdapter;
 
 import com.melnykov.fab.FloatingActionButton;
 
-public class NotesEditMedicationsActivity extends ActionBarActivity
+public class NotesEditMedicationsActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -81,6 +81,8 @@ public class NotesEditMedicationsActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.notes_edit_medications_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.notes_edit_medications_toolbar_search_layout);

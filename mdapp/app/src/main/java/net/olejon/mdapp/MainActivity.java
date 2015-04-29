@@ -37,8 +37,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -49,7 +49,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -61,7 +60,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
 {
     public static SQLiteDatabase SQLITE_DATABASE;
 
@@ -73,7 +72,7 @@ public class MainActivity extends ActionBarActivity
 
     private InputMethodManager mInputMethodManager;
 
-    private LinearLayout mDrawer;
+    private ScrimInsetsFrameLayout mDrawer;
     private DrawerLayout mDrawerLayout;
     private EditText mSearchEditText;
     private ViewPager mViewPager;
@@ -106,23 +105,24 @@ public class MainActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.main_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
         // Search
         mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
 
         // Drawer
-        mDrawer = (LinearLayout) findViewById(R.id.main_drawer);
+        mDrawer = (ScrimInsetsFrameLayout) findViewById(R.id.main_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
         TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
         TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
 
-        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name)+": "+mTools.getProjectVersionName());
-        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code)+": "+mTools.getProjectVersionCode());
-
-        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.project_name, R.string.project_name));
+        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name) + ": " + mTools.getProjectVersionName());
+        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code) + ": " + mTools.getProjectVersionCode());
 
         mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
         {
@@ -135,12 +135,14 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onDrawerClosed(View drawerView)
             {
+                TextView legehandbokaTextView = (TextView) findViewById(R.id.drawer_item_nel);
                 TextView brukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
                 TextView analyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
                 TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
                 TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
                 TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
 
+                legehandbokaTextView.setVisibility(View.GONE);
                 brukerhandbokenTextView.setVisibility(View.GONE);
                 analyseoversiktenTextView.setVisibility(View.GONE);
                 upToDateTextView.setVisibility(View.GONE);
@@ -162,6 +164,14 @@ public class MainActivity extends ActionBarActivity
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_felleskatalogen));
                         intent.putExtra("uri", "http://www.felleskatalogen.no/m/medisin/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_nel:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_nel));
+                        intent.putExtra("uri", "http://legehandboka.no/");
                         startActivity(intent);
                         break;
                     }
@@ -502,6 +512,7 @@ public class MainActivity extends ActionBarActivity
 
         if(mDrawerClosed == R.id.drawer_item_encyclopedias)
         {
+            TextView legehandbokaTextView = (TextView) findViewById(R.id.drawer_item_nel);
             TextView brukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
             TextView analyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
             TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
@@ -512,11 +523,13 @@ public class MainActivity extends ActionBarActivity
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.drawer_item);
 
+            legehandbokaTextView.startAnimation(animation);
             brukerhandbokenTextView.startAnimation(animation);
             analyseoversiktenTextView.startAnimation(animation);
             upToDateTextView.startAnimation(animation);
             bmjTextView.startAnimation(animation);
 
+            legehandbokaTextView.setVisibility(View.VISIBLE);
             brukerhandbokenTextView.setVisibility(View.VISIBLE);
             analyseoversiktenTextView.setVisibility(View.VISIBLE);
             upToDateTextView.setVisibility(View.VISIBLE);

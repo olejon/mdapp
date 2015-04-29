@@ -25,7 +25,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -43,7 +43,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 
-public class LvhActivity extends ActionBarActivity
+public class LvhActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -70,6 +70,8 @@ public class LvhActivity extends ActionBarActivity
         toolbar.setTitle(getString(R.string.lvh_title));
 
         setSupportActionBar(toolbar);
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar

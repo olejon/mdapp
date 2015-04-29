@@ -34,6 +34,9 @@
     <string name="main_webview_tip_dialog_title">Tips</string>
     <string name="main_webview_tip_dialog_message">Merk at du vil få treff fra både Legemiddelhåndboka, Brukerhåndboken, UpToDate og BMJ Best Practice dersom du søker i seksjonen Sykdommer og behandlinger, avhengig av språk.</string>
     <string name="main_webview_tip_dialog_positive_button">OK</string>
+    <string name="main_webview_nel_dialog_title">Legehåndboka</string>
+    <string name="main_webview_nel_dialog_message">Merk at Norsk Elektronisk Legehåndbok krever at du logger inn for å få tilgang til innholdet.</string>
+    <string name="main_webview_nel_dialog_positive_button">OK</string>
     <string name="main_webview_find_in_text_tip_dialog_title">Finn i tekst</string>
     <string name="main_webview_find_in_text_tip_dialog_message">Skriv inn det du ønsker å søke etter i teksten og trykk deretter på søkeknappen på tastaturet.\n\nHvis du får flere treff, kan du gå til neste treff ved å trykke på forstørrelsesglasset oppe til høyre.</string>
     <string name="main_webview_find_in_text_tip_dialog_positive_button">OK</string>
@@ -265,7 +268,7 @@
     <string name="scales_title">Skalaer</string>
     <string name="scales_vas">Visual Analog Scale</string>
     <string name="scales_gcs">Glasgow Coma Scale</string>
-    <string name="scales_mews">Modified Early Warning Score</string>
+    <string name="scales_mews">Modified Early Warning System</string>
     <string name="scales_card_button">FORSTØRR</string>
 
     <!-- Scale -->
@@ -430,7 +433,7 @@
 
     <!-- Welcome -->
     <string name="welcome_page_guide">Dra mot venstre for å gå til neste side</string>
-    <string name="welcome_page_1_text">Velkommen til LegeAppen. Tanken bak LegeAppen er at den skal være en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, som oversikt over preparater og substanser, Legemiddelhåndboka, Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.\n\nMed LegeAppen kan du erstatte drøssevis av apper og nettsider med bare én app.</string>
+    <string name="welcome_page_1_text">Velkommen til LegeAppen. LegeAppen er en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, inkludert oversikt over preparater og substanser, Legemiddelhåndboka, Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.\n\nMed LegeAppen kan du erstatte drøssevis av apper og nettsider med bare én app.</string>
     <string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er en oversikt over alle preparater og substanser, samt dine favoritter.\n\nDu kan raskt søke i preparater og substanser ved å bruke søkefeltet.\n\nI sidemenyen finner du alle de andre funksjonene. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
     <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\n<i>“Human knowledge belongs to the world”</i></string>
     <string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å ta deg til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
@@ -445,6 +448,7 @@
     <string name="drawer_subheader_other">Annet</string>
     <string name="drawer_item_nlh">Legemiddelhåndboka</string>
     <string name="drawer_item_felleskatalogen">Felleskatalogen</string>
+    <string name="drawer_item_nel">Legehåndboka</string>
     <string name="drawer_item_brukerhandboken">Brukerhåndboken</string>
     <string name="drawer_item_analyseoversikten">Analyseoversikten</string>
     <string name="drawer_item_uptodate">UpToDate</string>
