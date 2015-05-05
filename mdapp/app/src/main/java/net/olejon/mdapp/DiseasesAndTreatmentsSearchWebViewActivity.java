@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -267,25 +269,29 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    if(!mWebViewAnimationHasBeenShown)
+                    if(mWebViewAnimationHasBeenShown)
+                    {
+                        if(pageUri.contains("helsebiblioteket.no"))  mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8); } else if($('h3 > a').length) { javascript:window.location.replace($('h3 > a').attr('href')); }");
+                    }
+                    else
                     {
                         mWebViewAnimationHasBeenShown = true;
 
                         if(pageUri.contains("uptodate.com"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('h2').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:setTimeout(function() { var offset = $('h2').offset(); window.scrollTo(0, offset.top - 8); }, 1000);");
                         }
                         else if(pageUri.contains("bestpractice.bmj.com"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('small.monograph-title').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:var offset = $('small.monograph-title').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("nhi.no"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:var offset = $('div#title').offset(); window.scrollTo(0, offset.top);");
                         }
                         else if(pageUri.contains("sml.snl.no"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('article.sml_search_result').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:var offset = $('article.sml_search_result').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("forskning.no"))
                         {
@@ -293,11 +299,25 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         }
                         else if(pageUri.contains("helsebiblioteket.no"))
                         {
-                            mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top); } else { javascript:window.location.replace($('h3 > a').attr('href')); }");
+                            mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8); } else if($('h3 > a').length) { javascript:window.location.replace($('h3 > a').attr('href')); }");
+                        }
+                        else if(pageUri.contains("tidsskriftet.no"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('article#object').offset(); window.scrollTo(offset.left - 8, offset.top);");
+                        }
+                        else if(pageUri.contains("oncolex.no"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h1.pagetitle').offset(); window.scrollTo(offset.left - 8, offset.top - 8);");
                         }
                         else if(pageUri.contains("brukerhandboken.no"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top);");
+                            Display display = getWindowManager().getDefaultDisplay();
+                            Point size = new Point();
+                            display.getSize(size);
+
+                            int width = size.x;
+
+                            mWebView.loadUrl("javascript:$('div#paragraph_edit_links').css('width', '"+width+"px'); var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("helsenorge.no"))
                         {
@@ -310,7 +330,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         mWebView.setVisibility(View.VISIBLE);
                     }
 
-                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit(); }");
+                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit(); } else if($('div.search-results').length) { var offset = $('div.search-results').offset(); window.scrollTo(offset.left - 8, offset.top - 8); }");
                 }
                 else
                 {

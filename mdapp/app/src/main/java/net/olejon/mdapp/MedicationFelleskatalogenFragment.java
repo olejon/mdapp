@@ -81,7 +81,7 @@ public class MedicationFelleskatalogenFragment extends Fragment
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(! mTools.isDeviceConnected())
+                if(!mTools.isDeviceConnected())
                 {
                     mTools.showToast(getString(R.string.device_not_connected), 0);
                     return true;
@@ -104,6 +104,8 @@ public class MedicationFelleskatalogenFragment extends Fragment
                 if(newProgress == 100)
                 {
                     progressBar.setVisibility(View.INVISIBLE);
+
+                    if(mTools.isTablet()) WEBVIEW.loadUrl("javascript:$('div#base_content').removeClass('base_center_content');");
                 }
                 else
                 {

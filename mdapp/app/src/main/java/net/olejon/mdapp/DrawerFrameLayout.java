@@ -31,7 +31,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-public class ScrimInsetsFrameLayout extends FrameLayout
+public class DrawerFrameLayout extends FrameLayout
 {
     private Drawable mDrawable;
 
@@ -39,15 +39,15 @@ public class ScrimInsetsFrameLayout extends FrameLayout
 
     private Rect mRect;
 
-    public ScrimInsetsFrameLayout(Context context, AttributeSet attributeSet)
+    public DrawerFrameLayout(Context context, AttributeSet attributeSet)
     {
         super(context, attributeSet);
 
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.ScrimInsetsView, 0, 0);
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.DrawerFrameLayoutView, 0, 0);
 
         if(typedArray == null) return;
 
-        mDrawable = typedArray.getDrawable(R.styleable.ScrimInsetsView_insetForeground);
+        mDrawable = typedArray.getDrawable(R.styleable.DrawerFrameLayoutView_drawer_frame_inset_color);
 
         typedArray.recycle();
 

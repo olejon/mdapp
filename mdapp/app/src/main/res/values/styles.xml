@@ -2588,7 +2588,7 @@
         <item name="android:layout_gravity">start</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:background">@color/background</item>
-        <item name="insetForeground">@color/main_drawer</item>
+        <item name="drawer_frame_inset_color">@color/main_drawer</item>
     </style>
 
     <style name="main_drawer_base"/>
@@ -2670,7 +2670,7 @@
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:textColor">@color/white</item>
-        <item name="theme">@style/toolbar_theme</item>
+        <item name="android:theme">@style/toolbar_theme</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 

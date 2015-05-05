@@ -20,7 +20,7 @@
 
     </RelativeLayout>
 
-    <net.olejon.mdapp.ScrimInsetsFrameLayout android:id="@+id/main_drawer" style="@style/main_drawer">
+    <net.olejon.mdapp.DrawerFrameLayout android:id="@+id/main_drawer" style="@style/main_drawer">
 
         <ScrollView style="@style/main_drawer_inner">
 
@@ -82,6 +82,6 @@
 
         </ScrollView>
 
-    </net.olejon.mdapp.ScrimInsetsFrameLayout>
+    </net.olejon.mdapp.DrawerFrameLayout>
 
 </android.support.v4.widget.DrawerLayout>

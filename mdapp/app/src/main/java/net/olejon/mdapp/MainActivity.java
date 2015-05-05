@@ -53,6 +53,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.File;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
     private InputMethodManager mInputMethodManager;
 
-    private ScrimInsetsFrameLayout mDrawer;
+    private DrawerFrameLayout mDrawer;
     private DrawerLayout mDrawerLayout;
     private EditText mSearchEditText;
     private ViewPager mViewPager;
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
 
         // Drawer
-        mDrawer = (ScrimInsetsFrameLayout) findViewById(R.id.main_drawer);
+        mDrawer = (DrawerFrameLayout) findViewById(R.id.main_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
         TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
@@ -362,6 +364,10 @@ public class MainActivity extends AppCompatActivity
             NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
             notificationsFromSlvAlarm.setAlarm(applicationContext);
         }
+
+        // Google Analytics
+        Tracker tracker = ((MDapp) getApplication()).getTracker();
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         // Get data
         GetDataTask getDataTask = new GetDataTask();

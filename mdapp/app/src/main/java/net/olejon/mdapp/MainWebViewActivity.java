@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -249,15 +251,32 @@ public class MainWebViewActivity extends AppCompatActivity
 
                     if(mWebViewAnimationHasBeenShown)
                     {
-                        if(pageUri.contains("helsedirektoratet.no")) mWebView.loadUrl("javascript:if($('span.dropdown').length) { var offset = $('span.dropdown').offset(); window.scrollTo(0, offset.top); } else { var offset = $('.publication_information').offset(); window.scrollTo(0, offset.top); }");
+                        if(pageUri.contains("brukerhandboken.no"))
+                        {
+                            Display display = getWindowManager().getDefaultDisplay();
+                            Point size = new Point();
+                            display.getSize(size);
+
+                            int width = size.x;
+
+                            mWebView.loadUrl("javascript:if($('a.style_topic_title').length) { var offset = $('a.style_topic_title').first().offset(); window.scrollTo(offset.left - 8, offset.top - 8); } else if($('div#paragraph_edit_links').length) { $('div#paragraph_edit_links').css('width', '"+width+"px'); var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top - 8); }");
+                        }
+                        else if(pageUri.contains("helsedirektoratet.no"))
+                        {
+                            mWebView.loadUrl("javascript:if($('span.dropdown').length) { var offset = $('span.dropdown').offset(); window.scrollTo(0, offset.top); } else if($('.publication_information').length) { var offset = $('.publication_information').offset(); window.scrollTo(0, offset.top); }");
+                        }
                     }
                     else
                     {
                         mWebViewAnimationHasBeenShown = true;
 
-                        if(pageUri.contains("helsebiblioteket.no"))
+                        if(pageUri.contains("brukerhandboken.no"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('div.mobile-article > h1').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:var offset = $('div#FirstSearch1 > input:text').offset(); window.scrollTo(offset.left - 32, 0); $('div#FirstSearch1 > input:text').focus();");
+                        }
+                        else if(pageUri.contains("helsebiblioteket.no"))
+                        {
+                            mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8); } else if($('h3 > a').length) { javascript:window.location.replace($('h3 > a').attr('href')); }");
                         }
                         else if(pageUri.contains("helsedirektoratet.no"))
                         {
@@ -269,7 +288,7 @@ public class MainWebViewActivity extends AppCompatActivity
                         }
                         else if(pageUri.contains("icd10data.com"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('div.contentBlurb:contains(\"Clinical Information\")').offset(); window.scrollTo(0, offset.top);");
+                            mWebView.loadUrl("javascript:var offset = $('div.contentBlurb:contains(\"Clinical Information\")').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("lvh.no"))
                         {

@@ -16,11 +16,12 @@
     <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
     <application
+        android:name=".MDapp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/project_name"
         android:theme="@style/app_theme"
-        tools:ignore="UnusedAttribute">
+        tools:ignore="ExportedReceiver,UnusedAttribute">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -234,12 +235,18 @@
         <receiver android:name=".MessageAlarm" android:process=":messagealarm"/>
         <receiver android:name=".NotificationsFromSlvAlarm" android:process=":notificationsfromslvalarm"/>
 
+        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver" android:process=":analyticsreceiver">
+            <intent-filter><action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH"/></intent-filter>
+        </receiver>
+
         <service android:name=".MessageIntentService" android:process=":messageintentservice"/>
         <service android:name=".NotificationsFromSlvIntentService" android:process=":notificationsfromslvintentservice"/>
         <service android:name=".WidgetService" android:process=":widgetservice" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name="com.google.android.gms.analytics.AnalyticsService" android:process=":analyticsservice" android:exported="false"/>
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBl0K_iMW45EKrAzK63lTKFNqf7rYJvOTw"/>
+        <meta-data android:name="com.google.android.gms.analytics.globalConfigResource" android:resource="@xml/global_tracker"/>
 
     </application>
 

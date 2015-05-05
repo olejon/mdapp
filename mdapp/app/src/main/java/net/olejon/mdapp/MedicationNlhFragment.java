@@ -85,7 +85,7 @@ public class MedicationNlhFragment extends Fragment
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(! mTools.isDeviceConnected())
+                if(!mTools.isDeviceConnected())
                 {
                     mTools.showToast(getString(R.string.device_not_connected), 0);
                     return true;

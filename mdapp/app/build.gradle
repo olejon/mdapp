@@ -10,8 +10,8 @@ android
         applicationId "net.olejon.mdapp"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 160
-        versionName "1.6"
+        versionCode 172
+        versionName "1.7"
     }
 
     buildTypes
@@ -25,13 +25,13 @@ android
 
 dependencies
 {
-    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.google.android.gms:play-services:7.3.0'
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:recyclerview-v7:22.1.1'
     compile 'com.android.support:cardview-v7:22.1.1'
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    compile 'com.afollestad:material-dialogs:0.7.2.8'
+    compile 'com.afollestad:material-dialogs:0.7.3.1'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'com.nispok:snackbar:2.10.7'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:2.1.1'

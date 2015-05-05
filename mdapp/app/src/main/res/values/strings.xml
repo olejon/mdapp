@@ -64,7 +64,7 @@
     <string name="medication_tip_dialog_message">Trykk på de ulike symbolene for å få en forklaring på hva de betyr.\n\nFor å bla mellom preparatomtale i Legemiddelhåndboka og Felleskatalogen, trykk på henholdsvis Legemiddelhåndboka eller Felleskatalogen, eller dra mellom sidene.\n\nTrykk på ikonet oppe til høyre for flere alternativer, for eksempel interaksjonsanalyse, forgiftningsinformasjon, lage nytt notat og mulighet for å skrive ut teksten.</string>
     <string name="medication_tip_dialog_positive_button">OK</string>
     <string name="medication_not_connected_dialog_title">Ikke tilkoblet Internett</string>
-    <string name="medication_not_connected_dialog_message">Du må være tilkoblet Internett for å laste Legemiddelhåndboka og Felleskatalogen</string>
+    <string name="medication_not_connected_dialog_message">Du må være tilkoblet Internett for å laste Legemiddelhåndboka og Felleskatalogen.</string>
     <string name="medication_not_connected_dialog_positive_button">Prøv på nytt</string>
     <string name="medication_not_connected_dialog_negative_button">Lukk</string>
     <string name="medication_note_dialog_title">Ingen PIN-kode</string>
@@ -385,7 +385,7 @@
     <string name="tasks_title">Oppgaver</string>
     <string name="tasks_list_empty">Ingen oppgaver</string>
     <string name="tasks_tip_dialog_title">Tips</string>
-    <string name="tasks_tip_dialog_message">Trykk på den blå knappen nede til høyre for å opprette en ny oppgave. Når en oppgave er fullført, trykk på oppgaven. Den vil da bli markert som fullført. Trykk på ikonet oppe til høyre for å slette fullførte oppgaver.</string>
+    <string name="tasks_tip_dialog_message">Trykk på den blå knappen nede til høyre for å opprette en ny oppgave. Når en oppgave er fullført, trykk på oppgaven. Den vil da bli markert som fullført. Trykk på ikonet oppe til høyre for å fjerne fullførte oppgaver.</string>
     <string name="tasks_tip_dialog_positive_button">OK</string>
     <string name="tasks_task">oppgave</string>
     <string name="tasks_tasks">oppgaver</string>
@@ -433,7 +433,7 @@
 
     <!-- Welcome -->
     <string name="welcome_page_guide">Dra mot venstre for å gå til neste side</string>
-    <string name="welcome_page_1_text">Velkommen til LegeAppen. LegeAppen er en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, inkludert oversikt over preparater og substanser, Legemiddelhåndboka, Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.\n\nMed LegeAppen kan du erstatte drøssevis av apper og nettsider med bare én app.</string>
+    <string name="welcome_page_1_text">Velkommen til LegeAppen! LegeAppen er en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted, inkludert oversikt over preparater og substanser, Legemiddelhåndboka, Felleskatalogen, Legevakthåndboken, interaksjonsanalyse, Giftinformasjonen med mer.\n\nMed LegeAppen kan du erstatte drøssevis av apper og nettsider med bare én app.</string>
     <string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er en oversikt over alle preparater og substanser, samt dine favoritter.\n\nDu kan raskt søke i preparater og substanser ved å bruke søkefeltet.\n\nI sidemenyen finner du alle de andre funksjonene. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
     <string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\n<i>“Human knowledge belongs to the world”</i></string>
     <string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å ta deg til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>

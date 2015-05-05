@@ -49,7 +49,7 @@ public class WelcomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Transition
-        overridePendingTransition(R.anim.welcome_start, 0);
+        overridePendingTransition(R.anim.welcome_start, R.anim.none);
 
         // Layout
         setContentView(R.layout.activity_welcome);
