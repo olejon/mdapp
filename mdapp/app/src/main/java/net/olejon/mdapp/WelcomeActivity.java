@@ -66,7 +66,7 @@ public class WelcomeActivity extends AppCompatActivity
         ImageView imageView = (ImageView) findViewById(R.id.welcome_pager_indicator_page_1);
         imageView.setImageResource(R.drawable.welcome_indicator_active);
 
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             private LinearLayout linearLayout;
             private ImageView imageView;

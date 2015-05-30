@@ -24,7 +24,6 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -190,7 +188,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:37.0) Gecko/20100101 Firefox/37.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:38.0) Gecko/20100101 Firefox/38.0");
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
         else if(pageUri.contains("webofknowledge.com"))
@@ -311,13 +309,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         }
                         else if(pageUri.contains("brukerhandboken.no"))
                         {
-                            Display display = getWindowManager().getDefaultDisplay();
-                            Point size = new Point();
-                            display.getSize(size);
-
-                            int width = size.x;
-
-                            mWebView.loadUrl("javascript:$('div#paragraph_edit_links').css('width', '"+width+"px'); var offset = $('p#emnetittel').offset(); window.scrollTo(0, offset.top - 8);");
+                            mWebView.loadUrl("javascript:var offset = $('div#nonedit_title').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("helsenorge.no"))
                         {
