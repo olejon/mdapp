@@ -42,6 +42,7 @@
         <item>@string/diseases_and_treatments_search_tidsskriftet</item>
         <item>@string/diseases_and_treatments_search_oncolex</item>
         <item>@string/diseases_and_treatments_search_brukerhandboken</item>
+        <item>@string/diseases_and_treatments_search_legehandboka</item>
         <item>@string/diseases_and_treatments_search_helsenorge</item>
     </string-array>
 

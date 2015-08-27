@@ -18,6 +18,7 @@
     <application
         android:name=".MDapp"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/project_name"
         android:theme="@style/app_theme"

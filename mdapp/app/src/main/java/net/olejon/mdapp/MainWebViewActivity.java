@@ -181,8 +181,7 @@ public class MainWebViewActivity extends AppCompatActivity
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:38.0) Gecko/20100101 Firefox/38.0");
-            webSettings.setDefaultTextEncodingName("iso-8859-15");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
         }
         else if(pageUri.contains("interaksjoner.no"))
         {

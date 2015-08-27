@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
@@ -57,12 +58,12 @@ public class TasksSimpleCursorAdapter extends SimpleCursorAdapter
 
             if(completed.equals("yes"))
             {
-                textView.setTextColor(mContext.getResources().getColor(R.color.dark_grey));
+                textView.setTextColor(ContextCompat.getColor(mContext, R.color.dark_grey));
                 textView.setPaintFlags(textView.getPaintFlags()|Paint.STRIKE_THRU_TEXT_FLAG);
             }
             else
             {
-                textView.setTextColor(mContext.getResources().getColor(R.color.black));
+                textView.setTextColor(ContextCompat.getColor(mContext, R.color.black));
                 textView.setPaintFlags(textView.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
             }
         }

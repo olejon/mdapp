@@ -25,8 +25,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -42,6 +44,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -188,8 +191,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:38.0) Gecko/20100101 Firefox/38.0");
-            webSettings.setDefaultTextEncodingName("iso-8859-15");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
         }
         else if(pageUri.contains("webofknowledge.com"))
         {
@@ -234,6 +236,12 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                 }
 
                 return false;
+            }
+
+            @Override
+            public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
+            {
+                handler.proceed();
             }
         });
 

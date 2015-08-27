@@ -117,8 +117,9 @@
     <string name="diseases_and_treatments_search_helsebiblioteket">Helsebiblioteket</string>
     <string name="diseases_and_treatments_search_oncolex">Oncolex</string>
     <string name="diseases_and_treatments_search_tidsskriftet">Tidsskrift for Den norske legeforening</string>
-    <string name="diseases_and_treatments_search_helsenorge">Helsenorge.no</string>
     <string name="diseases_and_treatments_search_brukerhandboken">Nasjonal brukerhåndbok i Medisinsk Biokjemi</string>
+    <string name="diseases_and_treatments_search_legehandboka">Legehåndboka</string>
+    <string name="diseases_and_treatments_search_helsenorge">Helsenorge.no</string>
     <string name="diseases_and_treatments_search_no_results">Ingen treff i denne kilden</string>
 
     <!-- Diseases and treatments search web view -->

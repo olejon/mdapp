@@ -85,6 +85,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
     private int mFirstTidsskriftetPosition;
     private int mFirstOncolexPosition;
     private int mFirstBrukerhandbokenPosition;
+    private int mFirstLegehandbokaPosition;
     private int mFirstHelsenorgePosition;
 
     // Create activity
@@ -384,6 +385,19 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                 }
                 case 9:
                 {
+                    if(mFirstLegehandbokaPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstLegehandbokaPosition);
+                    }
+
+                    break;
+                }
+                case 10:
+                {
                     if(mFirstHelsenorgePosition == 0)
                     {
                         mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
@@ -429,6 +443,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
         mFirstTidsskriftetPosition = 0;
         mFirstOncolexPosition = 0;
         mFirstBrukerhandbokenPosition = 0;
+        mFirstLegehandbokaPosition = 0;
         mFirstHelsenorgePosition = 0;
 
         try
@@ -437,7 +452,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
 
             String apiUri = getString(R.string.project_website_uri)+"api/1/diseases-and-treatments/"+language+"/?search="+URLEncoder.encode(string, "utf-8");
 
-            if(!cache) requestQueue.getCache().remove(apiUri);
+            if(!cache) requestQueue.getCache().clear();
 
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
             {
@@ -477,6 +492,8 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                             if(mFirstOncolexPosition == 0 && type.equals("oncolex")) mFirstOncolexPosition = i;
 
                             if(mFirstBrukerhandbokenPosition == 0 && type.equals("brukerhandboken")) mFirstBrukerhandbokenPosition = i;
+
+                            if(mFirstLegehandbokaPosition == 0 && type.equals("legehandboka")) mFirstLegehandbokaPosition = i;
 
                             if(mFirstHelsenorgePosition == 0 && type.equals("helsenorge")) mFirstHelsenorgePosition = i;
                         }

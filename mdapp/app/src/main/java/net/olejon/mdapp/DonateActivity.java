@@ -25,6 +25,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -199,7 +200,9 @@ public class DonateActivity extends AppCompatActivity
             Bundle bundle = mIInAppBillingService.getBuyIntent(3, getPackageName(), product, "inapp", "");
             PendingIntent pendingIntent = bundle.getParcelable("BUY_INTENT");
 
-            startIntentSenderForResult(pendingIntent.getIntentSender(), 1, new Intent(), 0, 0, 0);
+            IntentSender intentSender = (pendingIntent != null) ? pendingIntent.getIntentSender() : null;
+
+            startIntentSenderForResult(intentSender, 1, new Intent(), 0, 0, 0);
         }
         catch(Exception e)
         {
@@ -231,14 +234,17 @@ public class DonateActivity extends AppCompatActivity
             {
                 ArrayList<String> purchaseDataArrayList = bundle.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
 
-                for(String purchaseData : purchaseDataArrayList)
+                if(purchaseDataArrayList != null)
                 {
-                    JSONObject purchaseDataJsonObject = new JSONObject(purchaseData);
+                    for(String purchaseData : purchaseDataArrayList)
+                    {
+                        JSONObject purchaseDataJsonObject = new JSONObject(purchaseData);
 
-                    consumeDonation(purchaseDataJsonObject.getString("purchaseToken"));
+                        consumeDonation(purchaseDataJsonObject.getString("purchaseToken"));
+                    }
+
+                    mTools.showToast(getString(R.string.donate_reset_successful), 0);
                 }
-
-                mTools.showToast(getString(R.string.donate_reset_successful), 0);
             }
             else
             {
@@ -271,29 +277,32 @@ public class DonateActivity extends AppCompatActivity
                     {
                         ArrayList<String> responseArrayList = skuDetailsBundle.getStringArrayList("DETAILS_LIST");
 
-                        for(String details : responseArrayList)
+                        if(responseArrayList != null)
                         {
-                            JSONObject detailsJsonObject = new JSONObject(details);
-
-                            String sku = detailsJsonObject.getString("productId");
-                            String price = detailsJsonObject.getString("price");
-
-                            switch(sku)
+                            for(String details : responseArrayList)
                             {
-                                case "small_donation":
+                                JSONObject detailsJsonObject = new JSONObject(details);
+
+                                String sku = detailsJsonObject.getString("productId");
+                                String price = detailsJsonObject.getString("price");
+
+                                switch(sku)
                                 {
-                                    mMakeSmallDonationButton.setText(getString(R.string.donate_donate)+" "+price);
-                                    break;
-                                }
-                                case "medium_donation":
-                                {
-                                    mMakeMediumDonationButton.setText(getString(R.string.donate_donate)+" "+price);
-                                    break;
-                                }
-                                case "big_donation":
-                                {
-                                    mMakeBigDonationButton.setText(getString(R.string.donate_donate)+" "+price);
-                                    break;
+                                    case "small_donation":
+                                    {
+                                        mMakeSmallDonationButton.setText(getString(R.string.donate_donate)+" "+price);
+                                        break;
+                                    }
+                                    case "medium_donation":
+                                    {
+                                        mMakeMediumDonationButton.setText(getString(R.string.donate_donate)+" "+price);
+                                        break;
+                                    }
+                                    case "big_donation":
+                                    {
+                                        mMakeBigDonationButton.setText(getString(R.string.donate_donate)+" "+price);
+                                        break;
+                                    }
                                 }
                             }
                         }

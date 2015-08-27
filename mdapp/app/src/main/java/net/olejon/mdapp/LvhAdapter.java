@@ -23,6 +23,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -99,7 +100,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     color = "#F44336";
                     icon = "lvh_urgent";
 
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
                     viewHolder.icon.setImageResource(R.drawable.ic_favorite_white_24dp);
 
                     break;
@@ -109,7 +110,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     color = "#9C27B0";
                     icon = "lvh_symptoms";
 
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.purple));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.purple));
                     viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
 
                     break;
@@ -119,7 +120,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     color = "#FF9800";
                     icon = "lvh_injuries";
 
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.orange));
                     viewHolder.icon.setImageResource(R.drawable.ic_healing_white_24dp);
 
                     break;
@@ -129,7 +130,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     color = "#009688";
                     icon = "lvh_administrative";
 
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.teal));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.teal));
                     viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
 
                     break;
@@ -139,7 +140,7 @@ public class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHold
                     color = "#009688";
                     icon = "lvh_administrative";
 
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.teal));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.teal));
                     viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
                 }
             }

@@ -181,6 +181,12 @@ public class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<Dis
                     viewHolder.text.setText(text);
                     break;
                 }
+                case "legehandboka":
+                {
+                    viewHolder.icon.setImageResource(R.drawable.legehandboka);
+                    viewHolder.text.setText(text);
+                    break;
+                }
             }
 
             viewHolder.card.setOnClickListener(new View.OnClickListener()

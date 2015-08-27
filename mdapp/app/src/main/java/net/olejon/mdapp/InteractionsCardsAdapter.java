@@ -23,6 +23,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -122,7 +123,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
             {
                 case "red":
                 {
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
                     viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
 
@@ -130,7 +131,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 }
                 case "orange":
                 {
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.orange));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_orange));
                     viewHolder.icon.setImageResource(R.drawable.ic_warning_white_24dp);
 
@@ -138,7 +139,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 }
                 case "green":
                 {
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_green));
                     viewHolder.icon.setImageResource(R.drawable.ic_check_white_24dp);
 
@@ -146,7 +147,7 @@ public class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsC
                 }
                 default:
                 {
-                    viewHolder.card.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
+                    viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
                     viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
                     viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
 

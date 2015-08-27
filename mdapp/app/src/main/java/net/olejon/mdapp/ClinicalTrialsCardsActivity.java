@@ -248,7 +248,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
             String apiUri = getString(R.string.project_website_uri)+"api/1/clinicaltrials/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
 
-            if(!cache) requestQueue.getCache().remove(apiUri);
+            if(!cache) requestQueue.getCache().clear();
 
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
             {

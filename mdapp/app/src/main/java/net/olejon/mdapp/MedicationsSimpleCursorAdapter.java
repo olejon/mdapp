@@ -42,7 +42,7 @@ public class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
 
         TextView textView = (TextView) view.findViewById(R.id.main_medications_list_item_prescription_group);
 
-        String prescriptionGroup = (String) textView.getText();
+        String prescriptionGroup = textView.getText().toString();
 
         switch(prescriptionGroup)
         {

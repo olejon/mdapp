@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -61,18 +62,18 @@ class AtcCodesSimpleCursorAdapter extends SimpleCursorAdapter
         {
             linearLayout.setBackgroundResource(R.drawable.atc_codes_code);
 
-            atcCodeTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
+            atcCodeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.purple));
 
-            atcNameTextView.setTextColor(mContext.getResources().getColor(R.color.purple));
+            atcNameTextView.setTextColor(ContextCompat.getColor(mContext, R.color.purple));
             atcNameTextView.setTypeface(Typeface.DEFAULT_BOLD);
         }
         else
         {
-            linearLayout.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+            linearLayout.setBackgroundColor(ContextCompat.getColor(mContext, android.R.color.transparent));
 
-            atcCodeTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            atcCodeTextView.setTextColor(ContextCompat.getColor(mContext, android.R.color.black));
 
-            atcNameTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            atcNameTextView.setTextColor(ContextCompat.getColor(mContext, android.R.color.black));
             atcNameTextView.setTypeface(Typeface.DEFAULT);
         }
 
