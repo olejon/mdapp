@@ -21,7 +21,6 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -43,7 +42,6 @@ public class MedicationFelleskatalogenFragment extends Fragment
 {
     public static WebView WEBVIEW;
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
     {

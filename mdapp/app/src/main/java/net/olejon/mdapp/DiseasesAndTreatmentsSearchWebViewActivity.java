@@ -21,7 +21,6 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -54,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivity
@@ -78,7 +78,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
     private boolean mWebViewAnimationHasBeenShown = false;
 
     // Create activity
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
@@ -113,7 +112,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search_layout);
@@ -191,7 +189,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:41.0) Gecko/20100101 Firefox/41.0");
         }
         else if(pageUri.contains("webofknowledge.com"))
         {
@@ -277,17 +275,13 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
                     if(mWebViewAnimationHasBeenShown)
                     {
-                        if(pageUri.contains("helsebiblioteket.no"))  mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8); } else if($('h3 > a').length) { javascript:window.location.replace($('h3 > a').attr('href')); }");
+                        if(pageUri.contains("helsebiblioteket.no"))  mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8);");
                     }
                     else
                     {
                         mWebViewAnimationHasBeenShown = true;
 
-                        if(pageUri.contains("uptodate.com"))
-                        {
-                            mWebView.loadUrl("javascript:setTimeout(function() { var offset = $('h2').offset(); window.scrollTo(0, offset.top - 8); }, 1000);");
-                        }
-                        else if(pageUri.contains("bestpractice.bmj.com"))
+                        if(pageUri.contains("bestpractice.bmj.com"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('small.monograph-title').offset(); window.scrollTo(0, offset.top - 8);");
                         }
@@ -305,7 +299,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         }
                         else if(pageUri.contains("helsebiblioteket.no"))
                         {
-                            mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8); } else if($('h3 > a').length) { javascript:window.location.replace($('h3 > a').attr('href')); }");
+                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("tidsskriftet.no"))
                         {
@@ -492,10 +486,10 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
                 if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
-                        public void onPositive(MaterialDialog dialog)
+                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
                             mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
                         }

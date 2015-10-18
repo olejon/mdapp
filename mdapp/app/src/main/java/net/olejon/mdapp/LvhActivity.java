@@ -71,7 +71,6 @@ public class LvhActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -127,7 +126,7 @@ public class LvhActivity extends AppCompatActivity
 
         String apiUri = getString(R.string.project_website_uri)+"api/1/lvh/";
 
-        if(!cache) requestQueue.getCache().clear();
+        if(!cache) requestQueue.getCache().remove(apiUri);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
         {

@@ -87,7 +87,6 @@ public class Icd10Activity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_toolbar_search_layout);

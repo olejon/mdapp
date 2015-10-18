@@ -21,13 +21,18 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -46,6 +51,10 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class BarcodeScannerActivity extends Activity implements ZXingScannerView.ResultHandler
 {
+    private final int PERMISSIONS_REQUEST_CAMERA = 0;
+
+    private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -58,16 +67,18 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
     {
         super.onCreate(state);
 
+        // Connected?
+        if(!mTools.isDeviceConnected())
+        {
+            mTools.showToast(getString(R.string.device_not_connected), 1);
+
+            finish();
+
+            return;
+        }
+
         // Window
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // Barcode scanner
-        mZXingScannerView = new ZXingScannerView(this);
-
-        setContentView(mZXingScannerView);
-
-        // Toast
-        mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
     }
 
     // Resume activity
@@ -75,6 +86,12 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
     public void onResume()
     {
         super.onResume();
+
+        grantPermissions();
+
+        mZXingScannerView = new ZXingScannerView(this);
+
+        setContentView(mZXingScannerView);
 
         mZXingScannerView.setResultHandler(this);
 
@@ -164,5 +181,31 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(jsonObjectRequest);
+    }
+
+    // Permissions
+    private void grantPermissions()
+    {
+        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        {
+            String[] permissions = {Manifest.permission.CAMERA};
+
+            ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_CAMERA);
+        }
+        else
+        {
+            mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == PERMISSIONS_REQUEST_CAMERA && grantResults[0] != PackageManager.PERMISSION_GRANTED)
+        {
+            mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
+
+            finish();
+        }
     }
 }

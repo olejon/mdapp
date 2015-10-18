@@ -28,6 +28,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -39,6 +40,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.json.JSONArray;
@@ -91,7 +93,6 @@ public class NotesEditActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Elements
@@ -312,16 +313,17 @@ public class NotesEditActivity extends AppCompatActivity
 
     private void showSaveNoteDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_save_dialog_title)).content(getString(R.string.notes_edit_save_dialog_message)).positiveText(getString(R.string.notes_edit_save_dialog_positive_button)).neutralText(getString(R.string.notes_edit_save_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+        new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_save_dialog_title)).content(getString(R.string.notes_edit_save_dialog_message)).positiveText(getString(R.string.notes_edit_save_dialog_positive_button)).neutralText(getString(R.string.notes_edit_save_dialog_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
         {
             @Override
-            public void onPositive(MaterialDialog dialog)
+            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
             {
                 saveNote();
             }
-
+        }).onNeutral(new MaterialDialog.SingleButtonCallback()
+        {
             @Override
-            public void onNeutral(MaterialDialog dialog)
+            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
             {
                 finish();
             }
@@ -343,10 +345,10 @@ public class NotesEditActivity extends AppCompatActivity
         }
         else
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_delete_dialog_title)).content(getString(R.string.notes_edit_delete_dialog_message)).positiveText(getString(R.string.notes_edit_delete_dialog_positive_button)).neutralText(getString(R.string.notes_edit_delete_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_delete_dialog_title)).content(getString(R.string.notes_edit_delete_dialog_message)).positiveText(getString(R.string.notes_edit_delete_dialog_positive_button)).neutralText(getString(R.string.notes_edit_delete_dialog_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
             {
                 @Override
-                public void onPositive(MaterialDialog dialog)
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                 {
                     deleteNote(true);
                 }
@@ -470,7 +472,7 @@ public class NotesEditActivity extends AppCompatActivity
                                     sqLiteDatabase.close();
                                 }
                             }
-                        }).itemColorRes(R.color.dark_blue).show();
+                        }).itemsColorRes(R.color.dark_blue).show();
                     }
                 });
             }

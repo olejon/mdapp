@@ -82,7 +82,6 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.notes_edit_medications_toolbar_search_layout);

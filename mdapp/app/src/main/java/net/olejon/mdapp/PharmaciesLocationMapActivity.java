@@ -21,9 +21,15 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -49,6 +55,10 @@ import java.net.URLEncoder;
 
 public class PharmaciesLocationMapActivity extends AppCompatActivity implements OnMapReadyCallback
 {
+    private final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 0;
+
+    private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -90,7 +100,6 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Map
@@ -140,6 +149,8 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
 
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+
+                        grantPermissions();
                     }
                     catch(Exception e)
                     {
@@ -171,5 +182,19 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         {
             Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
         }
+    }
+
+    // Permissions
+    private void grantPermissions()
+    {
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == PERMISSIONS_REQUEST_ACCESS_LOCATION && grantResults[0] != PackageManager.PERMISSION_GRANTED) mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
     }
 }

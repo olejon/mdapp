@@ -51,6 +51,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.gms.analytics.HitBuilders;
@@ -108,7 +109,6 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
@@ -402,10 +402,10 @@ public class MainActivity extends AppCompatActivity
             {
                 mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_140", true);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onPositive(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=net.olejon.mdapp"));
                         startActivity(intent);
@@ -424,10 +424,10 @@ public class MainActivity extends AppCompatActivity
             {
                 mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_140", true);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onPositive(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         Intent intent = new Intent(mContext, DonateActivity.class);
                         startActivity(intent);
@@ -669,6 +669,8 @@ public class MainActivity extends AppCompatActivity
 
                 try
                 {
+                    Log.w("LOG", getString(R.string.main_decompressing_new_database));
+
                     File file = getDatabasePath(SlDataSQLiteHelper.DB_NAME);
 
                     InputStream inputStream = mContext.getAssets().open(SlDataSQLiteHelper.DB_NAME);
@@ -685,6 +687,8 @@ public class MainActivity extends AppCompatActivity
                     outputStream.flush();
                     outputStream.close();
                     inputStream.close();
+
+                    Log.w("LOG", getString(R.string.main_new_database_decompressed));
                 }
                 catch(Exception e)
                 {

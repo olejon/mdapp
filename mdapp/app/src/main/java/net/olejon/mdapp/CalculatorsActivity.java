@@ -24,6 +24,7 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +39,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 public class CalculatorsActivity extends AppCompatActivity
@@ -64,7 +66,6 @@ public class CalculatorsActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // BMI
@@ -199,16 +200,17 @@ public class CalculatorsActivity extends AppCompatActivity
     // Information dialog
     private void showInformationDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_information_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_information_dialog_message))).positiveText(getString(R.string.calculators_information_dialog_positive_button)).neutralText(getString(R.string.calculators_information_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+        new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_information_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_information_dialog_message))).positiveText(getString(R.string.calculators_information_dialog_positive_button)).neutralText(getString(R.string.calculators_information_dialog_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
         {
             @Override
-            public void onPositive(MaterialDialog dialog)
+            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
             {
                 mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
             }
-
+        }).onNeutral(new MaterialDialog.SingleButtonCallback()
+        {
             @Override
-            public void onNeutral(MaterialDialog dialog)
+            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
             {
                 mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
 
@@ -267,10 +269,10 @@ public class CalculatorsActivity extends AppCompatActivity
 
                 String bmi = String.format("%.1f", result);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_bmi_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_bmi_dialog_message_first)+"<br><b>"+bmi+"</b><br><br>"+getString(R.string.calculators_bmi_dialog_message_second)+"<br><b>"+interpretation+"</b><br><br><small><i>"+getString(R.string.calculators_bmi_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_bmi_dialog_positive_button)).neutralText(getString(R.string.calculators_bmi_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_bmi_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_bmi_dialog_message_first)+"<br><b>"+bmi+"</b><br><br>"+getString(R.string.calculators_bmi_dialog_message_second)+"<br><b>"+interpretation+"</b><br><br><small><i>"+getString(R.string.calculators_bmi_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_bmi_dialog_positive_button)).neutralText(getString(R.string.calculators_bmi_dialog_neutral_button)).onNeutral(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onNeutral(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         showInformationDialog();
                     }
@@ -320,10 +322,10 @@ public class CalculatorsActivity extends AppCompatActivity
                     interpretation = "<font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
                 }
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_waist_measurement_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_waist_measurement_dialog_message_first)+"<br><b>"+waistMeasurementEditTextValue+" cm</b><br><br>"+getString(R.string.calculators_waist_measurement_dialog_message_second)+"<br>"+interpretation+"<br><br><small><i>"+getString(R.string.calculators_waist_measurement_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_waist_measurement_dialog_positive_button)).neutralText(getString(R.string.calculators_waist_measurement_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_waist_measurement_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_waist_measurement_dialog_message_first)+"<br><b>"+waistMeasurementEditTextValue+" cm</b><br><br>"+getString(R.string.calculators_waist_measurement_dialog_message_second)+"<br>"+interpretation+"<br><br><small><i>"+getString(R.string.calculators_waist_measurement_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_waist_measurement_dialog_positive_button)).neutralText(getString(R.string.calculators_waist_measurement_dialog_neutral_button)).onNeutral(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onNeutral(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         showInformationDialog();
                     }
@@ -359,10 +361,10 @@ public class CalculatorsActivity extends AppCompatActivity
 
                 int result = (int) Math.round(qtInterval / Math.sqrt(rrInterval) * 1000);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_corrected_qt_time_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_corrected_qt_time_dialog_message_first)+"<br><b>"+result+" ms</b><br><br><small><i>"+getString(R.string.calculators_corrected_qt_time_dialog_message_second)+"</i></small>")).positiveText(getString(R.string.calculators_corrected_qt_time_dialog_positive_button)).neutralText(getString(R.string.calculators_corrected_qt_time_dialog_neutral_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_corrected_qt_time_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_corrected_qt_time_dialog_message_first)+"<br><b>"+result+" ms</b><br><br><small><i>"+getString(R.string.calculators_corrected_qt_time_dialog_message_second)+"</i></small>")).positiveText(getString(R.string.calculators_corrected_qt_time_dialog_positive_button)).neutralText(getString(R.string.calculators_corrected_qt_time_dialog_neutral_button)).onNeutral(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onNeutral(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.calculators_corrected_qt_time_dialog_title));

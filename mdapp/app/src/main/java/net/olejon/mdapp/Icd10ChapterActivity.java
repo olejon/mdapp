@@ -123,7 +123,6 @@ public class Icd10ChapterActivity extends AppCompatActivity
 
         setSupportActionBar(mToolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_chapter_toolbar_search_layout);

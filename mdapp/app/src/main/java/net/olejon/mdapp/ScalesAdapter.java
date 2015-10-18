@@ -57,7 +57,9 @@ public class ScalesAdapter extends RecyclerView.Adapter<ScalesAdapter.ScaleViewH
         private final CardView card;
         private final TextView title;
         private final ImageView image;
+        private final View separator;
         private final TextView button;
+        private final TextView medscape;
 
         public ScaleViewHolder(View view)
         {
@@ -66,7 +68,9 @@ public class ScalesAdapter extends RecyclerView.Adapter<ScalesAdapter.ScaleViewH
             card = (CardView) view.findViewById(R.id.scales_card);
             title = (TextView) view.findViewById(R.id.scales_card_title);
             image = (ImageView) view.findViewById(R.id.scales_card_image);
+            separator = view.findViewById(R.id.scales_card_separator);
             button = (TextView) view.findViewById(R.id.scales_card_button);
+            medscape = (TextView) view.findViewById(R.id.scales_medscape);
         }
     }
 
@@ -82,34 +86,57 @@ public class ScalesAdapter extends RecyclerView.Adapter<ScalesAdapter.ScaleViewH
     {
         viewHolder.title.setText(mScalesTitlesArrayList.get(i));
 
-        viewHolder.image.setImageResource(mScalesImagesArrayList.get(i));
-
-        viewHolder.title.setOnClickListener(new View.OnClickListener()
+        if(mScalesImagesArrayList.get(i) == null)
         {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(mScalesImagesArrayList.get(i));
-            }
-        });
+            viewHolder.title.setVisibility(View.GONE);
+            viewHolder.image.setVisibility(View.GONE);
+            viewHolder.separator.setVisibility(View.GONE);
+            viewHolder.button.setVisibility(View.GONE);
 
-        viewHolder.image.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+            viewHolder.medscape.setOnClickListener(new View.OnClickListener()
             {
-                showScale(mScalesImagesArrayList.get(i));
-            }
-        });
+                @Override
+                public void onClick(View view)
+                {
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                    intent.putExtra("title", mContext.getString(R.string.scales_medscape_title));
+                    intent.putExtra("uri", "http://search.medscape.com/search/?q=scale");
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+        else
+        {
+            viewHolder.medscape.setVisibility(View.GONE);
+            viewHolder.image.setImageResource(mScalesImagesArrayList.get(i));
 
-        viewHolder.button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+            viewHolder.title.setOnClickListener(new View.OnClickListener()
             {
-                showScale(mScalesImagesArrayList.get(i));
-            }
-        });
+                @Override
+                public void onClick(View view)
+                {
+                    showScale(mScalesImagesArrayList.get(i));
+                }
+            });
+
+            viewHolder.image.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    showScale(mScalesImagesArrayList.get(i));
+                }
+            });
+
+            viewHolder.button.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    showScale(mScalesImagesArrayList.get(i));
+                }
+            });
+        }
 
         animateView(viewHolder.card, i);
     }

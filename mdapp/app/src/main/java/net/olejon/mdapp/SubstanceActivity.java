@@ -87,7 +87,6 @@ public class SubstanceActivity extends AppCompatActivity
 
             setSupportActionBar(toolbar);
 
-            //noinspection ConstantConditions
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             // ATC code

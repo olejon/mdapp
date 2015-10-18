@@ -53,6 +53,7 @@ import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -107,7 +108,6 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.nasjonale_retningslinjer_toolbar_search_layout);
@@ -343,10 +343,10 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                         }
                         else
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                             {
                                 @Override
-                                public void onPositive(MaterialDialog dialog)
+                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                                 {
                                     saveRecentSearch(correctSearchString);
 
@@ -362,17 +362,18 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                                         Log.e("NasjonaleRetningslinjer", Log.getStackTraceString(e));
                                     }
                                 }
-
+                            }).onNegative(new MaterialDialog.SingleButtonCallback()
+                            {
                                 @Override
-                                public void onNegative(MaterialDialog dialog)
+                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                                 {
-                                    saveRecentSearch(searchString);
+                                    saveRecentSearch(correctSearchString);
 
                                     try
                                     {
                                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+searchString+"\"");
-                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+correctSearchString+"\"");
+                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(correctSearchString.toLowerCase(), "utf-8"));
                                         startActivity(intent);
                                     }
                                     catch(Exception e)

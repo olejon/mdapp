@@ -31,6 +31,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -54,6 +55,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
 import com.nispok.snackbar.Snackbar;
@@ -122,7 +124,6 @@ public class MedicationActivity extends AppCompatActivity
 
         setSupportActionBar(mToolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.medication_toolbar_search_layout);
@@ -291,10 +292,10 @@ public class MedicationActivity extends AppCompatActivity
 
                 if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
-                        public void onPositive(MaterialDialog dialog)
+                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
                             mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
                         }
@@ -333,10 +334,10 @@ public class MedicationActivity extends AppCompatActivity
             {
                 if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_note_dialog_title)).content(getString(R.string.medication_note_dialog_message)).positiveText(getString(R.string.medication_note_dialog_positive_button)).negativeText(getString(R.string.medication_note_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_note_dialog_title)).content(getString(R.string.medication_note_dialog_message)).positiveText(getString(R.string.medication_note_dialog_positive_button)).negativeText(getString(R.string.medication_note_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
-                        public void onPositive(MaterialDialog dialog)
+                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
                             Intent intent = new Intent(mContext, NotesActivity.class);
                             startActivity(intent);
@@ -700,10 +701,10 @@ public class MedicationActivity extends AppCompatActivity
 
                     if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_140"))
                     {
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.medication_tip_dialog_title)).content(getString(R.string.medication_tip_dialog_message)).positiveText(getString(R.string.medication_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                        new MaterialDialog.Builder(mContext).title(getString(R.string.medication_tip_dialog_title)).content(getString(R.string.medication_tip_dialog_message)).positiveText(getString(R.string.medication_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                         {
                             @Override
-                            public void onPositive(MaterialDialog dialog)
+                            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                             {
                                 mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_140", true);
                             }
@@ -712,16 +713,17 @@ public class MedicationActivity extends AppCompatActivity
                 }
                 else
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_not_connected_dialog_title)).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(getString(R.string.medication_not_connected_dialog_positive_button)).negativeText(getString(R.string.medication_not_connected_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_not_connected_dialog_title)).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(getString(R.string.medication_not_connected_dialog_positive_button)).negativeText(getString(R.string.medication_not_connected_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
-                        public void onPositive(MaterialDialog dialog)
+                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
                             getMedication();
                         }
-
+                    }).onNegative(new MaterialDialog.SingleButtonCallback()
+                    {
                         @Override
-                        public void onNegative(MaterialDialog dialog)
+                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
                             finish();
                         }

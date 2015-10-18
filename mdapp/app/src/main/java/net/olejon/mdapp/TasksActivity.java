@@ -28,6 +28,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -73,7 +75,6 @@ public class TasksActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Floating action button
@@ -84,12 +85,12 @@ public class TasksActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_dialog_title)).customView(R.layout.activity_tasks_dialog, true).positiveText(getString(R.string.tasks_dialog_positive_button)).negativeText(getString(R.string.tasks_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_dialog_title)).customView(R.layout.activity_tasks_dialog, true).positiveText(getString(R.string.tasks_dialog_positive_button)).negativeText(getString(R.string.tasks_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onPositive(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
-                        EditText taskEditText = (EditText) dialog.findViewById(R.id.tasks_dialog_task);
+                        EditText taskEditText = (EditText) materialDialog.findViewById(R.id.tasks_dialog_task);
 
                         String task = taskEditText.getText().toString().trim();
 
@@ -108,16 +109,17 @@ public class TasksActivity extends AppCompatActivity
 
                             mSqLiteDatabase.insert(TasksSQLiteHelper.TABLE, null, contentValues);
 
-                            dialog.dismiss();
+                            materialDialog.dismiss();
 
                             getTasks();
                         }
                     }
-
+                }).onNegative(new MaterialDialog.SingleButtonCallback()
+                {
                     @Override
-                    public void onNegative(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
-                        dialog.dismiss();
+                        materialDialog.dismiss();
                     }
                 }).showListener(new DialogInterface.OnShowListener()
                 {
@@ -144,10 +146,10 @@ public class TasksActivity extends AppCompatActivity
         // Tip dialog
         if(!mTools.getSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG"))
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_tip_dialog_title)).content(getString(R.string.tasks_tip_dialog_message)).positiveText(getString(R.string.tasks_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+            new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_tip_dialog_title)).content(getString(R.string.tasks_tip_dialog_message)).positiveText(getString(R.string.tasks_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
             {
                 @Override
-                public void onPositive(MaterialDialog dialog)
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                 {
                     mTools.setSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG", true);
                 }

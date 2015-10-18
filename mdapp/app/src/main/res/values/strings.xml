@@ -28,11 +28,13 @@
     <string name="main_donate_dialog_negative_button">Nei takk</string>
     <string name="main_menu_scan_barcode">Skann strekkode</string>
     <string name="main_menu_donate">Doner</string>
+    <string name="main_decompressing_new_database">Dekomprimerer ny database</string>
+    <string name="main_new_database_decompressed">Ny database dekomprimert</string>
 
     <!-- Main web view -->
     <string name="main_webview_toolbar_search_hint">Finn i tekst…</string>
     <string name="main_webview_tip_dialog_title">Tips</string>
-    <string name="main_webview_tip_dialog_message">Merk at du vil få treff fra både Legemiddelhåndboka, Brukerhåndboken, UpToDate og BMJ Best Practice dersom du søker i seksjonen Sykdommer og behandlinger, avhengig av språk.</string>
+    <string name="main_webview_tip_dialog_message">Merk at du vil få treff fra både Legemiddelhåndboka, Brukerhåndboken, Legehåndboka, UpToDate og BMJ Best Practice dersom du søker i seksjonen Sykdommer og behandlinger, avhengig av språk.</string>
     <string name="main_webview_tip_dialog_positive_button">OK</string>
     <string name="main_webview_nel_dialog_title">Legehåndboka</string>
     <string name="main_webview_nel_dialog_message">Merk at Norsk Elektronisk Legehåndbok krever at du logger inn for å få tilgang til innholdet.</string>
@@ -96,7 +98,7 @@
     <string name="diseases_and_treatments_norwegian">Norsk</string>
     <string name="diseases_and_treatments_recent_searches">Nylige søk</string>
     <string name="diseases_and_treatments_no_recent_searches">Ingen nylige søk</string>
-    <string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>PubMed</i>, <i>Web of Science</i>, <i>MedlinePlus</i>, <i>Wikipedia</i>, <i>UpToDate</i> og <i>BMJ Best Practice</i>.\n\nDe norske kildene som benyttes er <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Wikipedia</i>, <i>Forskning.no</i>, <i>Helsebiblioteket</i>, <i>Oncolex</i>, <i>Tidsskrift for Den norske legeforening</i>, <i>Helsenorge.no</i> og <i>Nasjonal brukerhåndbok i Medisinsk Biokjemi</i>.</string>
+    <string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>PubMed</i>, <i>Web of Science</i>, <i>MedlinePlus</i>, <i>Wikipedia</i>, <i>UpToDate</i> og <i>BMJ Best Practice</i>.\n\nDe norske kildene som benyttes er <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Wikipedia</i>, <i>Forskning.no</i>, <i>Helsebiblioteket</i>, <i>Tidsskrift for Den norske legeforening</i>, <i>Oncolex</i>, <i>Nasjonal brukerhåndbok i Medisinsk Biokjemi</i>, <i>Legehåndboka</i> og <i>Helsenorge.no</i>.</string>
     <string name="diseases_and_treatments_recent_searches_removed">Nylige søk fjernet</string>
     <string name="diseases_and_treatments_menu_voice_search">Talesøk</string>
     <string name="diseases_and_treatments_menu_clear_recent_searches">Fjern nylige søk</string>
@@ -267,6 +269,8 @@
 
     <!-- Scales -->
     <string name="scales_title">Skalaer</string>
+    <string name="scales_medscape">Flere skalaer hos Medscape</string>
+    <string name="scales_medscape_title">Medscape</string>
     <string name="scales_vas">Visual Analog Scale</string>
     <string name="scales_gcs">Glasgow Coma Scale</string>
     <string name="scales_mews">Modified Early Warning System</string>
@@ -420,7 +424,7 @@
     <!-- Donate -->
     <string name="donate_title">Doner</string>
     <string name="donate_getting_product">Henter produkt…</string>
-    <string name="donate_information">Når du trykker på en av knappene over vil det komme opp en dialog hvor du kan bekrefte eller avbryte donasjonen.\n\nTusen takk!</string>
+    <string name="donate_information">Når du trykker på en av knappene over vil det komme opp en dialog hvor du kan bekrefte eller avbryte donasjonen.\n\nObs: Donasjoner går til utvikler, ikke innholdskildene.\n\nTusen takk!</string>
     <string name="donate_thank_you">Tusen takk for din donasjon!</string>
     <string name="donate_something_went_wrong">Noe gikk galt. Vennligst prøv igjen.</string>
     <string name="donate_reset_successful">Suksess</string>
@@ -510,6 +514,7 @@
 
     <!-- Various -->
     <string name="device_not_connected">Du må være tilkoblet Internett</string>
+    <string name="device_permissions_not_granted">Uten aktuell tillatelse får du ikke full funksjonalitet</string>
     <string name="device_not_supported_dialog_title">Ikke støttet</string>
     <string name="device_not_supported_dialog_message">Ikke støttet på denne enheten.</string>
     <string name="device_not_supported_dialog_positive_button">Lukk</string>

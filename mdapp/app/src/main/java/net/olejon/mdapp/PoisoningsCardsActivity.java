@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -102,7 +104,6 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
         setSupportActionBar(mToolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -192,10 +193,10 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
                         if(!correctSearchString.equals(""))
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).callback(new MaterialDialog.ButtonCallback()
+                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                             {
                                 @Override
-                                public void onPositive(MaterialDialog dialog)
+                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                                 {
                                     ContentValues contentValues = new ContentValues();
                                     contentValues.put(PoisoningsSQLiteHelper.COLUMN_STRING, correctSearchString);
@@ -291,7 +292,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
             String apiUri = getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
 
-            if(!cache) requestQueue.getCache().clear();
+            if(!cache) requestQueue.getCache().remove(apiUri);
 
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
             {

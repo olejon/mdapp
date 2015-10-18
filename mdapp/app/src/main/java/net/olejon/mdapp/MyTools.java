@@ -85,7 +85,6 @@ class MyTools
         return sharedPreferences.getBoolean(preference, false);
     }
 
-    @SuppressWarnings("SameParameterValue")
     public void setSharedPreferencesBoolean(String preference, boolean bool)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);

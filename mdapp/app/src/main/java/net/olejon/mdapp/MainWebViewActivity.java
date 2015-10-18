@@ -21,12 +21,12 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -50,6 +50,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MainWebViewActivity extends AppCompatActivity
@@ -72,7 +73,6 @@ public class MainWebViewActivity extends AppCompatActivity
 
     private boolean mWebViewAnimationHasBeenShown = false;
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
@@ -106,7 +106,6 @@ public class MainWebViewActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.main_webview_toolbar_search_layout);
@@ -181,7 +180,7 @@ public class MainWebViewActivity extends AppCompatActivity
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:41.0) Gecko/20100101 Firefox/41.0");
         }
         else if(pageUri.contains("interaksjoner.no"))
         {
@@ -267,7 +266,7 @@ public class MainWebViewActivity extends AppCompatActivity
                         }
                         else if(pageUri.contains("helsebiblioteket.no"))
                         {
-                            mWebView.loadUrl("javascript:if($('h1').length) { var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8); } else if($('h3 > a').length) { javascript:window.location.replace($('h3 > a').attr('href')); }");
+                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8);");
                         }
                         else if(pageUri.contains("helsedirektoratet.no"))
                         {
@@ -351,10 +350,10 @@ public class MainWebViewActivity extends AppCompatActivity
         {
             if(!mTools.getSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG"))
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_tip_dialog_title)).content(getString(R.string.main_webview_tip_dialog_message)).positiveText(getString(R.string.main_webview_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_tip_dialog_title)).content(getString(R.string.main_webview_tip_dialog_message)).positiveText(getString(R.string.main_webview_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onPositive(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG", true);
                     }
@@ -365,10 +364,10 @@ public class MainWebViewActivity extends AppCompatActivity
         {
             if(!mTools.getSharedPreferencesBoolean("MAIN_WEBVIEW_NEL_DIALOG"))
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_nel_dialog_title)).content(getString(R.string.main_webview_nel_dialog_message)).positiveText(getString(R.string.main_webview_nel_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_nel_dialog_title)).content(getString(R.string.main_webview_nel_dialog_message)).positiveText(getString(R.string.main_webview_nel_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onPositive(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_NEL_DIALOG", true);
                     }
@@ -480,10 +479,10 @@ public class MainWebViewActivity extends AppCompatActivity
 
                 if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
-                        public void onPositive(MaterialDialog dialog)
+                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
                             mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
                         }

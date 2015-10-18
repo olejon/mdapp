@@ -70,7 +70,6 @@ public class AtcActivity extends AppCompatActivity
 
         setSupportActionBar(mToolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // List

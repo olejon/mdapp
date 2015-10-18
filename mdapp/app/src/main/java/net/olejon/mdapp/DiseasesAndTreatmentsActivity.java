@@ -94,7 +94,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_toolbar_search_layout);

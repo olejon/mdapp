@@ -7,9 +7,11 @@
         <TextView android:id="@+id/scales_card_title" style="@style/scales_card_title"/>
         <ImageView android:id="@+id/scales_card_image" android:contentDescription="@string/image_content_description" style="@style/scales_card_image"/>
 
-        <View style="@style/card_separator"/>
+        <View android:id="@+id/scales_card_separator" style="@style/card_separator"/>
 
         <TextView android:id="@+id/scales_card_button" android:text="@string/scales_card_button" style="@style/scales_card_button"/>
+
+        <TextView android:id="@+id/scales_medscape" android:text="@string/scales_medscape" style="@style/scales_medscape"/>
 
     </LinearLayout>
 

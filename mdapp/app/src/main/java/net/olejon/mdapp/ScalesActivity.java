@@ -53,7 +53,6 @@ public class ScalesActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Recycler view
@@ -62,10 +61,12 @@ public class ScalesActivity extends AppCompatActivity
         final ArrayList<String> scalesTitlesArrayList = new ArrayList<>();
         final ArrayList<Integer> scalesImagesArrayList = new ArrayList<>();
 
+        scalesTitlesArrayList.add(getString(R.string.scales_medscape));
         scalesTitlesArrayList.add(getString(R.string.scales_vas));
         scalesTitlesArrayList.add(getString(R.string.scales_gcs));
         scalesTitlesArrayList.add(getString(R.string.scales_mews));
 
+        scalesImagesArrayList.add(null);
         scalesImagesArrayList.add(R.drawable.vas);
         scalesImagesArrayList.add(R.drawable.gcs);
         scalesImagesArrayList.add(R.drawable.mews);

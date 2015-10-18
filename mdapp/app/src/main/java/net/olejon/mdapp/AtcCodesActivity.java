@@ -67,7 +67,6 @@ public class AtcCodesActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // List
@@ -111,7 +110,7 @@ public class AtcCodesActivity extends AppCompatActivity
                             {
                                 getSubstance(substancesNamesStringArray[i]);
                             }
-                        }).itemColorRes(R.color.dark_blue).show();
+                        }).itemsColorRes(R.color.dark_blue).show();
                     }
                     else
                     {

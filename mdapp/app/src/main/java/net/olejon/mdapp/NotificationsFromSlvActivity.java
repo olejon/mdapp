@@ -87,7 +87,6 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -152,7 +151,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 
         String apiUri = getString(R.string.project_website_uri)+"api/1/notifications-from-slv/";
 
-        if(!cache) requestQueue.getCache().clear();
+        if(!cache) requestQueue.getCache().remove(apiUri);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
         {

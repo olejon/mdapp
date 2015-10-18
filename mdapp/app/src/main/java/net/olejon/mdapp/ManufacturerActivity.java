@@ -90,7 +90,6 @@ public class ManufacturerActivity extends AppCompatActivity
 
             setSupportActionBar(toolbar);
 
-            //noinspection ConstantConditions
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             // Medications count

@@ -50,6 +50,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -98,7 +99,6 @@ public class PoisoningsActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.poisonings_toolbar_search_layout);
@@ -376,10 +376,10 @@ public class PoisoningsActivity extends AppCompatActivity
             }
             else
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.poisonings_tip_dialog_title)).content(getString(R.string.poisonings_tip_dialog_message)).positiveText(getString(R.string.poisonings_tip_dialog_positive_button)).callback(new MaterialDialog.ButtonCallback()
+                new MaterialDialog.Builder(mContext).title(getString(R.string.poisonings_tip_dialog_title)).content(getString(R.string.poisonings_tip_dialog_message)).positiveText(getString(R.string.poisonings_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
-                    public void onPositive(MaterialDialog dialog)
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
                         mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG", true);
                     }
