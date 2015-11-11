@@ -74,6 +74,15 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- Saved articles -->
+    <style name="saved_articles_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="saved_articles_list_item_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- Diseases and treatments search -->
     <style name="diseases_and_treatments_search_separator_base">
         <item name="android:elevation">2dp</item>

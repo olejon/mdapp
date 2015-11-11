@@ -153,6 +153,12 @@ public class MainActivity extends AppCompatActivity
 
                 switch(mDrawerClosed)
                 {
+                    case R.id.drawer_item_saved_articles:
+                    {
+                        Intent intent = new Intent(mContext, SavedArticlesActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
                     case R.id.drawer_item_nlh:
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);

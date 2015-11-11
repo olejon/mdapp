@@ -24,11 +24,13 @@ along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
 import android.app.DownloadManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -236,6 +238,26 @@ class MyTools
         {
             showToast(mContext.getString(R.string.mytools_printing_not_supported), 1);
         }
+    }
+
+    // Saved articles
+    public void saveArticle(String title, String uri, String webview)
+    {
+        String domain = uri.replaceAll("https?://", "").replaceAll("[w]{3}\\.", "").replaceAll("/.*", "");
+
+        ContentValues savedArticlesContentValues = new ContentValues();
+        savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_TITLE, title);
+        savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_DOMAIN, domain);
+        savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_URI, uri);
+        savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_WEBVIEW, webview);
+
+        SQLiteDatabase savedArticlesSqLiteDatabase = new SavedArticlesSQLiteHelper(mContext).getWritableDatabase();
+
+        savedArticlesSqLiteDatabase.insert(SavedArticlesSQLiteHelper.TABLE, null, savedArticlesContentValues);
+
+        savedArticlesSqLiteDatabase.close();
+
+        showToast(mContext.getString(R.string.saved_articles_article_saved), 0);
     }
 
     // Widget

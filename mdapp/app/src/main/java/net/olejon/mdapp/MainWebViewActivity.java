@@ -35,8 +35,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
@@ -71,7 +69,7 @@ public class MainWebViewActivity extends AppCompatActivity
     private String pageTitle;
     private String pageUri;
 
-    private boolean mWebViewAnimationHasBeenShown = false;
+    private boolean mWebViewHasBeenLoaded = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -140,10 +138,14 @@ public class MainWebViewActivity extends AppCompatActivity
             }
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3)
+            {
+            }
 
             @Override
-            public void afterTextChanged(Editable editable) { }
+            public void afterTextChanged(Editable editable)
+            {
+            }
         });
 
         mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -180,7 +182,7 @@ public class MainWebViewActivity extends AppCompatActivity
         if(pageUri.contains("brukerhandboken.no"))
         {
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:41.0) Gecko/20100101 Firefox/41.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0");
         }
         else if(pageUri.contains("interaksjoner.no"))
         {
@@ -245,7 +247,7 @@ public class MainWebViewActivity extends AppCompatActivity
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    if(mWebViewAnimationHasBeenShown)
+                    if(mWebViewHasBeenLoaded)
                     {
                         if(pageUri.contains("brukerhandboken.no"))
                         {
@@ -258,7 +260,7 @@ public class MainWebViewActivity extends AppCompatActivity
                     }
                     else
                     {
-                        mWebViewAnimationHasBeenShown = true;
+                        mWebViewHasBeenLoaded = true;
 
                         if(pageUri.contains("brukerhandboken.no"))
                         {
@@ -284,11 +286,6 @@ public class MainWebViewActivity extends AppCompatActivity
                         {
                             mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
                         }
-
-                        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-
-                        mWebView.startAnimation(animation);
-                        mWebView.setVisibility(View.VISIBLE);
                     }
                 }
                 else
@@ -495,6 +492,10 @@ public class MainWebViewActivity extends AppCompatActivity
             {
                 mTools.printDocument(mWebView, pageTitle);
                 return true;
+            }
+            case R.id.main_webview_menu_save_article:
+            {
+                mTools.saveArticle(mWebView.getTitle(), pageUri, "main");
             }
             default:
             {

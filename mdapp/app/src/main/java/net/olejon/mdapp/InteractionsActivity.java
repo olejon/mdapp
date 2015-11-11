@@ -337,7 +337,6 @@ public class InteractionsActivity extends AppCompatActivity
                     }
                 }, 500);
             }
-
         }
 
         @Override

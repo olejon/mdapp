@@ -158,12 +158,24 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
             @Override
             public void onResponse(JSONArray response)
             {
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
+                if(response.length() == 0)
+                {
+                    mProgressBar.setVisibility(View.GONE);
+                    mSwipeRefreshLayout.setRefreshing(false);
 
-                if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    mTools.showToast(getString(R.string.notifications_from_slv_could_not_get_notifications), 1);
 
-                mRecyclerView.setAdapter(new NotificationsFromSlvAdapter(mContext, response));
+                    finish();
+                }
+                else
+                {
+                    mProgressBar.setVisibility(View.GONE);
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                    if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+                    mRecyclerView.setAdapter(new NotificationsFromSlvAdapter(mContext, response));
+                }
             }
         }, new Response.ErrorListener()
         {

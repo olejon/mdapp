@@ -46,6 +46,7 @@
     <string name="main_webview_menu_find_in_text">Finn i tekst</string>
     <string name="main_webview_menu_go_forward">Gå frem</string>
     <string name="main_webview_menu_print">Skriv ut</string>
+    <string name="main_webview_menu_save_article">Lagre artikkel</string>
 
     <!-- Medications favorites -->
     <string name="main_medications_favorites_list_empty">Ingen favoritter</string>
@@ -89,6 +90,16 @@
     <string name="substance_menu_interactions">Interaksjonsanalyse</string>
     <string name="substance_menu_atc">ATC-register</string>
 
+    <!-- Saved articles -->
+    <string name="saved_articles_title">Lagrede artikler</string>
+    <string name="saved_articles_list_empty">Ingen lagrede artikler</string>
+    <string name="saved_articles_article_saved">Artikkel lagret</string>
+    <string name="saved_articles_tip_dialog_title">Lagre artikler</string>
+    <string name="saved_articles_tip_dialog_message">Når du er inne på en nettside i LegeAppen, kan du lagre den her ved å trykke på knappen oppe til høyre og deretter Lagre artikkel.\n\nFor å fjerne en artikkel her, trykk og hold inne på artikkelen og trykk deretter Fjern fra lagrede artikler.</string>
+    <string name="saved_articles_tip_dialog_positive_button">OK</string>
+    <string name="saved_articles_menu_information">Informasjon</string>
+    <string name="saved_articles_menu_context_remove">Fjern fra lagrede artikler</string>
+
     <!-- Diseases and treatments -->
     <string name="diseases_and_treatments_title">Sykdommer og behandlinger</string>
     <string name="diseases_and_treatments_language_dialog_title">Velg søkespråk</string>
@@ -130,6 +141,7 @@
     <string name="diseases_and_treatments_search_webview_menu_find_in_text">Finn i tekst</string>
     <string name="diseases_and_treatments_search_webview_menu_forward">Gå frem</string>
     <string name="diseases_and_treatments_search_webview_menu_print">Skriv ut</string>
+    <string name="diseases_and_treatments_search_webview_menu_save_article">Lagre artikkel</string>
 
     <!-- Legevakthåndboken -->
     <string name="lvh_title">Legevakthåndboken</string>
@@ -451,6 +463,7 @@
     <string name="drawer_subheader_resources">Ressurser</string>
     <string name="drawer_subheader_tools">Verktøy</string>
     <string name="drawer_subheader_other">Annet</string>
+    <string name="drawer_item_saved_articles">Lagrede artikler</string>
     <string name="drawer_item_nlh">Legemiddelhåndboka</string>
     <string name="drawer_item_felleskatalogen">Felleskatalogen</string>
     <string name="drawer_item_nel">Legehåndboka</string>

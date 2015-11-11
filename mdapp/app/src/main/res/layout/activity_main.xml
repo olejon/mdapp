@@ -30,6 +30,7 @@
 
                 <TextView android:text="@string/drawer_subheader_encyclopedias" style="@style/drawer_subheader"/>
 
+                <TextView android:id="@+id/drawer_item_saved_articles" android:drawableStart="@drawable/ic_star_grey600_24dp" android:drawableLeft="@drawable/ic_star_grey600_24dp" android:text="@string/drawer_item_saved_articles" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_nlh" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_nlh" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_felleskatalogen" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_felleskatalogen" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_nel" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_nel" android:onClick="onDrawerItemClick" style="@style/drawer_item_gone"/>

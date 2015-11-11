@@ -274,7 +274,6 @@
     <style name="main_webview_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -451,6 +450,63 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <!-- Saved articles -->
+    <style name="saved_articles_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="saved_articles_list_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="saved_articles_list_empty" parent="saved_articles_list_empty_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">64dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="saved_articles_list_empty_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="saved_articles_list_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
+    </style>
+
+    <style name="saved_articles_list_item_title" parent="saved_articles_list_item_title_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="saved_articles_list_item_title_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="saved_articles_list_item_domain">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <!-- Diseases and treatments -->
     <style name="diseases_and_treatments_layout">
         <item name="android:layout_width">match_parent</item>
@@ -510,8 +566,8 @@
     <style name="diseases_and_treatments_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
@@ -634,7 +690,6 @@
     <style name="diseases_and_treatments_search_webview_content">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:visibility">invisible</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
@@ -832,8 +887,8 @@
     <style name="interactions_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
@@ -1014,8 +1069,8 @@
     <style name="poisonings_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
@@ -1190,8 +1245,8 @@
     <style name="nasjonale_retningslinjer_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
@@ -1256,8 +1311,8 @@
     <style name="clinicaltrials_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:drawableLeft">@drawable/ic_search_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
@@ -1792,8 +1847,8 @@
     <style name="pharmacies_list_item_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/list_item_layout_padding</item>
         <item name="android:drawableLeft">@drawable/ic_place_grey600_24dp</item>
         <item name="android:drawablePadding">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">18sp</item>
