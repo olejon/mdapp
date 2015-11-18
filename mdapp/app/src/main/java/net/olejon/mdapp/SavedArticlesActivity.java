@@ -143,7 +143,7 @@ public class SavedArticlesActivity extends AppCompatActivity
     }
 
     // Information dialog
-    public void showInformationDialog(boolean show)
+    private void showInformationDialog(boolean show)
     {
         if(show || !mTools.getSharedPreferencesBoolean("SAVED_ARTICLES_HIDE_INFORMATION_DIALOG"))
         {
