@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -25,10 +23,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -48,6 +49,12 @@ public class CalculatorsActivity extends AppCompatActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private TextInputLayout mBmiWeightInputLayout;
+    private TextInputLayout mBmiHeightInputLayout;
+    private TextInputLayout mWaistMeasurementInputLayout;
+    private TextInputLayout mQtIntervalEditTextLayout;
+    private TextInputLayout mRrIntervalEditTextLayout;
+
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,10 +72,14 @@ public class CalculatorsActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.calculators_title));
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // BMI
+        mBmiWeightInputLayout = (TextInputLayout) findViewById(R.id.calculators_bmi_weight_layout);
+        mBmiHeightInputLayout = (TextInputLayout) findViewById(R.id.calculators_bmi_height_layout);
+        mBmiWeightInputLayout.setHintAnimationEnabled(true);
+        mBmiHeightInputLayout.setHintAnimationEnabled(true);
+
         final EditText bmiEditText = (EditText) findViewById(R.id.calculators_bmi_height);
         final TextView bmiButton = (TextView) findViewById(R.id.calculators_bmi_button);
 
@@ -102,6 +113,9 @@ public class CalculatorsActivity extends AppCompatActivity
         });
 
         // Waist measurement
+        mWaistMeasurementInputLayout = (TextInputLayout) findViewById(R.id.calculators_waist_measurement_layout);
+        mWaistMeasurementInputLayout.setHintAnimationEnabled(true);
+
         final EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
         final TextView waistMeasurementButton = (TextView) findViewById(R.id.calculators_waist_measurement_button);
 
@@ -135,6 +149,11 @@ public class CalculatorsActivity extends AppCompatActivity
         });
 
         // Corrected QT time
+        mQtIntervalEditTextLayout = (TextInputLayout) findViewById(R.id.calculators_corrected_qt_time_qt_interval_layout);
+        mRrIntervalEditTextLayout = (TextInputLayout) findViewById(R.id.calculators_corrected_qt_time_rr_interval_layout);
+        mQtIntervalEditTextLayout.setHintAnimationEnabled(true);
+        mRrIntervalEditTextLayout.setHintAnimationEnabled(true);
+
         final EditText correctedQtTimeEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
         final TextView correctedQtTimeButton = (TextView) findViewById(R.id.calculators_corrected_qt_time_button);
 
@@ -228,12 +247,46 @@ public class CalculatorsActivity extends AppCompatActivity
         EditText weightEditText = (EditText) findViewById(R.id.calculators_bmi_weight);
         EditText heightEditText = (EditText) findViewById(R.id.calculators_bmi_height);
 
+        weightEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                mBmiWeightInputLayout.setError(null);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        heightEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                mBmiHeightInputLayout.setError(null);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
         String weightEditTextValue = weightEditText.getText().toString();
         String heightEditTextValue = heightEditText.getText().toString();
 
-        if(weightEditTextValue.equals("") || heightEditTextValue.equals(""))
+        if(weightEditTextValue.equals(""))
         {
-            mTools.showToast(getString(R.string.calculators_bmi_invalid_values), 1);
+            mBmiWeightInputLayout.setError(getString(R.string.calculators_bmi_invalid_values));
+        }
+        else if(heightEditTextValue.equals(""))
+        {
+            mBmiHeightInputLayout.setError(getString(R.string.calculators_bmi_invalid_values));
         }
         else
         {
@@ -291,11 +344,26 @@ public class CalculatorsActivity extends AppCompatActivity
     {
         EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
 
+        waistMeasurementEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                mWaistMeasurementInputLayout.setError(null);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
         String waistMeasurementEditTextValue = waistMeasurementEditText.getText().toString();
 
         if(waistMeasurementEditTextValue.equals(""))
         {
-            mTools.showToast(getString(R.string.calculators_waist_measurement_invalid_value), 1);
+            mWaistMeasurementInputLayout.setError(getString(R.string.calculators_waist_measurement_invalid_value));
         }
         else
         {
@@ -345,12 +413,46 @@ public class CalculatorsActivity extends AppCompatActivity
         EditText qtIntervalEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_qt_interval);
         EditText rrIntervalEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
 
+        qtIntervalEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                mQtIntervalEditTextLayout.setError(null);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        rrIntervalEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                mRrIntervalEditTextLayout.setError(null);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
         String qtIntervalEditTextValue = qtIntervalEditText.getText().toString();
         String rrIntervalEditTextValue = rrIntervalEditText.getText().toString();
 
-        if(qtIntervalEditTextValue.equals("") || rrIntervalEditTextValue.equals(""))
+        if(qtIntervalEditTextValue.equals(""))
         {
-            mTools.showToast(getString(R.string.calculators_corrected_qt_time_invalid_values), 1);
+            mQtIntervalEditTextLayout.setError(getString(R.string.calculators_corrected_qt_time_invalid_values));
+        }
+        else if(rrIntervalEditTextValue.equals(""))
+        {
+            mRrIntervalEditTextLayout.setError(getString(R.string.calculators_corrected_qt_time_invalid_values));
         }
         else
         {

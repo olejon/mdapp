@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -103,7 +101,6 @@ public class MainWebViewActivity extends AppCompatActivity
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.main_webview_toolbar_search_layout);
@@ -188,6 +185,10 @@ public class MainWebViewActivity extends AppCompatActivity
         {
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
+        else if(pageUri.contains("legemiddelverket.no"))
+        {
+            webSettings.setUseWideViewPort(true);
+        }
 
         mWebView.setWebViewClient(new WebViewClient()
         {
@@ -251,11 +252,11 @@ public class MainWebViewActivity extends AppCompatActivity
                     {
                         if(pageUri.contains("brukerhandboken.no"))
                         {
-                            mWebView.loadUrl("javascript:if($('div#nonedit_title').length) { var offset = $('div#nonedit_title').offset(); window.scrollTo(0, offset.top - 8); }");
+                            mWebView.loadUrl("javascript:if($('div#nonedit_title').length) { var offset = $('div#nonedit_title').offset(); window.scrollTo(0, offset.top - 16); }");
                         }
                         else if(pageUri.contains("helsedirektoratet.no"))
                         {
-                            mWebView.loadUrl("javascript:if($('span.dropdown').length) { var offset = $('span.dropdown').offset(); window.scrollTo(0, offset.top); } else if($('.publication_information').length) { var offset = $('.publication_information').offset(); window.scrollTo(0, offset.top); }");
+                            mWebView.loadUrl("javascript:if($('span.dropdown').length) { var offset = $('span.dropdown').offset(); window.scrollTo(0, offset.top - 32); }");
                         }
                     }
                     else
@@ -266,13 +267,9 @@ public class MainWebViewActivity extends AppCompatActivity
                         {
                             mWebView.loadUrl("javascript:$('div#FirstSearch1 > input:text').focus();");
                         }
-                        else if(pageUri.contains("helsebiblioteket.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8);");
-                        }
                         else if(pageUri.contains("helsedirektoratet.no"))
                         {
-                            mWebView.loadUrl("javascript:var offset = $('div.searchfield').offset(); window.scrollTo(0, offset.top + 48);");
+                            mWebView.loadUrl("javascript:var offset = $('div.searchfield').offset(); window.scrollTo(0, offset.top + 8);");
                         }
                         else if(pageUri.contains("helsenorge.no"))
                         {
@@ -281,6 +278,10 @@ public class MainWebViewActivity extends AppCompatActivity
                         else if(pageUri.contains("icd10data.com"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('div.contentBlurb:contains(\"Clinical Information\")').offset(); window.scrollTo(0, offset.top - 8);");
+                        }
+                        else if(pageUri.contains("legemiddelverket.no"))
+                        {
+                            mWebView.loadUrl("javascript:var offset = $('h1.articleTitle').offset(); window.scrollTo(offset.left - 16, offset.top - 16);");
                         }
                         else if(pageUri.contains("lvh.no"))
                         {
@@ -331,7 +332,14 @@ public class MainWebViewActivity extends AppCompatActivity
         cookieManager.setCookie("http://www.gulesider.no/", "cookiesAccepted=true");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
 
-        if(pageUri.contains("brukerhandboken.no")) mWebView.setInitialScale(100);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("brukerhandboken.no"))
+        {
+            mWebView.setInitialScale(100);
+        }
+        else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("legemiddelverket.no"))
+        {
+            mWebView.setInitialScale(100);
+        }
 
         if(savedInstanceState == null)
         {

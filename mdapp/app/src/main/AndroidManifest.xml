@@ -22,7 +22,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/project_name"
         android:theme="@style/app_theme"
-        tools:ignore="ExportedReceiver,UnusedAttribute">
+        tools:ignore="ExportedReceiver,GoogleAppIndexingWarning,UnusedAttribute">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

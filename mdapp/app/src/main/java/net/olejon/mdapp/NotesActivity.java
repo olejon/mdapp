@@ -4,23 +4,22 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,15 +28,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -46,10 +52,10 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.melnykov.fab.FloatingActionButton;
 
 public class NotesActivity extends AppCompatActivity
 {
+    private final Activity mActivity = this;
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -80,8 +86,28 @@ public class NotesActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.notes_title));
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.notes_layout_appbar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
+        {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+            {
+                if(appBarLayout.getTotalScrollRange() == - verticalOffset)
+                {
+                    mTools.setStatusbarColor(mActivity, R.color.dark_blue);
+                }
+                else
+                {
+                    mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+                }
+            }
+        });
+
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.notes_toolbar_layout);
+        collapsingToolbarLayout.setTitle(getString(R.string.notes_title));
 
         // Empty
         mEmptyTextView = (TextView) findViewById(R.id.notes_empty);
@@ -90,11 +116,11 @@ public class NotesActivity extends AppCompatActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.notes_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new NotesAdapter(mContext, mCursor));
+        mRecyclerView.setAdapter(new NotesAdapter());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Floating action button
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
+        android.support.design.widget.FloatingActionButton floatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.notes_fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -135,13 +161,31 @@ public class NotesActivity extends AppCompatActivity
                 @Override
                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                 {
+                    final TextInputLayout pinCodeTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.notes_dialog_pin_code_layout);
+                    pinCodeTextInputLayout.setHintAnimationEnabled(true);
+
                     EditText pinCodeEditText = (EditText) materialDialog.findViewById(R.id.notes_dialog_pin_code);
+
+                    pinCodeEditText.addTextChangedListener(new TextWatcher()
+                    {
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                        {
+                            pinCodeTextInputLayout.setError(null);
+                        }
+
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) { }
+                    });
 
                     String pinCode = pinCodeEditText.getText().toString();
 
                     if(pinCode.length() < 4)
                     {
-                        mTools.showToast(getString(R.string.notes_dialog_pin_code_invalid), 1);
+                        pinCodeTextInputLayout.setError(getString(R.string.notes_dialog_pin_code_invalid));
                     }
                     else
                     {
@@ -230,7 +274,25 @@ public class NotesActivity extends AppCompatActivity
                 @Override
                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                 {
+                    final TextInputLayout pinCodeTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.notes_dialog_verify_pin_code_layout);
+                    pinCodeTextInputLayout.setHintAnimationEnabled(true);
+
                     EditText pinCodeEditText = (EditText) materialDialog.findViewById(R.id.notes_dialog_verify_pin_code);
+
+                    pinCodeEditText.addTextChangedListener(new TextWatcher()
+                    {
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                        {
+                            pinCodeTextInputLayout.setError(null);
+                        }
+
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) { }
+                    });
 
                     String pinCode = pinCodeEditText.getText().toString();
 
@@ -243,7 +305,7 @@ public class NotesActivity extends AppCompatActivity
                     }
                     else
                     {
-                        mTools.showToast(getString(R.string.notes_dialog_verify_pin_code_wrong), 1);
+                        pinCodeTextInputLayout.setError(getString(R.string.notes_dialog_verify_pin_code_wrong));
                     }
                 }
             }).onNegative(new MaterialDialog.SingleButtonCallback()
@@ -315,10 +377,10 @@ public class NotesActivity extends AppCompatActivity
         }
     }
 
-    private class GetNotesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
+    private class GetNotesTask extends AsyncTask<Void, Void, Cursor>
     {
         @Override
-        protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
+        protected void onPostExecute(Cursor cursor)
         {
             if(mCursor.getCount() == 0)
             {
@@ -337,22 +399,94 @@ public class NotesActivity extends AppCompatActivity
                     mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
                 }
 
-                mRecyclerView.setAdapter(new NotesAdapter(mContext, mCursor));
+                mRecyclerView.setAdapter(new NotesAdapter());
             }
         }
 
         @Override
-        protected SimpleCursorAdapter doInBackground(Void... voids)
+        protected Cursor doInBackground(Void... voids)
         {
             mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
 
             String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
             mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
 
-            String[] fromColumns = {NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
-            int[] toViews = {R.id.notes_card_title, R.id.notes_card_text};
+            return mCursor;
+        }
+    }
 
-            return new SimpleCursorAdapter(mContext, R.layout.activity_notes_card, mCursor, fromColumns, toViews, 0);
+    // Adapter
+    private class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>
+    {
+        private int mLastPosition = -1;
+
+        private NotesAdapter() { }
+
+        class NoteViewHolder extends RecyclerView.ViewHolder
+        {
+            private final CardView card;
+            private final TextView title;
+            private final TextView text;
+
+            public NoteViewHolder(View view)
+            {
+                super(view);
+
+                card = (CardView) view.findViewById(R.id.notes_card);
+                title = (TextView) view.findViewById(R.id.notes_card_title);
+                text = (TextView) view.findViewById(R.id.notes_card_text);
+            }
+        }
+
+        @Override
+        public NoteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+        {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notes_card, viewGroup, false);
+            return new NoteViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(NoteViewHolder viewHolder, int i)
+        {
+            if(mCursor.moveToPosition(i))
+            {
+                final int id = mCursor.getInt(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_ID));
+                final String title = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TITLE));
+                final String text = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TEXT));
+
+                viewHolder.title.setText(title);
+                viewHolder.text.setText(text);
+
+                viewHolder.card.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(mContext, NotesEditActivity.class);
+                        intent.putExtra("id", id);
+                        mContext.startActivity(intent);
+                    }
+                });
+
+                animateCard(viewHolder.card, i);
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return (mCursor == null) ? 0 : mCursor.getCount();
+        }
+
+        private void animateCard(View view, int position)
+        {
+            if(position > mLastPosition)
+            {
+                mLastPosition = position;
+
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
+                view.startAnimation(animation);
+            }
         }
     }
 }

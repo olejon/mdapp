@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -31,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -56,7 +55,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,11 +73,11 @@ public class MainActivity extends AppCompatActivity
 
     private InputMethodManager mInputMethodManager;
 
-    private DrawerFrameLayout mDrawer;
+    private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
     private EditText mSearchEditText;
     private ViewPager mViewPager;
-    private FloatingActionButton mFloatingActionButton;
+    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
 
     private int mDrawerClosed;
 
@@ -93,9 +91,9 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Installed
-        long installed = mTools.getSharedPreferencesLong("INSTALLED");
+        long installed = mTools.getSharedPreferencesLong("INSTALLED_220");
 
-        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED", mTools.getCurrentTime());
+        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_220", mTools.getCurrentTime());
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
 
         // Drawer
-        mDrawer = (DrawerFrameLayout) findViewById(R.id.main_drawer);
+        mDrawer = (NavigationView) findViewById(R.id.main_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
         TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
@@ -339,7 +337,7 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (ViewPager) findViewById(R.id.main_pager);
 
         // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.main_fab);
+        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.main_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -398,15 +396,21 @@ public class MainActivity extends AppCompatActivity
             }
         }, 250);
 
+        // Floating action button
+        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+
+        mFloatingActionButton.startAnimation(animation);
+        mFloatingActionButton.setVisibility(View.VISIBLE);
+
         // Rate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_140"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_220"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_220");
 
             if(currentTime - installedTime > 1000 * 3600 * 48)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_140", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_220", true);
 
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
@@ -421,14 +425,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Donate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_140"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_220"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_220");
 
             if(currentTime - installedTime > 1000 * 3600 * 96)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_140", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_220", true);
 
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
@@ -441,6 +445,14 @@ public class MainActivity extends AppCompatActivity
                 }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
             }
         }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        mFloatingActionButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -644,11 +656,6 @@ public class MainActivity extends AppCompatActivity
                     mSearchEditText.setText("");
                 }
             });
-
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
-            mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mTools.getSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN"))
             {

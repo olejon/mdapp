@@ -4,35 +4,44 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
@@ -42,6 +51,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class LvhActivity extends AppCompatActivity
 {
@@ -67,10 +77,9 @@ public class LvhActivity extends AppCompatActivity
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.lvh_toolbar);
-        toolbar.setTitle(getString(R.string.lvh_title));
+        toolbar.setTitle(R.string.lvh_title);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -94,7 +103,7 @@ public class LvhActivity extends AppCompatActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.lvh_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new LvhAdapter(mContext, new JSONArray()));
+        mRecyclerView.setAdapter(new LvhAdapter(new JSONArray()));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Get categories
@@ -138,7 +147,7 @@ public class LvhActivity extends AppCompatActivity
 
                 if(mTools.isTablet()) mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-                mRecyclerView.setAdapter(new LvhAdapter(mContext, response));
+                mRecyclerView.setAdapter(new LvhAdapter(response));
             }
         }, new Response.ErrorListener()
         {
@@ -157,5 +166,167 @@ public class LvhActivity extends AppCompatActivity
         jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(jsonArrayRequest);
+    }
+
+    // Adapter
+    private class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHolder>
+    {
+        private final LayoutInflater mLayoutInflater;
+
+        private final JSONArray mCategories;
+
+        private int mLastPosition = -1;
+
+        private LvhAdapter(JSONArray jsonArray)
+        {
+            mLayoutInflater =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            mCategories = jsonArray;
+        }
+
+        class CategoryViewHolder extends RecyclerView.ViewHolder
+        {
+            private final CardView card;
+            private final ImageView icon;
+            private final TextView title;
+            private final LinearLayout categories;
+
+            public CategoryViewHolder(View view)
+            {
+                super(view);
+
+                card = (CardView) view.findViewById(R.id.lvh_card);
+                icon = (ImageView) view.findViewById(R.id.lvh_card_icon);
+                title = (TextView) view.findViewById(R.id.lvh_card_title);
+                categories = (LinearLayout) view.findViewById(R.id.lvh_card_categories);
+            }
+        }
+
+        @Override
+        public CategoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+        {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_card, viewGroup, false);
+            return new CategoryViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(CategoryViewHolder viewHolder, int i)
+        {
+            try
+            {
+                final String color;
+                final String icon;
+
+                final JSONObject categoriesJsonObject = mCategories.getJSONObject(i);
+
+                switch(i)
+                {
+                    case 0:
+                    {
+                        color = "#F44336";
+                        icon = "lvh_urgent";
+
+                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                        viewHolder.icon.setImageResource(R.drawable.ic_favorite_white_24dp);
+
+                        break;
+                    }
+                    case 1:
+                    {
+                        color = "#9C27B0";
+                        icon = "lvh_symptoms";
+
+                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.purple));
+                        viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
+
+                        break;
+                    }
+                    case 2:
+                    {
+                        color = "#FF9800";
+                        icon = "lvh_injuries";
+
+                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.orange));
+                        viewHolder.icon.setImageResource(R.drawable.ic_healing_white_24dp);
+
+                        break;
+                    }
+                    case 3:
+                    {
+                        color = "#009688";
+                        icon = "lvh_administrative";
+
+                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.teal));
+                        viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
+
+                        break;
+                    }
+                    default:
+                    {
+                        color = "#009688";
+                        icon = "lvh_administrative";
+
+                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.teal));
+                        viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
+                    }
+                }
+
+                viewHolder.title.setText(categoriesJsonObject.getString("title"));
+
+                viewHolder.categories.removeAllViews();
+
+                final JSONArray categoriesJsonArray = categoriesJsonObject.getJSONArray("categories");
+
+                for(int f = 0; f < categoriesJsonArray.length(); f++)
+                {
+                    final JSONObject categoryJsonObject = categoriesJsonArray.getJSONObject(f);
+
+                    final String title = categoryJsonObject.getString("title");
+                    final String subcategories = categoryJsonObject.getString("subcategories");
+
+                    final TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_lvh_card_categories_item, null);
+                    textView.setText(categoryJsonObject.getString("title"));
+
+                    textView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            Intent intent = new Intent(mContext, LvhCategoriesActivity.class);
+                            intent.putExtra("color", color);
+                            intent.putExtra("icon", icon);
+                            intent.putExtra("title", title);
+                            intent.putExtra("subcategories", subcategories);
+                            mContext.startActivity(intent);
+                        }
+                    });
+
+                    viewHolder.categories.addView(textView);
+                }
+
+                animateCard(viewHolder.card, i);
+            }
+            catch(Exception e)
+            {
+                Log.e("LvhAdapter", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return mCategories.length();
+        }
+
+        private void animateCard(View view, int position)
+        {
+            if(position > mLastPosition)
+            {
+                mLastPosition = position;
+
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
+                view.startAnimation(animation);
+            }
+        }
     }
 }

@@ -95,10 +95,13 @@
     <string name="saved_articles_list_empty">Ingen lagrede artikler</string>
     <string name="saved_articles_article_saved">Artikkel lagret</string>
     <string name="saved_articles_tip_dialog_title">Lagre artikler</string>
-    <string name="saved_articles_tip_dialog_message">Når du er inne på en nettside i LegeAppen, kan du lagre den her ved å trykke på knappen oppe til høyre og deretter Lagre artikkel.\n\nFor å fjerne en artikkel her, trykk og hold inne på artikkelen og trykk deretter Fjern fra lagrede artikler.</string>
+    <string name="saved_articles_tip_dialog_message">Når du er inne på en nettside i LegeAppen, kan du lagre den her ved å trykke på knappen oppe til høyre og deretter Lagre artikkel.\n\nFor å fjerne en artikkel her, trykk og hold inne på artikkelen.</string>
     <string name="saved_articles_tip_dialog_positive_button">OK</string>
+    <string name="saved_articles_remove_article_dialog_title">Fjern artikkel</string>
+    <string name="saved_articles_remove_article_dialog_message">Vil du fjerne denne artikkelen?</string>
+    <string name="saved_articles_remove_article_dialog_positive_button">Ja</string>
+    <string name="saved_articles_remove_article_dialog_neutral_button">Nei</string>
     <string name="saved_articles_menu_information">Informasjon</string>
-    <string name="saved_articles_menu_context_remove">Fjern fra lagrede artikler</string>
 
     <!-- Diseases and treatments -->
     <string name="diseases_and_treatments_title">Sykdommer og behandlinger</string>
@@ -347,13 +350,13 @@
     <!-- Notes -->
     <string name="notes_title">Notater</string>
     <string name="notes_empty">Ingen notater</string>
-    <string name="notes_dialog_pin_code_title">PIN-kode</string>
-    <string name="notes_dialog_pin_code_message">For å kunne bruke Notater må du opprette en PIN-kode som du må taste inn hver gang du går inn på Notater. Ha god hukommelse, eller skriv den ned på en lapp og legg den i en låst skuff.</string>
+    <string name="notes_dialog_pin_code_title">Notater</string>
+    <string name="notes_dialog_pin_code_message">Du må først opprette en PIN-kode. Ha god hukommelse, eller skriv den ned på en lapp og legg den i en låst skuff.</string>
     <string name="notes_dialog_pin_code_hint">PIN-kode</string>
     <string name="notes_dialog_pin_code_positive_button">Lagre</string>
     <string name="notes_dialog_pin_code_negative_button">Avbryt</string>
     <string name="notes_dialog_pin_code_invalid">PIN-koden må bestå av minst fire tall</string>
-    <string name="notes_dialog_verify_pin_code_title">PIN-kode</string>
+    <string name="notes_dialog_verify_pin_code_title">Notater</string>
     <string name="notes_dialog_verify_pin_code_hint">PIN-kode</string>
     <string name="notes_dialog_verify_pin_code_positive_button">Åpne</string>
     <string name="notes_dialog_verify_pin_code_negative_button">Avbryt</string>
@@ -411,6 +414,7 @@
     <string name="tasks_dialog_task_hint">Navn på oppgave</string>
     <string name="tasks_dialog_positive_button">Lagre</string>
     <string name="tasks_dialog_negative_button">Avbryt</string>
+    <string name="tasks_dialog_task_invalid_name">Du må fylle ut navn på oppgaven</string>
     <string name="tasks_menu_clear_tasks">Fjern fullførte oppgaver</string>
 
     <!-- Settings -->
@@ -518,7 +522,7 @@
 
     <!-- Widget -->
     <string name="widget_title">LegeAppen - Favoritter</string>
-    <string name="widget_toolbar_title">Favoritter</string>
+    <string name="widget_toolbar_title">LegeAppen</string>
     <string name="widget_list_empty">Ingen favoritter</string>
     <string name="widget_list_loading">Laster…</string>
 

@@ -22,6 +22,8 @@
         <item name="colorControlActivated">@color/white</item>
     </style>
 
+    <style name="appbar_theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <style name="main_theme" parent="app_theme"/>
 
     <style name="main_search_theme" parent="app_theme">
@@ -42,15 +44,18 @@
     <style name="main_search" parent="main_search_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingRight">14dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingLeft">14dp</item>
         <item name="android:background">@color/blue</item>
         <item name="android:theme">@style/main_search_theme</item>
     </style>
 
-    <style name="main_search_base"/>
+    <style name="main_search_base" parent="main_search_base_base"/>
+
+    <style name="main_search_base_base">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">14dp</item>
+    </style>
 
     <style name="main_search_edittext" parent="toolbar_search_edittext"/>
 
@@ -451,48 +456,17 @@
     </style>
 
     <!-- Saved articles -->
-    <style name="saved_articles_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="saved_articles_list_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="saved_articles_list_empty" parent="saved_articles_list_empty_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">64dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/blue</item>
-    </style>
-
-    <style name="saved_articles_list_empty_base">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="saved_articles_list_item_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:padding">@dimen/list_item_layout_padding</item>
-    </style>
-
     <style name="saved_articles_list_item_title" parent="saved_articles_list_item_title_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/list_item_layout_padding</item>
+        <item name="android:paddingRight">@dimen/list_item_layout_padding</item>
         <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">@dimen/list_item_layout_padding</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="saved_articles_list_item_title_base">
@@ -503,6 +477,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingRight">@dimen/list_item_layout_padding</item>
+        <item name="android:paddingBottom">@dimen/list_item_layout_padding</item>
+        <item name="android:paddingLeft">@dimen/list_item_layout_padding</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
@@ -2167,7 +2144,10 @@
     <style name="calculators_card_title" parent="calculators_card_title_base">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">16sp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/purple</item>
     </style>
@@ -2176,12 +2156,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="calculators_text_input" parent="text_input">
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginLeft">20sp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
     <style name="calculators_edittext">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">32dp</item>
-        <item name="android:layout_marginLeft">32sp</item>
-        <item name="android:layout_marginBottom">8dp</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/dark_grey</item>
@@ -2216,11 +2199,6 @@
     </style>
 
     <!-- Notes -->
-    <style name="notes_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
     <style name="notes_dialog_pin_code_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -2230,7 +2208,9 @@
     <style name="notes_dialog_pin_code_message">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -2245,31 +2225,12 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="notes_empty" parent="notes_empty_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingTop">64dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/blue</item>
-    </style>
-
-    <style name="notes_empty_base">
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="notes_cards">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/light_grey</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+        <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
     </style>
 
     <style name="notes_card_layout">
@@ -2445,35 +2406,6 @@
     </style>
 
     <!-- Tasks -->
-    <style name="tasks_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="tasks_list_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="tasks_list_empty" parent="tasks_list_empty_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingTop">64dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/blue</item>
-    </style>
-
-    <style name="tasks_list_empty_base">
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="tasks_list_item_task">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -2660,7 +2592,6 @@
         <item name="android:layout_gravity">start</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:background">@color/background</item>
-        <item name="drawer_frame_inset_color">@color/main_drawer</item>
     </style>
 
     <style name="main_drawer_base"/>
@@ -2787,25 +2718,106 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="toolbar_button">
-        <item name="android:layout_width">96dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:background">@drawable/toolbar_button</item>
-    </style>
-
     <style name="toolbar_shadow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">4dp</item>
         <item name="android:background">@drawable/toolbar_shadow</item>
     </style>
 
+    <!-- Appbar -->
+    <style name="appbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">160dp</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:theme">@style/appbar_theme</item>
+    </style>
+
+    <!-- Collapsing toolbar -->
+    <style name="collapsing_toolbar" parent="collapsing_toolbar_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="expandedTitleTextAppearance">@style/collapsing_toolbar_extended</item>
+        <item name="contentScrim">?attr/colorPrimary</item>
+        <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
+    </style>
+
+    <style name="collapsing_toolbar_base"/>
+
+    <style name="collapsing_toolbar_toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="layout_collapseMode">pin</item>
+    </style>
+
+    <style name="collapsing_toolbar_extended">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="collapsing_toolbar_image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:minHeight">160dp</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="layout_collapseMode">parallax</item>
+        <item name="layout_collapseParallaxMultiplier">0.8</item>
+    </style>
+
     <!-- Swipe refresh -->
     <style name="swipe_refresh_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!-- Recycler view -->
+    <style name="recyclerview_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="recyclerview_list_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+        <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
+    </style>
+
+    <style name="recyclerview_list_empty" parent="recyclerview_list_empty_base">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:paddingTop">192dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="recyclerview_list_empty_base">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="recyclerview_list_item_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/list_item</item>
+    </style>
+
+    <style name="recyclerview_list_item_separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:paddingTop">@dimen/list_item_layout_padding</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
 
     <!-- List view -->
@@ -2859,9 +2871,6 @@
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
         <item name="android:visibility">gone</item>
-        <item name="fab_colorNormal">@color/blue</item>
-        <item name="fab_colorPressed">@color/dark_blue</item>
-        <item name="fab_colorRipple">@color/darker_blue</item>
     </style>
 
     <style name="fab_layout_base"/>
@@ -2878,6 +2887,12 @@
 
     <style name="subheader_base">
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Text input -->
+    <style name="text_input">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <!-- Widget -->

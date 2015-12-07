@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -42,12 +40,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
-import com.melnykov.fab.FloatingActionButton;
 
 public class NotesEditMedicationsActivity extends AppCompatActivity
 {
@@ -62,7 +57,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private FloatingActionButton mFloatingActionButton;
+    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     @Override
@@ -81,25 +76,13 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
         toolbar.setTitle(getString(R.string.notes_edit_medications_title));
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.notes_edit_medications_toolbar_search_layout);
         mToolbarSearchEditText = (EditText) findViewById(R.id.notes_edit_medications_toolbar_search);
 
-        ImageButton imageButton = (ImageButton) findViewById(R.id.notes_edit_medications_toolbar_clear_search);
-
-        imageButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mToolbarSearchEditText.setText("");
-            }
-        });
-
         // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.notes_edit_medications_fab);
+        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.notes_edit_medications_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {

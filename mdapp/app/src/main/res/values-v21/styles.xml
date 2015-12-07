@@ -11,8 +11,15 @@
     <!-- Main -->
     <style name="main_updating_progressbar_base" parent="android:Widget.Material.Light.ProgressBar.Inverse"/>
 
-    <style name="main_search_base">
+    <style name="main_search_base" parent="main_search_base_base">
         <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="main_search_base_base">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">14dp</item>
     </style>
 
     <style name="main_tabs_base" parent="main_tabs_base_base">
@@ -65,21 +72,17 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- Saved articles -->
+    <style name="saved_articles_list_item_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- Diseases and treatments -->
     <style name="diseases_and_treatments_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="diseases_and_treatments_search_card_title_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <!-- Saved articles -->
-    <style name="saved_articles_list_empty_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
-    <style name="saved_articles_list_item_title_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
@@ -231,11 +234,6 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Tasks -->
-    <style name="tasks_list_empty_base">
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <!-- Welcome -->
     <style name="welcome_page_title_base">
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -267,6 +265,16 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:visibility">gone</item>
+    </style>
+
+    <!-- Collapsing toolbar -->
+    <style name="collapsing_toolbar_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <!-- Recycler view -->
+    <style name="recyclerview_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <!-- List view -->

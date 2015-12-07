@@ -3,6 +3,13 @@
 <resources>
 
     <!-- Main -->
+    <style name="main_search_base_base">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">28dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">28dp</item>
+    </style>
+
     <style name="main_tabs_base_base">
         <item name="pstsShouldExpand">false</item>
         <item name="pstsTabPaddingLeftRight">16dp</item>

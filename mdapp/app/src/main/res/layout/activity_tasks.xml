@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/tasks_layout">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/recyclerview_layout" style="@style/recyclerview_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/tasks_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+    <android.support.design.widget.AppBarLayout android:id="@+id/tasks_layout_appbar" style="@style/appbar">
 
-    <ListView android:id="@+id/tasks_list" android:layout_below="@+id/tasks_toolbar" style="@style/tasks_list_layout"/>
-    <TextView android:id="@+id/tasks_list_empty" android:layout_below="@+id/tasks_toolbar" android:text="@string/tasks_list_empty" style="@style/tasks_list_empty"/>
+        <android.support.design.widget.CollapsingToolbarLayout android:id="@+id/tasks_toolbar_layout" style="@style/collapsing_toolbar">
 
-    <View android:layout_below="@+id/tasks_toolbar" style="@style/toolbar_shadow"/>
+            <ImageView android:src="@drawable/tasks" android:contentDescription="@string/image_content_description" style="@style/collapsing_toolbar_image"/>
 
-    <com.melnykov.fab.FloatingActionButton android:id="@+id/tasks_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_add_white_24dp" style="@style/fab_layout"/>
+            <android.support.v7.widget.Toolbar android:id="@+id/tasks_toolbar" style="@style/collapsing_toolbar_toolbar"/>
 
-</RelativeLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/tasks_list" style="@style/recyclerview_list_layout"/>
+
+    <TextView android:id="@+id/tasks_list_empty" android:text="@string/tasks_list_empty" style="@style/recyclerview_list_empty"/>
+
+    <android.support.design.widget.FloatingActionButton android:id="@+id/tasks_fab" android:src="@drawable/ic_add_white_24dp" app:layout_anchor="@id/recyclerview_layout" app:layout_anchorGravity="bottom|right|end" style="@style/fab_layout"/>
+
+</android.support.design.widget.CoordinatorLayout>

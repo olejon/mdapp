@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -27,15 +25,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -53,14 +52,12 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.net.URLEncoder;
 
@@ -75,6 +72,7 @@ public class MedicationActivity extends AppCompatActivity
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
+    private RelativeLayout mRelativeLayout;
     private Toolbar mToolbar;
     private MenuItem mFavoriteMenuItem;
     private MenuItem mAtcCodeMenuItem;
@@ -118,12 +116,14 @@ public class MedicationActivity extends AppCompatActivity
         // Layout
         setContentView(R.layout.activity_medication);
 
+        // View
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.medication_inner_layout);
+
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.medication_toolbar);
         mToolbar.setTitle("");
 
         setSupportActionBar(mToolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.medication_toolbar_search_layout);
@@ -318,7 +318,7 @@ public class MedicationActivity extends AppCompatActivity
             }
             case R.id.medication_menu_poisonings:
             {
-                Intent intent = new Intent(mContext, PoisoningsActivity.class);
+                Intent intent = new Intent(mContext, PoisoningsCardsActivity.class);
                 intent.putExtra("search", medicationName);
                 startActivity(intent);
                 return true;
@@ -444,14 +444,22 @@ public class MedicationActivity extends AppCompatActivity
             snackbarString = getString(R.string.medication_favorite_saved);
         }
 
-        SnackbarManager.show(Snackbar.with(mContext).text(snackbarString).colorResource(R.color.dark).actionLabel(getString(R.string.snackbar_undo)).actionLabelTypeface(Typeface.DEFAULT_BOLD).actionColorResource(R.color.orange).actionListener(new ActionClickListener()
+        Snackbar snackbar = Snackbar.make(mRelativeLayout, snackbarString, Snackbar.LENGTH_LONG).setAction(R.string.snackbar_undo, new View.OnClickListener()
         {
             @Override
-            public void onActionClicked(Snackbar snackbar)
+            public void onClick(View view)
             {
                 favorite();
             }
-        }));
+        }).setActionTextColor(ContextCompat.getColor(mContext,R.color.orange));
+
+        View snackbarView = snackbar.getView();
+
+        TextView snackbarTextView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+
+        snackbarTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+
+        snackbar.show();
 
         mTools.updateWidget();
 

@@ -4,50 +4,60 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.melnykov.fab.FloatingActionButton;
 
 public class TasksActivity extends AppCompatActivity
 {
+    private final Activity mActivity = this;
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -55,7 +65,8 @@ public class TasksActivity extends AppCompatActivity
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
-    private ListView mListView;
+    private TextView mEmptyTextView;
+    private RecyclerView mRecyclerView;
 
     // Create activity
     @Override
@@ -71,14 +82,33 @@ public class TasksActivity extends AppCompatActivity
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.tasks_toolbar);
-        toolbar.setTitle(getString(R.string.tasks_title));
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.tasks_layout_appbar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
+        {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+            {
+                if(appBarLayout.getTotalScrollRange() == - verticalOffset)
+                {
+                    mTools.setStatusbarColor(mActivity, R.color.dark_blue);
+                }
+                else
+                {
+                    mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+                }
+            }
+        });
+
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.tasks_toolbar_layout);
+        collapsingToolbarLayout.setTitle(getString(R.string.tasks_title));
+
         // Floating action button
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.tasks_fab);
+        android.support.design.widget.FloatingActionButton floatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.tasks_fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -90,13 +120,31 @@ public class TasksActivity extends AppCompatActivity
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
+                        final TextInputLayout taskTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.tasks_dialog_task_layout);
+                        taskTextInputLayout.setHintAnimationEnabled(true);
+
                         EditText taskEditText = (EditText) materialDialog.findViewById(R.id.tasks_dialog_task);
+
+                        taskEditText.addTextChangedListener(new TextWatcher()
+                        {
+                            @Override
+                            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                            {
+                                taskTextInputLayout.setError(null);
+                            }
+
+                            @Override
+                            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                            @Override
+                            public void afterTextChanged(Editable editable) { }
+                        });
 
                         String task = taskEditText.getText().toString().trim();
 
                         if(task.equals(""))
                         {
-                            mTools.showToast("Du må fylle ut navn på oppgaven", 1);
+                            taskTextInputLayout.setError(getString(R.string.tasks_dialog_task_invalid_name));
                         }
                         else
                         {
@@ -137,8 +185,15 @@ public class TasksActivity extends AppCompatActivity
         floatingActionButton.startAnimation(animation);
         floatingActionButton.setVisibility(View.VISIBLE);
 
-        // List
-        mListView = (ListView) findViewById(R.id.tasks_list);
+        // Empty
+        mEmptyTextView = (TextView) findViewById(R.id.tasks_list_empty);
+
+        // Recycler view
+        mRecyclerView = (RecyclerView) findViewById(R.id.tasks_list);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(new TasksAdapter(mCursor));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Get tasks
         getTasks();
@@ -204,52 +259,34 @@ public class TasksActivity extends AppCompatActivity
         getTasksTask.execute();
     }
 
-    private class GetTasksTask extends AsyncTask<Void, Void, TasksSimpleCursorAdapter>
+    private class GetTasksTask extends AsyncTask<Void, Void, Cursor>
     {
         @Override
-        protected void onPostExecute(TasksSimpleCursorAdapter tasksSimpleCursorAdapter)
+        protected void onPostExecute(Cursor cursor)
         {
-            mListView.setAdapter(tasksSimpleCursorAdapter);
-
-            View listViewEmpty = findViewById(R.id.tasks_list_empty);
-            mListView.setEmptyView(listViewEmpty);
-
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            if(mCursor.getCount() == 0)
             {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
-                {
-                    if(mCursor.moveToPosition(i))
-                    {
-                        int taskId = mCursor.getInt(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_ID));
+                mRecyclerView.setVisibility(View.GONE);
+                mEmptyTextView.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                mEmptyTextView.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
 
-                        String taskCompleted = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_COMPLETED));
-
-                        String completed = (taskCompleted.equals("no")) ? "yes" : "no";
-
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(TasksSQLiteHelper.COLUMN_COMPLETED, completed);
-
-                        mSqLiteDatabase.update(TasksSQLiteHelper.TABLE, contentValues, TasksSQLiteHelper.COLUMN_ID+" = "+taskId, null);
-
-                        getTasks();
-                    }
-                }
-            });
+                mRecyclerView.setAdapter(new TasksAdapter(cursor));
+            }
         }
 
         @Override
-        protected TasksSimpleCursorAdapter doInBackground(Void... voids)
+        protected Cursor doInBackground(Void... voids)
         {
             mSqLiteDatabase = new TasksSQLiteHelper(mContext).getReadableDatabase();
 
             String[] queryColumns = {TasksSQLiteHelper.COLUMN_ID, TasksSQLiteHelper.COLUMN_TASK, TasksSQLiteHelper.COLUMN_COMPLETED};
             mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, queryColumns, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK+" COLLATE NOCASE");
 
-            String[] fromColumns = {TasksSQLiteHelper.COLUMN_TASK};
-            int[] toViews = {R.id.tasks_list_item_task};
-
-            return new TasksSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
+            return mCursor;
         }
     }
 
@@ -263,5 +300,83 @@ public class TasksActivity extends AppCompatActivity
         mTools.showToast(removed+" "+tasks+" "+getString(R.string.tasks_removed), 0);
 
         getTasks();
+    }
+
+    // Adapter
+    private class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksAdapterViewHolder>
+    {
+        private final Cursor mCursor;
+
+        private TasksAdapter(Cursor cursor)
+        {
+            mCursor = cursor;
+        }
+
+        class TasksAdapterViewHolder extends RecyclerView.ViewHolder
+        {
+            final LinearLayout listItem;
+            final TextView task;
+
+            public TasksAdapterViewHolder(View view)
+            {
+                super(view);
+
+                listItem = (LinearLayout) view.findViewById(R.id.tasks_list_item_layout);
+                task = (TextView) view.findViewById(R.id.tasks_list_item_task);
+            }
+        }
+
+        @Override
+        public TasksAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+        {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_tasks_list_item, viewGroup, false);
+            return new TasksAdapterViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(TasksAdapterViewHolder viewHolder, int i)
+        {
+            if(mCursor.moveToPosition(i))
+            {
+                final int taskId = mCursor.getInt(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_ID));
+                final String task = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_TASK));
+                final String taskCompleted = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_COMPLETED));
+
+                viewHolder.task.setText(task);
+
+                if(taskCompleted.equals("yes"))
+                {
+                    viewHolder.task.setTextColor(ContextCompat.getColor(mContext, R.color.dark_grey));
+                    viewHolder.task.setPaintFlags(viewHolder.task.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+                else
+                {
+                    viewHolder.task.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+                    viewHolder.task.setPaintFlags(viewHolder.task.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+
+                viewHolder.listItem.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        String completed = (taskCompleted.equals("no")) ? "yes" : "no";
+
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(TasksSQLiteHelper.COLUMN_COMPLETED, completed);
+
+                        mSqLiteDatabase.update(TasksSQLiteHelper.TABLE, contentValues, TasksSQLiteHelper.COLUMN_ID+" = "+taskId, null);
+
+                        getTasks();
+                    }
+                });
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return (mCursor == null) ? 0 : mCursor.getCount();
+        }
     }
 }

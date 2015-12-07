@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -109,7 +107,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search_layout);
@@ -271,11 +268,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    if(mWebViewHasBeenLoaded)
-                    {
-                        if(pageUri.contains("helsebiblioteket.no"))  mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8);");
-                    }
-                    else
+                    if(!mWebViewHasBeenLoaded)
                     {
                         mWebViewHasBeenLoaded = true;
 
@@ -293,11 +286,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         }
                         else if(pageUri.contains("forskning.no"))
                         {
-                            mWebView.loadUrl("javascript:var elements = document.getElementsByTagName('span'); elements[0].scrollIntoView();");
-                        }
-                        else if(pageUri.contains("helsebiblioteket.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('h1').offset(); window.scrollTo(0, offset.top - 8);");
+                            mWebView.loadUrl("javascript:var elements = document.getElementsByTagName('h3'); elements[0].scrollIntoView();");
                         }
                         else if(pageUri.contains("tidsskriftet.no"))
                         {
@@ -317,7 +306,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         }
                     }
 
-                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit(); } else if($('div.search-results').length) { var offset = $('div.search-results').offset(); window.scrollTo(offset.left - 8, offset.top - 8); }");
+                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit(); } else if($('div.search-results').length) { var offset = $('div.search-results').offset(); var width = $('div.l-column-sidebar').outerWidth(); window.scrollTo(width + 80, offset.top + 48); }");
                 }
                 else
                 {
@@ -362,11 +351,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
 
-        if(pageUri.contains("brukerhandboken.no"))
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("brukerhandboken.no"))
         {
             mWebView.setInitialScale(100);
         }
-        else if(pageUri.contains("webofknowledge.com"))
+        else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("webofknowledge.com"))
         {
             mWebView.setInitialScale(100);
         }

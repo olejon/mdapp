@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -30,23 +28,29 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.melnykov.fab.FloatingActionButton;
+import com.afollestad.materialdialogs.MaterialDialog;
+
+import java.net.URLEncoder;
 
 public class PharmaciesLocationActivity extends AppCompatActivity
 {
@@ -61,7 +65,7 @@ public class PharmaciesLocationActivity extends AppCompatActivity
 
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private FloatingActionButton mFloatingActionButton;
+    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
     private RecyclerView mRecyclerView;
 
     private String mMunicipalityName;
@@ -88,25 +92,13 @@ public class PharmaciesLocationActivity extends AppCompatActivity
         toolbar.setTitle(mMunicipalityName);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_location_toolbar_search_layout);
         mToolbarSearchEditText = (EditText) findViewById(R.id.pharmacies_location_toolbar_search);
 
-        ImageButton imageButton = (ImageButton) findViewById(R.id.pharmacies_location_toolbar_clear_search);
-
-        imageButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mToolbarSearchEditText.setText("");
-            }
-        });
-
         // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.pharmacies_location_fab);
+        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.pharmacies_location_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -124,7 +116,7 @@ public class PharmaciesLocationActivity extends AppCompatActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.pharmacies_location_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, mCursor));
+        mRecyclerView.setAdapter(new PharmaciesLocationAdapter());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Get pharmacies
@@ -205,9 +197,9 @@ public class PharmaciesLocationActivity extends AppCompatActivity
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
             }
 
-            mRecyclerView.setAdapter(new PharmaciesLocationAdapter(mContext, mCursor));
+            mRecyclerView.setAdapter(new PharmaciesLocationAdapter());
 
-            if(mCursor.getCount() >= 4)
+            if(mCursor.getCount() >= 8)
             {
                 mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
                 {
@@ -254,6 +246,125 @@ public class PharmaciesLocationActivity extends AppCompatActivity
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_PHARMACIES, queryColumns, SlDataSQLiteHelper.PHARMACIES_COLUMN_MUNICIPALITY+" = "+mTools.sqe(mMunicipalityName), null, null, null, null);
 
             return null;
+        }
+    }
+
+    // Adapter
+    private class PharmaciesLocationAdapter extends RecyclerView.Adapter<PharmaciesLocationAdapter.PharmaciesViewHolder>
+    {
+        private boolean isGoogleMapsInstalled = false;
+
+        private int mLastPosition = -1;
+
+        private PharmaciesLocationAdapter()
+        {
+            try
+            {
+                mContext.getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+
+                isGoogleMapsInstalled = true;
+            }
+            catch(Exception e)
+            {
+                Log.e("PharmaciesLocation", Log.getStackTraceString(e));
+            }
+        }
+
+        class PharmaciesViewHolder extends RecyclerView.ViewHolder
+        {
+            private final CardView card;
+            private final TextView name;
+            private final TextView address;
+            private final TextView mapButton;
+            private final TextView contactButton;
+
+            public PharmaciesViewHolder(View view)
+            {
+                super(view);
+
+                card = (CardView) view.findViewById(R.id.pharmacies_location_card);
+                name = (TextView) view.findViewById(R.id.pharmacies_location_card_name);
+                address = (TextView) view.findViewById(R.id.pharmacies_location_card_address);
+                mapButton = (TextView) view.findViewById(R.id.pharmacies_location_card_map_button);
+                contactButton = (TextView) view.findViewById(R.id.pharmacies_location_card_contact_button);
+            }
+        }
+
+        @Override
+        public PharmaciesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+        {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_pharmacies_location_card, viewGroup, false);
+            return new PharmaciesViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(PharmaciesViewHolder viewHolder, int i)
+        {
+            if(mCursor.moveToPosition(i))
+            {
+                final String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_NAME));
+                final String address = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_ADDRESS));
+
+                viewHolder.name.setText(name);
+                viewHolder.address.setText(address);
+
+                viewHolder.mapButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if(isGoogleMapsInstalled)
+                        {
+                            Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("address", address);
+                            mContext.startActivity(intent);
+                        }
+                        else
+                        {
+                            new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.device_not_supported_dialog_title)).content(mContext.getString(R.string.device_not_supported_dialog_message)).positiveText(mContext.getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                        }
+                    }
+                });
+
+                viewHolder.contactButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        try
+                        {
+                            Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                            intent.putExtra("title", name);
+                            intent.putExtra("uri", "http://www.gulesider.no/finn:"+ URLEncoder.encode(name, "utf-8"));
+                            mContext.startActivity(intent);
+                        }
+                        catch(Exception e)
+                        {
+                            Log.e("PharmaciesLocation", Log.getStackTraceString(e));
+                        }
+                    }
+                });
+
+                animateCard(viewHolder.card, i);
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return (mCursor == null) ? 0 : mCursor.getCount();
+        }
+
+        private void animateCard(View view, int position)
+        {
+            if(position > mLastPosition)
+            {
+                mLastPosition = position;
+
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
+                view.startAnimation(animation);
+            }
         }
     }
 }

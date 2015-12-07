@@ -16,11 +16,11 @@
 
         <View android:layout_below="@+id/main_tabs" style="@style/toolbar_shadow"/>
 
-        <com.melnykov.fab.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
+        <android.support.design.widget.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 
     </RelativeLayout>
 
-    <net.olejon.mdapp.DrawerFrameLayout android:id="@+id/main_drawer" style="@style/main_drawer">
+    <android.support.design.widget.NavigationView android:id="@+id/main_drawer" style="@style/main_drawer">
 
         <ScrollView style="@style/main_drawer_inner">
 
@@ -83,6 +83,6 @@
 
         </ScrollView>
 
-    </net.olejon.mdapp.DrawerFrameLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

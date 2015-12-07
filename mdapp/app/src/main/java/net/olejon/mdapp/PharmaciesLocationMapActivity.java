@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -26,6 +24,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -99,12 +98,19 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         toolbar.setTitle(mPharmacyName);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Map
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.pharmacies_location_map_map);
-        mapFragment.getMapAsync(this);
+        // Permissions
+        String [] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermissions())
+        {
+            ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+        }
+        else
+        {
+            showMap();
+        }
     }
 
     // Menu
@@ -125,7 +131,34 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         }
     }
 
+    // Permissions
+    private boolean checkPermissions()
+    {
+        return (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == PERMISSIONS_REQUEST_ACCESS_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+            showMap();
+        }
+        else
+        {
+            mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
+
+            finish();
+        }
+    }
+
     // Map
+    private void showMap()
+    {
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.pharmacies_location_map_map);
+        mapFragment.getMapAsync(this);
+    }
+
     @Override
     public void onMapReady(final GoogleMap googleMap)
     {
@@ -149,8 +182,6 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
 
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
-
-                        grantPermissions();
                     }
                     catch(Exception e)
                     {
@@ -182,19 +213,5 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         {
             Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
         }
-    }
-
-    // Permissions
-    private void grantPermissions()
-    {
-        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-
-        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        if(requestCode == PERMISSIONS_REQUEST_ACCESS_LOCATION && grantResults[0] != PackageManager.PERMISSION_GRANTED) mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
     }
 }

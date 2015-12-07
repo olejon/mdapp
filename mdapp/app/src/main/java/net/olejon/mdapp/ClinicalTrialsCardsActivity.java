@@ -4,20 +4,18 @@ package net.olejon.mdapp;
 
 Copyright 2015 Ole Jon Bjørkum
 
-This file is part of LegeAppen.
-
-LegeAppen is free software: you can redistribute it and/or modify
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-LegeAppen is distributed in the hope that it will be useful,
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with LegeAppen.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
@@ -30,17 +28,23 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -101,7 +105,6 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
 
         setSupportActionBar(mToolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
@@ -125,7 +128,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.clinicaltrials_cards_cards);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(mContext, new JSONArray()));
+        mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(new JSONArray()));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // No clinical trials
@@ -273,7 +276,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
                             mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
                         }
 
-                        mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(mContext, response));
+                        mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(response));
 
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(ClinicalTrialsSQLiteHelper.COLUMN_STRING, string);
@@ -309,6 +312,115 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         catch(Exception e)
         {
             Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+        }
+    }
+
+    // Adapter
+    private class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTrialsCardsAdapter.ClinicalTrialsViewHolder>
+    {
+        private final JSONArray mClinicalTrials;
+
+        private int mLastPosition = -1;
+
+        private ClinicalTrialsCardsAdapter(JSONArray jsonArray)
+        {
+            mClinicalTrials = jsonArray;
+        }
+
+        class ClinicalTrialsViewHolder extends RecyclerView.ViewHolder
+        {
+            private final CardView card;
+            private final TextView title;
+            private final TextView status;
+            private final TextView conditions;
+            private final TextView intervention;
+            private final TextView button;
+
+            public ClinicalTrialsViewHolder(View view)
+            {
+                super(view);
+
+                card = (CardView) view.findViewById(R.id.clinicaltrials_cards_card);
+                title = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_title);
+                status = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_status);
+                conditions = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_conditions);
+                intervention = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_intervention);
+                button = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_button_uri);
+            }
+        }
+
+        @Override
+        public ClinicalTrialsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+        {
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_clinicaltrials_card, viewGroup, false);
+            return new ClinicalTrialsViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ClinicalTrialsViewHolder viewHolder, int i)
+        {
+            try
+            {
+                final JSONObject clinicalTrialsJsonObject = mClinicalTrials.getJSONObject(i);
+
+                final String title = clinicalTrialsJsonObject.getString("study");
+                final String status = clinicalTrialsJsonObject.getString("status");
+                final String conditions = clinicalTrialsJsonObject.getString("conditions");
+                final String intervention = clinicalTrialsJsonObject.getString("intervention");
+                final String uri = clinicalTrialsJsonObject.getString("uri");
+
+                viewHolder.title.setText(title);
+                viewHolder.status.setText(status);
+                viewHolder.conditions.setText(conditions);
+                viewHolder.intervention.setText(intervention);
+
+                viewHolder.title.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", title);
+                        intent.putExtra("uri", uri);
+                        mContext.startActivity(intent);
+                    }
+                });
+
+                viewHolder.button.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", title);
+                        intent.putExtra("uri", uri);
+                        mContext.startActivity(intent);
+                    }
+                });
+
+                animateCard(viewHolder.card, i);
+            }
+            catch(Exception e)
+            {
+                Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return mClinicalTrials.length();
+        }
+
+        private void animateCard(View view, int position)
+        {
+            if(position > mLastPosition)
+            {
+                mLastPosition = position;
+
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
+                view.startAnimation(animation);
+            }
         }
     }
 }

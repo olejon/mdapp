@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notes_layout">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/recyclerview_layout" style="@style/recyclerview_layout">
 
-    <android.support.v7.widget.Toolbar android:id="@+id/notes_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+    <android.support.design.widget.AppBarLayout android:id="@+id/notes_layout_appbar" style="@style/appbar">
 
-    <TextView android:id="@+id/notes_empty" android:layout_below="@+id/notes_toolbar" android:text="@string/notes_empty" style="@style/notes_empty"/>
+        <android.support.design.widget.CollapsingToolbarLayout android:id="@+id/notes_toolbar_layout" style="@style/collapsing_toolbar">
 
-    <android.support.v7.widget.RecyclerView android:id="@+id/notes_cards" android:layout_below="@+id/notes_toolbar" style="@style/notes_cards"/>
+            <ImageView android:src="@drawable/notes" android:contentDescription="@string/image_content_description" style="@style/collapsing_toolbar_image"/>
 
-    <View android:layout_below="@+id/notes_toolbar" style="@style/toolbar_shadow"/>
+            <android.support.v7.widget.Toolbar android:id="@+id/notes_toolbar" style="@style/collapsing_toolbar_toolbar"/>
 
-    <com.melnykov.fab.FloatingActionButton android:id="@+id/notes_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_add_white_24dp" style="@style/fab_layout"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
 
-</RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/notes_cards" style="@style/notes_cards"/>
+
+    <TextView android:id="@+id/notes_empty" android:text="@string/notes_empty" style="@style/recyclerview_list_empty"/>
+
+    <android.support.design.widget.FloatingActionButton android:id="@+id/notes_fab" android:src="@drawable/ic_add_white_24dp" app:layout_anchor="@id/recyclerview_layout" app:layout_anchorGravity="bottom|right|end" style="@style/fab_layout"/>
+
+</android.support.design.widget.CoordinatorLayout>
