@@ -147,7 +147,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.interactions_cards_search)+": \""+searchString+"\"");
-                    intent.putExtra("uri", "http://interaksjoner.no/analyser.asp?PreparatNavn="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&submit1=Sjekk");
+                    intent.putExtra("uri", "http://www.interaksjoner.no/analyser.asp?PreparatNavn="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&submit1=Sjekk");
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)

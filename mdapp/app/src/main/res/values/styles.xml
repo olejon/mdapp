@@ -27,7 +27,6 @@
     <style name="main_theme" parent="app_theme"/>
 
     <style name="main_search_theme" parent="app_theme">
-        <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/white</item>
     </style>
 
@@ -370,6 +369,16 @@
     <style name="medication_pager">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="medication_fragment_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="medication_fragment_progressbar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
     </style>
 
     <style name="medication_nlh_content">
@@ -2298,6 +2307,18 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="notes_edit_text_input" parent="text_input">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="notes_edit_text_input_edittext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="notes_edit_edittext">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -2305,31 +2326,39 @@
         <item name="android:layout_marginRight">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorHint">@color/dark_grey</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:inputType">textCapSentences|textAutoCorrect</item>
         <item name="android:singleLine">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
     </style>
 
-    <style name="notes_edit_title_edittext" parent="notes_edit_edittext">
+    <style name="notes_edit_title_edittext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">textCapSentences|textAutoCorrect</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/purple</item>
-        <item name="android:inputType">textCapSentences|textAutoCorrect</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
     </style>
 
-    <style name="notes_edit_text_edittext" parent="notes_edit_edittext">
+    <style name="notes_edit_text_edittext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">textMultiLine|textCapSentences|textAutoCorrect</item>
         <item name="android:gravity">top</item>
         <item name="android:minLines">4</item>
-        <item name="android:inputType">textMultiLine|textCapSentences|textAutoCorrect</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
     </style>
 
     <style name="notes_edit_medications_textview">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_margin">8dp</item>
         <item name="android:visibility">gone</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingRight">4dp</item>
@@ -2713,9 +2742,10 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:inputType">textNoSuggestions</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/hint</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:textColorHighlight">@color/light_blue</item>
     </style>
 
     <style name="toolbar_shadow">

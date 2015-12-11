@@ -27,9 +27,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +57,8 @@ public class NotesEditActivity extends AppCompatActivity
 
     private final MyTools mTools = new MyTools(mContext);
 
+    private TextInputLayout mTitleInputLayout;
+    private TextInputLayout mTextInputLayout;
     private EditText mTitleEditText;
     private EditText mTextEditText;
     private EditText mPatientIdEditText;
@@ -65,7 +70,9 @@ public class NotesEditActivity extends AppCompatActivity
 
     private JSONArray mPatientMedicationsJsonArray = new JSONArray();
 
-    private int noteId;
+    private int mNoteId;
+
+    private boolean mNoteHasBeenChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +84,7 @@ public class NotesEditActivity extends AppCompatActivity
 
         final String noteTitle = intent.getStringExtra("title");
 
-        noteId = intent.getIntExtra("id", 0);
+        mNoteId = intent.getIntExtra("id", 0);
 
         // Layout
         setContentView(R.layout.activity_notes_edit);
@@ -85,7 +92,7 @@ public class NotesEditActivity extends AppCompatActivity
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_toolbar);
 
-        final String title = (noteId == 0) ? getString(R.string.notes_edit_title_new) : getString(R.string.notes_edit_title_edit);
+        final String title = (mNoteId == 0) ? getString(R.string.notes_edit_title_new) : getString(R.string.notes_edit_title_edit);
 
         toolbar.setTitle(title);
 
@@ -93,6 +100,19 @@ public class NotesEditActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Elements
+        final TextInputLayout patientIdInputLayout;
+        final TextInputLayout patientNameInputLayout;
+        final TextInputLayout patientDoctorInputLayout;
+        final TextInputLayout patientDepartmentInputLayout;
+        final TextInputLayout patientRoomInputLayout;
+
+        mTitleInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_title_layout);
+        mTextInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_text_layout);
+        patientIdInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_id_layout);
+        patientNameInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_name_layout);
+        patientDoctorInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_doctor_layout);
+        patientDepartmentInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_department_layout);
+        patientRoomInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_room_layout);
         mTitleEditText = (EditText) findViewById(R.id.notes_edit_title);
         mTextEditText = (EditText) findViewById(R.id.notes_edit_text);
         mPatientIdEditText = (EditText) findViewById(R.id.notes_edit_patient_id);
@@ -101,6 +121,14 @@ public class NotesEditActivity extends AppCompatActivity
         mPatientDepartmentEditText = (EditText) findViewById(R.id.notes_edit_patient_department);
         mPatientRoomEditText = (EditText) findViewById(R.id.notes_edit_patient_room);
         mPatientMedicationsTextView = (TextView) findViewById(R.id.notes_edit_patient_medications);
+
+        mTitleInputLayout.setHintAnimationEnabled(true);
+        mTextInputLayout.setHintAnimationEnabled(true);
+        patientIdInputLayout.setHintAnimationEnabled(true);
+        patientNameInputLayout.setHintAnimationEnabled(true);
+        patientDoctorInputLayout.setHintAnimationEnabled(true);
+        patientDepartmentInputLayout.setHintAnimationEnabled(true);
+        patientRoomInputLayout.setHintAnimationEnabled(true);
 
         if(noteTitle != null && !noteTitle.equals("")) mTitleEditText.setText(noteTitle);
 
@@ -130,6 +158,8 @@ public class NotesEditActivity extends AppCompatActivity
         {
             if(resultCode == RESULT_OK)
             {
+                mNoteHasBeenChanged = true;
+
                 String name = data.getStringExtra("name");
                 String manufacturer = data.getStringExtra("manufacturer");
 
@@ -162,7 +192,7 @@ public class NotesEditActivity extends AppCompatActivity
     {
         getMenuInflater().inflate(R.menu.menu_notes_edit, menu);
 
-        if(noteId != 0)
+        if(mNoteId != 0)
         {
             MenuItem menuItem = menu.add(Menu.NONE, Menu.NONE, Menu.NONE, getString(R.string.notes_edit_menu_delete)).setIcon(R.drawable.ic_delete_white_24dp);
             menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -206,12 +236,14 @@ public class NotesEditActivity extends AppCompatActivity
     // Get note
     private void getNote()
     {
-        if(noteId != 0)
+        mNoteHasBeenChanged = false;
+
+        if(mNoteId != 0)
         {
             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
 
             String[] queryColumns = {NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT, NotesSQLiteHelper.COLUMN_PATIENT_ID, NotesSQLiteHelper.COLUMN_PATIENT_NAME, NotesSQLiteHelper.COLUMN_PATIENT_DOCTOR, NotesSQLiteHelper.COLUMN_PATIENT_DEPARTMENT, NotesSQLiteHelper.COLUMN_PATIENT_ROOM, NotesSQLiteHelper.COLUMN_PATIENT_MEDICATIONS};
-            Cursor cursor = sqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, NotesSQLiteHelper.COLUMN_ID+" = "+noteId, null, null, null, null);
+            Cursor cursor = sqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, NotesSQLiteHelper.COLUMN_ID+" = "+mNoteId, null, null, null, null);
 
             if(cursor.moveToFirst())
             {
@@ -249,6 +281,117 @@ public class NotesEditActivity extends AppCompatActivity
 
             cursor.close();
             sqLiteDatabase.close();
+
+            mTitleEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                    mTitleInputLayout.setError(null);
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable)
+                {
+                }
+            });
+
+            mTextEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                    mTextInputLayout.setError(null);
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
+
+            mPatientIdEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
+
+            mPatientNameEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
+
+            mPatientDoctorEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
+
+            mPatientDepartmentEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
+
+            mPatientRoomEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                {
+                    mNoteHasBeenChanged = true;
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+                @Override
+                public void afterTextChanged(Editable editable) { }
+            });
         }
     }
 
@@ -263,9 +406,13 @@ public class NotesEditActivity extends AppCompatActivity
         String patientDepartment = mPatientDepartmentEditText.getText().toString().trim();
         String patientRoom = mPatientRoomEditText.getText().toString().trim();
 
-        if(title.equals("") || text.equals(""))
+        if(title.equals(""))
         {
-            mTools.showToast(getString(R.string.notes_edit_invalid_values), 1);
+            mTitleInputLayout.setError(getString(R.string.notes_edit_invalid_values));
+        }
+        else if(text.equals(""))
+        {
+            mTextInputLayout.setError(getString(R.string.notes_edit_invalid_values));
         }
         else
         {
@@ -291,13 +438,13 @@ public class NotesEditActivity extends AppCompatActivity
 
             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
 
-            if(noteId == 0)
+            if(mNoteId == 0)
             {
                 sqLiteDatabase.insert(NotesSQLiteHelper.TABLE, null, contentValues);
             }
             else
             {
-                sqLiteDatabase.update(NotesSQLiteHelper.TABLE, contentValues, NotesSQLiteHelper.COLUMN_ID+" = "+noteId, null);
+                sqLiteDatabase.update(NotesSQLiteHelper.TABLE, contentValues, NotesSQLiteHelper.COLUMN_ID+" = "+mNoteId, null);
             }
 
             sqLiteDatabase.close();
@@ -310,21 +457,31 @@ public class NotesEditActivity extends AppCompatActivity
 
     private void showSaveNoteDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_save_dialog_title)).content(getString(R.string.notes_edit_save_dialog_message)).positiveText(getString(R.string.notes_edit_save_dialog_positive_button)).neutralText(getString(R.string.notes_edit_save_dialog_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+        String title = mTitleEditText.getText().toString().trim();
+        String text = mTextEditText.getText().toString().trim();
+
+        if(title.equals("") && text.equals("") || !mNoteHasBeenChanged)
         {
-            @Override
-            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-            {
-                saveNote();
-            }
-        }).onNeutral(new MaterialDialog.SingleButtonCallback()
+            finish();
+        }
+        else
         {
-            @Override
-            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_edit_save_dialog_title)).content(getString(R.string.notes_edit_save_dialog_message)).positiveText(getString(R.string.notes_edit_save_dialog_positive_button)).neutralText(getString(R.string.notes_edit_save_dialog_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
             {
-                finish();
-            }
-        }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.red).show();
+                @Override
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                {
+                    saveNote();
+                }
+            }).onNeutral(new MaterialDialog.SingleButtonCallback()
+            {
+                @Override
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                {
+                    finish();
+                }
+            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+        }
     }
 
     // Delete note
@@ -333,7 +490,7 @@ public class NotesEditActivity extends AppCompatActivity
         if(delete)
         {
             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
-            sqLiteDatabase.delete(NotesSQLiteHelper.TABLE, NotesSQLiteHelper.COLUMN_ID+" = "+noteId, null);
+            sqLiteDatabase.delete(NotesSQLiteHelper.TABLE, NotesSQLiteHelper.COLUMN_ID+" = "+mNoteId, null);
             sqLiteDatabase.close();
 
             mTools.showToast(getString(R.string.notes_edit_deleted), 1);
@@ -349,7 +506,7 @@ public class NotesEditActivity extends AppCompatActivity
                 {
                     deleteNote(true);
                 }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.red).neutralColorRes(R.color.dark_blue).show();
+            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
         }
     }
 

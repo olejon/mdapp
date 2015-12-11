@@ -6,5 +6,6 @@
     <item android:id="@+id/diseases_and_treatments_search_webview_menu_go_forward" android:orderInCategory="2" app:showAsAction="ifRoom" android:visible="false" android:icon="@drawable/ic_keyboard_arrow_right_white_24dp" android:title="@string/diseases_and_treatments_search_webview_menu_forward"/>
     <item android:id="@+id/diseases_and_treatments_search_webview_menu_print" android:orderInCategory="3" app:showAsAction="ifRoom" android:icon="@drawable/ic_print_white_24dp" android:title="@string/diseases_and_treatments_search_webview_menu_print"/>
     <item android:id="@+id/diseases_and_treatments_search_webview_menu_save_article" android:orderInCategory="4" app:showAsAction="never" android:title="@string/diseases_and_treatments_search_webview_menu_save_article"/>
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_open_uri" android:orderInCategory="5" app:showAsAction="never" android:title="@string/diseases_and_treatments_search_webview_menu_open_uri"/>
 
 </menu>

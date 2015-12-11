@@ -10,8 +10,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ProgressBar android:id="@+id/medication_toolbar_progressbar_horizontal" android:layout_alignParentTop="true" android:max="100" style="@style/toolbar_progressbar_horizontal"/>
-
     <RelativeLayout android:id="@+id/medication_extended_toolbar" android:layout_below="@+id/medication_toolbar" style="@style/medication_extended_toolbar_layout">
 
         <Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_prescription_group"/>

@@ -91,9 +91,9 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
     private int mFirstForskningPosition;
     private int mFirstHelsebiblioteketPosition;
     private int mFirstTidsskriftetPosition;
+    private int mFirstLegehandbokaPosition;
     private int mFirstOncolexPosition;
     private int mFirstBrukerhandbokenPosition;
-    private int mFirstLegehandbokaPosition;
     private int mFirstHelsenorgePosition;
 
     // Create activity
@@ -365,6 +365,19 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                 }
                 case 7:
                 {
+                    if(mFirstLegehandbokaPosition == 0)
+                    {
+                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
+                    }
+                    else
+                    {
+                        mRecyclerView.scrollToPosition(mFirstLegehandbokaPosition);
+                    }
+
+                    break;
+                }
+                case 8:
+                {
                     if(mFirstOncolexPosition == 0)
                     {
                         mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
@@ -376,7 +389,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
 
                     break;
                 }
-                case 8:
+                case 9:
                 {
                     if(mFirstBrukerhandbokenPosition == 0)
                     {
@@ -385,19 +398,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                     else
                     {
                         mRecyclerView.scrollToPosition(mFirstBrukerhandbokenPosition);
-                    }
-
-                    break;
-                }
-                case 9:
-                {
-                    if(mFirstLegehandbokaPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstLegehandbokaPosition);
                     }
 
                     break;
@@ -447,9 +447,9 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
         mFirstForskningPosition = 0;
         mFirstHelsebiblioteketPosition = 0;
         mFirstTidsskriftetPosition = 0;
+        mFirstLegehandbokaPosition = 0;
         mFirstOncolexPosition = 0;
         mFirstBrukerhandbokenPosition = 0;
-        mFirstLegehandbokaPosition = 0;
         mFirstHelsenorgePosition = 0;
 
         try
@@ -495,11 +495,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
 
                             if(mFirstTidsskriftetPosition == 0 && type.equals("tidsskriftet")) mFirstTidsskriftetPosition = i;
 
+                            if(mFirstLegehandbokaPosition == 0 && type.equals("legehandboka")) mFirstLegehandbokaPosition = i;
+
                             if(mFirstOncolexPosition == 0 && type.equals("oncolex")) mFirstOncolexPosition = i;
 
                             if(mFirstBrukerhandbokenPosition == 0 && type.equals("brukerhandboken")) mFirstBrukerhandbokenPosition = i;
-
-                            if(mFirstLegehandbokaPosition == 0 && type.equals("legehandboka")) mFirstLegehandbokaPosition = i;
 
                             if(mFirstHelsenorgePosition == 0 && type.equals("helsenorge")) mFirstHelsenorgePosition = i;
                         }
@@ -671,6 +671,12 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                         viewHolder.text.setText(text);
                         break;
                     }
+                    case "legehandboka":
+                    {
+                        viewHolder.icon.setImageResource(R.drawable.legehandboka);
+                        viewHolder.text.setText(text);
+                        break;
+                    }
                     case "oncolex":
                     {
                         viewHolder.icon.setImageResource(R.drawable.oncolex);
@@ -686,12 +692,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                     case "helsenorge":
                     {
                         viewHolder.icon.setImageResource(R.drawable.helsenorge);
-                        viewHolder.text.setText(text);
-                        break;
-                    }
-                    case "legehandboka":
-                    {
-                        viewHolder.icon.setImageResource(R.drawable.legehandboka);
                         viewHolder.text.setText(text);
                         break;
                     }

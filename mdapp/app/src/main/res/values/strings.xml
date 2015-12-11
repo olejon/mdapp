@@ -47,6 +47,7 @@
     <string name="main_webview_menu_go_forward">Gå frem</string>
     <string name="main_webview_menu_print">Skriv ut</string>
     <string name="main_webview_menu_save_article">Lagre artikkel</string>
+    <string name="main_webview_menu_open_uri">Åpne i nettleser</string>
 
     <!-- Medications favorites -->
     <string name="main_medications_favorites_list_empty">Ingen favoritter</string>
@@ -131,10 +132,10 @@
     <string name="diseases_and_treatments_search_sml">Store medisinske leksikon</string>
     <string name="diseases_and_treatments_search_forskning">Forskning.no</string>
     <string name="diseases_and_treatments_search_helsebiblioteket">Helsebiblioteket</string>
-    <string name="diseases_and_treatments_search_oncolex">Oncolex</string>
     <string name="diseases_and_treatments_search_tidsskriftet">Tidsskrift for Den norske legeforening</string>
-    <string name="diseases_and_treatments_search_brukerhandboken">Nasjonal brukerhåndbok i Medisinsk Biokjemi</string>
     <string name="diseases_and_treatments_search_legehandboka">Legehåndboka</string>
+    <string name="diseases_and_treatments_search_oncolex">Oncolex</string>
+    <string name="diseases_and_treatments_search_brukerhandboken">Nasjonal brukerhåndbok i Medisinsk Biokjemi</string>
     <string name="diseases_and_treatments_search_helsenorge">Helsenorge.no</string>
     <string name="diseases_and_treatments_search_no_results">Ingen treff i denne kilden</string>
 
@@ -145,6 +146,7 @@
     <string name="diseases_and_treatments_search_webview_menu_forward">Gå frem</string>
     <string name="diseases_and_treatments_search_webview_menu_print">Skriv ut</string>
     <string name="diseases_and_treatments_search_webview_menu_save_article">Lagre artikkel</string>
+    <string name="diseases_and_treatments_search_webview_menu_open_uri">Åpne i nettleser</string>
 
     <!-- Legevakthåndboken -->
     <string name="lvh_title">Legevakthåndboken</string>
@@ -422,6 +424,10 @@
     <string name="settings_category_notifications_from_slv">Varsler fra Legemiddelverket</string>
     <string name="settings_checkbox_notifications_from_slv_notify_title">Varsle ved nytt varsel</string>
     <string name="settings_checkbox_notifications_from_slv_notify_summary">Varsle meg når det kommer et nytt varsel fra Legemiddelverket</string>
+    <string name="settings_checkbox_notifications_from_slv_notify_sound_title">Lyd</string>
+    <string name="settings_checkbox_notifications_from_slv_notify_sound_summary">Spill av lyd</string>
+    <string name="settings_checkbox_notifications_from_slv_notify_led_title">LED-lys</string>
+    <string name="settings_checkbox_notifications_from_slv_notify_led_summary">Blink LED-lys</string>
     <string name="settings_category_advanced">Avansert</string>
     <string name="settings_checkbox_medication_multiple_documents">Åpne flere preparater samtidig</string>
     <string name="settings_checkbox_medication_multiple_documents_summary">Åpne preparater som en egen skjerm. Du kan bla mellom skjermene med menyknappen for dine skjermer i Android</string>

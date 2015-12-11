@@ -323,10 +323,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     case R.id.drawer_item_report_issue:
                     {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", getString(R.string.drawer_item_report_issue));
-                        intent.putExtra("uri", getString(R.string.project_report_issue_uri));
-                        startActivity(intent);
+                        mTools.openUri(getString(R.string.project_report_issue_uri));
                         break;
                     }
                 }
@@ -474,6 +471,10 @@ public class MainActivity extends AppCompatActivity
         else if(!mSearchEditText.getText().toString().equals(""))
         {
             mSearchEditText.setText("");
+        }
+        else if(VIEW_PAGER_POSITION != 0)
+        {
+            mViewPager.setCurrentItem(0);
         }
         else
         {

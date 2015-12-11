@@ -98,14 +98,15 @@ public class NotificationsFromSlvIntentService extends IntentService
                                         .setCategory(Notification.CATEGORY_MESSAGE)
                                         .setLargeIcon(bitmap)
                                         .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
-                                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                                        .setLights(Color.BLUE, 1000, 2000)
                                         .setTicker(title)
                                         .setContentTitle(title)
                                         .setContentText(message)
                                         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                                         .setContentIntent(launchPendingIntent)
                                         .addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.service_notifications_from_slv_read_more), launchPendingIntent);
+
+                                if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND")) notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                                if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_LED")) notificationBuilder.setLights(Color.BLUE, 1000, 2000);
 
                                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                             }

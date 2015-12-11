@@ -4,6 +4,8 @@
 
     <PreferenceCategory android:title="@string/settings_category_notifications_from_slv">
         <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_summary"/>
+        <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_sound_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_sound_summary"/>
+        <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY_LED" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_led_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_led_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_category_about">

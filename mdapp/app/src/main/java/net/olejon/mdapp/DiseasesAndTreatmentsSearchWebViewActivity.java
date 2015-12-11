@@ -79,6 +79,9 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
     {
         super.onCreate(savedInstanceState);
 
+        // Transition
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
         // Connected?
         if(!mTools.isDeviceConnected())
         {
@@ -189,7 +192,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         else if(pageUri.contains("webofknowledge.com"))
         {
             webSettings.setUseWideViewPort(true);
-
             mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_this_can_take_some_time), 1);
         }
 
@@ -288,6 +290,10 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                         {
                             mWebView.loadUrl("javascript:var elements = document.getElementsByTagName('h3'); elements[0].scrollIntoView();");
                         }
+                        else if(pageUri.contains("helsebiblioteket.no"))
+                        {
+                            mWebView.loadUrl("javascript:if($('div.guidlinelinklistContent').length) { var offset = $('div.guidlinelinklistContent').offset(); window.scrollTo(offset.left - 6, offset.top - 18); }");
+                        }
                         else if(pageUri.contains("tidsskriftet.no"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('article#object').offset(); window.scrollTo(offset.left - 8, offset.top);");
@@ -346,18 +352,21 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         CookieManager cookieManager = CookieManager.getInstance();
 
         cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
-        cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
-        cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
+        cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
+        cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("brukerhandboken.no"))
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
         {
-            mWebView.setInitialScale(100);
-        }
-        else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("webofknowledge.com"))
-        {
-            mWebView.setInitialScale(100);
+            if(pageUri.contains("brukerhandboken.no"))
+            {
+                mWebView.setInitialScale(100);
+            }
+            else if(pageUri.contains("webofknowledge.com"))
+            {
+                mWebView.setInitialScale(100);
+            }
         }
 
         if(savedInstanceState == null)
@@ -426,6 +435,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         else
         {
             super.onBackPressed();
+
+            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
         }
     }
 
@@ -448,6 +459,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
             case android.R.id.home:
             {
                 finish();
+                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
                 return true;
             }
             case R.id.diseases_and_treatments_search_webview_menu_find_in_text:
@@ -493,6 +505,12 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
             case R.id.diseases_and_treatments_search_webview_menu_save_article:
             {
                 mTools.saveArticle(mWebView.getTitle(), pageUri, "diseases_and_treatments");
+                return true;
+            }
+            case R.id.diseases_and_treatments_search_webview_menu_open_uri:
+            {
+                mTools.openUri(pageUri);
+                return true;
             }
             default:
             {

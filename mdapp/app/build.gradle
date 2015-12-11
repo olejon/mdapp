@@ -10,8 +10,8 @@ android
         applicationId "net.olejon.mdapp"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 222
-        versionName "2.2"
+        versionCode 230
+        versionName "2.3"
     }
 
     buildTypes

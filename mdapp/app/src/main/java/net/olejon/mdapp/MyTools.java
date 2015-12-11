@@ -246,6 +246,13 @@ class MyTools
         }
     }
 
+    // Open URI
+    public void openUri(String uri)
+    {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        mContext.startActivity(browserIntent);
+    }
+
     // Saved articles
     public void saveArticle(String title, String uri, String webview)
     {

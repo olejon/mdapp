@@ -355,7 +355,7 @@ public class NotesActivity extends AppCompatActivity
                         {
                             finish();
                         }
-                    }).contentColorRes(R.color.black).positiveColorRes(R.color.red).neutralColorRes(R.color.dark_blue).show();
+                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
                 }
             }).showListener(new DialogInterface.OnShowListener()
             {

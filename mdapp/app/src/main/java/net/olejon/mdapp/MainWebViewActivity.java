@@ -74,6 +74,9 @@ public class MainWebViewActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        // Transition
+        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
         // Connected?
         if(!mTools.isDeviceConnected())
         {
@@ -181,8 +184,13 @@ public class MainWebViewActivity extends AppCompatActivity
             webSettings.setUseWideViewPort(true);
             webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0");
         }
+        else if(pageUri.contains("clinicaltrials.gov"))
+        {
+            webSettings.setUseWideViewPort(true);
+        }
         else if(pageUri.contains("interaksjoner.no"))
         {
+            webSettings.setUseWideViewPort(true);
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
         else if(pageUri.contains("legemiddelverket.no"))
@@ -267,6 +275,10 @@ public class MainWebViewActivity extends AppCompatActivity
                         {
                             mWebView.loadUrl("javascript:$('div#FirstSearch1 > input:text').focus();");
                         }
+                        else if(pageUri.contains("helsebiblioteket.no"))
+                        {
+                            mWebView.loadUrl("javascript:if($('div.guidlinelinklistContent').length) { var offset = $('div.guidlinelinklistContent').offset(); window.scrollTo(offset.left - 6, offset.top - 18); }");
+                        }
                         else if(pageUri.contains("helsedirektoratet.no"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('div.searchfield').offset(); window.scrollTo(0, offset.top + 8);");
@@ -332,13 +344,24 @@ public class MainWebViewActivity extends AppCompatActivity
         cookieManager.setCookie("http://www.gulesider.no/", "cookiesAccepted=true");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("brukerhandboken.no"))
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
         {
-            mWebView.setInitialScale(100);
-        }
-        else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT && pageUri.contains("legemiddelverket.no"))
-        {
-            mWebView.setInitialScale(100);
+            if(pageUri.contains("brukerhandboken.no"))
+            {
+                mWebView.setInitialScale(100);
+            }
+            else if(pageUri.contains("clinicaltrials.gov"))
+            {
+                mWebView.setInitialScale(100);
+            }
+            else if(pageUri.contains("interaksjoner.no"))
+            {
+                mWebView.setInitialScale(100);
+            }
+            else if(pageUri.contains("legemiddelverket.no"))
+            {
+                mWebView.setInitialScale(100);
+            }
         }
 
         if(savedInstanceState == null)
@@ -437,6 +460,8 @@ public class MainWebViewActivity extends AppCompatActivity
         else
         {
             super.onBackPressed();
+
+            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
         }
     }
 
@@ -459,6 +484,7 @@ public class MainWebViewActivity extends AppCompatActivity
             case android.R.id.home:
             {
                 finish();
+                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
                 return true;
             }
             case R.id.main_webview_menu_go_forward:
@@ -504,6 +530,12 @@ public class MainWebViewActivity extends AppCompatActivity
             case R.id.main_webview_menu_save_article:
             {
                 mTools.saveArticle(mWebView.getTitle(), pageUri, "main");
+                return true;
+            }
+            case R.id.main_webview_menu_open_uri:
+            {
+                mTools.openUri(pageUri);
+                return true;
             }
             default:
             {

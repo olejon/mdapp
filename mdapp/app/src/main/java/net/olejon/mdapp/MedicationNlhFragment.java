@@ -60,7 +60,7 @@ public class MedicationNlhFragment extends Fragment
         final String pageUri = bundle.getString("uri");
 
         // Progress bar
-        final ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.medication_toolbar_progressbar_horizontal);
+        final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_nlh_progressbar);
 
         // Toolbar
         final LinearLayout toolbarSearchLayout = (LinearLayout) activity.findViewById(R.id.medication_toolbar_search_layout);
@@ -106,14 +106,13 @@ public class MedicationNlhFragment extends Fragment
             @Override
             public void onProgressChanged(WebView view, int newProgress)
             {
-                if(newProgress == 100)
+                if(newProgress > 32)
                 {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.GONE);
                 }
                 else
                 {
                     progressBar.setVisibility(View.VISIBLE);
-                    progressBar.setProgress(newProgress);
 
                     toolbarSearchLayout.setVisibility(View.GONE);
                     toolbarSearchEditText.setText("");
