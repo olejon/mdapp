@@ -4,7 +4,7 @@
 
     <RelativeLayout style="@style/interactions_cards_card_inner_layout">
 
-        <ImageView android:id="@+id/interactions_cards_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/image_content_description" style="@style/interactions_cards_card_icon"/>
+        <ImageView android:id="@+id/interactions_cards_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/interactions_cards_card_image_content_description" style="@style/interactions_cards_card_icon"/>
 
         <TextView android:id="@+id/interactions_cards_card_title" android:layout_alignParentTop="true" style="@style/interactions_cards_card_title"/>
         <TextView android:id="@+id/interactions_cards_card_text" android:layout_below="@+id/interactions_cards_card_title" style="@style/interactions_cards_card_text"/>

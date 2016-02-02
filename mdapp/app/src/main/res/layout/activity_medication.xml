@@ -13,7 +13,6 @@
     <RelativeLayout android:id="@+id/medication_extended_toolbar" android:layout_below="@+id/medication_toolbar" style="@style/medication_extended_toolbar_layout">
 
         <Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_prescription_group"/>
-        <Button android:id="@+id/medication_blue_prescription" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_blue_prescription"/>
 
         <LinearLayout android:id="@+id/medication_extended_toolbar_inner_layout" android:layout_alignParentTop="true" style="@style/medication_extended_toolbar_inner_layout">
 

@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
         // Refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.poisonings_cards_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_green, R.color.accent_purple, R.color.accent_orange);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -147,8 +147,8 @@ public class PoisoningsCardsActivity extends AppCompatActivity
                 try
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.poisonings_cards_search)+": \""+mSearchString+"\"");
-                    intent.putExtra("uri", "https://helsenorge.no/sok/giftinformasjon/?k="+URLEncoder.encode(mSearchString.toLowerCase(), "utf-8"));
+                    intent.putExtra("title", getString(R.string.poisonings_cards_search_on_helsenorge));
+                    intent.putExtra("uri", "https://helsenorge.no/Giftinformasjon/");
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)
@@ -166,8 +166,8 @@ public class PoisoningsCardsActivity extends AppCompatActivity
                 try
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.poisonings_cards_search)+": \""+mSearchString+"\"");
-                    intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/alle-anbefalinger?cx=005475784484624053973%3A3bnj2dj_uei&ie=UTF-8&q="+URLEncoder.encode(mSearchString.toLowerCase(), "utf-8")+"&sa=S%C3%B8k");
+                    intent.putExtra("title", getString(R.string.poisonings_cards_search_in_helsebiblioteket));
+                    intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/");
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)
@@ -287,13 +287,13 @@ public class PoisoningsCardsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String string, boolean cache)
+    private void search(final String searchString, final boolean cache)
     {
         try
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            String apiUri = getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
+            String apiUri = getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8");
 
             if(!cache) requestQueue.getCache().remove(apiUri);
 
@@ -322,11 +322,11 @@ public class PoisoningsCardsActivity extends AppCompatActivity
                         mRecyclerView.setAdapter(new PoisoningsCardsAdapter(response));
 
                         ContentValues contentValues = new ContentValues();
-                        contentValues.put(PoisoningsSQLiteHelper.COLUMN_STRING, string);
+                        contentValues.put(PoisoningsSQLiteHelper.COLUMN_STRING, searchString);
 
                         SQLiteDatabase sqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
 
-                        sqLiteDatabase.delete(PoisoningsSQLiteHelper.TABLE, PoisoningsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(string)+" COLLATE NOCASE", null);
+                        sqLiteDatabase.delete(PoisoningsSQLiteHelper.TABLE, PoisoningsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
                         sqLiteDatabase.insert(PoisoningsSQLiteHelper.TABLE, null, contentValues);
 
                         sqLiteDatabase.close();

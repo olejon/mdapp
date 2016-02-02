@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,7 +62,7 @@ public class InteractionsActivity extends AppCompatActivity
 
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     private boolean mActivityPaused = false;
@@ -130,7 +131,7 @@ public class InteractionsActivity extends AppCompatActivity
         mListView.addHeaderView(listViewHeader, null, false);
 
         // Floating action button
-        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.interactions_fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.interactions_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -245,24 +246,24 @@ public class InteractionsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(String string)
+    private void search(String searchString)
     {
-        if(string.equals("")) return;
+        if(searchString.equals("")) return;
 
         Pattern pattern = Pattern.compile("([A-Za-z][0-9]{2}[A-Za-z]\\s+[A-Za-z][0-9]{2})");
-        Matcher matcher = pattern.matcher(string);
+        Matcher matcher = pattern.matcher(searchString);
 
         while(matcher.find())
         {
-            string = string.replace(matcher.group(0), "");
+            searchString = searchString.replace(matcher.group(0), "");
 
-            string += " "+matcher.group(1).replace(" ", "")+" ";
+            searchString += " "+matcher.group(1).replace(" ", "")+" ";
         }
 
-        string = string.replaceAll("\\s{2,}", " ").trim();
+        searchString = searchString.replaceAll("\\s{2,}", " ").trim();
 
         Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
-        intent.putExtra("search", string);
+        intent.putExtra("search", searchString);
         startActivity(intent);
     }
 

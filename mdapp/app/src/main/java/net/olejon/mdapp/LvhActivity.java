@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ public class LvhActivity extends AppCompatActivity
 
         // Refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.lvh_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_green, R.color.accent_purple, R.color.accent_orange);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -129,7 +129,7 @@ public class LvhActivity extends AppCompatActivity
     }
 
     // Get categories
-    private void getCategories(boolean cache)
+    private void getCategories(final boolean cache)
     {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 

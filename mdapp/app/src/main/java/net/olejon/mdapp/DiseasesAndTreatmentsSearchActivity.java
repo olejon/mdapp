@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,12 +19,13 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
+import android.app.assist.AssistContent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -40,13 +41,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -65,7 +61,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
-public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener
+public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 {
     private final Context mContext = this;
 
@@ -73,28 +69,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
 
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
-    private Spinner mSpinner;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
     private String mSearchLanguage;
     private String mSearchString;
-
-    private int mFirstPubMedPosition;
-    private int mFirstWebOfSciencePosition;
-    private int mFirstMedlinePlusPosition;
-    private int mFirstWikipediaPosition;
-    private int mFirstUpToDatePosition;
-    private int mFirstBmjPosition;
-    private int mFirstNhiPosition;
-    private int mFirstSmlPosition;
-    private int mFirstForskningPosition;
-    private int mFirstHelsebiblioteketPosition;
-    private int mFirstTidsskriftetPosition;
-    private int mFirstLegehandbokaPosition;
-    private int mFirstOncolexPosition;
-    private int mFirstBrukerhandbokenPosition;
-    private int mFirstHelsenorgePosition;
 
     // Create activity
     @Override
@@ -133,35 +112,16 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
         mProgressBar = (ProgressBar) findViewById(R.id.diseases_and_treatments_search_toolbar_progressbar);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        // Spinner
-        mSpinner = (Spinner) findViewById(R.id.diseases_and_treatments_search_spinner);
-
-        ArrayAdapter<CharSequence> arrayAdapter;
-
-        if(mSearchLanguage.equals(""))
-        {
-            arrayAdapter = ArrayAdapter.createFromResource(mContext, R.array.diseases_and_treatments_search_spinner_items_english, R.layout.activity_diseases_and_treatments_search_spinner_header);
-        }
-        else
-        {
-            arrayAdapter = ArrayAdapter.createFromResource(mContext, R.array.diseases_and_treatments_search_spinner_items_norwegian, R.layout.activity_diseases_and_treatments_search_spinner_header);
-        }
-
-        arrayAdapter.setDropDownViewResource(R.layout.activity_diseases_and_treatments_search_spinner_item);
-
-        mSpinner.setAdapter(arrayAdapter);
-        mSpinner.setOnItemSelectedListener(this);
-
         // Refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.diseases_and_treatments_search_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_green, R.color.accent_purple, R.color.accent_orange);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
             {
-                search(false);
+                search(mSearchString, false);
             }
         });
 
@@ -173,7 +133,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Search
-        search(true);
+        search(mSearchString, true);
 
         // Correct
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
@@ -210,7 +170,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
 
                                     mProgressBar.setVisibility(View.VISIBLE);
 
-                                    search(true);
+                                    search(correctSearchString, true);
                                 }
                             }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
                         }
@@ -257,206 +217,35 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
         }
     }
 
-    // Spinner
+    // Now on tap
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+    public void onProvideAssistContent(AssistContent assistContent)
     {
-        if(mSearchLanguage.equals(""))
+        super.onProvideAssistContent(assistContent);
+
+        try
         {
-            switch(i)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             {
-                case 1:
-                {
-                    mRecyclerView.scrollToPosition(mFirstPubMedPosition);
-                    break;
-                }
-                case 2:
-                {
-                    mRecyclerView.scrollToPosition(mFirstWebOfSciencePosition);
-                    break;
-                }
-                case 3:
-                {
-                    mRecyclerView.scrollToPosition(mFirstMedlinePlusPosition);
-                    break;
-                }
-                case 4:
-                {
-                    mRecyclerView.scrollToPosition(mFirstWikipediaPosition);
-                    break;
-                }
-                case 5:
-                {
-                    if(mFirstUpToDatePosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstUpToDatePosition);
-                    }
+                String structuredJson = new JSONObject().put("@type", "MedicalCondition").put("name", mSearchString).toString();
 
-                    break;
-                }
-                case 6:
-                {
-                    if(mFirstBmjPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstBmjPosition);
-                    }
-
-                    break;
-                }
+                assistContent.setStructuredData(structuredJson);
             }
         }
-        else
+        catch(Exception e)
         {
-            switch(i)
-            {
-                case 1:
-                {
-                    mRecyclerView.scrollToPosition(mFirstNhiPosition);
-                    break;
-                }
-                case 2:
-                {
-                    mRecyclerView.scrollToPosition(mFirstSmlPosition);
-                    break;
-                }
-                case 3:
-                {
-                    mRecyclerView.scrollToPosition(mFirstWikipediaPosition);
-                    break;
-                }
-                case 4:
-                {
-                    mRecyclerView.scrollToPosition(mFirstForskningPosition);
-                    break;
-                }
-                case 5:
-                {
-                    if(mFirstHelsebiblioteketPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstHelsebiblioteketPosition);
-                    }
-
-                    break;
-                }
-                case 6:
-                {
-                    if(mFirstTidsskriftetPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstTidsskriftetPosition);
-                    }
-
-                    break;
-                }
-                case 7:
-                {
-                    if(mFirstLegehandbokaPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstLegehandbokaPosition);
-                    }
-
-                    break;
-                }
-                case 8:
-                {
-                    if(mFirstOncolexPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstOncolexPosition);
-                    }
-
-                    break;
-                }
-                case 9:
-                {
-                    if(mFirstBrukerhandbokenPosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstBrukerhandbokenPosition);
-                    }
-
-                    break;
-                }
-                case 10:
-                {
-                    if(mFirstHelsenorgePosition == 0)
-                    {
-                        mTools.showToast(getString(R.string.diseases_and_treatments_search_no_results), 1);
-                    }
-                    else
-                    {
-                        mRecyclerView.scrollToPosition(mFirstHelsenorgePosition);
-                    }
-
-                    break;
-                }
-            }
+            Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
         }
-
-        Handler handler = new Handler();
-
-        handler.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mSpinner.setSelection(0);
-            }
-        }, 250);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) { }
-
     // Search
-    private void search(final boolean cache)
+    private void search(final String searchString, final boolean cache)
     {
-        mFirstPubMedPosition = 0;
-        mFirstWebOfSciencePosition = 0;
-        mFirstMedlinePlusPosition = 0;
-        mFirstWikipediaPosition = 0;
-        mFirstUpToDatePosition = 0;
-        mFirstBmjPosition = 0;
-        mFirstNhiPosition = 0;
-        mFirstSmlPosition = 0;
-        mFirstForskningPosition = 0;
-        mFirstHelsebiblioteketPosition = 0;
-        mFirstTidsskriftetPosition = 0;
-        mFirstLegehandbokaPosition = 0;
-        mFirstOncolexPosition = 0;
-        mFirstBrukerhandbokenPosition = 0;
-        mFirstHelsenorgePosition = 0;
-
         try
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            String apiUri = getString(R.string.project_website_uri)+"api/1/diseases-and-treatments/"+mSearchLanguage+"/?search="+URLEncoder.encode(mSearchString, "utf-8");
+            String apiUri = getString(R.string.project_website_uri)+"api/1/diseases-and-treatments/"+mSearchLanguage+"/?search="+URLEncoder.encode(searchString, "utf-8");
 
             if(!cache) requestQueue.getCache().remove(apiUri);
 
@@ -465,50 +254,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                 @Override
                 public void onResponse(JSONArray response)
                 {
-                    for(int i = 0; i < response.length(); i++)
-                    {
-                        try
-                        {
-                            JSONObject jsonObject = response.getJSONObject(i);
-
-                            String type = jsonObject.getString("type");
-
-                            if(mFirstPubMedPosition == 0 && type.equals("pubmed")) mFirstPubMedPosition = i;
-
-                            if(mFirstWebOfSciencePosition == 0 && type.equals("webofscience")) mFirstWebOfSciencePosition = i;
-
-                            if(mFirstMedlinePlusPosition == 0 && type.equals("medlineplus")) mFirstMedlinePlusPosition = i;
-
-                            if(mFirstWikipediaPosition == 0 && type.equals("wikipedia")) mFirstWikipediaPosition = i;
-
-                            if(mFirstUpToDatePosition == 0 && type.equals("uptodate")) mFirstUpToDatePosition = i;
-
-                            if(mFirstBmjPosition == 0 && type.equals("bmj")) mFirstBmjPosition = i;
-
-                            if(mFirstNhiPosition == 0 && type.equals("nhi")) mFirstNhiPosition = i;
-
-                            if(mFirstSmlPosition == 0 && type.equals("sml")) mFirstSmlPosition = i;
-
-                            if(mFirstForskningPosition == 0 && type.equals("forskning")) mFirstForskningPosition = i;
-
-                            if(mFirstHelsebiblioteketPosition == 0 && type.equals("helsebiblioteket")) mFirstHelsebiblioteketPosition = i;
-
-                            if(mFirstTidsskriftetPosition == 0 && type.equals("tidsskriftet")) mFirstTidsskriftetPosition = i;
-
-                            if(mFirstLegehandbokaPosition == 0 && type.equals("legehandboka")) mFirstLegehandbokaPosition = i;
-
-                            if(mFirstOncolexPosition == 0 && type.equals("oncolex")) mFirstOncolexPosition = i;
-
-                            if(mFirstBrukerhandbokenPosition == 0 && type.equals("brukerhandboken")) mFirstBrukerhandbokenPosition = i;
-
-                            if(mFirstHelsenorgePosition == 0 && type.equals("helsenorge")) mFirstHelsenorgePosition = i;
-                        }
-                        catch(Exception e)
-                        {
-                            Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
-                        }
-                    }
-
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
 
@@ -517,11 +262,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                     mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(response));
 
                     ContentValues contentValues = new ContentValues();
-                    contentValues.put(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING, mSearchString);
+                    contentValues.put(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING, searchString);
 
                     SQLiteDatabase sqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
 
-                    sqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(mSearchString)+" COLLATE NOCASE", null);
+                    sqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
                     sqLiteDatabase.insert(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, contentValues);
 
                     sqLiteDatabase.close();
@@ -556,8 +301,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
     private class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<DiseasesAndTreatmentsSearchAdapter.DiseasesAndTreatmentsSearchViewHolder>
     {
         private final JSONArray mResults;
-
-        private int mLastPosition = -1;
 
         private DiseasesAndTreatmentsSearchAdapter(JSONArray results)
         {
@@ -659,6 +402,12 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                         viewHolder.text.setText(text);
                         break;
                     }
+                    case "legehandboka":
+                    {
+                        viewHolder.icon.setImageResource(R.drawable.legehandboka);
+                        viewHolder.text.setText(text);
+                        break;
+                    }
                     case "helsebiblioteket":
                     {
                         viewHolder.icon.setImageResource(R.drawable.helsebiblioteket);
@@ -668,12 +417,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                     case "tidsskriftet":
                     {
                         viewHolder.icon.setImageResource(R.drawable.tidsskriftet);
-                        viewHolder.text.setText(text);
-                        break;
-                    }
-                    case "legehandboka":
-                    {
-                        viewHolder.icon.setImageResource(R.drawable.legehandboka);
                         viewHolder.text.setText(text);
                         break;
                     }
@@ -689,9 +432,21 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                         viewHolder.text.setText(text);
                         break;
                     }
+                    case "analyseoversikten":
+                    {
+                        viewHolder.icon.setImageResource(R.drawable.analyseoversikten);
+                        viewHolder.text.setText(text);
+                        break;
+                    }
                     case "helsenorge":
                     {
                         viewHolder.icon.setImageResource(R.drawable.helsenorge);
+                        viewHolder.text.setText(text);
+                        break;
+                    }
+                    default:
+                    {
+                        viewHolder.icon.setImageResource(R.drawable.ic_launcher);
                         viewHolder.text.setText(text);
                         break;
                     }
@@ -709,8 +464,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
                         mContext.startActivity(intent);
                     }
                 });
-
-                animateCard(viewHolder.card, i);
             }
             catch(Exception e)
             {
@@ -722,17 +475,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity imple
         public int getItemCount()
         {
             return mResults.length();
-        }
-
-        private void animateCard(View view, int position)
-        {
-            if(position > mLastPosition)
-            {
-                mLastPosition = position;
-
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
-                view.startAnimation(animation);
-            }
         }
     }
 }

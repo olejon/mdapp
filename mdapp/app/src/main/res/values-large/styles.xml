@@ -21,9 +21,19 @@
         <item name="pstsTabPaddingLeftRight">16dp</item>
     </style>
 
+    <!-- Scales -->
+    <style name="scales_card_layout_base">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginLeft">32dp</item>
+    </style>
+
     <!-- Calculators -->
     <style name="calculators_card_layout_base">
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginRight">32dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginLeft">32dp</item>
     </style>
 

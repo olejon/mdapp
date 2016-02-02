@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -101,11 +100,18 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Permissions
-        String [] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermissions())
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+            String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
+            if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+            }
+            else
+            {
+                showMap();
+            }
         }
         else
         {
@@ -132,11 +138,6 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
     }
 
     // Permissions
-    private boolean checkPermissions()
-    {
-        return (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -162,7 +163,7 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
     @Override
     public void onMapReady(final GoogleMap googleMap)
     {
-        googleMap.setMyLocationEnabled(true);
+        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) googleMap.setMyLocationEnabled(true);
 
         try
         {

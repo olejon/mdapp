@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -103,6 +102,32 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
         super.onPause();
 
         mZXingScannerView.stopCamera();
+    }
+
+    // Permissions
+    private void grantPermissions()
+    {
+        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        {
+            String[] permissions = {Manifest.permission.CAMERA};
+
+            ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_CAMERA);
+        }
+        else
+        {
+            mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == PERMISSIONS_REQUEST_CAMERA && grantResults[0] != PackageManager.PERMISSION_GRANTED)
+        {
+            mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
+
+            finish();
+        }
     }
 
     // Result
@@ -179,31 +204,5 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(jsonObjectRequest);
-    }
-
-    // Permissions
-    private void grantPermissions()
-    {
-        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            String[] permissions = {Manifest.permission.CAMERA};
-
-            ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_CAMERA);
-        }
-        else
-        {
-            mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        if(requestCode == PERMISSIONS_REQUEST_CAMERA && grantResults[0] != PackageManager.PERMISSION_GRANTED)
-        {
-            mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
-
-            finish();
-        }
     }
 }

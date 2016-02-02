@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
+import android.app.assist.AssistContent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -58,6 +59,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
+
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
@@ -567,6 +570,27 @@ public class MedicationActivity extends AppCompatActivity
         }
     }
 
+    // Now on tap
+    @Override
+    public void onProvideAssistContent(AssistContent assistContent)
+    {
+        super.onProvideAssistContent(assistContent);
+
+        try
+        {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                String structuredJson = new JSONObject().put("@type", "Drug").put("name", medicationName).put("activeIngredient", medicationSubstance).put("manufacturer", medicationManufacturer).toString();
+
+                assistContent.setStructuredData(structuredJson);
+            }
+        }
+        catch(Exception e)
+        {
+            Log.e("MedicationActivity", Log.getStackTraceString(e));
+        }
+    }
+
     // Get medication
     private void getMedication()
     {
@@ -581,8 +605,6 @@ public class MedicationActivity extends AppCompatActivity
         {
             if(mCursor.moveToFirst())
             {
-                final String medicationBluePrescription = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_BLUE_PRESCRIPTION));
-
                 medicationPrescriptionGroup = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP));
                 medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
                 medicationSubstance = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE));
@@ -643,22 +665,6 @@ public class MedicationActivity extends AppCompatActivity
                     }
                 });
 
-                Button bluePrescriptionButton = (Button) findViewById(R.id.medication_blue_prescription);
-
-                if(medicationBluePrescription.equals("yes"))
-                {
-                    bluePrescriptionButton.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            mTools.showToast(getString(R.string.medication_blue_prescription), 1);
-                        }
-                    });
-
-                    bluePrescriptionButton.setVisibility(View.VISIBLE);
-                }
-
                 TextView substanceTextView = (TextView) findViewById(R.id.medication_substance);
                 substanceTextView.setText(medicationSubstance);
 
@@ -707,14 +713,14 @@ public class MedicationActivity extends AppCompatActivity
                         }
                     });
 
-                    if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_140"))
+                    if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_240"))
                     {
                         new MaterialDialog.Builder(mContext).title(getString(R.string.medication_tip_dialog_title)).content(getString(R.string.medication_tip_dialog_message)).positiveText(getString(R.string.medication_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                         {
                             @Override
                             public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                             {
-                                mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_140", true);
+                                mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_240", true);
                             }
                         }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                     }
@@ -752,7 +758,7 @@ public class MedicationActivity extends AppCompatActivity
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 
-            String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_BLUE_PRESCRIPTION, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE};
+            String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE};
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+medicationId, null, null, null, null);
 
             return null;

@@ -6,7 +6,7 @@
 
         <android.support.design.widget.CollapsingToolbarLayout android:id="@+id/notes_toolbar_layout" style="@style/collapsing_toolbar">
 
-            <ImageView android:src="@drawable/notes" android:contentDescription="@string/image_content_description" style="@style/collapsing_toolbar_image"/>
+            <ImageView android:src="@drawable/notes" android:contentDescription="@string/notes_image_content_description" style="@style/collapsing_toolbar_image"/>
 
             <android.support.v7.widget.Toolbar android:id="@+id/notes_toolbar" style="@style/collapsing_toolbar_toolbar"/>
 

@@ -15,6 +15,7 @@
     <color name="red">#F44336</color>
     <color name="accent_red">#FF5252</color>
     <color name="teal">#009688</color>
+    <color name="accent_teal">#64FFDA</color>
     <color name="purple">#9C27B0</color>
     <color name="accent_purple">#E040FB</color>
     <color name="light_grey">#E0E0E0</color>

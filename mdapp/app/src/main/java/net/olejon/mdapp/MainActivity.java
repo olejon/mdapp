@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -77,7 +78,25 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private EditText mSearchEditText;
     private ViewPager mViewPager;
-    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingActionButton;
+
+    private TextView mHelsebiblioteketTextView;
+    private TextView mTidsskriftetTextView;
+    private TextView mOncolexTextView;
+    private TextView mBrukerhandbokenTextView;
+    private TextView mAnalyseoversiktenTextView;
+    private TextView mNhiTextView;
+    private TextView mSmlTextView;
+    private TextView mWikipediaNorwegianTextView;
+    private TextView mForskningTextView;
+    private TextView mHelsenorgeTextView;
+    private TextView mUpToDateTextView;
+    private TextView mBmjTextView;
+    private TextView mPubmedTextView;
+    private TextView mWebofscienceTextView;
+    private TextView mMedlineplusTextView;
+    private TextView mWikipediaEnglishTextView;
+    private TextView mEncyclopediasTextView;
 
     private int mDrawerClosed;
 
@@ -91,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Installed
-        long installed = mTools.getSharedPreferencesLong("INSTALLED_220");
+        final long installed = mTools.getSharedPreferencesLong("INSTALLED_220");
 
         if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_220", mTools.getCurrentTime());
 
@@ -118,11 +137,29 @@ public class MainActivity extends AppCompatActivity
         mDrawer = (NavigationView) findViewById(R.id.main_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
-        TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
-        TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
+        mHelsebiblioteketTextView = (TextView) findViewById(R.id.drawer_item_helsebiblioteket);
+        mTidsskriftetTextView = (TextView) findViewById(R.id.drawer_item_tidsskriftet);
+        mOncolexTextView = (TextView) findViewById(R.id.drawer_item_oncolex);
+        mBrukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
+        mAnalyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
+        mNhiTextView = (TextView) findViewById(R.id.drawer_item_nhi);
+        mSmlTextView = (TextView) findViewById(R.id.drawer_item_sml);
+        mWikipediaNorwegianTextView = (TextView) findViewById(R.id.drawer_item_wikipedia_norwegian);
+        mForskningTextView = (TextView) findViewById(R.id.drawer_item_forskning);
+        mHelsenorgeTextView = (TextView) findViewById(R.id.drawer_item_helsenorge);
+        mUpToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
+        mBmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
+        mPubmedTextView = (TextView) findViewById(R.id.drawer_item_pubmed);
+        mWebofscienceTextView = (TextView) findViewById(R.id.drawer_item_webofscience);
+        mMedlineplusTextView = (TextView) findViewById(R.id.drawer_item_medlineplus);
+        mWikipediaEnglishTextView = (TextView) findViewById(R.id.drawer_item_wikipedia_english);
+        mEncyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
 
-        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name) + ": " + mTools.getProjectVersionName());
-        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code) + ": " + mTools.getProjectVersionCode());
+        final TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
+        final TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
+
+        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name)+": "+mTools.getProjectVersionName());
+        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code)+": "+mTools.getProjectVersionCode());
 
         mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
         {
@@ -135,19 +172,24 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerClosed(View drawerView)
             {
-                TextView legehandbokaTextView = (TextView) findViewById(R.id.drawer_item_nel);
-                TextView brukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
-                TextView analyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
-                TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
-                TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
-                TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
+                mHelsebiblioteketTextView.setVisibility(View.GONE);
+                mTidsskriftetTextView.setVisibility(View.GONE);
+                mOncolexTextView.setVisibility(View.GONE);
+                mBrukerhandbokenTextView.setVisibility(View.GONE);
+                mAnalyseoversiktenTextView.setVisibility(View.GONE);
+                mNhiTextView.setVisibility(View.GONE);
+                mSmlTextView.setVisibility(View.GONE);
+                mWikipediaNorwegianTextView.setVisibility(View.GONE);
+                mForskningTextView.setVisibility(View.GONE);
+                mHelsenorgeTextView.setVisibility(View.GONE);
+                mUpToDateTextView.setVisibility(View.GONE);
+                mBmjTextView.setVisibility(View.GONE);
+                mPubmedTextView.setVisibility(View.GONE);
+                mWebofscienceTextView.setVisibility(View.GONE);
+                mMedlineplusTextView.setVisibility(View.GONE);
+                mWikipediaEnglishTextView.setVisibility(View.GONE);
 
-                legehandbokaTextView.setVisibility(View.GONE);
-                brukerhandbokenTextView.setVisibility(View.GONE);
-                analyseoversiktenTextView.setVisibility(View.GONE);
-                upToDateTextView.setVisibility(View.GONE);
-                bmjTextView.setVisibility(View.GONE);
-                encyclopediasTextView.setVisibility(View.VISIBLE);
+                mEncyclopediasTextView.setVisibility(View.VISIBLE);
 
                 switch(mDrawerClosed)
                 {
@@ -181,6 +223,30 @@ public class MainActivity extends AppCompatActivity
                         startActivity(intent);
                         break;
                     }
+                    case R.id.drawer_item_helsebiblioteket:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_helsebiblioteket));
+                        intent.putExtra("uri", "http://www.helsebiblioteket.no/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_tidsskriftet:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_tidsskriftet));
+                        intent.putExtra("uri", "http://tidsskriftet.no/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_oncolex:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_oncolex));
+                        intent.putExtra("uri", "http://oncolex.no/");
+                        startActivity(intent);
+                        break;
+                    }
                     case R.id.drawer_item_brukerhandboken:
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
@@ -197,11 +263,51 @@ public class MainActivity extends AppCompatActivity
                         startActivity(intent);
                         break;
                     }
+                    case R.id.drawer_item_nhi:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_nhi));
+                        intent.putExtra("uri", "http://nhi.no/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_sml:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_sml));
+                        intent.putExtra("uri", "https://sml.snl.no/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_wikipedia_norwegian:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_wikipedia_norwegian));
+                        intent.putExtra("uri", "https://no.m.wikipedia.org/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_forskning:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_forskning));
+                        intent.putExtra("uri", "http://forskning.no/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_helsenorge:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_helsenorge));
+                        intent.putExtra("uri", "https://helsenorge.no/");
+                        startActivity(intent);
+                        break;
+                    }
                     case R.id.drawer_item_uptodate:
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_uptodate));
-                        intent.putExtra("uri", "http://www.uptodate.com/contents/search");
+                        intent.putExtra("uri", "http://www.uptodate.com/");
                         startActivity(intent);
                         break;
                     }
@@ -210,6 +316,38 @@ public class MainActivity extends AppCompatActivity
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_bmj));
                         intent.putExtra("uri", "http://bestpractice.bmj.com/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_pubmed:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_pubmed));
+                        intent.putExtra("uri", "http://www.ncbi.nlm.nih.gov/m/pubmed/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_webofscience:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_webofscience));
+                        intent.putExtra("uri", "https://webofknowledge.com/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_medlineplus:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_medlineplus));
+                        intent.putExtra("uri", "https://www.nlm.nih.gov/medlineplus/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_wikipedia_english:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_wikipedia_english));
+                        intent.putExtra("uri", "https://en.m.wikipedia.org/");
                         startActivity(intent);
                         break;
                     }
@@ -334,7 +472,7 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (ViewPager) findViewById(R.id.main_pager);
 
         // Floating action button
-        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.main_fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.main_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -445,14 +583,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mFloatingActionButton.setVisibility(View.GONE);
-    }
-
-    @Override
     protected void onDestroy()
     {
         super.onDestroy();
@@ -537,28 +667,43 @@ public class MainActivity extends AppCompatActivity
 
         if(mDrawerClosed == R.id.drawer_item_encyclopedias)
         {
-            TextView legehandbokaTextView = (TextView) findViewById(R.id.drawer_item_nel);
-            TextView brukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
-            TextView analyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
-            TextView upToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
-            TextView bmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
-            TextView encyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
-
-            encyclopediasTextView.setVisibility(View.GONE);
+            mEncyclopediasTextView.setVisibility(View.GONE);
 
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.drawer_item);
 
-            legehandbokaTextView.startAnimation(animation);
-            brukerhandbokenTextView.startAnimation(animation);
-            analyseoversiktenTextView.startAnimation(animation);
-            upToDateTextView.startAnimation(animation);
-            bmjTextView.startAnimation(animation);
+            mHelsebiblioteketTextView.startAnimation(animation);
+            mTidsskriftetTextView.startAnimation(animation);
+            mOncolexTextView.startAnimation(animation);
+            mBrukerhandbokenTextView.startAnimation(animation);
+            mAnalyseoversiktenTextView.startAnimation(animation);
+            mNhiTextView.startAnimation(animation);
+            mSmlTextView.startAnimation(animation);
+            mWikipediaNorwegianTextView.startAnimation(animation);
+            mForskningTextView.startAnimation(animation);
+            mHelsenorgeTextView.startAnimation(animation);
+            mUpToDateTextView.startAnimation(animation);
+            mBmjTextView.startAnimation(animation);
+            mPubmedTextView.startAnimation(animation);
+            mWebofscienceTextView.startAnimation(animation);
+            mMedlineplusTextView.startAnimation(animation);
+            mWikipediaEnglishTextView.startAnimation(animation);
 
-            legehandbokaTextView.setVisibility(View.VISIBLE);
-            brukerhandbokenTextView.setVisibility(View.VISIBLE);
-            analyseoversiktenTextView.setVisibility(View.VISIBLE);
-            upToDateTextView.setVisibility(View.VISIBLE);
-            bmjTextView.setVisibility(View.VISIBLE);
+            mHelsebiblioteketTextView.setVisibility(View.VISIBLE);
+            mTidsskriftetTextView.setVisibility(View.VISIBLE);
+            mOncolexTextView.setVisibility(View.VISIBLE);
+            mBrukerhandbokenTextView.setVisibility(View.VISIBLE);
+            mAnalyseoversiktenTextView.setVisibility(View.VISIBLE);
+            mNhiTextView.setVisibility(View.VISIBLE);
+            mSmlTextView.setVisibility(View.VISIBLE);
+            mWikipediaNorwegianTextView.setVisibility(View.VISIBLE);
+            mForskningTextView.setVisibility(View.VISIBLE);
+            mHelsenorgeTextView.setVisibility(View.VISIBLE);
+            mUpToDateTextView.setVisibility(View.VISIBLE);
+            mBmjTextView.setVisibility(View.VISIBLE);
+            mPubmedTextView.setVisibility(View.VISIBLE);
+            mWebofscienceTextView.setVisibility(View.VISIBLE);
+            mMedlineplusTextView.setVisibility(View.VISIBLE);
+            mWikipediaEnglishTextView.setVisibility(View.VISIBLE);
         }
         else
         {

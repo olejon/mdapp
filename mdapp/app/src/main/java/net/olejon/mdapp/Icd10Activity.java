@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -62,7 +63,7 @@ public class Icd10Activity extends AppCompatActivity
 
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     // Create activity
@@ -109,7 +110,7 @@ public class Icd10Activity extends AppCompatActivity
         mListView = (ListView) findViewById(R.id.icd10_list);
 
         // Floating action button
-        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.icd10_fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.icd10_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -147,7 +148,7 @@ public class Icd10Activity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            String voiceSearchString = voiceSearchArrayList.get(0);
+            final String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -237,7 +238,7 @@ public class Icd10Activity extends AppCompatActivity
     }
 
     // Search
-    private void search(String searchString)
+    private void search(final String searchString)
     {
         if(searchString.equals("")) return;
 

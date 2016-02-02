@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
         // Refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.interactions_cards_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_green, R.color.accent_purple, R.color.accent_orange);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -246,13 +246,13 @@ public class InteractionsCardsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String string, boolean cache)
+    private void search(final String searchString, final boolean cache)
     {
         try
         {
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
-            String apiUri = getString(R.string.project_website_uri)+"api/1/interactions/?search="+URLEncoder.encode(string.toLowerCase(), "utf-8");
+            String apiUri = getString(R.string.project_website_uri)+"api/1/interactions/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8");
 
             if(!cache) requestQueue.getCache().remove(apiUri);
 
@@ -281,11 +281,11 @@ public class InteractionsCardsActivity extends AppCompatActivity
                         mRecyclerView.setAdapter(new InteractionsCardsAdapter(response));
 
                         ContentValues contentValues = new ContentValues();
-                        contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, string);
+                        contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, searchString);
 
                         SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
 
-                        sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(string)+" COLLATE NOCASE", null);
+                        sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
                         sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
 
                         sqLiteDatabase.close();

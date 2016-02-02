@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -120,7 +121,7 @@ public class NotesActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Floating action button
-        android.support.design.widget.FloatingActionButton floatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.notes_fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener()
         {

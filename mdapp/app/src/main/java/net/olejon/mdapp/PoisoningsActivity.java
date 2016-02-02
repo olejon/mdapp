@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,7 +68,7 @@ public class PoisoningsActivity extends AppCompatActivity
 
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     private boolean mActivityPaused = false;
@@ -118,7 +119,7 @@ public class PoisoningsActivity extends AppCompatActivity
         });
 
         // Floating action button
-        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.poisonings_fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.poisonings_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {
@@ -164,7 +165,7 @@ public class PoisoningsActivity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            String voiceSearchString = voiceSearchArrayList.get(0);
+            final String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -291,12 +292,12 @@ public class PoisoningsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(String string)
+    private void search(final String searchString)
     {
-        if(string.equals("")) return;
+        if(searchString.equals("")) return;
 
         Intent intent = new Intent(mContext, PoisoningsCardsActivity.class);
-        intent.putExtra("search", string);
+        intent.putExtra("search", searchString);
         startActivity(intent);
     }
 

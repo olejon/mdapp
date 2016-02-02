@@ -316,24 +316,10 @@
 
     <style name="medication_prescription_group_base"/>
 
-    <style name="medication_blue_prescription" parent="medication_blue_prescription_base">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_marginRight">48dp</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/medication_blue_prescription</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:text">T</item>
-    </style>
-
-    <style name="medication_blue_prescription_base"/>
-
     <style name="medication_detail">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">88dp</item>
+        <item name="android:layout_marginRight">64dp</item>
         <item name="android:paddingBottom">2dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/white</item>
@@ -563,52 +549,6 @@
     <style name="diseases_and_treatments_search_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_separator" parent="diseases_and_treatments_search_separator_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/white</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_separator_base"/>
-
-    <style name="diseases_and_treatments_search_spinner" parent="diseases_and_treatments_search_spinner_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/diseases_and_treatments_search_spinner</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_spinner_base">
-        <item name="android:dropDownVerticalOffset">-48dp</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_spinner_header" parent="diseases_and_treatments_search_spinner_header_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:drawableRight">@drawable/ic_arrow_drop_down_white_24dp</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_spinner_header_base">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="diseases_and_treatments_search_spinner_item">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">12dp</item>
-        <item name="android:background">@drawable/list_item</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="diseases_and_treatments_search_cards">
@@ -1934,6 +1874,18 @@
         <item name="android:background">@color/light_grey</item>
     </style>
 
+    <style name="scales_inner_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
+    </style>
+
+    <style name="scales_inner_inner_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="scales_medscape">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1947,23 +1899,19 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="scales_cards">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-    </style>
-
-    <style name="scales_card_layout">
+    <style name="scales_card_layout" parent="scales_card_layout_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="scales_card_layout_base">
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginRight">8dp</item>
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginLeft">8dp</item>
-        <item name="cardCornerRadius">2dp</item>
-        <item name="cardElevation">2dp</item>
-        <item name="cardBackgroundColor">@color/white</item>
     </style>
 
     <style name="scales_card_inner_layout">
@@ -2120,7 +2068,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
-        <item name="android:fadeScrollbars">false</item>
     </style>
 
     <style name="calculators_inner_inner_layout">
@@ -2132,15 +2079,15 @@
     <style name="calculators_card_layout" parent="calculators_card_layout_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:layout_marginBottom">4dp</item>
         <item name="cardCornerRadius">2dp</item>
         <item name="cardElevation">2dp</item>
         <item name="cardBackgroundColor">@color/white</item>
     </style>
 
     <style name="calculators_card_layout_base">
+        <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginLeft">8dp</item>
     </style>
 
@@ -2826,15 +2773,12 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:drawableTop">@drawable/ic_error_grey600_48dp</item>
-        <item name="android:drawablePadding">16dp</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/blue</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="recyclerview_list_empty_base">
-        <item name="android:textStyle">bold</item>
-    </style>
+    <style name="recyclerview_list_empty_base"/>
 
     <style name="recyclerview_list_item_layout">
         <item name="android:layout_width">match_parent</item>

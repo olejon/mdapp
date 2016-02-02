@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -81,7 +82,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
     private ProgressBar mProgressBar;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
     private View mListViewEmpty;
 
@@ -126,7 +127,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
         // Progress bar
         mProgressBar = (ProgressBar) findViewById(R.id.icd10_chapter_toolbar_progressbar);
 
-        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.icd10_chapter_fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.icd10_chapter_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {

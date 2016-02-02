@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import android.util.Log;
 
 class SlDataSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final int DB_VERSION = 50;
+    private static final int DB_VERSION = 240;
 
     public static final String DB_NAME = "data.db";
 
@@ -49,7 +49,7 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
     public static final String MEDICATIONS_COLUMN_NAME = "name";
     public static final String MEDICATIONS_COLUMN_SUBSTANCE = "substance";
     public static final String MEDICATIONS_COLUMN_MANUFACTURER = "manufacturer";
-    public static final String MEDICATIONS_COLUMN_BLUE_PRESCRIPTION = "blue_prescription";
+    private static final String MEDICATIONS_COLUMN_BLUE_PRESCRIPTION = "blue_prescription";
     public static final String MEDICATIONS_COLUMN_ATC_CODE = "atc_code";
 
     public static final String SUBSTANCES_COLUMN_ID = "_id";

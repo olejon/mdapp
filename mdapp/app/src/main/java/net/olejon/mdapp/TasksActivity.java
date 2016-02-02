@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
@@ -108,7 +109,7 @@ public class TasksActivity extends AppCompatActivity
         collapsingToolbarLayout.setTitle(getString(R.string.tasks_title));
 
         // Floating action button
-        android.support.design.widget.FloatingActionButton floatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.tasks_fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.tasks_fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener()
         {

@@ -4,7 +4,7 @@
 
     <RelativeLayout style="@style/lvh_categories_card_inner_layout">
 
-        <ImageView android:id="@+id/lvh_categories_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/image_content_description" style="@style/lvh_categories_card_icon"/>
+        <ImageView android:id="@+id/lvh_categories_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/lvh_categories_card_image_content_description" style="@style/lvh_categories_card_icon"/>
 
         <TextView android:id="@+id/lvh_categories_card_title" android:layout_alignParentTop="true" style="@style/lvh_categories_card_title"/>
 

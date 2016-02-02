@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +38,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -138,14 +141,10 @@ public class MainWebViewActivity extends AppCompatActivity
             }
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3)
-            {
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
 
             @Override
-            public void afterTextChanged(Editable editable)
-            {
-            }
+            public void afterTextChanged(Editable editable) { }
         });
 
         mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -179,22 +178,42 @@ public class MainWebViewActivity extends AppCompatActivity
         webSettings.setAppCachePath(getCacheDir().getAbsolutePath());
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
+        //noinspection deprecation
+        webSettings.setSavePassword(false);
+
         if(pageUri.contains("brukerhandboken.no"))
         {
+            webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:42.0) Gecko/20100101 Firefox/42.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0");
         }
         else if(pageUri.contains("clinicaltrials.gov"))
         {
+            webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
         }
         else if(pageUri.contains("interaksjoner.no"))
         {
-            webSettings.setUseWideViewPort(true);
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
         else if(pageUri.contains("legemiddelverket.no"))
         {
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+        }
+        else if(pageUri.contains("oncolex.no"))
+        {
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+        }
+        else if(pageUri.contains("tidsskriftet.no"))
+        {
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+        }
+        else if(pageUri.contains("webofknowledge.com"))
+        {
+            webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
         }
 
@@ -212,6 +231,10 @@ public class MainWebViewActivity extends AppCompatActivity
                 {
                     mTools.downloadFile(view.getTitle(), url);
                     return true;
+                }
+                else if(url.contains("login.pva.uib.no"))
+                {
+                    webSettings.setDefaultTextEncodingName("iso-8859-15");
                 }
                 else if(url.startsWith("mailto:"))
                 {
@@ -236,15 +259,35 @@ public class MainWebViewActivity extends AppCompatActivity
 
                 return false;
             }
+
+            @Override
+            public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
+            {
+                handler.proceed();
+            }
         });
 
         mWebView.setWebChromeClient(new WebChromeClient()
         {
             @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result)
+            {
+                if(pageUri.contains("webofknowledge.com"))
+                {
+                    result.confirm();
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
             public void onProgressChanged(WebView view, int newProgress)
             {
                 if(newProgress == 100)
                 {
+                    toolbar.setTitle(mWebView.getTitle());
+
                     mProgressBar.setVisibility(View.INVISIBLE);
 
                     if(mWebView.canGoForward())
@@ -256,34 +299,11 @@ public class MainWebViewActivity extends AppCompatActivity
                         goForwardMenuItem.setVisible(false);
                     }
 
-                    if(mWebViewHasBeenLoaded)
-                    {
-                        if(pageUri.contains("brukerhandboken.no"))
-                        {
-                            mWebView.loadUrl("javascript:if($('div#nonedit_title').length) { var offset = $('div#nonedit_title').offset(); window.scrollTo(0, offset.top - 16); }");
-                        }
-                        else if(pageUri.contains("helsedirektoratet.no"))
-                        {
-                            mWebView.loadUrl("javascript:if($('span.dropdown').length) { var offset = $('span.dropdown').offset(); window.scrollTo(0, offset.top - 32); }");
-                        }
-                    }
-                    else
+                    if(!mWebViewHasBeenLoaded)
                     {
                         mWebViewHasBeenLoaded = true;
 
-                        if(pageUri.contains("brukerhandboken.no"))
-                        {
-                            mWebView.loadUrl("javascript:$('div#FirstSearch1 > input:text').focus();");
-                        }
-                        else if(pageUri.contains("helsebiblioteket.no"))
-                        {
-                            mWebView.loadUrl("javascript:if($('div.guidlinelinklistContent').length) { var offset = $('div.guidlinelinklistContent').offset(); window.scrollTo(offset.left - 6, offset.top - 18); }");
-                        }
-                        else if(pageUri.contains("helsedirektoratet.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('div.searchfield').offset(); window.scrollTo(0, offset.top + 8);");
-                        }
-                        else if(pageUri.contains("helsenorge.no"))
+                        if(pageUri.contains("helsenorge.no"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
                         }
@@ -291,15 +311,13 @@ public class MainWebViewActivity extends AppCompatActivity
                         {
                             mWebView.loadUrl("javascript:var offset = $('div.contentBlurb:contains(\"Clinical Information\")').offset(); window.scrollTo(0, offset.top - 8);");
                         }
-                        else if(pageUri.contains("legemiddelverket.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('h1.articleTitle').offset(); window.scrollTo(offset.left - 16, offset.top - 16);");
-                        }
                         else if(pageUri.contains("lvh.no"))
                         {
                             mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
                         }
                     }
+
+                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); }");
                 }
                 else
                 {
@@ -340,29 +358,10 @@ public class MainWebViewActivity extends AppCompatActivity
 
         cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
+        cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("http://www.gulesider.no/", "cookiesAccepted=true");
         cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
-
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-        {
-            if(pageUri.contains("brukerhandboken.no"))
-            {
-                mWebView.setInitialScale(100);
-            }
-            else if(pageUri.contains("clinicaltrials.gov"))
-            {
-                mWebView.setInitialScale(100);
-            }
-            else if(pageUri.contains("interaksjoner.no"))
-            {
-                mWebView.setInitialScale(100);
-            }
-            else if(pageUri.contains("legemiddelverket.no"))
-            {
-                mWebView.setInitialScale(100);
-            }
-        }
 
         if(savedInstanceState == null)
         {
@@ -371,36 +370,6 @@ public class MainWebViewActivity extends AppCompatActivity
         else
         {
             mWebView.restoreState(savedInstanceState);
-        }
-
-        // Tip dialog
-        if(pageUri.equals("http://m.legemiddelhandboka.no/") || pageUri.equals("http://brukerhandboken.no/") || pageUri.equals("http://www.uptodate.com/contents/search") || pageUri.equals("http://bestpractice.bmj.com/"))
-        {
-            if(!mTools.getSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG"))
-            {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_tip_dialog_title)).content(getString(R.string.main_webview_tip_dialog_message)).positiveText(getString(R.string.main_webview_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
-                {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                    {
-                        mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_HIDE_TIP_DIALOG", true);
-                    }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-            }
-        }
-        else if(pageUri.equals("http://legehandboka.no/"))
-        {
-            if(!mTools.getSharedPreferencesBoolean("MAIN_WEBVIEW_NEL_DIALOG"))
-            {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_nel_dialog_title)).content(getString(R.string.main_webview_nel_dialog_message)).positiveText(getString(R.string.main_webview_nel_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
-                {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                    {
-                        mTools.setSharedPreferencesBoolean("MAIN_WEBVIEW_NEL_DIALOG", true);
-                    }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-            }
         }
     }
 
@@ -529,12 +498,17 @@ public class MainWebViewActivity extends AppCompatActivity
             }
             case R.id.main_webview_menu_save_article:
             {
-                mTools.saveArticle(mWebView.getTitle(), pageUri, "main");
+                mTools.saveArticle(mWebView.getTitle(), mWebView.getUrl(), "main");
+                return true;
+            }
+            case R.id.main_webview_menu_reload:
+            {
+                mWebView.reload();
                 return true;
             }
             case R.id.main_webview_menu_open_uri:
             {
-                mTools.openUri(pageUri);
+                mTools.openUri(mWebView.getUrl());
                 return true;
             }
             default:

@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -57,7 +58,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
-    private android.support.design.widget.FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingActionButton;
     private ListView mListView;
 
     @Override
@@ -82,7 +83,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
         mToolbarSearchEditText = (EditText) findViewById(R.id.notes_edit_medications_toolbar_search);
 
         // Floating action button
-        mFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.notes_edit_medications_fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.notes_edit_medications_fab);
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener()
         {

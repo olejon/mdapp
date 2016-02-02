@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2015 Ole Jon Bjørkum
+Copyright 2016 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,13 +21,18 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -35,6 +40,8 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MedicationFelleskatalogenFragment extends Fragment
 {
@@ -87,8 +94,34 @@ public class MedicationFelleskatalogenFragment extends Fragment
                     mTools.downloadFile(view.getTitle(), url);
                     return true;
                 }
+                else if(url.startsWith("mailto:"))
+                {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                    startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
+                    return true;
+                }
+                else if(url.startsWith("tel:"))
+                {
+                    try
+                    {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                        startActivity(intent);
+                    }
+                    catch(Exception e)
+                    {
+                        new MaterialDialog.Builder(context).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    }
+
+                    return true;
+                }
 
                 return false;
+            }
+
+            @Override
+            public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
+            {
+                handler.proceed();
             }
         });
 

@@ -6,7 +6,7 @@
 
         <android.support.design.widget.CollapsingToolbarLayout android:id="@+id/saved_articles_toolbar_layout" style="@style/collapsing_toolbar">
 
-            <ImageView android:src="@drawable/saved_articles" android:contentDescription="@string/image_content_description" style="@style/collapsing_toolbar_image"/>
+            <ImageView android:src="@drawable/saved_articles" android:contentDescription="@string/saved_articles_image_content_description" style="@style/collapsing_toolbar_image"/>
 
             <android.support.v7.widget.Toolbar android:id="@+id/saved_articles_toolbar" style="@style/collapsing_toolbar_toolbar"/>
 

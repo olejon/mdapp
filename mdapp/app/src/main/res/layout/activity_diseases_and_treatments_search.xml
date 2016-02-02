@@ -6,14 +6,10 @@
         <ProgressBar android:id="@+id/diseases_and_treatments_search_toolbar_progressbar" style="@style/toolbar_progressbar"/>
     </android.support.v7.widget.Toolbar>
 
-    <View android:id="@+id/diseases_and_treatments_search_separator" android:layout_below="@+id/diseases_and_treatments_search_toolbar" style="@style/diseases_and_treatments_search_separator"/>
-
-    <Spinner android:id="@+id/diseases_and_treatments_search_spinner" android:layout_below="@+id/diseases_and_treatments_search_separator" style="@style/diseases_and_treatments_search_spinner"/>
-
-    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/diseases_and_treatments_search_swipe_refresh_layout" android:layout_below="@+id/diseases_and_treatments_search_spinner" style="@style/swipe_refresh_layout">
+    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/diseases_and_treatments_search_swipe_refresh_layout" android:layout_below="@+id/diseases_and_treatments_search_toolbar" style="@style/swipe_refresh_layout">
         <android.support.v7.widget.RecyclerView android:id="@+id/diseases_and_treatments_search_cards" style="@style/diseases_and_treatments_search_cards"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <View android:layout_below="@+id/diseases_and_treatments_search_spinner" style="@style/toolbar_shadow"/>
+    <View android:layout_below="@+id/diseases_and_treatments_search_toolbar" style="@style/toolbar_shadow"/>
 
 </RelativeLayout>
