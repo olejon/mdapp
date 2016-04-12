@@ -18,6 +18,6 @@
 
     <TextView android:id="@+id/notes_empty" android:text="@string/notes_empty" style="@style/recyclerview_list_empty"/>
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/notes_fab" android:src="@drawable/ic_add_white_24dp" app:layout_anchor="@id/recyclerview_layout" app:layout_anchorGravity="bottom|right|end" style="@style/fab_layout"/>
+    <android.support.design.widget.FloatingActionButton android:id="@+id/notes_fab" android:src="@drawable/ic_add_white_24dp" app:layout_anchor="@id/notes_cards" app:layout_anchorGravity="bottom|right|end" style="@style/fab_layout"/>
 
 </android.support.design.widget.CoordinatorLayout>

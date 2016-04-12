@@ -33,13 +33,17 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
@@ -59,17 +63,25 @@ public class MessageIntentService extends IntentService
 
         final MyTools mTools = new MyTools(mContext);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
+
+        final Network network = new BasicNetwork(new HurlStack());
+
+        final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+        requestQueue.start();
 
         int projectVersionCode = mTools.getProjectVersionCode();
 
         String device = mTools.getDevice();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)
             {
+                requestQueue.stop();
+
                 try
                 {
                     final long id = response.getLong("id");
@@ -125,6 +137,8 @@ public class MessageIntentService extends IntentService
             @Override
             public void onErrorResponse(VolleyError error)
             {
+                requestQueue.stop();
+
                 Log.e("MessageIntentService", error.toString());
             }
         });

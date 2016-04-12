@@ -26,7 +26,7 @@ import android.util.Log;
 
 class SlDataSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final int DB_VERSION = 240;
+    private static final int DB_VERSION = 250;
 
     public static final String DB_NAME = "data.db";
 

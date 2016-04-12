@@ -90,13 +90,13 @@ public class WelcomeActivity extends AppCompatActivity
             @Override
             public void onPageScrollStateChanged(int state)
             {
-                textView = (TextView) viewPager.getChildAt(0).findViewById(R.id.welcome_page_1_guide);
+                textView = (TextView) viewPager.findViewById(R.id.welcome_page_1_guide);
                 textView.setVisibility(View.INVISIBLE);
 
-                textView = (TextView) viewPager.getChildAt(1).findViewById(R.id.welcome_page_2_guide);
+                textView = (TextView) viewPager.findViewById(R.id.welcome_page_2_guide);
                 textView.setVisibility(View.INVISIBLE);
 
-                textView = (TextView) viewPager.getChildAt(2).findViewById(R.id.welcome_page_3_guide);
+                textView = (TextView) viewPager.findViewById(R.id.welcome_page_3_guide);
                 textView.setVisibility(View.INVISIBLE);
             }
 

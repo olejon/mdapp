@@ -19,6 +19,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity
 
     public static int VIEW_PAGER_POSITION = 0;
 
+    private final Activity mActivity = this;
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mPubmedTextView;
     private TextView mWebofscienceTextView;
     private TextView mMedlineplusTextView;
+    private TextView mAoSurgeryTextView;
     private TextView mWikipediaEnglishTextView;
     private TextView mEncyclopediasTextView;
 
@@ -152,6 +155,7 @@ public class MainActivity extends AppCompatActivity
         mPubmedTextView = (TextView) findViewById(R.id.drawer_item_pubmed);
         mWebofscienceTextView = (TextView) findViewById(R.id.drawer_item_webofscience);
         mMedlineplusTextView = (TextView) findViewById(R.id.drawer_item_medlineplus);
+        mAoSurgeryTextView = (TextView) findViewById(R.id.drawer_item_ao_surgery);
         mWikipediaEnglishTextView = (TextView) findViewById(R.id.drawer_item_wikipedia_english);
         mEncyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
 
@@ -161,7 +165,7 @@ public class MainActivity extends AppCompatActivity
         drawerVersionNameTextView.setText(getString(R.string.drawer_version_name)+": "+mTools.getProjectVersionName());
         drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code)+": "+mTools.getProjectVersionCode());
 
-        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
+        mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(mActivity, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
         {
             @Override
             public void onDrawerOpened(View drawerView)
@@ -187,6 +191,7 @@ public class MainActivity extends AppCompatActivity
                 mPubmedTextView.setVisibility(View.GONE);
                 mWebofscienceTextView.setVisibility(View.GONE);
                 mMedlineplusTextView.setVisibility(View.GONE);
+                mAoSurgeryTextView.setVisibility(View.GONE);
                 mWikipediaEnglishTextView.setVisibility(View.GONE);
 
                 mEncyclopediasTextView.setVisibility(View.VISIBLE);
@@ -340,6 +345,14 @@ public class MainActivity extends AppCompatActivity
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_medlineplus));
                         intent.putExtra("uri", "https://www.nlm.nih.gov/medlineplus/");
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.drawer_item_ao_surgery:
+                    {
+                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                        intent.putExtra("title", getString(R.string.drawer_item_ao_surgery));
+                        intent.putExtra("uri", "https://www2.aofoundation.org/wps/portal/surgerymobile");
                         startActivity(intent);
                         break;
                     }
@@ -686,6 +699,7 @@ public class MainActivity extends AppCompatActivity
             mPubmedTextView.startAnimation(animation);
             mWebofscienceTextView.startAnimation(animation);
             mMedlineplusTextView.startAnimation(animation);
+            mAoSurgeryTextView.startAnimation(animation);
             mWikipediaEnglishTextView.startAnimation(animation);
 
             mHelsebiblioteketTextView.setVisibility(View.VISIBLE);
@@ -703,6 +717,7 @@ public class MainActivity extends AppCompatActivity
             mPubmedTextView.setVisibility(View.VISIBLE);
             mWebofscienceTextView.setVisibility(View.VISIBLE);
             mMedlineplusTextView.setVisibility(View.VISIBLE);
+            mAoSurgeryTextView.setVisibility(View.VISIBLE);
             mWikipediaEnglishTextView.setVisibility(View.VISIBLE);
         }
         else

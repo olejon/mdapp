@@ -280,10 +280,10 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
     private void showSearchLanguageDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_language_dialog_title)).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice()
+        new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_language_dialog_title)).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallback(new MaterialDialog.ListCallback()
         {
             @Override
-            public boolean onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
+            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
             {
                 if(i == 0)
                 {
@@ -299,10 +299,8 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
                 }
 
                 showSearch();
-
-                return true;
             }
-        }).contentColorRes(R.color.black).show();
+        }).itemsColorRes(R.color.dark_blue).show();
     }
 
     private void showSearch()

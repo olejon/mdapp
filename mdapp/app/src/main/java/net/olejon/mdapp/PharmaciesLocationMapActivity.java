@@ -33,13 +33,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -169,13 +173,21 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         {
             mTools.showToast(getString(R.string.pharmacies_location_map_locating), 0);
 
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), new Response.Listener<JSONObject>()
+            final Network network = new BasicNetwork(new HurlStack());
+
+            final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+            requestQueue.start();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
                 {
+                    requestQueue.stop();
+
                     try
                     {
                         double latitude = response.getDouble("latitude");
@@ -198,6 +210,8 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
+                    requestQueue.stop();
+
                     mTools.showToast(getString(R.string.pharmacies_location_map_exact_location_not_found), 1);
 
                     Log.e("PharmaciesLocationMap", error.toString());

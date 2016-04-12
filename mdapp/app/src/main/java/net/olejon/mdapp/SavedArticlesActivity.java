@@ -104,11 +104,16 @@ public class SavedArticlesActivity extends AppCompatActivity
         mRecyclerView.setAdapter(new SavedArticlesAdapter(mCursor));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
-        // Get saved articles
-        getSavedArticles();
-
         // Tip dialog
         showInformationDialog(false);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        getSavedArticles();
     }
 
     // Destroy activity

@@ -53,13 +53,17 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
@@ -295,15 +299,23 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
         mToolbarSearchEditText.setText("");
         mProgressBar.setVisibility(View.VISIBLE);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONObject>()
+            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+
+            final Network network = new BasicNetwork(new HurlStack());
+
+            final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+            requestQueue.start();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
                 {
+                    requestQueue.stop();
+
                     mProgressBar.setVisibility(View.GONE);
 
                     try
@@ -379,6 +391,8 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
+                    requestQueue.stop();
+
                     mProgressBar.setVisibility(View.GONE);
 
                     Log.e("NasjonaleRetningslinjer", error.toString());

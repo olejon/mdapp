@@ -2,6 +2,6 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
 
-    <integer name="ga_dispatchPeriod">900</integer>
+    <integer name="ga_dispatchPeriod">120</integer>
 
 </resources>

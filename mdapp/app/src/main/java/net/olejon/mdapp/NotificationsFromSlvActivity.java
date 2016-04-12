@@ -42,12 +42,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -108,7 +112,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
             @Override
             public void onRefresh()
             {
-                getNotifications(false);
+                getNotifications();
             }
         });
 
@@ -120,7 +124,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Get notifications
-        getNotifications(true);
+        getNotifications();
     }
 
     // Resume activity
@@ -151,19 +155,23 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
     }
 
     // Get notifications
-    private void getNotifications(final boolean cache)
+    private void getNotifications()
     {
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
-        String apiUri = getString(R.string.project_website_uri)+"api/1/notifications-from-slv/";
+        final Network network = new BasicNetwork(new HurlStack());
 
-        if(!cache) requestQueue.getCache().remove(apiUri);
+        final RequestQueue requestQueue = new RequestQueue(cache, network);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
+        requestQueue.start();
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/notifications-from-slv/", new Response.Listener<JSONArray>()
         {
             @Override
             public void onResponse(JSONArray response)
             {
+                requestQueue.stop();
+
                 if(response.length() == 0)
                 {
                     mProgressBar.setVisibility(View.GONE);
@@ -188,6 +196,8 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
             @Override
             public void onErrorResponse(VolleyError error)
             {
+                requestQueue.stop();
+
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
 

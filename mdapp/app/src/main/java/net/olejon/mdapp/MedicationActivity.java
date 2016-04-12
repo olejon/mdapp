@@ -665,6 +665,8 @@ public class MedicationActivity extends AppCompatActivity
                     }
                 });
 
+                prescriptionGroupButton.setVisibility(View.VISIBLE);
+
                 TextView substanceTextView = (TextView) findViewById(R.id.medication_substance);
                 substanceTextView.setText(medicationSubstance);
 

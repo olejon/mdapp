@@ -50,14 +50,18 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -122,7 +126,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
             @Override
             public void onRefresh()
             {
-                search(searchString, false);
+                search(searchString);
             }
         });
 
@@ -158,18 +162,26 @@ public class InteractionsCardsActivity extends AppCompatActivity
         });
 
         // Search
-        search(searchString, true);
+        search(searchString);
 
         // Correct
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
         try
         {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONObject>()
+            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+
+            final Network network = new BasicNetwork(new HurlStack());
+
+            final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+            requestQueue.start();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
                 {
+                    requestQueue.stop();
+
                     try
                     {
                         final String correctSearchString = response.getString("correct");
@@ -198,7 +210,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
                                     mNoInteractionsLayout.setVisibility(View.GONE);
                                     mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
-                                    search(correctSearchString, true);
+                                    search(correctSearchString);
                                 }
                             }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
                         }
@@ -213,6 +225,8 @@ public class InteractionsCardsActivity extends AppCompatActivity
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
+                    requestQueue.stop();
+
                     Log.e("InteractionsCards", error.toString());
                 }
             });
@@ -246,21 +260,25 @@ public class InteractionsCardsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String searchString, final boolean cache)
+    private void search(final String searchString)
     {
         try
         {
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
-            String apiUri = getString(R.string.project_website_uri)+"api/1/interactions/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8");
+            final Network network = new BasicNetwork(new HurlStack());
 
-            if(!cache) requestQueue.getCache().remove(apiUri);
+            final RequestQueue requestQueue = new RequestQueue(cache, network);
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(apiUri, new Response.Listener<JSONArray>()
+            requestQueue.start();
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/interactions/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
                 {
+                    requestQueue.stop();
+
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
 
@@ -296,6 +314,8 @@ public class InteractionsCardsActivity extends AppCompatActivity
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
+                    requestQueue.stop();
+
                     mProgressBar.setVisibility(View.GONE);
                     mSwipeRefreshLayout.setRefreshing(false);
 
@@ -423,13 +443,21 @@ public class InteractionsCardsActivity extends AppCompatActivity
                             {
                                 mProgressBar.setVisibility(View.VISIBLE);
 
-                                RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+                                final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
-                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+URLEncoder.encode(uri, "utf-8"), new Response.Listener<JSONObject>()
+                                final Network network = new BasicNetwork(new HurlStack());
+
+                                final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+                                requestQueue.start();
+
+                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mContext.getString(R.string.project_website_uri)+"api/1/interactions/handling/?uri="+URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
                                 {
                                     @Override
                                     public void onResponse(JSONObject response)
                                     {
+                                        requestQueue.stop();
+
                                         mProgressBar.setVisibility(View.GONE);
 
                                         try
@@ -448,6 +476,8 @@ public class InteractionsCardsActivity extends AppCompatActivity
                                     @Override
                                     public void onErrorResponse(VolleyError error)
                                     {
+                                        requestQueue.stop();
+
                                         mProgressBar.setVisibility(View.GONE);
 
                                         mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);

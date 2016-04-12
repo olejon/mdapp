@@ -32,12 +32,16 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -60,7 +64,13 @@ public class NotificationsFromSlvIntentService extends IntentService
 
         if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY") && mTools.isDeviceConnected())
         {
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
+
+            final Network network = new BasicNetwork(new HurlStack());
+
+            final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+            requestQueue.start();
 
             int projectVersionCode = mTools.getProjectVersionCode();
 
@@ -71,6 +81,8 @@ public class NotificationsFromSlvIntentService extends IntentService
                 @Override
                 public void onResponse(JSONArray response)
                 {
+                    requestQueue.stop();
+
                     try
                     {
                         final JSONObject notifications = response.getJSONObject(0);
@@ -124,6 +136,8 @@ public class NotificationsFromSlvIntentService extends IntentService
                 @Override
                 public void onErrorResponse(VolleyError error)
                 {
+                    requestQueue.stop();
+
                     Log.e("NotificationsFromSlv", error.toString());
                 }
             });

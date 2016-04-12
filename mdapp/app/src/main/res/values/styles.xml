@@ -308,6 +308,7 @@
     <style name="medication_prescription_group" parent="medication_prescription_group_base">
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
+        <item name="android:visibility">invisible</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/medication_prescription_group_green</item>
         <item name="android:textColor">@color/white</item>

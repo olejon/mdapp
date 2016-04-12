@@ -33,13 +33,17 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.zxing.Result;
 
 import org.json.JSONObject;
@@ -138,13 +142,21 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
         String barcode = result.getText();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/barcode/?search="+barcode, new Response.Listener<JSONObject>()
+        final Network network = new BasicNetwork(new HurlStack());
+
+        final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+        requestQueue.start();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/barcode/?search="+barcode, null, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)
             {
+                requestQueue.stop();
+
                 try
                 {
                     String medicationName = response.getString("name");
@@ -197,6 +209,8 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
             @Override
             public void onErrorResponse(VolleyError error)
             {
+                requestQueue.stop();
+
                 Log.e("FelleskatalogenService", error.toString());
             }
         });

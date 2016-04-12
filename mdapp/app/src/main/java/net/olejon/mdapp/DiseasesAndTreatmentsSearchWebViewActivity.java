@@ -20,6 +20,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -188,7 +189,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
         }
         else if(pageUri.contains("oncolex.no"))
         {
@@ -249,7 +250,27 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
             @Override
             public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
             {
-                handler.proceed();
+                handler.cancel();
+
+                mWebView.stopLoading();
+
+                mProgressBar.setVisibility(View.INVISIBLE);
+
+                new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                    {
+                        finish();
+                    }
+                }).cancelListener(new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface)
+                    {
+                        finish();
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }
         });
 

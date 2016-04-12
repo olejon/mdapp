@@ -21,6 +21,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -41,6 +42,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MedicationNlhFragment extends Fragment
@@ -130,7 +132,27 @@ public class MedicationNlhFragment extends Fragment
             @Override
             public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
             {
-                handler.proceed();
+                handler.cancel();
+
+                WEBVIEW.stopLoading();
+
+                progressBar.setVisibility(View.INVISIBLE);
+
+                new MaterialDialog.Builder(activity).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                    {
+                        WEBVIEW.goBack();
+                    }
+                }).cancelListener(new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface)
+                    {
+                        WEBVIEW.goBack();
+                    }
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }
         });
 
