@@ -189,7 +189,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0");
         }
         else if(pageUri.contains("oncolex.no"))
         {
