@@ -55,6 +55,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -518,7 +519,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Google Analytics
-        Tracker tracker = ((MDapp) getApplication()).getTracker();
+        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(mContext);
+        Tracker tracker = googleAnalytics.newTracker(R.xml.app_tracker);
         tracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         // Get data
