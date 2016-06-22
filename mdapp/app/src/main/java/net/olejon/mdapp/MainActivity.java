@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Installed
-        final long installed = mTools.getSharedPreferencesLong("INSTALLED_220");
+        final long installed = mTools.getSharedPreferencesLong("INSTALLED_290");
 
-        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_220", mTools.getCurrentTime());
+        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_290", mTools.getCurrentTime());
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -553,14 +553,14 @@ public class MainActivity extends AppCompatActivity
         mFloatingActionButton.setVisibility(View.VISIBLE);
 
         // Rate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_220"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_290"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_220");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_290");
 
             if(currentTime - installedTime > 1000 * 3600 * 48)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_220", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_290", true);
 
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
@@ -575,14 +575,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Donate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_220"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_290"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_220");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_290");
 
             if(currentTime - installedTime > 1000 * 3600 * 96)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_220", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_290", true);
 
                 new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
