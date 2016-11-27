@@ -22,7 +22,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -73,8 +73,18 @@ public class LvhActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        // Settings
+        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
+
         // Connected?
-        if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
+        if(!mTools.isDeviceConnected())
+        {
+            mTools.showToast(getString(R.string.device_not_connected), 1);
+
+            finish();
+
+            return;
+        }
 
         // Layout
         setContentView(R.layout.activity_lvh);
@@ -122,7 +132,7 @@ public class LvhActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             default:
@@ -135,7 +145,7 @@ public class LvhActivity extends AppCompatActivity
     // Get categories
     private void getCategories()
     {
-        final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
         final Network network = new BasicNetwork(new HurlStack());
 
@@ -164,12 +174,7 @@ public class LvhActivity extends AppCompatActivity
             {
                 requestQueue.stop();
 
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
-
-                mTools.showToast(getString(R.string.lvh_could_not_load_lvh), 1);
-
-                finish();
+                Log.e("LvhActivity", error.toString());
             }
         });
 

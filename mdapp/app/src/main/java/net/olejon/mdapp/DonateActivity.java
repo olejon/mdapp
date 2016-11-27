@@ -155,7 +155,7 @@ public class DonateActivity extends AppCompatActivity
     {
         super.onDestroy();
 
-        if(mServiceConnection != null) unbindService(mServiceConnection);
+        if(mTools.isDeviceConnected() && mServiceConnection != null) unbindService(mServiceConnection);
     }
 
     // Menu
@@ -202,7 +202,7 @@ public class DonateActivity extends AppCompatActivity
         }
         catch(Exception e)
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -214,7 +214,7 @@ public class DonateActivity extends AppCompatActivity
         }
         catch(Exception e)
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -244,12 +244,12 @@ public class DonateActivity extends AppCompatActivity
             }
             else
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }
         }
         catch(Exception e)
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -286,17 +286,17 @@ public class DonateActivity extends AppCompatActivity
                                 {
                                     case "small_donation":
                                     {
-                                        mMakeSmallDonationButton.setText(getString(R.string.donate_donate)+" "+price);
+                                        mMakeSmallDonationButton.setText(getString(R.string.donate_donate)+price);
                                         break;
                                     }
                                     case "medium_donation":
                                     {
-                                        mMakeMediumDonationButton.setText(getString(R.string.donate_donate)+" "+price);
+                                        mMakeMediumDonationButton.setText(getString(R.string.donate_donate)+price);
                                         break;
                                     }
                                     case "big_donation":
                                     {
-                                        mMakeBigDonationButton.setText(getString(R.string.donate_donate)+" "+price);
+                                        mMakeBigDonationButton.setText(getString(R.string.donate_donate)+price);
                                         break;
                                     }
                                 }

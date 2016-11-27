@@ -7,6 +7,4 @@
     <ListView android:id="@+id/atc_codes_list" android:layout_below="@+id/atc_codes_toolbar" style="@style/atc_codes_list_layout"/>
     <TextView android:id="@+id/atc_codes_list_empty" android:layout_below="@+id/atc_codes_toolbar" android:text="@string/atc_codes_list_empty" style="@style/atc_codes_list_empty"/>
 
-    <View android:layout_below="@+id/atc_codes_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

@@ -10,11 +10,11 @@
             <EditText android:id="@+id/main_search_edittext" android:hint="@string/main_search_hint" style="@style/main_search_edittext"/>
         </LinearLayout>
 
-        <com.astuetz.PagerSlidingTabStrip android:id="@+id/main_tabs" android:layout_below="@+id/main_search" style="@style/main_tabs"/>
+        <android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_search" style="@style/main_pager">
 
-        <android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_tabs" style="@style/main_pager"/>
+            <android.support.design.widget.TabLayout android:id="@+id/main_tabs" style="@style/main_tabs"/>
 
-        <View android:layout_below="@+id/main_tabs" style="@style/toolbar_shadow"/>
+        </android.support.v4.view.ViewPager>
 
         <android.support.design.widget.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 

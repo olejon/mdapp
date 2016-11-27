@@ -33,7 +33,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -106,7 +105,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
-        mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
+        mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -148,8 +147,8 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
                 try
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.clinicaltrials_cards_search)+": \""+searchString+"\"");
-                    intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?term="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&no_unk=Y");
+                    intent.putExtra("title", getString(R.string.clinicaltrials_cards_search, searchString));
+                    intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?term="+URLEncoder.encode(searchString, "utf-8")+"&recr=Open");
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)
@@ -165,7 +164,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         // Correct
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
             final Network network = new BasicNetwork(new HurlStack());
 
@@ -186,7 +185,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
                         if(!correctSearchString.equals(""))
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                            new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                             {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -201,7 +200,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
                                     sqLiteDatabase.close();
 
-                                    mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search)+": \""+correctSearchString+"\"");
+                                    mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, correctSearchString));
 
                                     mProgressBar.setVisibility(View.VISIBLE);
 
@@ -270,7 +269,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
             requestQueue.start();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/clinicaltrials/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"), new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/clinicaltrials/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -319,9 +318,9 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
                     mTools.showToast(getString(R.string.clinicaltrials_cards_something_went_wrong), 1);
 
-                    finish();
-
                     Log.e("ClinicalTrialsCards", error.toString());
+
+                    finish();
                 }
             });
 

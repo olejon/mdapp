@@ -20,7 +20,6 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,9 +31,10 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -54,7 +54,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     public static int VIEW_PAGER_POSITION = 0;
 
     private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Installed
-        final long installed = mTools.getSharedPreferencesLong("INSTALLED_290");
+        final long installed = mTools.getSharedPreferencesLong("INSTALLED_300");
 
-        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_290", mTools.getCurrentTime());
+        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_300", mTools.getCurrentTime());
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -163,8 +163,8 @@ public class MainActivity extends AppCompatActivity
         final TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
         final TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
 
-        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name)+": "+mTools.getProjectVersionName());
-        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code)+": "+mTools.getProjectVersionCode());
+        drawerVersionNameTextView.setText(getString(R.string.drawer_version_name, mTools.getProjectVersionName()));
+        drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code, mTools.getProjectVersionCode()));
 
         mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(mActivity, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
         {
@@ -207,17 +207,21 @@ public class MainActivity extends AppCompatActivity
                     }
                     case R.id.drawer_item_nlh:
                     {
+                        String uri = (mTools.isTablet()) ? "http://legemiddelhandboka.no/" : "http://m.legemiddelhandboka.no/";
+
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_nlh));
-                        intent.putExtra("uri", "http://m.legemiddelhandboka.no/");
+                        intent.putExtra("uri", uri);
                         startActivity(intent);
                         break;
                     }
                     case R.id.drawer_item_felleskatalogen:
                     {
+                        String uri = (mTools.isTablet()) ? "http://www.felleskatalogen.no/medisin/" : "http://www.felleskatalogen.no/m/medisin/";
+
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_felleskatalogen));
-                        intent.putExtra("uri", "http://www.felleskatalogen.no/m/medisin/");
+                        intent.putExtra("uri", uri);
                         startActivity(intent);
                         break;
                     }
@@ -469,7 +473,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     case R.id.drawer_item_feedback:
                     {
-                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"+getString(R.string.project_feedback_uri)+"?subject="+getString(R.string.project_name)));
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.project_feedback_uri, getString(R.string.project_name))));
                         startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
                         break;
                     }
@@ -500,27 +504,17 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Alarms
-        Context applicationContext = getApplicationContext();
+        final Context applicationContext = getApplicationContext();
 
-        boolean messageAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 1, new Intent(applicationContext, MessageIntentService.class), PendingIntent.FLAG_NO_CREATE) != null);
+        final MessageAlarm messageAlarm = new MessageAlarm();
+        messageAlarm.setAlarm(applicationContext);
 
-        if(!messageAlarmIsStarted)
-        {
-            MessageAlarm messageAlarm = new MessageAlarm();
-            messageAlarm.setAlarm(applicationContext);
-        }
-
-        boolean notificationsFromSlvAlarmIsStarted = (PendingIntent.getBroadcast(mContext, 2, new Intent(applicationContext, NotificationsFromSlvAlarm.class), PendingIntent.FLAG_NO_CREATE) != null);
-
-        if(!notificationsFromSlvAlarmIsStarted)
-        {
-            NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
-            notificationsFromSlvAlarm.setAlarm(applicationContext);
-        }
+        final NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
+        notificationsFromSlvAlarm.setAlarm(applicationContext);
 
         // Google Analytics
-        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(mContext);
-        Tracker tracker = googleAnalytics.newTracker(R.xml.app_tracker);
+        final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(mContext);
+        final Tracker tracker = googleAnalytics.newTracker(R.xml.app_tracker);
         tracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         // Get data
@@ -553,16 +547,16 @@ public class MainActivity extends AppCompatActivity
         mFloatingActionButton.setVisibility(View.VISIBLE);
 
         // Rate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_290"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_300"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_290");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_300");
 
             if(currentTime - installedTime > 1000 * 3600 * 48)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_290", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_300", true);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_rate_dialog_title)).content(getString(R.string.main_rate_dialog_message)).positiveText(getString(R.string.main_rate_dialog_positive_button)).negativeText(getString(R.string.main_rate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.main_rate_dialog_title).content(getString(R.string.main_rate_dialog_message)).positiveText(R.string.main_rate_dialog_positive_button).negativeText(R.string.main_rate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -575,16 +569,16 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Donate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_290"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_300"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_290");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_300");
 
             if(currentTime - installedTime > 1000 * 3600 * 96)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_290", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_300", true);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.main_donate_dialog_title)).content(getString(R.string.main_donate_dialog_message)).positiveText(getString(R.string.main_donate_dialog_positive_button)).negativeText(getString(R.string.main_donate_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.main_donate_dialog_title).content(getString(R.string.main_donate_dialog_message)).positiveText(R.string.main_donate_dialog_positive_button).negativeText(R.string.main_donate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -668,6 +662,11 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             }
+            case R.id.main_menu_settings:
+            {
+                Intent intent = new Intent(mContext, SettingsActivity.class);
+                startActivity(intent);
+            }
             default:
             {
                 return super.onOptionsItemSelected(item);
@@ -729,7 +728,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // View pager
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter
+    private class ViewPagerAdapter extends FragmentPagerAdapter
     {
         private final String[] pages = getResources().getStringArray(R.array.main_pages);
 
@@ -754,15 +753,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return pages[position];
-        }
-
-        @Override
         public int getCount()
         {
             return pages.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position)
+        {
+            return pages[position];
         }
     }
 
@@ -806,18 +805,24 @@ public class MainActivity extends AppCompatActivity
             mViewPager.setOffscreenPageLimit(3);
             mViewPager.setPageTransformer(true, new ViewPagerTransformer());
 
-            PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.main_tabs);
-            pagerSlidingTabStrip.setViewPager(mViewPager);
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
+            tabLayout.setupWithViewPager(mViewPager);
 
-            pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
             {
                 @Override
-                public void onPageSelected(int position)
+                public void onTabSelected(TabLayout.Tab tab)
                 {
-                    VIEW_PAGER_POSITION = position;
+                    VIEW_PAGER_POSITION = tab.getPosition();
 
                     mSearchEditText.setText("");
                 }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) { }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) { }
             });
 
             if(!mTools.getSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN"))

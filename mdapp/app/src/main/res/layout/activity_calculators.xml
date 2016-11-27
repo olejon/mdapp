@@ -84,6 +84,4 @@
 
     </ScrollView>
 
-    <View android:layout_below="@+id/calculators_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

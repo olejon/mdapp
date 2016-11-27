@@ -39,6 +39,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class PharmaciesLocationActivity extends AppCompatActivity
 {
@@ -69,7 +71,10 @@ public class PharmaciesLocationActivity extends AppCompatActivity
     private FloatingActionButton mFloatingActionButton;
     private RecyclerView mRecyclerView;
 
-    private String mMunicipalityName;
+    private String mPharmacyMunicipality;
+
+    private ArrayList<String> mPharmacyNames;
+    private ArrayList<String> mPharmacyAddresses;
 
     // Create activity
     @Override
@@ -80,7 +85,7 @@ public class PharmaciesLocationActivity extends AppCompatActivity
         // Intent
         final Intent intent = getIntent();
 
-        mMunicipalityName = intent.getStringExtra("name");
+        mPharmacyMunicipality = intent.getStringExtra("municipality");
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -90,7 +95,7 @@ public class PharmaciesLocationActivity extends AppCompatActivity
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_toolbar);
-        toolbar.setTitle(mMunicipalityName);
+        toolbar.setTitle(mPharmacyMunicipality);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -169,6 +174,13 @@ public class PharmaciesLocationActivity extends AppCompatActivity
 
     // Menu
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_pharmacies_location, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -177,6 +189,21 @@ public class PharmaciesLocationActivity extends AppCompatActivity
             {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            }
+            case R.id.pharmacies_location_menu_contact_information_to_all:
+            {
+                try
+                {
+                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                    intent.putExtra("title", getString(R.string.pharmacies_location_menu_contact_information_to_all));
+                    intent.putExtra("uri", "http://www.gulesider.no/finn:Apotek%20"+URLEncoder.encode(mPharmacyMunicipality, "utf-8"));
+                    startActivity(intent);
+                    return true;
+                }
+                catch(Exception e)
+                {
+                    Log.e("PharmaciesLocation", Log.getStackTraceString(e));
+                }
             }
             default:
             {
@@ -244,7 +271,27 @@ public class PharmaciesLocationActivity extends AppCompatActivity
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 
             String[] queryColumns = {SlDataSQLiteHelper.PHARMACIES_COLUMN_NAME, SlDataSQLiteHelper.PHARMACIES_COLUMN_ADDRESS};
-            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_PHARMACIES, queryColumns, SlDataSQLiteHelper.PHARMACIES_COLUMN_MUNICIPALITY+" = "+mTools.sqe(mMunicipalityName), null, null, null, null);
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_PHARMACIES, queryColumns, SlDataSQLiteHelper.PHARMACIES_COLUMN_MUNICIPALITY+" = "+mTools.sqe(mPharmacyMunicipality), null, null, null, null);
+
+            final int count = mCursor.getCount();
+
+            mPharmacyNames = new ArrayList<>();
+            mPharmacyAddresses = new ArrayList<>();
+
+            for(int i = 0; i < count; i++)
+            {
+                if(mCursor.moveToPosition(i))
+                {
+                    String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_NAME));
+                    String address = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.PHARMACIES_COLUMN_ADDRESS));
+
+                    if(!mTools.pharmacyAddressIsPostBox(address))
+                    {
+                        mPharmacyNames.add(name);
+                        mPharmacyAddresses.add(address);
+                    }
+                }
+            }
 
             return null;
         }
@@ -316,14 +363,23 @@ public class PharmaciesLocationActivity extends AppCompatActivity
                     {
                         if(isGoogleMapsInstalled)
                         {
-                            Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
-                            intent.putExtra("name", name);
-                            intent.putExtra("address", address);
-                            mContext.startActivity(intent);
+                            if(mTools.isDeviceConnected())
+                            {
+                                Intent intent = new Intent(mContext, PharmaciesLocationMapActivity.class);
+                                intent.putExtra("name", name);
+                                intent.putExtra("address", address);
+                                intent.putExtra("names", mPharmacyNames);
+                                intent.putExtra("addresses", mPharmacyAddresses);
+                                mContext.startActivity(intent);
+                            }
+                            else
+                            {
+                                mTools.showToast(getString(R.string.device_not_connected), 1);
+                            }
                         }
                         else
                         {
-                            new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.device_not_supported_dialog_title)).content(mContext.getString(R.string.device_not_supported_dialog_message)).positiveText(mContext.getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                            new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                         }
                     }
                 });
@@ -337,7 +393,7 @@ public class PharmaciesLocationActivity extends AppCompatActivity
                         {
                             Intent intent = new Intent(mContext, MainWebViewActivity.class);
                             intent.putExtra("title", name);
-                            intent.putExtra("uri", "http://www.gulesider.no/finn:"+ URLEncoder.encode(name, "utf-8"));
+                            intent.putExtra("uri", "http://www.gulesider.no/finn:"+URLEncoder.encode(name, "utf-8"));
                             mContext.startActivity(intent);
                         }
                         catch(Exception e)

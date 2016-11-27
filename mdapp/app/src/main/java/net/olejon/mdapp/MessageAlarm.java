@@ -31,20 +31,18 @@ public class MessageAlarm extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        // Settings
         PreferenceManager.setDefaultValues(context, R.xml.settings, false);
 
-        // Alarm
-        Intent alarmIntent = new Intent(context, MessageIntentService.class);
+        final Intent alarmIntent = new Intent(context, MessageIntentService.class);
         context.startService(alarmIntent);
     }
 
     public void setAlarm(Context context)
     {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(context, MessageAlarm.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final Intent intent = new Intent(context, MessageAlarm.class);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
     }

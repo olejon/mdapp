@@ -10,6 +10,4 @@
         <android.support.v7.widget.RecyclerView android:id="@+id/lvh_cards" style="@style/lvh_cards"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <View android:layout_below="@+id/lvh_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

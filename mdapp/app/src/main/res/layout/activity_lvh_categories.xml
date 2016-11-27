@@ -6,6 +6,4 @@
 
     <android.support.v7.widget.RecyclerView android:id="@+id/lvh_categories_cards" android:layout_below="@+id/lvh_categories_toolbar" style="@style/lvh_categories_cards"/>
 
-    <View android:layout_below="@+id/lvh_categories_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

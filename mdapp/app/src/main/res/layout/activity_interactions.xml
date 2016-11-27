@@ -21,8 +21,6 @@
 
     </ScrollView>
 
-    <View android:layout_below="@+id/interactions_toolbar" style="@style/toolbar_shadow"/>
-
     <android.support.design.widget.FloatingActionButton android:id="@+id/interactions_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 
 </RelativeLayout>

@@ -63,88 +63,91 @@ public class MessageIntentService extends IntentService
 
         final MyTools mTools = new MyTools(mContext);
 
-        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-        final Network network = new BasicNetwork(new HurlStack());
-
-        final RequestQueue requestQueue = new RequestQueue(cache, network);
-
-        requestQueue.start();
-
-        int projectVersionCode = mTools.getProjectVersionCode();
-
-        String device = mTools.getDevice();
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
+        if(mTools.isDeviceConnected())
         {
-            @Override
-            public void onResponse(JSONObject response)
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
+
+            final Network network = new BasicNetwork(new HurlStack());
+
+            final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+            requestQueue.start();
+
+            int projectVersionCode = mTools.getProjectVersionCode();
+
+            String device = mTools.getDevice();
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/message/?version_code="+projectVersionCode+"&device="+device, null, new Response.Listener<JSONObject>()
             {
-                requestQueue.stop();
-
-                try
+                @Override
+                public void onResponse(JSONObject response)
                 {
-                    final long id = response.getLong("id");
-                    final String title = response.getString("title");
-                    final String message = response.getString("message");
-                    final String bigMessage = response.getString("big_message");
-                    final String button = response.getString("button");
-                    final String uri = response.getString("uri");
+                    requestQueue.stop();
 
-                    final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
-
-                    mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
-
-                    if(lastId != 0 && id != lastId)
+                    try
                     {
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                        final long id = response.getLong("id");
+                        final String title = response.getString("title");
+                        final String message = response.getString("message");
+                        final String bigMessage = response.getString("big_message");
+                        final String button = response.getString("button");
+                        final String uri = response.getString("uri");
 
-                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
+                        final long lastId = mTools.getSharedPreferencesLong("MESSAGE_LAST_ID");
 
-                        notificationBuilder.setWhen(mTools.getCurrentTime())
-                                .setAutoCancel(true)
-                                .setPriority(Notification.PRIORITY_HIGH)
-                                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                                .setCategory(Notification.CATEGORY_MESSAGE)
-                                .setLargeIcon(bitmap)
-                                .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
-                                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                                .setLights(Color.BLUE, 1000, 2000)
-                                .setTicker(message)
-                                .setContentTitle(title)
-                                .setContentText(message)
-                                .setStyle(new NotificationCompat.BigTextStyle().bigText(bigMessage));
+                        mTools.setSharedPreferencesLong("MESSAGE_LAST_ID", id);
 
-                        if(!uri.equals(""))
+                        if(lastId != 0 && id != lastId)
                         {
-                            Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                            PendingIntent launchPendingIntent = PendingIntent.getActivity(mContext, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
-                            notificationBuilder.setContentIntent(launchPendingIntent).addAction(R.drawable.ic_local_hospital_white_24dp, button, launchPendingIntent);
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
+
+                            notificationBuilder.setWhen(mTools.getCurrentTime())
+                                    .setAutoCancel(true)
+                                    .setPriority(Notification.PRIORITY_HIGH)
+                                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+                                    .setCategory(Notification.CATEGORY_MESSAGE)
+                                    .setLargeIcon(bitmap)
+                                    .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
+                                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                                    .setLights(Color.BLUE, 1000, 2000)
+                                    .setTicker(message)
+                                    .setContentTitle(title)
+                                    .setContentText(message)
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(bigMessage));
+
+                            if(!uri.equals(""))
+                            {
+                                Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                PendingIntent launchPendingIntent = PendingIntent.getActivity(mContext, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                notificationBuilder.setContentIntent(launchPendingIntent).addAction(R.drawable.ic_local_hospital_white_24dp, button, launchPendingIntent);
+                            }
+
+                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                         }
-
-                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e("MessageIntentService", Log.getStackTraceString(e));
                     }
                 }
-                catch(Exception e)
-                {
-                    Log.e("MessageIntentService", Log.getStackTraceString(e));
-                }
-            }
-        }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
+            }, new Response.ErrorListener()
             {
-                requestQueue.stop();
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    requestQueue.stop();
 
-                Log.e("MessageIntentService", error.toString());
-            }
-        });
+                    Log.e("MessageIntentService", error.toString());
+                }
+            });
 
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        requestQueue.add(jsonObjectRequest);
+            requestQueue.add(jsonObjectRequest);
+        }
     }
 }

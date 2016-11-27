@@ -181,6 +181,6 @@ public class ScalesActivity extends AppCompatActivity
     {
         Intent intent = new Intent(mContext, ScaleActivity.class);
         intent.putExtra("scale", scale);
-        mContext.startActivity(intent);
+        startActivity(intent);
     }
 }

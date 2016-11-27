@@ -94,8 +94,6 @@ public class Icd10ChapterActivity extends AppCompatActivity
 
     private long mChapterId;
 
-    private boolean mActivityPaused = false;
-
     private JSONArray mData;
 
     private ArrayList<String> mCodesArrayList;
@@ -170,13 +168,24 @@ public class Icd10ChapterActivity extends AppCompatActivity
         }
     }
 
-    // Pause activity
     @Override
-    protected void onPause()
+    protected void onResume()
     {
-        super.onPause();
+        super.onResume();
 
-        mActivityPaused = true;
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                mToolbarSearchEditText.requestFocus();
+
+                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+            }
+        }, 500);
     }
 
     // Destroy activity
@@ -250,7 +259,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -333,14 +342,10 @@ public class Icd10ChapterActivity extends AppCompatActivity
                 }
 
                 @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3)
-                {
-                }
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
 
                 @Override
-                public void afterTextChanged(Editable editable)
-                {
-                }
+                public void afterTextChanged(Editable editable) { }
             });
 
             mListView.setEmptyView(mListViewEmpty);
@@ -350,74 +355,73 @@ public class Icd10ChapterActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
                 {
-                    mToolbarSearchLayout.setVisibility(View.GONE);
-                    mProgressBar.setVisibility(View.VISIBLE);
-
-                    try
+                    if(mTools.isDeviceConnected())
                     {
-                        final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+                        mToolbarSearchLayout.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.VISIBLE);
 
-                        final Network network = new BasicNetwork(new HurlStack());
-
-                        final RequestQueue requestQueue = new RequestQueue(cache, network);
-
-                        requestQueue.start();
-
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
+                        try
                         {
-                            @Override
-                            public void onResponse(JSONObject response)
+                            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
+
+                            final Network network = new BasicNetwork(new HurlStack());
+
+                            final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+                            requestQueue.start();
+
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
                             {
-                                requestQueue.stop();
-
-                                try
+                                @Override
+                                public void onResponse(JSONObject response)
                                 {
-                                    mProgressBar.setVisibility(View.GONE);
-                                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
+                                    requestQueue.stop();
 
-                                    String uri = response.getString("uri");
+                                    try
+                                    {
+                                        mProgressBar.setVisibility(View.GONE);
 
-                                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                    intent.putExtra("title", mNamesArrayList.get(i));
-                                    intent.putExtra("uri", uri);
-                                    startActivity(intent);
+                                        String uri = response.getString("uri");
+
+                                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                                        intent.putExtra("title", mNamesArrayList.get(i));
+                                        intent.putExtra("uri", uri);
+                                        startActivity(intent);
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                                    }
                                 }
-                                catch(Exception e)
+                            }, new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
                                 {
+                                    requestQueue.stop();
+
                                     mProgressBar.setVisibility(View.GONE);
 
                                     mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                                     mTools.showToast(getString(R.string.icd10_chapter_could_not_find_code), 1);
 
-                                    Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                                    Log.e("Icd10ChapterActivity", error.toString());
                                 }
-                            }
-                        }, new Response.ErrorListener()
+                            });
+
+                            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                            requestQueue.add(jsonObjectRequest);
+                        }
+                        catch(Exception e)
                         {
-                            @Override
-                            public void onErrorResponse(VolleyError error)
-                            {
-                                requestQueue.stop();
-
-                                mProgressBar.setVisibility(View.GONE);
-                                mToolbarSearchLayout.setVisibility(View.VISIBLE);
-
-                                mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
-                                mTools.showToast(getString(R.string.icd10_chapter_could_not_find_code), 1);
-
-                                Log.e("Icd10ChapterActivity", error.toString());
-                            }
-                        });
-
-                        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                        requestQueue.add(jsonObjectRequest);
+                            Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                        }
                     }
-                    catch(Exception e)
+                    else
                     {
-                        Log.e("Icd10ChapterActivity", Log.getStackTraceString(e));
+                        mTools.showToast(getString(R.string.device_not_connected), 1);
                     }
                 }
             });
@@ -428,23 +432,6 @@ public class Icd10ChapterActivity extends AppCompatActivity
 
             mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
-
-            if(!mActivityPaused)
-            {
-                Handler handler = new Handler();
-
-                handler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                        mToolbarSearchEditText.requestFocus();
-
-                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                    }
-                }, 500);
-            }
         }
 
         @Override

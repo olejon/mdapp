@@ -34,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -165,6 +166,13 @@ public class PharmaciesActivity extends AppCompatActivity
 
     // Menu
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_pharmacies, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -172,6 +180,14 @@ public class PharmaciesActivity extends AppCompatActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            case R.id.pharmacies_menu_overview:
+            {
+                Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                intent.putExtra("title", getString(R.string.pharmacies_menu_overview));
+                intent.putExtra("uri", "https://legemiddelverket.no/import-og-salg/apotekdrift/apotekoversikt/");
+                startActivity(intent);
                 return true;
             }
             default:
@@ -195,11 +211,11 @@ public class PharmaciesActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
-                    TextView municipalityNameTextView = (TextView) view.findViewById(R.id.pharmacies_list_item_municipality);
-                    String municipalityName = municipalityNameTextView.getText().toString();
+                    TextView municipalityTextView = (TextView) view.findViewById(R.id.pharmacies_list_item_municipality);
+                    String municipality = municipalityTextView.getText().toString();
 
                     Intent intent = new Intent(mContext, PharmaciesLocationActivity.class);
-                    intent.putExtra("name", municipalityName);
+                    intent.putExtra("municipality", municipality);
                     startActivity(intent);
                 }
             });

@@ -26,6 +26,10 @@
         <item name="android:elevation">2dp</item>
     </style>
 
+    <style name="main_pager_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
     <style name="main_medications_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
@@ -56,6 +60,10 @@
     </style>
 
     <style name="medication_tabs_base" parent="medication_tabs_base_base">
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="medication_pager_base">
         <item name="android:elevation">2dp</item>
     </style>
 
@@ -246,12 +254,6 @@
 
     <style name="toolbar_progressbar_horizontal_base" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:elevation">2dp</item>
-    </style>
-
-    <style name="toolbar_shadow">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:visibility">gone</item>
     </style>
 
     <!-- Collapsing toolbar -->

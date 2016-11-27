@@ -10,6 +10,4 @@
         <android.support.v7.widget.RecyclerView android:id="@+id/notifications_from_slv_cards" style="@style/notifications_from_slv_cards"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <View android:layout_below="@+id/notifications_from_slv_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

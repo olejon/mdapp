@@ -23,10 +23,10 @@
 
     </RelativeLayout>
 
-    <com.astuetz.PagerSlidingTabStrip android:id="@+id/medication_tabs" android:layout_below="@+id/medication_extended_toolbar" style="@style/medication_tabs"/>
+    <android.support.v4.view.ViewPager android:id="@+id/medication_pager" android:layout_below="@+id/medication_extended_toolbar" style="@style/medication_pager">
 
-    <android.support.v4.view.ViewPager android:id="@+id/medication_pager" android:layout_below="@+id/medication_tabs" style="@style/medication_pager"/>
+        <android.support.design.widget.TabLayout android:id="@+id/medication_tabs" style="@style/medication_tabs"/>
 
-    <View android:layout_below="@+id/medication_tabs" style="@style/toolbar_shadow"/>
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

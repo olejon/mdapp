@@ -18,6 +18,4 @@
 
     </ScrollView>
 
-    <View android:layout_below="@+id/donate_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

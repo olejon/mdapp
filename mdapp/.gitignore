@@ -5,6 +5,7 @@ bin/
 build/
 gen/
 proguard/
+projectFilesBackup/
 
 .DS_Store
 

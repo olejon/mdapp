@@ -34,7 +34,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -108,7 +107,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.interactions_cards_toolbar);
-        mToolbar.setTitle(getString(R.string.interactions_cards_search)+": \""+searchString+"\"");
+        mToolbar.setTitle(getString(R.string.interactions_cards_search, searchString));
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -150,8 +149,8 @@ public class InteractionsCardsActivity extends AppCompatActivity
                 try
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.interactions_cards_search)+": \""+searchString+"\"");
-                    intent.putExtra("uri", "http://www.interaksjoner.no/analyser.asp?PreparatNavn="+URLEncoder.encode(searchString.toLowerCase(), "utf-8")+"&submit1=Sjekk");
+                    intent.putExtra("title", getString(R.string.interactions_cards_search, searchString));
+                    intent.putExtra("uri", "http://interaksjoner.azurewebsites.net/analyser.asp?PreparatNavn="+URLEncoder.encode(searchString, "utf-8")+"&Client=Sjekk");
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)
@@ -165,79 +164,82 @@ public class InteractionsCardsActivity extends AppCompatActivity
         search(searchString);
 
         // Correct
-        try
+        if(!searchString.contains("_"))
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
-
-            requestQueue.start();
-
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            try
             {
-                @Override
-                public void onResponse(JSONObject response)
+                final Cache cache = new DiskBasedCache(getCacheDir(), 0);
+
+                final Network network = new BasicNetwork(new HurlStack());
+
+                final RequestQueue requestQueue = new RequestQueue(cache, network);
+
+                requestQueue.start();
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
                 {
-                    requestQueue.stop();
-
-                    try
+                    @Override
+                    public void onResponse(JSONObject response)
                     {
-                        final String correctSearchString = response.getString("correct");
+                        requestQueue.stop();
 
-                        if(!correctSearchString.equals(""))
+                        try
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                            final String correctSearchString = response.getString("correct");
+
+                            if(! correctSearchString.equals(""))
                             {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                                new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                                 {
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, correctSearchString);
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                                    {
+                                        ContentValues contentValues = new ContentValues();
+                                        contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, correctSearchString);
 
-                                    SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
+                                        SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
 
-                                    sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
-                                    sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
+                                        sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+                                        sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
 
-                                    sqLiteDatabase.close();
+                                        sqLiteDatabase.close();
 
-                                    mToolbar.setTitle(getString(R.string.interactions_cards_search)+": \""+correctSearchString+"\"");
+                                        mToolbar.setTitle(getString(R.string.interactions_cards_search, correctSearchString));
 
-                                    mProgressBar.setVisibility(View.VISIBLE);
+                                        mProgressBar.setVisibility(View.VISIBLE);
 
-                                    mNoInteractionsLayout.setVisibility(View.GONE);
-                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                                        mNoInteractionsLayout.setVisibility(View.GONE);
+                                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
-                                    search(correctSearchString);
-                                }
-                            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                                        search(correctSearchString);
+                                    }
+                                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Log.e("InteractionsCards", Log.getStackTraceString(e));
                         }
                     }
-                    catch(Exception e)
-                    {
-                        Log.e("InteractionsCards", Log.getStackTraceString(e));
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
+                }, new Response.ErrorListener()
                 {
-                    requestQueue.stop();
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        requestQueue.stop();
 
-                    Log.e("InteractionsCards", error.toString());
-                }
-            });
+                        Log.e("InteractionsCards", error.toString());
+                    }
+                });
 
-            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-            requestQueue.add(jsonObjectRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("InteractionsCards", Log.getStackTraceString(e));
+                requestQueue.add(jsonObjectRequest);
+            }
+            catch(Exception e)
+            {
+                Log.e("InteractionsCards", Log.getStackTraceString(e));
+            }
         }
     }
 
@@ -272,7 +274,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
             requestQueue.start();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/interactions/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"), new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/interactions/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -321,9 +323,9 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
                     mTools.showToast(getString(R.string.interactions_cards_something_went_wrong), 1);
 
-                    finish();
-
                     Log.e("InteractionsCards", error.toString());
+
+                    finish();
                 }
             });
 
@@ -398,7 +400,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
                     case "red":
                     {
                         viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
+                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_red)));
                         viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
 
                         break;
@@ -406,7 +408,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
                     case "orange":
                     {
                         viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.orange));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_orange));
+                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_orange)));
                         viewHolder.icon.setImageResource(R.drawable.ic_warning_white_24dp);
 
                         break;
@@ -414,7 +416,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
                     case "green":
                     {
                         viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_green));
+                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_green)));
                         viewHolder.icon.setImageResource(R.drawable.ic_check_white_24dp);
 
                         break;
@@ -422,7 +424,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
                     default:
                     {
                         viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance)+": "+mContext.getString(R.string.interactions_cards_relevance_red));
+                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_red)));
                         viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
 
                         break;
@@ -462,7 +464,9 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
                                         try
                                         {
-                                            new MaterialDialog.Builder(mContext).title(mContext.getString(R.string.interactions_cards_handling_dialog_title)).content(response.getString("handling")).positiveText(mContext.getString(R.string.interactions_cards_handling_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                                            final String handling = response.getString("handling");
+
+                                            new MaterialDialog.Builder(mContext).title(R.string.interactions_cards_handling_dialog_title).content(handling).positiveText(R.string.interactions_cards_handling_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                                         }
                                         catch(Exception e)
                                         {

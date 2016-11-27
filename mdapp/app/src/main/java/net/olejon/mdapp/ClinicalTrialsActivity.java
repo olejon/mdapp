@@ -250,7 +250,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -273,7 +273,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
         if(searchString.equals("")) return;
 
         Intent intent = new Intent(mContext, ClinicalTrialsCardsActivity.class);
-        intent.putExtra("search", searchString);
+        intent.putExtra("search", mTools.firstToUpper(searchString));
         startActivity(intent);
     }
 

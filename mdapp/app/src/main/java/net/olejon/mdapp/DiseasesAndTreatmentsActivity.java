@@ -71,8 +71,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
     private String mSearchLanguage = "";
 
-    private boolean mActivityPaused = false;
-
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -167,15 +165,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
         getRecentSearches();
     }
 
-    // Pause activity
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mActivityPaused = true;
-    }
-
     // Destroy activity
     @Override
     protected void onDestroy()
@@ -245,7 +234,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -280,7 +269,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
     private void showSearchLanguageDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.diseases_and_treatments_language_dialog_title)).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallback(new MaterialDialog.ListCallback()
+        new MaterialDialog.Builder(mContext).title(R.string.diseases_and_treatments_language_dialog_title).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallback(new MaterialDialog.ListCallback()
         {
             @Override
             public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
@@ -326,7 +315,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
         Intent intent = new Intent(mContext, DiseasesAndTreatmentsSearchActivity.class);
         intent.putExtra("language", mSearchLanguage);
-        intent.putExtra("string", searchString);
+        intent.putExtra("string", mTools.firstToUpper(searchString));
         startActivity(intent);
     }
 
@@ -353,7 +342,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
             mFloatingActionButton.startAnimation(fabAnimation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            if(!mActivityPaused && mCursor.getCount() > 0)
+            if(mCursor.getCount() > 0)
             {
                 Handler handler = new Handler();
 

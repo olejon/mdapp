@@ -35,7 +35,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -107,7 +106,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_toolbar);
-        mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search)+": \""+mSearchString+"\"");
+        mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, mSearchString));
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -142,7 +141,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
         // Correct
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
             final Network network = new BasicNetwork(new HurlStack());
 
@@ -163,7 +162,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
                         if(!correctSearchString.equals(""))
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                            new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                             {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -178,7 +177,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
                                     sqLiteDatabase.close();
 
-                                    mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search)+": \""+correctSearchString+"\"");
+                                    mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, correctSearchString));
 
                                     mProgressBar.setVisibility(View.VISIBLE);
 
@@ -472,7 +471,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
                     }
                     default:
                     {
-                        viewHolder.icon.setImageResource(R.drawable.ic_launcher);
+                        viewHolder.icon.setImageResource(R.mipmap.ic_launcher);
                         viewHolder.text.setText(text);
                         break;
                     }

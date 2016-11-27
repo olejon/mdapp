@@ -106,14 +106,14 @@ public class AtcCodesActivity extends AppCompatActivity
                     }
                     else if(substanceName.contains(" / "))
                     {
-                        final String[] substancesNamesStringArray = substanceName.split(" / ");
+                        final CharSequence[] substancesNamesStringArray = substanceName.split(" / ");
 
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.atc_codes_dialog_title)).items(substancesNamesStringArray).itemsCallback(new MaterialDialog.ListCallback()
+                        new MaterialDialog.Builder(mContext).title(R.string.atc_codes_dialog_title).items(substancesNamesStringArray).itemsCallback(new MaterialDialog.ListCallback()
                         {
                             @Override
                             public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
                             {
-                                getSubstance(substancesNamesStringArray[i]);
+                                getSubstance(substancesNamesStringArray[i].toString());
                             }
                         }).itemsColorRes(R.color.dark_blue).show();
                     }

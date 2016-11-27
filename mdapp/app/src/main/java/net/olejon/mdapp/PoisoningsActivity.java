@@ -258,7 +258,7 @@ public class PoisoningsActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -274,7 +274,7 @@ public class PoisoningsActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -297,7 +297,7 @@ public class PoisoningsActivity extends AppCompatActivity
         if(searchString.equals("")) return;
 
         Intent intent = new Intent(mContext, PoisoningsCardsActivity.class);
-        intent.putExtra("search", searchString);
+        intent.putExtra("search", mTools.firstToUpper(searchString));
         startActivity(intent);
     }
 
@@ -339,8 +339,7 @@ public class PoisoningsActivity extends AppCompatActivity
             mFloatingActionButton.startAnimation(animation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            // Tip dialog
-            if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG"))
+            if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG"))
             {
                 if(!mActivityPaused && mCursor.getCount() > 0)
                 {
@@ -361,12 +360,12 @@ public class PoisoningsActivity extends AppCompatActivity
             }
             else
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.poisonings_tip_dialog_title)).content(getString(R.string.poisonings_tip_dialog_message)).positiveText(getString(R.string.poisonings_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.poisonings_information_dialog_title).content(getString(R.string.poisonings_information_dialog_message)).positiveText(R.string.poisonings_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
-                        mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_TIP_DIALOG", true);
+                        mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG", true);
                     }
                 }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }

@@ -22,6 +22,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -61,6 +62,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
     private InputMethodManager mInputMethodManager;
 
+    private MenuItem findInTextMenuItem;
     private MenuItem goForwardMenuItem;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
@@ -186,18 +188,30 @@ public class MainWebViewActivity extends AppCompatActivity
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:50.0) Gecko/20100101 Firefox/50.0");
         }
         else if(pageUri.contains("clinicaltrials.gov"))
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
         }
-        else if(pageUri.contains("interaksjoner.no"))
+        else if(pageUri.contains("felleskatalogen.no"))
+        {
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:50.0) Gecko/20100101 Firefox/50.0");
+        }
+        else if(pageUri.contains("interaksjoner.azurewebsites.net"))
         {
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
-        else if(pageUri.contains("legemiddelverket.no"))
+        else if(pageUri.contains("legemiddelhandboka.no"))
+        {
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:50.0) Gecko/20100101 Firefox/50.0");
+        }
+        else if(pageUri.contains("legemiddelsok.no"))
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
@@ -220,6 +234,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
         mWebView.setWebViewClient(new WebViewClient()
         {
+            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
@@ -228,14 +243,15 @@ public class MainWebViewActivity extends AppCompatActivity
                     mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
                     return true;
                 }
-                else if(url.matches("^https?://.*?\\.pdf$"))
+                else if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
+                {
+                    mTools.showToast(getString(R.string.device_not_supported), 1);
+                    return true;
+                }
+                else if(url.matches("^https?://.*?\\.pdf$") || url.matches("^https?://.*?\\.docx?$") || url.matches("^https?://.*?\\.xlsx?$") || url.matches("^https?://.*?\\.pptx?$"))
                 {
                     mTools.downloadFile(view.getTitle(), url);
                     return true;
-                }
-                else if(url.contains("login.pva.uib.no"))
-                {
-                    webSettings.setDefaultTextEncodingName("iso-8859-15");
                 }
                 else if(url.startsWith("mailto:"))
                 {
@@ -252,13 +268,63 @@ public class MainWebViewActivity extends AppCompatActivity
                     }
                     catch(Exception e)
                     {
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                        new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                     }
 
                     return true;
                 }
 
                 return false;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon)
+            {
+                if(mWebViewHasBeenLoaded) findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text));
+
+                mProgressBar.setVisibility(View.VISIBLE);
+
+                mToolbarSearchLayout.setVisibility(View.GONE);
+                mToolbarSearchEditText.setText("");
+
+                mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                toolbar.setTitle(mWebView.getTitle());
+
+                mProgressBar.setVisibility(View.INVISIBLE);
+
+                if(mWebView.canGoForward())
+                {
+                    goForwardMenuItem.setVisible(true);
+                }
+                else
+                {
+                    goForwardMenuItem.setVisible(false);
+                }
+
+                if(!mWebViewHasBeenLoaded)
+                {
+                    mWebViewHasBeenLoaded = true;
+
+                    if(pageUri.contains("helsenorge.no"))
+                    {
+                        mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top - 8);");
+                    }
+                    else if(pageUri.contains("icd10data.com"))
+                    {
+                        mWebView.loadUrl("javascript:var element = $('div.contentBlurb:contains(\"Clinical Information\")'); if(element.length) { var offset = element.offset(); window.scrollTo(0, offset.top - 8); } else { alert('no_clinical_information'); }");
+                    }
+                    else if(pageUri.contains("lvh.no"))
+                    {
+                        mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
+                    }
+                }
+
+                if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); }");
             }
 
             @Override
@@ -270,7 +336,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
                 mProgressBar.setVisibility(View.INVISIBLE);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -293,7 +359,13 @@ public class MainWebViewActivity extends AppCompatActivity
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result)
             {
-                if(pageUri.contains("webofknowledge.com"))
+                if(pageUri.contains("icd10data.com") && message.equals("no_clinical_information"))
+                {
+                    mTools.showToast("Ingen klinisk informasjon", 1);
+                    result.confirm();
+                    return true;
+                }
+                else if(pageUri.contains("webofknowledge.com"))
                 {
                     result.confirm();
                     return true;
@@ -305,49 +377,7 @@ public class MainWebViewActivity extends AppCompatActivity
             @Override
             public void onProgressChanged(WebView view, int newProgress)
             {
-                if(newProgress == 100)
-                {
-                    toolbar.setTitle(mWebView.getTitle());
-
-                    mProgressBar.setVisibility(View.INVISIBLE);
-
-                    if(mWebView.canGoForward())
-                    {
-                        goForwardMenuItem.setVisible(true);
-                    }
-                    else
-                    {
-                        goForwardMenuItem.setVisible(false);
-                    }
-
-                    if(!mWebViewHasBeenLoaded)
-                    {
-                        mWebViewHasBeenLoaded = true;
-
-                        if(pageUri.contains("helsenorge.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
-                        }
-                        else if(pageUri.contains("icd10data.com"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('div.contentBlurb:contains(\"Clinical Information\")').offset(); window.scrollTo(0, offset.top - 8);");
-                        }
-                        else if(pageUri.contains("lvh.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
-                        }
-                    }
-
-                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); }");
-                }
-                else
-                {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mProgressBar.setProgress(newProgress);
-
-                    mToolbarSearchLayout.setVisibility(View.GONE);
-                    mToolbarSearchEditText.setText("");
-                }
+                mProgressBar.setProgress(newProgress);
             }
         });
 
@@ -379,6 +409,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
         cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
+        cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
         cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("http://www.gulesider.no/", "cookiesAccepted=true");
@@ -409,6 +440,8 @@ public class MainWebViewActivity extends AppCompatActivity
     {
         super.onPause();
 
+        findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text));
+
         mToolbarSearchLayout.setVisibility(View.GONE);
         mToolbarSearchEditText.setText("");
 
@@ -438,6 +471,8 @@ public class MainWebViewActivity extends AppCompatActivity
     {
         if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
         {
+            findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text));
+
             mToolbarSearchLayout.setVisibility(View.GONE);
             mToolbarSearchEditText.setText("");
 
@@ -461,6 +496,7 @@ public class MainWebViewActivity extends AppCompatActivity
     {
         getMenuInflater().inflate(R.menu.menu_main_webview, menu);
 
+        findInTextMenuItem = menu.findItem(R.id.main_webview_menu_find_in_text);
         goForwardMenuItem = menu.findItem(R.id.main_webview_menu_go_forward);
 
         return true;
@@ -492,20 +528,22 @@ public class MainWebViewActivity extends AppCompatActivity
                 }
                 else
                 {
+                    findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text_next));
+
                     mToolbarSearchLayout.setVisibility(View.VISIBLE);
                     mToolbarSearchEditText.requestFocus();
 
                     mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                 }
 
-                if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
+                if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG"))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(R.string.main_webview_find_in_text_information_dialog_title).content(getString(R.string.main_webview_find_in_text_information_dialog_message)).positiveText(R.string.main_webview_find_in_text_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
                         public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
-                            mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
+                            mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG", true);
                         }
                     }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }

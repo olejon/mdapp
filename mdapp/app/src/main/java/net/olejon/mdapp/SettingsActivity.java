@@ -19,14 +19,18 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 public class SettingsActivity extends AppCompatActivity
 {
+    private final Context mContext = this;
+
+    private final MyTools mTools = new MyTools(mContext);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -53,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             default:

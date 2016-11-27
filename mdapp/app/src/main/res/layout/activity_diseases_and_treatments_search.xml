@@ -10,6 +10,4 @@
         <android.support.v7.widget.RecyclerView android:id="@+id/diseases_and_treatments_search_cards" style="@style/diseases_and_treatments_search_cards"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <View android:layout_below="@+id/diseases_and_treatments_search_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

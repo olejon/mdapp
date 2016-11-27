@@ -22,8 +22,6 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -72,9 +70,6 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        // Settings
-        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Connected?
         if(!mTools.isDeviceConnected())
@@ -144,7 +139,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             default:
@@ -202,6 +197,8 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
                 mSwipeRefreshLayout.setRefreshing(false);
 
                 mTools.showToast(getString(R.string.notifications_from_slv_could_not_get_notifications), 1);
+
+                Log.e("NotificationsFromSlv", error.toString());
 
                 finish();
             }

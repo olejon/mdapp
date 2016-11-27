@@ -66,6 +66,4 @@
 
     </ScrollView>
 
-    <View android:layout_below="@+id/scales_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

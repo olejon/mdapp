@@ -26,10 +26,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +48,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 public class SavedArticlesActivity extends AppCompatActivity
 {
     private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -63,9 +64,11 @@ public class SavedArticlesActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_saved_articles);
+        // Settings
+        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
-        mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+        // Layout
+        setContentView(R.layout.activity_saved_articles);
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.saved_articles_toolbar);
@@ -103,9 +106,6 @@ public class SavedArticlesActivity extends AppCompatActivity
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(new SavedArticlesAdapter(mCursor));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
-        // Tip dialog
-        showInformationDialog(false);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class SavedArticlesActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             case R.id.saved_articles_menu_information:
@@ -158,9 +158,9 @@ public class SavedArticlesActivity extends AppCompatActivity
     // Information dialog
     private void showInformationDialog(boolean show)
     {
-        if(show || !mTools.getSharedPreferencesBoolean("SAVED_ARTICLES_HIDE_INFORMATION_DIALOG"))
+        if(!mTools.getSharedPreferencesBoolean("SAVED_ARTICLES_HIDE_INFORMATION_DIALOG") || show)
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.saved_articles_tip_dialog_title)).content(getString(R.string.saved_articles_tip_dialog_message)).positiveText(getString(R.string.saved_articles_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+            new MaterialDialog.Builder(mContext).title(R.string.saved_articles_information_dialog_title).content(getString(R.string.saved_articles_information_dialog_message)).positiveText(R.string.saved_articles_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
             {
                 @Override
                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -203,6 +203,8 @@ public class SavedArticlesActivity extends AppCompatActivity
 
                 mRecyclerView.setAdapter(new SavedArticlesAdapter(cursor));
             }
+
+            showInformationDialog(false);
         }
 
         @Override
@@ -280,7 +282,7 @@ public class SavedArticlesActivity extends AppCompatActivity
                     @Override
                     public boolean onLongClick(View view)
                     {
-                        new MaterialDialog.Builder(mContext).title(R.string.saved_articles_remove_article_dialog_title).content(R.string.saved_articles_remove_article_dialog_message).positiveText(R.string.saved_articles_remove_article_dialog_positive_button).neutralText(R.string.saved_articles_remove_article_dialog_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
+                        new MaterialDialog.Builder(mContext).title(R.string.saved_articles_remove_article_dialog_title).content(getString(R.string.saved_articles_remove_article_dialog_message)).positiveText(R.string.saved_articles_remove_article_dialog_positive_button).neutralText(R.string.saved_articles_remove_article_dialog_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
                         {
                             @Override
                             public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)

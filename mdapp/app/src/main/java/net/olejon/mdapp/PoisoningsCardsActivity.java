@@ -34,7 +34,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -108,7 +107,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.poisonings_cards_toolbar);
-        mToolbar.setTitle(getString(R.string.poisonings_cards_search)+": \""+mSearchString+"\"");
+        mToolbar.setTitle(getString(R.string.poisonings_cards_search, mSearchString));
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -187,7 +186,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
         // Correct
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
             final Network network = new BasicNetwork(new HurlStack());
 
@@ -208,7 +207,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
                         if(!correctSearchString.equals(""))
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                            new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                             {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -223,7 +222,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
                                     sqLiteDatabase.close();
 
-                                    mToolbar.setTitle(getString(R.string.poisonings_cards_search)+": \""+correctSearchString+"\"");
+                                    mToolbar.setTitle(getString(R.string.poisonings_cards_search, correctSearchString));
 
                                     mProgressBar.setVisibility(View.VISIBLE);
 
@@ -288,7 +287,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(R.string.device_not_supported_dialog_message).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -313,7 +312,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
             requestQueue.start();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"), new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -362,9 +361,9 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
                     mTools.showToast(getString(R.string.poisonings_cards_something_went_wrong), 1);
 
-                    finish();
-
                     Log.e("PoisoningsCardsActivity", error.toString());
+
+                    finish();
                 }
             });
 

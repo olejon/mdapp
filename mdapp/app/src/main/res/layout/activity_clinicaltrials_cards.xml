@@ -17,6 +17,4 @@
 
     </LinearLayout>
 
-    <View android:layout_below="@+id/clinicaltrials_cards_toolbar" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

@@ -45,16 +45,10 @@ public class Widget extends AppWidgetProvider
             remoteViews.setRemoteAdapter(R.id.widget_list, intent);
             remoteViews.setEmptyView(R.id.widget_list, R.id.widget_list_empty);
 
-            Intent launchMainActivityIntent = new Intent(context, MainActivity.class);
-            launchMainActivityIntent.setAction("android.intent.action.MAIN");
-            launchMainActivityIntent.addCategory("android.intent.category.LAUNCHER");
-            PendingIntent launchMainActivityPendingIntent = PendingIntent.getActivity(context, appWidgetId, launchMainActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
             Intent launchMedicationActivityIntent = new Intent(context, MedicationActivity.class);
-            launchMedicationActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            launchMedicationActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent launchMedicationActivityPendingIntent = PendingIntent.getActivity(context, 0, launchMedicationActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            remoteViews.setOnClickPendingIntent(R.id.widget_toolbar, launchMainActivityPendingIntent);
             remoteViews.setPendingIntentTemplate(R.id.widget_list, launchMedicationActivityPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);

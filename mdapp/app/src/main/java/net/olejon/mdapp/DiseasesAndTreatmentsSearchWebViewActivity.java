@@ -22,6 +22,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -61,6 +62,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
     private InputMethodManager mInputMethodManager;
 
+    private MenuItem findInTextMenuItem;
     private MenuItem goForwardMenuItem;
     private LinearLayout mToolbarSearchLayout;
     private EditText mToolbarSearchEditText;
@@ -189,7 +191,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:50.0) Gecko/20100101 Firefox/50.0");
         }
         else if(pageUri.contains("oncolex.no"))
         {
@@ -211,17 +213,19 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
         mWebView.setWebViewClient(new WebViewClient()
         {
+            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
-                if(url.matches("^https?://.*?\\.pdf$"))
+                if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
+                {
+                    mTools.showToast(getString(R.string.device_not_supported), 1);
+                    return true;
+                }
+                else if(url.matches("^https?://.*?\\.pdf$") || url.matches("^https?://.*?\\.docx?$") || url.matches("^https?://.*?\\.xlsx?$") || url.matches("^https?://.*?\\.pptx?$"))
                 {
                     mTools.downloadFile(pageTitle, url);
                     return true;
-                }
-                else if(url.contains("login.pva.uib.no"))
-                {
-                    webSettings.setDefaultTextEncodingName("iso-8859-15");
                 }
                 else if(url.startsWith("mailto:"))
                 {
@@ -238,13 +242,59 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                     }
                     catch(Exception e)
                     {
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                        new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                     }
 
                     return true;
                 }
 
                 return false;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon)
+            {
+                if(mWebViewHasBeenLoaded) findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text));
+
+                mProgressBar.setVisibility(View.VISIBLE);
+
+                mToolbarSearchLayout.setVisibility(View.GONE);
+                mToolbarSearchEditText.setText("");
+
+                mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                toolbar.setTitle(mWebView.getTitle());
+
+                mProgressBar.setVisibility(View.INVISIBLE);
+
+                if(mWebView.canGoForward())
+                {
+                    goForwardMenuItem.setVisible(true);
+                }
+                else
+                {
+                    goForwardMenuItem.setVisible(false);
+                }
+
+                if(!mWebViewHasBeenLoaded)
+                {
+                    mWebViewHasBeenLoaded = true;
+
+                    if(pageUri.contains("bestpractice.bmj.com"))
+                    {
+                        mWebView.loadUrl("javascript:$('div#snackbar-container').hide();");
+                    }
+                    else if(pageUri.contains("helsenorge.no"))
+                    {
+                        mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top - 8);");
+                    }
+                }
+
+                if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#WOS_GeneralSearch_input_form').submit(); }");
             }
 
             @Override
@@ -256,7 +306,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
                 mProgressBar.setVisibility(View.INVISIBLE);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -291,61 +341,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
             @Override
             public void onProgressChanged(WebView view, int newProgress)
             {
-                if(newProgress == 100)
-                {
-                    toolbar.setTitle(mWebView.getTitle());
-
-                    mProgressBar.setVisibility(View.INVISIBLE);
-
-                    if(mWebView.canGoForward())
-                    {
-                        goForwardMenuItem.setVisible(true);
-                    }
-                    else
-                    {
-                        goForwardMenuItem.setVisible(false);
-                    }
-
-                    if(!mWebViewHasBeenLoaded)
-                    {
-                        mWebViewHasBeenLoaded = true;
-
-                        if(pageUri.contains("bestpractice.bmj.com"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('small.monograph-title').offset(); window.scrollTo(0, offset.top - 8);");
-                        }
-                        else if(pageUri.contains("forskning.no"))
-                        {
-                            mWebView.loadUrl("javascript:var elements = document.getElementsByTagName('h3'); elements[0].scrollIntoView();");
-                        }
-                        else if(pageUri.contains("helsebiblioteket.no"))
-                        {
-                            mWebView.loadUrl("javascript:if($('div.guidlinelinklistContent').length) { var offset = $('div.guidlinelinklistContent').offset(); window.scrollTo(offset.left - 6, offset.top - 18); }");
-                        }
-                        else if(pageUri.contains("helsenorge.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top);");
-                        }
-                        else if(pageUri.contains("nhi.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('div#title').offset(); window.scrollTo(0, offset.top);");
-                        }
-                        else if(pageUri.contains("sml.snl.no"))
-                        {
-                            mWebView.loadUrl("javascript:var offset = $('article.sml_search_result').offset(); window.scrollTo(0, offset.top - 8);");
-                        }
-                    }
-
-                    if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#UA_GeneralSearch_input_form').submit(); }");
-                }
-                else
-                {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mProgressBar.setProgress(newProgress);
-
-                    mToolbarSearchLayout.setVisibility(View.GONE);
-                    mToolbarSearchEditText.setText("");
-                }
+                mProgressBar.setProgress(newProgress);
             }
         });
 
@@ -406,6 +402,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
     {
         super.onPause();
 
+        findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text));
+
         mToolbarSearchLayout.setVisibility(View.GONE);
         mToolbarSearchEditText.setText("");
 
@@ -435,6 +433,8 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
     {
         if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
         {
+            findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text));
+
             mToolbarSearchLayout.setVisibility(View.GONE);
             mToolbarSearchEditText.setText("");
 
@@ -458,6 +458,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
     {
         getMenuInflater().inflate(R.menu.menu_diseases_and_treatments_search_webview, menu);
 
+        findInTextMenuItem = menu.findItem(R.id.diseases_and_treatments_search_webview_menu_find_in_text);
         goForwardMenuItem = menu.findItem(R.id.diseases_and_treatments_search_webview_menu_go_forward);
 
         return true;
@@ -484,20 +485,22 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
                 }
                 else
                 {
+                    findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text_next));
+
                     mToolbarSearchLayout.setVisibility(View.VISIBLE);
                     mToolbarSearchEditText.requestFocus();
 
                     mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                 }
 
-                if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
+                if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG"))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(R.string.main_webview_find_in_text_information_dialog_title).content(getString(R.string.main_webview_find_in_text_information_dialog_message)).positiveText(R.string.main_webview_find_in_text_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
                         public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
-                            mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
+                            mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG", true);
                         }
                     }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }

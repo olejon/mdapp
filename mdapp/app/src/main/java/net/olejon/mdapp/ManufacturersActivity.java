@@ -34,6 +34,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -164,6 +165,13 @@ public class ManufacturersActivity extends AppCompatActivity
 
     // Menu
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_manufacturers, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -171,6 +179,14 @@ public class ManufacturersActivity extends AppCompatActivity
             case android.R.id.home:
             {
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            case R.id.manufacturers_menu_new_approvals:
+            {
+                Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                intent.putExtra("title", getString(R.string.manufacturers_menu_new_approvals));
+                intent.putExtra("uri", "https://legemiddelverket.no/godkjenning/godkjenning-av-legemidler/liste-over-nye-markedsforingstillatelser/");
+                startActivity(intent);
                 return true;
             }
             default:

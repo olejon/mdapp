@@ -27,12 +27,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +57,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 public class NotesActivity extends AppCompatActivity
 {
     private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -75,6 +76,9 @@ public class NotesActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Settings
+        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -154,10 +158,9 @@ public class NotesActivity extends AppCompatActivity
     {
         super.onResume();
 
-        // PIN code
         if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_dialog_pin_code_title)).customView(R.layout.activity_notes_dialog_pin_code, true).positiveText(getString(R.string.notes_dialog_pin_code_positive_button)).negativeText(getString(R.string.notes_dialog_pin_code_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+            new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_pin_code_title).customView(R.layout.activity_notes_dialog_pin_code, true).positiveText(R.string.notes_dialog_pin_code_positive_button).negativeText(R.string.notes_dialog_pin_code_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
             {
                 @Override
                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -250,7 +253,7 @@ public class NotesActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             default:
@@ -270,7 +273,7 @@ public class NotesActivity extends AppCompatActivity
         }
         else
         {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.notes_dialog_verify_pin_code_title)).customView(R.layout.activity_notes_dialog_verify_pin_code, true).positiveText(getString(R.string.notes_dialog_verify_pin_code_positive_button)).negativeText(getString(R.string.notes_dialog_verify_pin_code_negative_button)).neutralText(getString(R.string.notes_dialog_verify_pin_code_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+            new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_verify_pin_code_title).customView(R.layout.activity_notes_dialog_verify_pin_code, true).positiveText(R.string.notes_dialog_verify_pin_code_positive_button).negativeText(R.string.notes_dialog_verify_pin_code_negative_button).neutralText(R.string.notes_dialog_verify_pin_code_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
             {
                 @Override
                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -325,7 +328,7 @@ public class NotesActivity extends AppCompatActivity
                 {
                     materialDialog.dismiss();
 
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.notes_dialog_reset_pin_code_title)).content(getString(R.string.notes_dialog_reset_pin_code_message)).positiveText(getString(R.string.notes_dialog_reset_pin_code_positive_button)).neutralText(getString(R.string.notes_dialog_reset_pin_code_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_reset_pin_code_title).content(getString(R.string.notes_dialog_reset_pin_code_message)).positiveText(R.string.notes_dialog_reset_pin_code_positive_button).neutralText(R.string.notes_dialog_reset_pin_code_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
                         public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)

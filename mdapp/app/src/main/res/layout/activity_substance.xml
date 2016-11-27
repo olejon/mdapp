@@ -9,6 +9,4 @@
     <ListView android:id="@+id/substance_list" android:layout_below="@+id/substance_atc_code" style="@style/substance_list_layout"/>
     <TextView android:id="@+id/substance_list_empty" android:layout_below="@+id/substance_atc_code" android:text="@string/substance_list_empty" style="@style/substance_list_empty"/>
 
-    <View android:layout_below="@+id/substance_atc_code" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

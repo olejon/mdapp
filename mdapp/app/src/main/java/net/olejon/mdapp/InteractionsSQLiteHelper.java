@@ -27,7 +27,7 @@ class InteractionsSQLiteHelper extends SQLiteOpenHelper
 {
     private static final String DB_NAME = "interactions_recent_searches.db";
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     public static final String TABLE = "interactions_recent_searches";
 

@@ -30,13 +30,12 @@ public class MyBootReceiver extends BroadcastReceiver
     {
         if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
         {
-            // Start alarms
-            Context applicationContext = context.getApplicationContext();
+            final Context applicationContext = context.getApplicationContext();
 
-            MessageAlarm messageAlarm = new MessageAlarm();
+            final MessageAlarm messageAlarm = new MessageAlarm();
             messageAlarm.setAlarm(applicationContext);
 
-            NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
+            final NotificationsFromSlvAlarm notificationsFromSlvAlarm = new NotificationsFromSlvAlarm();
             notificationsFromSlvAlarm.setAlarm(applicationContext);
         }
     }

@@ -28,7 +28,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -219,20 +218,11 @@ public class CalculatorsActivity extends AppCompatActivity
     // Information dialog
     private void showInformationDialog()
     {
-        new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_information_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_information_dialog_message))).positiveText(getString(R.string.calculators_information_dialog_positive_button)).neutralText(getString(R.string.calculators_information_dialog_neutral_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+        new MaterialDialog.Builder(mContext).title(R.string.calculators_information_dialog_title).content(getString(R.string.calculators_information_dialog_message)).positiveText(R.string.calculators_information_dialog_positive_button).neutralText(R.string.calculators_information_dialog_neutral_button).onNeutral(new MaterialDialog.SingleButtonCallback()
         {
             @Override
             public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
             {
-                mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
-            }
-        }).onNeutral(new MaterialDialog.SingleButtonCallback()
-        {
-            @Override
-            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-            {
-                mTools.setSharedPreferencesBoolean("CALCULATORS_HIDE_INFORMATION_DIALOG", true);
-
                 Intent intent = new Intent(mContext, MainWebViewActivity.class);
                 intent.putExtra("title", getString(R.string.calculators_information_dialog_title));
                 intent.putExtra("uri", "https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
@@ -297,32 +287,30 @@ public class CalculatorsActivity extends AppCompatActivity
 
                 double result = (weight) / ((height / 100) * (height / 100));
 
-                String interpretation = "<font color=\"#4caf50\">"+getString(R.string.calculators_bmi_normal_weight)+"</font>";
+                String interpretation = getString(R.string.calculators_bmi_normal_weight);
 
                 if(result < 18)
                 {
-                    interpretation = "<font color=\"#ff9800\">"+getString(R.string.calculators_bmi_under_weight)+"</font>";
+                    interpretation = getString(R.string.calculators_bmi_under_weight);
                 }
                 else if(result >= 25 && result < 30)
                 {
-                    interpretation = "<font color=\"#ff9800\">"+getString(R.string.calculators_bmi_over_weight)+"</font>";
+                    interpretation = getString(R.string.calculators_bmi_over_weight);
                 }
                 else if(result >= 30 && result < 35)
                 {
-                    interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_1_weight)+"</font>";
+                    interpretation = getString(R.string.calculators_bmi_obesity_1_weight);
                 }
                 else if(result >= 35 && result < 40)
                 {
-                    interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_2_weight)+"</font>";
+                    interpretation = getString(R.string.calculators_bmi_obesity_2_weight);
                 }
                 else if(result >= 40)
                 {
-                    interpretation = "<font color=\"#f44336\">"+getString(R.string.calculators_bmi_obesity_3_weight)+"</font>";
+                    interpretation = getString(R.string.calculators_bmi_obesity_3_weight);
                 }
 
-                String bmi = String.format("%.1f", result);
-
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_bmi_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_bmi_dialog_message_first)+"<br><b>"+bmi+"</b><br><br>"+getString(R.string.calculators_bmi_dialog_message_second)+"<br><b>"+interpretation+"</b><br><br><small><i>"+getString(R.string.calculators_bmi_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_bmi_dialog_positive_button)).neutralText(getString(R.string.calculators_bmi_dialog_neutral_button)).onNeutral(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.calculators_bmi_dialog_title).content(getString(R.string.calculators_bmi_dialog_message, result, interpretation)).positiveText(R.string.calculators_bmi_dialog_positive_button).neutralText(R.string.calculators_bmi_dialog_neutral_button).onNeutral(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -371,26 +359,26 @@ public class CalculatorsActivity extends AppCompatActivity
             {
                 int waistMeasurement = Integer.parseInt(waistMeasurementEditTextValue);
 
-                String interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font>";
+                String interpretation = getString(R.string.calculators_waist_measurement_men_normal_weight)+getString(R.string.calculators_waist_measurement_women_normal_weight);
 
                 if(waistMeasurement > 80 && waistMeasurement <= 88)
                 {
-                    interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#ff9800\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_over_weight)+"</b></font>";
+                    interpretation = getString(R.string.calculators_waist_measurement_men_normal_weight)+getString(R.string.calculators_waist_measurement_women_over_weight);
                 }
                 else if(waistMeasurement > 88 && waistMeasurement <= 94)
                 {
-                    interpretation = "<font color=\"#4caf50\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_normal_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
+                    interpretation = getString(R.string.calculators_waist_measurement_men_normal_weight)+getString(R.string.calculators_waist_measurement_women_obesity_weight);
                 }
                 else if(waistMeasurement > 94 && waistMeasurement <= 102)
                 {
-                    interpretation = "<font color=\"#ff9800\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_over_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
+                    interpretation = getString(R.string.calculators_waist_measurement_men_over_weight)+getString(R.string.calculators_waist_measurement_women_obesity_weight);
                 }
                 else if(waistMeasurement > 102)
                 {
-                    interpretation = "<font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_men)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font><br><font color=\"#f44336\"><b>"+getString(R.string.calculators_waist_measurement_women)+": "+getString(R.string.calculators_waist_measurement_obesity_weight)+"</b></font>";
+                    interpretation = getString(R.string.calculators_waist_measurement_men_obesity_weight)+getString(R.string.calculators_waist_measurement_women_obesity_weight);
                 }
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_waist_measurement_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_waist_measurement_dialog_message_first)+"<br><b>"+waistMeasurementEditTextValue+" cm</b><br><br>"+getString(R.string.calculators_waist_measurement_dialog_message_second)+"<br>"+interpretation+"<br><br><small><i>"+getString(R.string.calculators_waist_measurement_dialog_message_third)+"</i></small>")).positiveText(getString(R.string.calculators_waist_measurement_dialog_positive_button)).neutralText(getString(R.string.calculators_waist_measurement_dialog_neutral_button)).onNeutral(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.calculators_waist_measurement_dialog_title).content(getString(R.string.calculators_waist_measurement_dialog_message, waistMeasurementEditTextValue, interpretation)).positiveText(R.string.calculators_waist_measurement_dialog_positive_button).neutralText(R.string.calculators_waist_measurement_dialog_neutral_button).onNeutral(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -463,7 +451,7 @@ public class CalculatorsActivity extends AppCompatActivity
 
                 int result = (int) Math.round(qtInterval / Math.sqrt(rrInterval) * 1000);
 
-                new MaterialDialog.Builder(mContext).title(getString(R.string.calculators_corrected_qt_time_dialog_title)).content(Html.fromHtml(getString(R.string.calculators_corrected_qt_time_dialog_message_first)+"<br><b>"+result+" ms</b><br><br><small><i>"+getString(R.string.calculators_corrected_qt_time_dialog_message_second)+"</i></small>")).positiveText(getString(R.string.calculators_corrected_qt_time_dialog_positive_button)).neutralText(getString(R.string.calculators_corrected_qt_time_dialog_neutral_button)).onNeutral(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.calculators_corrected_qt_time_dialog_title).content(getString(R.string.calculators_corrected_qt_time_dialog_message, result)).positiveText(R.string.calculators_corrected_qt_time_dialog_positive_button).neutralText(R.string.calculators_corrected_qt_time_dialog_neutral_button).onNeutral(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)

@@ -29,12 +29,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.NavUtils;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -58,7 +59,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.astuetz.PagerSlidingTabStrip;
 
 import org.json.JSONObject;
 
@@ -83,6 +83,8 @@ public class MedicationActivity extends AppCompatActivity
     private EditText mToolbarSearchEditText;
     private ViewPager mViewPager;
     private WebView mWebView;
+    private WebView mNlhWebView;
+    private WebView mFelleskatalogenWebView;
 
     private long medicationId;
     private String medicationPrescriptionGroup;
@@ -98,6 +100,9 @@ public class MedicationActivity extends AppCompatActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Settings
+        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Intent
         final Intent intent = getIntent();
@@ -214,11 +219,7 @@ public class MedicationActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        if(MedicationNlhFragment.WEBVIEW == null || MedicationFelleskatalogenFragment.WEBVIEW == null)
-        {
-            super.onBackPressed();
-        }
-        else if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
         {
             mToolbarSearchLayout.setVisibility(View.GONE);
             mToolbarSearchEditText.setText("");
@@ -229,9 +230,9 @@ public class MedicationActivity extends AppCompatActivity
         {
             if(mViewPagerPosition == 0)
             {
-                if(MedicationNlhFragment.WEBVIEW.canGoBack())
+                if(mNlhWebView.canGoBack())
                 {
-                    MedicationNlhFragment.WEBVIEW.goBack();
+                    mNlhWebView.goBack();
                 }
                 else
                 {
@@ -241,9 +242,9 @@ public class MedicationActivity extends AppCompatActivity
 
             if(mViewPagerPosition == 1)
             {
-                if(MedicationFelleskatalogenFragment.WEBVIEW.canGoBack())
+                if(mFelleskatalogenWebView.canGoBack())
                 {
-                    MedicationFelleskatalogenFragment.WEBVIEW.goBack();
+                    mFelleskatalogenWebView.goBack();
                 }
                 else
                 {
@@ -274,7 +275,7 @@ public class MedicationActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             case R.id.medication_menu_find_in_text:
@@ -293,14 +294,14 @@ public class MedicationActivity extends AppCompatActivity
                     mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
                 }
 
-                if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG"))
+                if(!mTools.getSharedPreferencesBoolean("MEDICATION_WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG"))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.main_webview_find_in_text_tip_dialog_title)).content(getString(R.string.main_webview_find_in_text_tip_dialog_message)).positiveText(getString(R.string.main_webview_find_in_text_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(R.string.medication_webview_find_in_text_information_dialog_title).content(getString(R.string.medication_webview_find_in_text_information_dialog_message)).positiveText(R.string.medication_webview_find_in_text_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
                         public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                         {
-                            mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_TIP_DIALOG", true);
+                            mTools.setSharedPreferencesBoolean("MEDICATION_WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG", true);
                         }
                     }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
@@ -337,7 +338,7 @@ public class MedicationActivity extends AppCompatActivity
             {
                 if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_note_dialog_title)).content(getString(R.string.medication_note_dialog_message)).positiveText(getString(R.string.medication_note_dialog_positive_button)).negativeText(getString(R.string.medication_note_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(R.string.medication_note_dialog_title).content(getString(R.string.medication_note_dialog_message)).positiveText(R.string.medication_note_dialog_positive_button).negativeText(R.string.medication_note_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
                         public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -367,7 +368,7 @@ public class MedicationActivity extends AppCompatActivity
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.medication_menu_slv));
-                    intent.putExtra("uri", "http://www.legemiddelverket.no/Legemiddelsoek/Sider/default.aspx?searchquery="+URLEncoder.encode(medicationName, "utf-8"));
+                    intent.putExtra("uri", "https://www.legemiddelsok.no/sider/default.aspx?searchquery="+URLEncoder.encode(medicationName, "utf-8"));
                     startActivity(intent);
                 }
                 catch(Exception e)
@@ -381,11 +382,11 @@ public class MedicationActivity extends AppCompatActivity
             {
                 if(mViewPagerPosition == 0)
                 {
-                    mTools.printDocument(MedicationNlhFragment.WEBVIEW, medicationName);
+                    mTools.printDocument(mNlhWebView, medicationName);
                 }
                 else
                 {
-                    mTools.printDocument(MedicationFelleskatalogenFragment.WEBVIEW, medicationName);
+                    mTools.printDocument(mFelleskatalogenWebView, medicationName);
                 }
 
                 return true;
@@ -491,7 +492,7 @@ public class MedicationActivity extends AppCompatActivity
     }
 
     // View pager
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter
+    private class ViewPagerAdapter extends FragmentPagerAdapter
     {
         private final String[] pages = getResources().getStringArray(R.array.medication_pages);
 
@@ -524,21 +525,19 @@ public class MedicationActivity extends AppCompatActivity
             felleskatalogenBundle.putString("uri", "http://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString);
             felleskatalogenFragment.setArguments(felleskatalogenBundle);
 
-            if(position == 0) return nlhFragment;
-
-            return felleskatalogenFragment;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return pages[position];
+            return (position == 0) ? nlhFragment : felleskatalogenFragment;
         }
 
         @Override
         public int getCount()
         {
             return pages.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position)
+        {
+            return pages[position];
         }
     }
 
@@ -615,7 +614,7 @@ public class MedicationActivity extends AppCompatActivity
 
                 if(isFavorite()) mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
 
-                mAtcCodeMenuItem.setTitle(getString(R.string.medication_menu_atc)+" ("+medicationAtcCode+")");
+                mAtcCodeMenuItem.setTitle(getString(R.string.medication_menu_atc, medicationAtcCode));
 
                 Button prescriptionGroupButton = (Button) findViewById(R.id.medication_prescription_group);
                 prescriptionGroupButton.setText(medicationPrescriptionGroup);
@@ -678,9 +677,13 @@ public class MedicationActivity extends AppCompatActivity
                     PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
                     mViewPager.setAdapter(pagerAdapter);
+                    mViewPager.setOffscreenPageLimit(2);
                     mViewPager.setPageTransformer(true, new ViewPagerTransformer());
 
-                    mWebView = MedicationNlhFragment.WEBVIEW;
+                    mNlhWebView = (WebView) findViewById(R.id.medication_nlh_content);
+                    mFelleskatalogenWebView = (WebView) findViewById(R.id.medication_felleskatalogen_content);
+
+                    mWebView = mNlhWebView;
 
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     {
@@ -694,42 +697,48 @@ public class MedicationActivity extends AppCompatActivity
                         });
                     }
 
-                    PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.medication_tabs);
-                    pagerSlidingTabStrip.setViewPager(mViewPager);
+                    TabLayout tabLayout = (TabLayout) findViewById(R.id.medication_tabs);
+                    tabLayout.setupWithViewPager(mViewPager);
 
-                    pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener()
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
                     {
                         @Override
-                        public void onPageSelected(int position)
+                        public void onTabSelected(TabLayout.Tab tab)
                         {
-                            mViewPagerPosition = position;
+                            mViewPagerPosition = tab.getPosition();
 
                             mToolbarSearchLayout.setVisibility(View.GONE);
                             mToolbarSearchEditText.setText("");
 
                             mWebView.clearMatches();
 
-                            mWebView = (mViewPagerPosition == 0) ? MedicationNlhFragment.WEBVIEW : MedicationFelleskatalogenFragment.WEBVIEW;
+                            mWebView = (mViewPagerPosition == 0) ? mNlhWebView : mFelleskatalogenWebView;
 
                             mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
                         }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) { }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) { }
                     });
 
-                    if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_240"))
+                    if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300"))
                     {
-                        new MaterialDialog.Builder(mContext).title(getString(R.string.medication_tip_dialog_title)).content(getString(R.string.medication_tip_dialog_message)).positiveText(getString(R.string.medication_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                        new MaterialDialog.Builder(mContext).title(R.string.medication_information_dialog_title).content(getString(R.string.medication_information_dialog_message)).positiveText(R.string.medication_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                         {
                             @Override
                             public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                             {
-                                mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_MEDICATION_TIP_DIALOG_240", true);
+                                mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300", true);
                             }
                         }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                     }
                 }
                 else
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.medication_not_connected_dialog_title)).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(getString(R.string.medication_not_connected_dialog_positive_button)).negativeText(getString(R.string.medication_not_connected_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                    new MaterialDialog.Builder(mContext).title(R.string.medication_not_connected_dialog_title).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(R.string.medication_not_connected_dialog_positive_button).negativeText(R.string.medication_not_connected_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                     {
                         @Override
                         public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)

@@ -26,13 +26,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Network;
@@ -54,6 +58,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class PharmaciesLocationMapActivity extends AppCompatActivity implements OnMapReadyCallback
 {
@@ -68,30 +73,30 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
     private String mPharmacyName;
     private String mPharmacyAddress;
 
+    private ArrayList<String> mPharmacyNames;
+    private ArrayList<String> mPharmacyAddresses;
+
+    private int mPharmacyAddressesSize;
+
+    private double mOtherPharmacyLatitude = 0;
+    private double mOtherPharmacyLongitude = 0;
+
+    private boolean mPharmacyAddressNotFound = true;
+
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        // Connected?
-        if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
-
         // Intent
         final Intent intent = getIntent();
 
         mPharmacyName = intent.getStringExtra("name");
         mPharmacyAddress = intent.getStringExtra("address");
-
-        // Location
-        if(mPharmacyAddress.startsWith("Boks") || mPharmacyAddress.startsWith("Pb.") || mPharmacyAddress.startsWith("Postboks") || mPharmacyAddress.startsWith("Serviceboks"))
-        {
-            mTools.showToast(getString(R.string.pharmacies_location_map_post_box_location), 1);
-
-            finish();
-
-            return;
-        }
+        mPharmacyNames = intent.getStringArrayListExtra("names");
+        mPharmacyAddresses = intent.getStringArrayListExtra("addresses");
+        mPharmacyAddressesSize = mPharmacyAddresses.size();
 
         // Layout
         setContentView(R.layout.activity_pharmacies_location_map);
@@ -125,6 +130,13 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
 
     // Menu
     @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_pharmacies_location_map, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId())
@@ -134,10 +146,30 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
                 finish();
                 return true;
             }
+            case R.id.pharmacies_location_map_menu_information:
+            {
+                showInformationDialog(true);
+            }
             default:
             {
                 return super.onOptionsItemSelected(item);
             }
+        }
+    }
+
+    // Information dialog
+    private void showInformationDialog(final boolean show)
+    {
+        if(!mTools.getSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG") || show)
+        {
+            new MaterialDialog.Builder(mContext).title(R.string.pharmacies_location_map_information_dialog_title).content(getString(R.string.pharmacies_location_map_information_dialog_message)).positiveText(R.string.pharmacies_location_map_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
+            {
+                @Override
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                {
+                    mTools.setSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG", true);
+                }
+            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -160,8 +192,19 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
     // Map
     private void showMap()
     {
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.pharmacies_location_map_map);
-        mapFragment.getMapAsync(this);
+        if(mPharmacyAddressesSize == 0)
+        {
+            mTools.showToast(getString(R.string.pharmacies_location_map_location_not_found), 1);
+
+            finish();
+        }
+        else
+        {
+            mTools.showToast(getString(R.string.pharmacies_location_map_locating), 0);
+
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.pharmacies_location_map_map);
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
@@ -171,58 +214,135 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
 
         try
         {
-            mTools.showToast(getString(R.string.pharmacies_location_map_locating), 0);
+            if(mTools.pharmacyAddressIsPostBox(mPharmacyAddress))
+            {
+                new MaterialDialog.Builder(mContext).title(R.string.pharmacies_location_map_pharmacy_not_found_dialog_title).content(getString(R.string.pharmacies_location_map_pharmacy_not_found_dialog_message)).positiveText(R.string.pharmacies_location_map_pharmacy_not_found_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+            }
+            else
+            {
+                final Cache mPharmacyCache = new DiskBasedCache(getCacheDir(), 0);
 
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
+                final Network mPharmacyNetwork = new BasicNetwork(new HurlStack());
 
-            final Network network = new BasicNetwork(new HurlStack());
+                final RequestQueue mPharmacyRequestQueue = new RequestQueue(mPharmacyCache, mPharmacyNetwork);
 
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+                mPharmacyRequestQueue.start();
 
-            requestQueue.start();
+                JsonObjectRequest mPharmacyJsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        mPharmacyRequestQueue.stop();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
+                        try
+                        {
+                            mPharmacyAddressNotFound = false;
+
+                            double latitude = response.getDouble("latitude");
+                            double longitude = response.getDouble("longitude");
+
+                            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName)).showInfoWindow();
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13.5f));
+
+                            showInformationDialog(false);
+                        }
+                        catch(Exception e)
+                        {
+                            Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
+                        }
+                    }
+                }, new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        mPharmacyRequestQueue.stop();
+
+                        Log.e("PharmaciesLocationMap", error.toString());
+                    }
+                });
+
+                mPharmacyJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                mPharmacyRequestQueue.add(mPharmacyJsonObjectRequest);
+            }
+
+            Handler handler = new Handler();
+
+            handler.postDelayed(new Runnable()
             {
                 @Override
-                public void onResponse(JSONObject response)
+                public void run()
                 {
-                    requestQueue.stop();
-
                     try
                     {
-                        double latitude = response.getDouble("latitude");
-                        double longitude = response.getDouble("longitude");
+                        for(int i = 0; i < mPharmacyAddressesSize; i++)
+                        {
+                            final String pharmacyOtherName = mPharmacyNames.get(i);
+                            final String pharmacyOtherAddress = mPharmacyAddresses.get(i);
 
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+                            if(pharmacyOtherAddress.equals(mPharmacyAddress)) continue;
+
+                            final Cache mPharmacyOtherCache = new DiskBasedCache(getCacheDir(), 0);
+
+                            final Network mPharmacyOtherNetwork = new BasicNetwork(new HurlStack());
+
+                            final RequestQueue mPharmacyOtherRequestQueue = new RequestQueue(mPharmacyOtherCache, mPharmacyOtherNetwork);
+
+                            mPharmacyOtherRequestQueue.start();
+
+                            JsonObjectRequest mPharmacyOtherJsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(pharmacyOtherAddress, "utf-8")+"&name="+URLEncoder.encode(pharmacyOtherName, "utf-8"), null, new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response)
+                                {
+                                    mPharmacyOtherRequestQueue.stop();
+
+                                    try
+                                    {
+                                        String name = response.getString("name");
+
+                                        double latitude = response.getDouble("latitude");
+                                        double longitude = response.getDouble("longitude");
+
+                                        googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name));
+
+                                        if(mPharmacyAddressNotFound && mOtherPharmacyLatitude == 0 && mOtherPharmacyLongitude == 0)
+                                        {
+                                            mOtherPharmacyLatitude = latitude;
+                                            mOtherPharmacyLongitude = longitude;
+
+                                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOtherPharmacyLatitude, mOtherPharmacyLongitude), 13.5f));
+                                        }
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
+                                    }
+                                }
+                            }, new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error)
+                                {
+                                    mPharmacyOtherRequestQueue.stop();
+
+                                    Log.e("PharmaciesLocationMap", error.toString());
+                                }
+                            });
+
+                            mPharmacyOtherJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                            mPharmacyOtherRequestQueue.add(mPharmacyOtherJsonObjectRequest);
+                        }
                     }
                     catch(Exception e)
                     {
-                        mTools.showToast(getString(R.string.pharmacies_location_map_exact_location_not_found), 1);
-
                         Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
-
-                        finish();
                     }
                 }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    requestQueue.stop();
-
-                    mTools.showToast(getString(R.string.pharmacies_location_map_exact_location_not_found), 1);
-
-                    Log.e("PharmaciesLocationMap", error.toString());
-
-                    finish();
-                }
-            });
-
-            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(jsonObjectRequest);
+            }, 2000);
         }
         catch(Exception e)
         {

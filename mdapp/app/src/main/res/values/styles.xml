@@ -60,29 +60,34 @@
 
     <style name="main_tabs" parent="main_tabs_base">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">top</item>
         <item name="android:background">@color/blue</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="pstsIndicatorHeight">2dp</item>
-        <item name="pstsIndicatorColor">@color/white</item>
-        <item name="pstsDividerPadding">0dp</item>
-        <item name="pstsDividerColor">@android:color/transparent</item>
-        <item name="pstsUnderlineHeight">0dp</item>
-        <item name="pstsUnderlineColor">@android:color/transparent</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabTextAppearance">@style/main_tabs_text</item>
+        <item name="tabSelectedTextColor">@color/white</item>
     </style>
 
     <style name="main_tabs_base" parent="main_tabs_base_base"/>
 
     <style name="main_tabs_base_base">
-        <item name="pstsShouldExpand">true</item>
-        <item name="pstsTabPaddingLeftRight">6dp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="main_pager">
+    <style name="main_tabs_text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="main_pager" parent="main_pager_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="main_pager_base"/>
 
     <style name="main_medications_layout">
         <item name="android:layout_width">match_parent</item>
@@ -334,29 +339,34 @@
 
     <style name="medication_tabs" parent="medication_tabs_base">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">top</item>
         <item name="android:background">@color/blue</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="pstsIndicatorHeight">2dp</item>
-        <item name="pstsIndicatorColor">@color/white</item>
-        <item name="pstsDividerPadding">0dp</item>
-        <item name="pstsDividerColor">@android:color/transparent</item>
-        <item name="pstsUnderlineHeight">0dp</item>
-        <item name="pstsUnderlineColor">@android:color/transparent</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabTextAppearance">@style/medication_tabs_text</item>
+        <item name="tabSelectedTextColor">@color/white</item>
     </style>
 
     <style name="medication_tabs_base" parent="medication_tabs_base_base"/>
 
     <style name="medication_tabs_base_base">
-        <item name="pstsShouldExpand">true</item>
-        <item name="pstsTabPaddingLeftRight">6dp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="medication_pager">
+    <style name="medication_tabs_text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="medication_pager" parent="medication_pager_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="medication_pager_base"/>
 
     <style name="medication_fragment_layout">
         <item name="android:layout_width">match_parent</item>
@@ -2303,21 +2313,7 @@
         <item name="android:textColorHint">@color/dark_grey</item>
     </style>
 
-    <style name="notes_edit_medications_textview">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingRight">4dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:background">@drawable/list_item</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/blue</item>
-    </style>
-
-    <style name="notes_edit_button">
+    <style name="notes_edit_add_medication_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">8dp</item>
@@ -2325,6 +2321,10 @@
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="notes_edit_medications_button" parent="notes_edit_add_medication_button">
+        <item name="android:visibility">gone</item>
     </style>
 
     <!-- Notes edit medications -->
@@ -2696,12 +2696,6 @@
         <item name="android:textColorHighlight">@color/light_blue</item>
     </style>
 
-    <style name="toolbar_shadow">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">4dp</item>
-        <item name="android:background">@drawable/toolbar_shadow</item>
-    </style>
-
     <!-- Appbar -->
     <style name="appbar">
         <item name="android:layout_width">match_parent</item>
@@ -2881,9 +2875,9 @@
     <style name="widget_toolbar_layout" parent="widget_toolbar_layout_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingLeft">8dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:background">@drawable/toolbar</item>
+        <item name="android:background">@color/blue</item>
         <item name="android:drawableLeft">@drawable/ic_local_hospital_white_24dp</item>
         <item name="android:drawablePadding">12dp</item>
         <item name="android:textSize">18sp</item>

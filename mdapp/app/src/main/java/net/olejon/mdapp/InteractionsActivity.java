@@ -76,7 +76,7 @@ public class InteractionsActivity extends AppCompatActivity
         // Intent
         final Intent intent = getIntent();
 
-        final String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").split(" ")[0];
+        final String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -263,7 +263,7 @@ public class InteractionsActivity extends AppCompatActivity
         searchString = searchString.replaceAll("\\s{2,}", " ").trim();
 
         Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
-        intent.putExtra("search", searchString);
+        intent.putExtra("search", mTools.firstToUpper(searchString));
         startActivity(intent);
     }
 
@@ -275,7 +275,12 @@ public class InteractionsActivity extends AppCompatActivity
 
     private void clearRecentSearches()
     {
+        mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+
         mSqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, null, null);
+
+        mToolbarSearchLayout.setVisibility(View.GONE);
+        mToolbarSearchEditText.setText("");
 
         mTools.showToast(getString(R.string.interactions_recent_searches_removed), 0);
 

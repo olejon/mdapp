@@ -11,14 +11,16 @@
     </style>
 
     <style name="main_tabs_base_base">
-        <item name="pstsShouldExpand">false</item>
-        <item name="pstsTabPaddingLeftRight">16dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabMinWidth">154dp</item>
     </style>
 
     <!-- Medication -->
     <style name="medication_tabs_base_base">
-        <item name="pstsShouldExpand">false</item>
-        <item name="pstsTabPaddingLeftRight">16dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabMinWidth">200dp</item>
     </style>
 
     <!-- Scales -->

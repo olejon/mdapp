@@ -89,7 +89,7 @@ public class Icd10SearchActivity extends AppCompatActivity
 
         // Toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_search_toolbar);
-        toolbar.setTitle(getString(R.string.icd10_search_search)+": \""+mSearchString+"\"");
+        toolbar.setTitle(getString(R.string.icd10_search_search, mSearchString));
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -155,7 +155,7 @@ public class Icd10SearchActivity extends AppCompatActivity
 
                     try
                     {
-                        final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+                        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
                         final Network network = new BasicNetwork(new HurlStack());
 

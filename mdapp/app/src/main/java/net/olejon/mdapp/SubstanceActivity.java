@@ -27,7 +27,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -129,30 +128,20 @@ public class SubstanceActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                Intent intent = NavUtils.getParentActivityIntent(this);
-
-                if(NavUtils.shouldUpRecreateTask(this, intent))
-                {
-                    TaskStackBuilder.create(this).addNextIntentWithParentStack(intent).startActivities();
-                }
-                else
-                {
-                    NavUtils.navigateUpTo(this, intent);
-                }
-
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
             case R.id.substance_menu_interactions:
             {
                 Intent intent = new Intent(mContext, InteractionsActivity.class);
-                intent.putExtra("search", substanceAtcCode.replace("ATC-kode: ", ""));
+                intent.putExtra("search", substanceAtcCode.replace(getString(R.string.substance_atc_code), ""));
                 startActivity(intent);
                 return true;
             }
             case R.id.substance_menu_atc:
             {
                 Intent intent = new Intent(mContext, AtcCodesActivity.class);
-                intent.putExtra("code", substanceAtcCode.replace("ATC-kode: ", ""));
+                intent.putExtra("code", substanceAtcCode.replace(getString(R.string.substance_atc_code), ""));
                 startActivity(intent);
                 return true;
             }
@@ -169,7 +158,7 @@ public class SubstanceActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
         {
-            mAtcCodeMenuItem.setTitle(getString(R.string.substance_menu_atc)+" ("+substanceAtcCode.replace("ATC-kode: ", "")+")");
+            mAtcCodeMenuItem.setTitle(getString(R.string.substance_menu_atc, substanceAtcCode.replace(getString(R.string.substance_atc_code), "")));
 
             mListView.setAdapter(simpleCursorAdapter);
 
@@ -182,10 +171,7 @@ public class SubstanceActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MedicationActivity.class);
 
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        {
-                            if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                        }
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
                         intent.putExtra("id", id);
                         startActivity(intent);

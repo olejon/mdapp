@@ -6,6 +6,4 @@
     <ListView android:id="@+id/widget_list" android:layout_below="@+id/widget_toolbar" style="@style/widget_list_layout"/>
     <TextView android:id="@+id/widget_list_empty" android:layout_below="@+id/widget_toolbar" android:text="@string/widget_list_empty" style="@style/widget_list_empty"/>
 
-    <ImageView android:layout_below="@+id/widget_toolbar" android:contentDescription="@string/widget_image_content_description" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

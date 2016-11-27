@@ -28,12 +28,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,6 +59,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 public class TasksActivity extends AppCompatActivity
 {
     private final Activity mActivity = this;
+
     private final Context mContext = this;
 
     private final MyTools mTools = new MyTools(mContext);
@@ -74,6 +75,9 @@ public class TasksActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Settings
+        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Input manager
         final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -116,7 +120,7 @@ public class TasksActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_dialog_title)).customView(R.layout.activity_tasks_dialog, true).positiveText(getString(R.string.tasks_dialog_positive_button)).negativeText(getString(R.string.tasks_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.tasks_dialog_title).customView(R.layout.activity_tasks_dialog, true).positiveText(R.string.tasks_dialog_positive_button).negativeText(R.string.tasks_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -198,19 +202,6 @@ public class TasksActivity extends AppCompatActivity
 
         // Get tasks
         getTasks();
-
-        // Tip dialog
-        if(!mTools.getSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG"))
-        {
-            new MaterialDialog.Builder(mContext).title(getString(R.string.tasks_tip_dialog_title)).content(getString(R.string.tasks_tip_dialog_message)).positiveText(getString(R.string.tasks_tip_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    mTools.setSharedPreferencesBoolean("TASKS_HIDE_TIP_DIALOG", true);
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-        }
     }
 
     // Destroy activity
@@ -238,7 +229,7 @@ public class TasksActivity extends AppCompatActivity
         {
             case android.R.id.home:
             {
-                NavUtils.navigateUpFromSameTask(this);
+                mTools.navigateUp(this);
                 return true;
             }
             case R.id.tasks_menu_clear_tasks:
@@ -246,10 +237,30 @@ public class TasksActivity extends AppCompatActivity
                 removeTasks();
                 return true;
             }
+            case R.id.tasks_menu_information:
+            {
+                showInformationDialog(true);
+            }
             default:
             {
                 return super.onOptionsItemSelected(item);
             }
+        }
+    }
+
+    // Information dialog
+    private void showInformationDialog(final boolean show)
+    {
+        if(!mTools.getSharedPreferencesBoolean("TASKS_HIDE_INFORMATION_DIALOG") || show)
+        {
+            new MaterialDialog.Builder(mContext).title(R.string.tasks_information_dialog_title).content(getString(R.string.tasks_information_dialog_message)).positiveText(R.string.tasks_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
+            {
+                @Override
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+                {
+                    mTools.setSharedPreferencesBoolean("TASKS_HIDE_INFORMATION_DIALOG", true);
+                }
+            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
         }
     }
 
@@ -277,6 +288,8 @@ public class TasksActivity extends AppCompatActivity
 
                 mRecyclerView.setAdapter(new TasksAdapter(cursor));
             }
+
+            showInformationDialog(false);
         }
 
         @Override

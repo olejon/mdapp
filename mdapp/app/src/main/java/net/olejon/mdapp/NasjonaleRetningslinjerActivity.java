@@ -33,7 +33,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -273,7 +272,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                 }
                 catch(Exception e)
                 {
-                    new MaterialDialog.Builder(mContext).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                 }
 
                 return true;
@@ -291,9 +290,13 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String searchString)
+    private void search(final String originalSearchString)
     {
-        if(searchString.equals("")) return;
+        if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
+
+        if(originalSearchString.equals("")) return;
+
+        final String searchString = mTools.firstToUpper(originalSearchString);
 
         mToolbarSearchLayout.setVisibility(View.GONE);
         mToolbarSearchEditText.setText("");
@@ -301,7 +304,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
 
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
 
             final Network network = new BasicNetwork(new HurlStack());
 
@@ -329,8 +332,8 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                             try
                             {
                                 Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+searchString+"\"");
-                                intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                                intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search, searchString));
+                                intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString, "utf-8"));
                                 startActivity(intent);
                             }
                             catch(Exception e)
@@ -340,7 +343,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                         }
                         else
                         {
-                            new MaterialDialog.Builder(mContext).title(getString(R.string.correct_dialog_title)).content(Html.fromHtml(getString(R.string.correct_dialog_message)+":<br><br><b>"+correctSearchString+"</b>")).positiveText(getString(R.string.correct_dialog_positive_button)).negativeText(getString(R.string.correct_dialog_negative_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                            new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                             {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
@@ -350,8 +353,8 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                                     try
                                     {
                                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+correctSearchString+"\"");
-                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(correctSearchString.toLowerCase(), "utf-8"));
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search, correctSearchString));
+                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(correctSearchString, "utf-8"));
                                         startActivity(intent);
                                     }
                                     catch(Exception e)
@@ -369,8 +372,8 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                                     try
                                     {
                                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search)+": \""+searchString+"\"");
-                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString.toLowerCase(), "utf-8"));
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search, searchString));
+                                        intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString, "utf-8"));
                                         startActivity(intent);
                                     }
                                     catch(Exception e)

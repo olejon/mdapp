@@ -8,6 +8,4 @@
 
     <ListView android:id="@+id/manufacturer_list" android:layout_below="@+id/manufacturer_medications_count" style="@style/manufacturer_list_layout"/>
 
-    <View android:layout_below="@+id/manufacturer_medications_count" style="@style/toolbar_shadow"/>
-
 </RelativeLayout>

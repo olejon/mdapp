@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -34,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -47,7 +47,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MedicationNlhFragment extends Fragment
 {
-    public static WebView WEBVIEW;
+    private WebView mWebView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
@@ -64,9 +64,7 @@ public class MedicationNlhFragment extends Fragment
         final MyTools mTools = new MyTools(context);
 
         // Arguments
-        Bundle bundle = getArguments();
-
-        final String pageUri = bundle.getString("uri");
+        final String pageUri = getArguments().getString("uri");
 
         // Progress bar
         final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_nlh_progressbar);
@@ -76,17 +74,19 @@ public class MedicationNlhFragment extends Fragment
         final EditText toolbarSearchEditText = (EditText) activity.findViewById(R.id.medication_toolbar_search);
 
         // Web view
-        WEBVIEW = (WebView) viewGroup.findViewById(R.id.medication_nlh_content);
+        mWebView = (WebView) viewGroup.findViewById(R.id.medication_nlh_content);
 
-        WebSettings webSettings = WEBVIEW.getSettings();
+        final WebSettings webSettings = mWebView.getSettings();
+
         webSettings.setJavaScriptEnabled(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setAppCachePath(context.getCacheDir().getAbsolutePath());
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        WEBVIEW.setWebViewClient(new WebViewClient()
+        mWebView.setWebViewClient(new WebViewClient()
         {
+            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
@@ -97,10 +97,15 @@ public class MedicationNlhFragment extends Fragment
                 }
                 else if(url.matches(".*/[^#]+#[^/]+$"))
                 {
-                    WEBVIEW.loadUrl(url.replaceAll("#[^/]+$", ""));
+                    mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
                     return true;
                 }
-                else if(url.matches("^https?://.*?\\.pdf$"))
+                else if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
+                {
+                    mTools.showToast(getString(R.string.device_not_supported), 1);
+                    return true;
+                }
+                else if(url.matches("^https?://.*?\\.pdf$") || url.matches("^https?://.*?\\.docx?$") || url.matches("^https?://.*?\\.xlsx?$") || url.matches("^https?://.*?\\.pptx?$"))
                 {
                     mTools.downloadFile(view.getTitle(), url);
                     return true;
@@ -120,7 +125,7 @@ public class MedicationNlhFragment extends Fragment
                     }
                     catch(Exception e)
                     {
-                        new MaterialDialog.Builder(context).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                        new MaterialDialog.Builder(context).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
                     }
 
                     return true;
@@ -130,58 +135,56 @@ public class MedicationNlhFragment extends Fragment
             }
 
             @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon)
+            {
+                progressBar.setVisibility(View.VISIBLE);
+
+                toolbarSearchLayout.setVisibility(View.GONE);
+                toolbarSearchEditText.setText("");
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                progressBar.setVisibility(View.GONE);
+
+                mWebView.loadUrl("javascript:if(document.getElementById('mainframe') != null) { document.getElementById('mainframe').firstElementChild.style.display = 'none'; } void(0);");
+            }
+
+            @Override
             public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
             {
                 handler.cancel();
 
-                WEBVIEW.stopLoading();
+                mWebView.stopLoading();
 
                 progressBar.setVisibility(View.INVISIBLE);
 
-                new MaterialDialog.Builder(activity).title(getString(R.string.device_not_supported_dialog_title)).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(getString(R.string.device_not_supported_dialog_positive_button)).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(context).title(R.string.device_not_supported_dialog_title).content(R.string.device_not_supported_dialog_ssl_error_message).positiveText(R.string.device_not_supported_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
-                        WEBVIEW.goBack();
+                        mWebView.goBack();
                     }
                 }).cancelListener(new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialogInterface)
                     {
-                        WEBVIEW.goBack();
+                        mWebView.goBack();
                     }
                 }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
             }
         });
 
-        WEBVIEW.setWebChromeClient(new WebChromeClient()
-        {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress)
-            {
-                if(newProgress > 32)
-                {
-                    progressBar.setVisibility(View.GONE);
-                }
-                else
-                {
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    toolbarSearchLayout.setVisibility(View.GONE);
-                    toolbarSearchEditText.setText("");
-                }
-            }
-        });
-
         if(savedInstanceState == null)
         {
-            WEBVIEW.loadUrl(pageUri);
+            mWebView.loadUrl(pageUri);
         }
         else
         {
-            WEBVIEW.restoreState(savedInstanceState);
+            mWebView.restoreState(savedInstanceState);
         }
 
         return viewGroup;
@@ -193,7 +196,7 @@ public class MedicationNlhFragment extends Fragment
     {
         super.onResume();
 
-        WEBVIEW.resumeTimers();
+        mWebView.resumeTimers();
     }
 
     // Pause fragment
@@ -202,7 +205,7 @@ public class MedicationNlhFragment extends Fragment
     {
         super.onPause();
 
-        WEBVIEW.pauseTimers();
+        mWebView.pauseTimers();
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
         {
@@ -217,6 +220,6 @@ public class MedicationNlhFragment extends Fragment
     {
         super.onSaveInstanceState(outState);
 
-        WEBVIEW.saveState(outState);
+        mWebView.saveState(outState);
     }
 }

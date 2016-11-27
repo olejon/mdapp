@@ -39,6 +39,8 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.webkit.WebView;
@@ -205,6 +207,12 @@ class MyTools
         return ((size) == Configuration.SCREENLAYOUT_SIZE_LARGE || (size) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
     }
 
+    // Strings
+    public String firstToUpper(String string)
+    {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
     // Statusbar
     public void setStatusbarColor(Activity activity, int color)
     {
@@ -232,9 +240,7 @@ class MyTools
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) printDocumentAdapter = webView.createPrintDocumentAdapter(title);
 
-            String documentName = mContext.getString(R.string.project_name)+" - "+title;
-
-            PrintJob printJob = printManager.print(documentName, printDocumentAdapter, new PrintAttributes.Builder().build());
+            PrintJob printJob = printManager.print(title, printDocumentAdapter, new PrintAttributes.Builder().build());
 
             List<PrintJob> printJobs = printManager.getPrintJobs();
 
@@ -251,6 +257,21 @@ class MyTools
     {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         mContext.startActivity(browserIntent);
+    }
+
+    // Up navigation
+    public void navigateUp(Activity activity)
+    {
+        Intent navigateUpIntent = NavUtils.getParentActivityIntent(activity);
+
+        if(NavUtils.shouldUpRecreateTask(activity, navigateUpIntent) || activity.isTaskRoot())
+        {
+            TaskStackBuilder.create(mContext).addNextIntentWithParentStack(navigateUpIntent).startActivities();
+        }
+        else
+        {
+            NavUtils.navigateUpFromSameTask(activity);
+        }
     }
 
     // Saved articles
@@ -271,6 +292,12 @@ class MyTools
         savedArticlesSqLiteDatabase.close();
 
         showToast(mContext.getString(R.string.saved_articles_article_saved), 0);
+    }
+
+    // Pharmacies
+    public boolean pharmacyAddressIsPostBox(String pharmacyAddress)
+    {
+        return (pharmacyAddress.startsWith("Boks") || pharmacyAddress.startsWith("Pb.") || pharmacyAddress.startsWith("Postboks") || pharmacyAddress.startsWith("Serviceboks"));
     }
 
     // Widget

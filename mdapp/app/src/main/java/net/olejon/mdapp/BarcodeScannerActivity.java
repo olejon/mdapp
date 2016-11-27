@@ -180,10 +180,7 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
                             Intent intent = new Intent(mContext, MedicationActivity.class);
 
-                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                            {
-                                if(mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                            }
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
                             intent.putExtra("id", id);
                             startActivity(intent);
@@ -211,7 +208,7 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
             {
                 requestQueue.stop();
 
-                Log.e("FelleskatalogenService", error.toString());
+                Log.e("BarcodeScannerActivity", error.toString());
             }
         });
 

@@ -43,7 +43,6 @@ public class AtcActivity extends AppCompatActivity
     private Cursor mCursor;
 
     private Toolbar mToolbar;
-
     private ListView mListView;
 
     private String mGroup;

@@ -96,10 +96,15 @@ public class NotificationsFromSlvIntentService extends IntentService
                         {
                             if(!lastTitle.equals(""))
                             {
-                                Intent launchIntent = new Intent(mContext, NotificationsFromSlvActivity.class);
-                                PendingIntent launchPendingIntent = PendingIntent.getActivity(mContext, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                Intent readMoreIntent = new Intent(mContext, NotificationsFromSlvActivity.class);
+                                readMoreIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                PendingIntent readMorePendingIntent = PendingIntent.getActivity(mContext, 0, readMoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                                Intent settingsIntent = new Intent(mContext, SettingsActivity.class);
+                                settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                PendingIntent settingsPendingIntent = PendingIntent.getActivity(mContext, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
                                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
                                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
@@ -114,8 +119,9 @@ public class NotificationsFromSlvIntentService extends IntentService
                                         .setContentTitle(title)
                                         .setContentText(message)
                                         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                                        .setContentIntent(launchPendingIntent)
-                                        .addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.service_notifications_from_slv_read_more), launchPendingIntent);
+                                        .setContentIntent(readMorePendingIntent)
+                                        .addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.service_notifications_from_slv_read_more), readMorePendingIntent)
+                                        .addAction(R.drawable.ic_settings_white_24dp, getString(R.string.service_notifications_from_slv_settings), settingsPendingIntent);
 
                                 if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND")) notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
                                 if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_LED")) notificationBuilder.setLights(Color.BLUE, 1000, 2000);
