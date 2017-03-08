@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2016 Ole Jon Bjørkum
+Copyright 2017 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Progress bar
         mProgressBar = (ProgressBar) findViewById(R.id.clinicaltrials_cards_toolbar_progressbar);

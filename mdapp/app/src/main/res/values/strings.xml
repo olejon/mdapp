@@ -6,7 +6,7 @@
     <string name="project_name">LegeAppen</string>
     <string name="project_website_uri">http://www.olejon.net/code/mdapp/</string>
     <string name="project_developer_website_uri">http://www.olejon.net/code/mdapp/?page=olejondotnet</string>
-    <string name="project_developer_privacy_uri">http://www.olejon.net/code/mdapp/?page=privacy</string>
+    <string name="project_developer_privacy_uri">https://github.com/olejon/mdapp/wiki/Personvern</string>
     <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
     <string name="project_developer_licenses_uri">http://www.olejon.net/code/mdapp/?page=licenses</string>
     <string name="project_report_issue_uri">http://www.olejon.net/code/mdapp/?page=issues</string>

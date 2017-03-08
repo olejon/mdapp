@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2016 Ole Jon Bjørkum
+Copyright 2017 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -106,9 +107,6 @@ public class MessageIntentService extends IntentService
 
                             notificationBuilder.setWhen(mTools.getCurrentTime())
                                     .setAutoCancel(true)
-                                    .setPriority(Notification.PRIORITY_HIGH)
-                                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                                    .setCategory(Notification.CATEGORY_MESSAGE)
                                     .setLargeIcon(bitmap)
                                     .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
                                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -117,6 +115,10 @@ public class MessageIntentService extends IntentService
                                     .setContentTitle(title)
                                     .setContentText(message)
                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(bigMessage));
+
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
+
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC).setCategory(Notification.CATEGORY_MESSAGE);
 
                             if(!uri.equals(""))
                             {

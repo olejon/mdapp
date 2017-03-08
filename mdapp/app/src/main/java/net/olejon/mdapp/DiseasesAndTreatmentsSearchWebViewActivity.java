@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2016 Ole Jon Bjørkum
+Copyright 2017 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         toolbar.setTitle(pageTitle);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search_layout);
         mToolbarSearchEditText = (EditText) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search);
@@ -191,7 +191,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:50.0) Gecko/20100101 Firefox/50.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0) Gecko/20100101 Firefox/52.0");
         }
         else if(pageUri.contains("oncolex.no"))
         {
