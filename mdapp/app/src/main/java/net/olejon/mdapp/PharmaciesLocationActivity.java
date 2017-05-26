@@ -308,7 +308,7 @@ public class PharmaciesLocationActivity extends AppCompatActivity
         {
             try
             {
-                mContext.getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+                mContext.getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0);
 
                 isGoogleMapsInstalled = true;
             }

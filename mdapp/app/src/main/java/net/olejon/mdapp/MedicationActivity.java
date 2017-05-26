@@ -154,18 +154,7 @@ public class MedicationActivity extends AppCompatActivity
                 }
                 else
                 {
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                    {
-                        if(mWebView != null) mWebView.findAllAsync(find);
-                    }
-                    else
-                    {
-                        if(mWebView != null)
-                        {
-                            //noinspection deprecation
-                            mWebView.findAll(find);
-                        }
-                    }
+                    if(mWebView != null) mWebView.findAllAsync(find);
                 }
             }
 
@@ -391,11 +380,41 @@ public class MedicationActivity extends AppCompatActivity
 
                 return true;
             }
+            case R.id.medication_menu_open_uri:
+            {
+                if(mWebView.getUrl() == null)
+                {
+                    showSslErrorDialog(getUri("felleskatalogen"));
+                }
+                else
+                {
+                    mTools.openChromeCustomTabsUri(mWebView.getUrl());
+                }
+
+                return true;
+            }
             default:
             {
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    // Get URI
+    private String getUri(String page)
+    {
+        String searchString = "";
+
+        try
+        {
+            searchString = URLEncoder.encode(medicationName.replaceAll(" .*", ""), "utf-8");
+        }
+        catch(Exception e)
+        {
+            Log.e("MedicationActivity", Log.getStackTraceString(e));
+        }
+
+        return (page.equals("nlh")) ? "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString : "http://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString;
     }
 
     // Favorite
@@ -504,25 +523,14 @@ public class MedicationActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position)
         {
-            String searchString = "";
-
-            try
-            {
-                searchString = URLEncoder.encode(medicationName.replaceAll(" .*", ""), "utf-8");
-            }
-            catch(Exception e)
-            {
-                Log.e("MedicationActivity", Log.getStackTraceString(e));
-            }
-
             Fragment nlhFragment = new MedicationNlhFragment();
             Bundle nlhBundle = new Bundle();
-            nlhBundle.putString("uri", "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString);
+            nlhBundle.putString("uri", getUri("nlh"));
             nlhFragment.setArguments(nlhBundle);
 
             Fragment felleskatalogenFragment = new MedicationFelleskatalogenFragment();
             Bundle felleskatalogenBundle = new Bundle();
-            felleskatalogenBundle.putString("uri", "http://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString);
+            felleskatalogenBundle.putString("uri", getUri("felleskatalogen"));
             felleskatalogenFragment.setArguments(felleskatalogenBundle);
 
             return (position == 0) ? nlhFragment : felleskatalogenFragment;
@@ -567,6 +575,21 @@ public class MedicationActivity extends AppCompatActivity
                 view.setScaleY(scaleFactor);
             }
         }
+    }
+
+    // SSL error dialog
+    private void showSslErrorDialog(final String uri)
+    {
+        new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).neutralText(R.string.device_not_supported_dialog_neutral_button).onNeutral(new MaterialDialog.SingleButtonCallback()
+        {
+            @Override
+            public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction which)
+            {
+                materialDialog.dismiss();
+
+                mTools.openChromeCustomTabsUri(uri);
+            }
+        }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
     }
 
     // Now on tap
@@ -685,17 +708,35 @@ public class MedicationActivity extends AppCompatActivity
 
                     mWebView = mNlhWebView;
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    mWebView.setFindListener(new WebView.FindListener()
                     {
-                        mWebView.setFindListener(new WebView.FindListener()
+                        @Override
+                        public void onFindResultReceived(int i, int i2, boolean b)
                         {
-                            @Override
-                            public void onFindResultReceived(int i, int i2, boolean b)
-                            {
-                                if(i2 == 0) mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
-                            }
-                        });
-                    }
+                            if(i2 == 0) mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
+                        }
+                    });
+
+                    final Button nlhSslErrorButton = (Button) findViewById(R.id.medication_nlh_ssl_error_button);
+                    final Button felleskatalogenSslErrorButton = (Button) findViewById(R.id.medication_felleskatalogen_ssl_error_button);
+
+                    nlhSslErrorButton.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            showSslErrorDialog("http://m.legemiddelhandboka.no/");
+                        }
+                    });
+
+                    felleskatalogenSslErrorButton.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            showSslErrorDialog("http://www.felleskatalogen.no/ir/medisin/");
+                        }
+                    });
 
                     TabLayout tabLayout = (TabLayout) findViewById(R.id.medication_tabs);
                     tabLayout.setupWithViewPager(mViewPager);

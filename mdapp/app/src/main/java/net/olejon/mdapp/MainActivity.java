@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Installed
-        final long installed = mTools.getSharedPreferencesLong("INSTALLED_311");
+        final long installed = mTools.getSharedPreferencesLong("INSTALLED_320");
 
-        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_311", mTools.getCurrentTime());
+        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_320", mTools.getCurrentTime());
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     case R.id.drawer_item_felleskatalogen:
                     {
-                        String uri = (mTools.isTablet()) ? "http://www.felleskatalogen.no/medisin/" : "http://www.felleskatalogen.no/m/medisin/";
+                        String uri = (mTools.isTablet()) ? "https://www.felleskatalogen.no/medisin/" : "https://www.felleskatalogen.no/m/medisin/";
 
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_felleskatalogen));
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_nel));
-                        intent.putExtra("uri", "http://legehandboka.no/");
+                        intent.putExtra("uri", "https://legehandboka.no/");
                         startActivity(intent);
                         break;
                     }
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_nhi));
-                        intent.putExtra("uri", "http://nhi.no/");
+                        intent.putExtra("uri", "https://nhi.no/");
                         startActivity(intent);
                         break;
                     }
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_uptodate));
-                        intent.putExtra("uri", "http://www.uptodate.com/");
+                        intent.putExtra("uri", "https://www.uptodate.com/");
                         startActivity(intent);
                         break;
                     }
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_pubmed));
-                        intent.putExtra("uri", "http://www.ncbi.nlm.nih.gov/m/pubmed/");
+                        intent.putExtra("uri", "https://www.ncbi.nlm.nih.gov/m/pubmed/");
                         startActivity(intent);
                         break;
                     }
@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_medlineplus));
-                        intent.putExtra("uri", "https://www.nlm.nih.gov/medlineplus/");
+                        intent.putExtra("uri", "https://medlineplus.gov/");
                         startActivity(intent);
                         break;
                     }
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.drawer_item_ao_surgery));
-                        intent.putExtra("uri", "https://www2.aofoundation.org/wps/portal/surgerymobile");
+                        intent.putExtra("uri", "https://www2.aofoundation.org/wps/portal/surgerymobile/");
                         startActivity(intent);
                         break;
                     }
@@ -479,7 +479,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     case R.id.drawer_item_report_issue:
                     {
-                        mTools.openUri(getString(R.string.project_report_issue_uri));
+                        mTools.openChromeCustomTabsUri(getString(R.string.project_report_issue_uri));
                         break;
                     }
                 }
@@ -547,14 +547,14 @@ public class MainActivity extends AppCompatActivity
         mFloatingActionButton.setVisibility(View.VISIBLE);
 
         // Rate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_311"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_320"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_311");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_320");
 
             if(currentTime - installedTime > 1000 * 3600 * 48)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_311", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_320", true);
 
                 new MaterialDialog.Builder(mContext).title(R.string.main_rate_dialog_title).content(getString(R.string.main_rate_dialog_message)).positiveText(R.string.main_rate_dialog_positive_button).negativeText(R.string.main_rate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
@@ -569,14 +569,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Donate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_311"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_320"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_311");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_320");
 
             if(currentTime - installedTime > 1000 * 3600 * 96)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_311", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_320", true);
 
                 new MaterialDialog.Builder(mContext).title(R.string.main_donate_dialog_title).content(getString(R.string.main_donate_dialog_message)).positiveText(R.string.main_donate_dialog_positive_button).negativeText(R.string.main_donate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {

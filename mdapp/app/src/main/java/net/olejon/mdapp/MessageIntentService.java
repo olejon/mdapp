@@ -106,6 +106,7 @@ public class MessageIntentService extends IntentService
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
 
                             notificationBuilder.setWhen(mTools.getCurrentTime())
+                                    .setPriority(Notification.PRIORITY_HIGH)
                                     .setAutoCancel(true)
                                     .setLargeIcon(bitmap)
                                     .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
@@ -115,8 +116,6 @@ public class MessageIntentService extends IntentService
                                     .setContentTitle(title)
                                     .setContentText(message)
                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(bigMessage));
-
-                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
                             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC).setCategory(Notification.CATEGORY_MESSAGE);
 

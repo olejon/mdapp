@@ -227,6 +227,13 @@
             android:theme="@style/welcome_theme">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </activity>
+        <activity
+            android:name=".ChromeCustomTabsActivity"
+            android:parentActivityName=".MainActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </activity>
 
         <receiver android:name=".Widget" android:label="@string/widget_title">
             <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter>

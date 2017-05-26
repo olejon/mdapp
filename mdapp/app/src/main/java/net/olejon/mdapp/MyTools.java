@@ -39,6 +39,7 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
@@ -253,10 +254,37 @@ class MyTools
     }
 
     // Open URI
-    public void openUri(String uri)
+    public void openChromeCustomTabsUri(final String uri)
     {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        mContext.startActivity(browserIntent);
+        final String packageName = "com.android.chrome";
+
+        boolean isGoogleChromeInstalled = false;
+
+        try
+        {
+            mContext.getPackageManager().getApplicationInfo(packageName, 0);
+
+            isGoogleChromeInstalled = true;
+        }
+        catch(Exception e)
+        {
+            Log.e("MyTools", Log.getStackTraceString(e));
+        }
+
+        if(isGoogleChromeInstalled)
+        {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setToolbarColor(ContextCompat.getColor(mContext, R.color.dark_blue));
+
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.intent.setPackage(packageName);
+            customTabsIntent.launchUrl(mContext, Uri.parse(uri));
+        }
+        else
+        {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            mContext.startActivity(browserIntent);
+        }
     }
 
     // Up navigation

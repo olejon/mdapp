@@ -84,6 +84,7 @@
     <string name="medication_menu_slv">Legemiddelverket</string>
     <string name="medication_menu_note">Nytt notat</string>
     <string name="medication_menu_print">Skriv ut</string>
+    <string name="medication_menu_open_uri">Åpne i nettleser</string>
 
     <!-- Substance -->
     <string name="substance_list_empty">Ingen preparater</string>
@@ -144,7 +145,7 @@
     <string name="interactions_title">Interaksjonsanalyse</string>
     <string name="interactions_toolbar_search_hint">Søk…</string>
     <string name="interactions_no_recent_searches">Ingen nylige søk</string>
-    <string name="interactions_information">Søk etter preparater, substanser og ATC-koder, <b>skilt med mellomrom</b>. Bruk <b>understrek</b> dersom preparatnavnet består av to ord. Eksempler: \"Lamictal Orfiril\" og \"Paralgin_Forte Seroxat\".\n\nKilden som brukes er <i>Interaksjoner.no</i> fra Legemiddelverket.</string>
+    <string name="interactions_information">Søk etter preparater, substanser og ATC-koder, <b>skilt med mellomrom</b>. Bruk <b>understrek</b> dersom preparatnavnet består av to ord, og <b>ikke inkluder styrke.</b>\n\nEksempler: \"Lamictal Orfiril\" og \"Paralgin_Forte Seroxat\".\n\nKilden som brukes er <i>Interaksjoner.no</i> fra Legemiddelverket.</string>
     <string name="interactions_recent_searches">Nylige søk</string>
     <string name="interactions_search_other_medications_or_substances">Skriv eventuelt inn andre preparater å sjekke opp mot</string>
     <string name="interactions_recent_searches_removed">Nylige søk fjernet</string>
@@ -306,7 +307,7 @@
     <!-- Calculators -->
     <string name="calculators_title">Kalkulatorer</string>
     <string name="calculators_information_dialog_title">Informasjon</string>
-    <string name="calculators_information_dialog_message">BMI\n\nMennesker med stor muskelmasse kan ha høy BMI, men har lav fettprosent og karakteriseres ikke som overvektige. For barn og ungdom opp til 18 år er det en egen alders- og kjønnsjustert skala.\n\nMidjemål\n\nMidjemål supplerer BMI i vurdering av overvektrelatert helserisiko, spesielt med tanke på metabolsk syndrom og type 2-diabetes.​ Målingen tas med vanlig målebånd og måles midt mellom nederste ribben og øverste delen av hoftekammen. Eller sagt på en annen måte: Mål der midjen er smalest!\n\nGravide\n\nFor gravide kvinner er overvekt og vektøkning, utover det anbefalte, forbundet med risiko for svangerskapsdiabetes og komplikasjoner under fødselen. For kvinner med stor vektøkning i svangerskapet kan det være vanskeligere å redusere vekten etter graviditeten. For kvinner med normal vekt er øvre anbefalte vektoppgang i løpet av svangerskapsperioden 16 kg i følge Institute of Medicine (IOM) sine retningslinjer fra 1990.​\n\nKilde: Helsenorge.no</string>
+    <string name="calculators_information_dialog_message">Kroppsmasseindeks (KMI), ofte kalt body mass index (BMI), er en av tingene man ser på for å vurdere en persons helserisiko. I tillegg til ser man på midjemål, fysisk aktivitet, kosthold og andre ting som varierer fra person til person.\n\nMennesker med stor muskelmasse kan ha høy BMI, men har lav fettprosent og karakteriseres ikke som overvektige. For barn og ungdom opp til 18 år er det en egen alders- og kjønnsjustert skala.\n\n​Midjemål brukes sammen med BMI når man vurderer overvektrelatert helserisiko. Det brukes spesielt når man undersøker risiko for metabolsk syndrom og type 2-diabetes.​ Målingen tas med vanlig målebånd der hvor midjen er smalest. Det vil si midt mellom nederste ribben og øverste delen av hoftekammen.\n\nFor gravide kvinner er overvekt og vektøkning, utover det anbefalte, forbundet med risiko for svangerskapsdiabetes og komplikasjoner under fødselen. For kvinner med stor vektøkning i svangerskapet kan det være vanskeligere å redusere vekten etter graviditeten. Vanlig vektøkning i svangerskapet er mellom 11 og 16 kilo. Optimal vektøkning avhenger av blant annet mors BMI før svangerskapet. Kvinner som er undervektige før svangerskapet kan gjerne ha høyere vektøkning (opp til 18 kg), og kvinner med overvekt bør ha lavere vektøkning (mindre enn 11 kg).​\n\nKilde: Helsenorge.no</string>
     <string name="calculators_information_dialog_positive_button">OK</string>
     <string name="calculators_information_dialog_neutral_button">Les mer</string>
     <string name="calculators_button">BEREGN</string>
@@ -553,12 +554,15 @@
     <string name="service_notifications_from_slv_settings">Innstillinger</string>
 
     <!-- Various -->
+    <string name="device_something_went_wrong">Noe gikk galt</string>
     <string name="device_not_connected">Du må være tilkoblet Internett</string>
     <string name="device_permissions_not_granted">Uten aktuell tillatelse får du ikke full funksjonalitet</string>
     <string name="device_not_supported">Ikke støttet</string>
     <string name="device_not_supported_dialog_title">Ikke støttet</string>
     <string name="device_not_supported_dialog_message">Ikke støttet på denne enheten.</string>
     <string name="device_not_supported_dialog_positive_button">Lukk</string>
-    <string name="device_not_supported_dialog_ssl_error_message">Denne enheten er for gammel til å vise denne nettsiden på grunn av at SSL-sertifikatet nettsiden bruker er for nytt.</string>
+    <string name="device_not_supported_dialog_neutral_button">Åpne i nettleser</string>
+    <string name="device_not_supported_dialog_ssl_error_message">Denne enheten er for gammel til å vise denne nettsiden på grunn av at SSL-sertifikatet nettsiden bruker er for nytt. Dette er en sikkerhetsrisiko.\n\nInstaller appen Google Chrome og velg Åpne i nettleser.</string>
+    <string name="device_not_supported_button_ssl_error_message">Klikk her for informasjon</string>
 
 </resources>

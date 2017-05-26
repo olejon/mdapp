@@ -131,15 +131,7 @@ public class MainWebViewActivity extends AppCompatActivity
                 }
                 else
                 {
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                    {
-                        mWebView.findAllAsync(find);
-                    }
-                    else
-                    {
-                        //noinspection deprecation
-                        mWebView.findAll(find);
-                    }
+                    mWebView.findAllAsync(find);
                 }
             }
 
@@ -184,13 +176,7 @@ public class MainWebViewActivity extends AppCompatActivity
         //noinspection deprecation
         webSettings.setSavePassword(false);
 
-        if(pageUri.contains("brukerhandboken.no"))
-        {
-            webSettings.setLoadWithOverviewMode(true);
-            webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0) Gecko/20100101 Firefox/52.0");
-        }
-        else if(pageUri.contains("clinicaltrials.gov"))
+        if(pageUri.contains("clinicaltrials.gov"))
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
@@ -199,7 +185,7 @@ public class MainWebViewActivity extends AppCompatActivity
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0) Gecko/20100101 Firefox/52.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0");
         }
         else if(pageUri.contains("interaksjoner.azurewebsites.net"))
         {
@@ -209,7 +195,7 @@ public class MainWebViewActivity extends AppCompatActivity
         {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setUseWideViewPort(true);
-            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0) Gecko/20100101 Firefox/52.0");
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0");
         }
         else if(pageUri.contains("legemiddelsok.no"))
         {
@@ -310,7 +296,11 @@ public class MainWebViewActivity extends AppCompatActivity
                 {
                     mWebViewHasBeenLoaded = true;
 
-                    if(pageUri.contains("helsenorge.no"))
+                    if(pageUri.contains("bestpractice.bmj.com"))
+                    {
+                        mWebView.loadUrl("javascript:$('div#snackbar-container').hide();");
+                    }
+                    else if(pageUri.contains("helsenorge.no"))
                     {
                         mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top - 8);");
                     }
@@ -324,7 +314,14 @@ public class MainWebViewActivity extends AppCompatActivity
                     }
                 }
 
-                if(pageUri.contains("webofknowledge.com")) mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); }");
+                if(pageUri.contains("brukerhandboken.no"))
+                {
+                    mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
+                }
+                else if(pageUri.contains("webofknowledge.com"))
+                {
+                    mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); }");
+                }
             }
 
             @Override
@@ -336,11 +333,22 @@ public class MainWebViewActivity extends AppCompatActivity
 
                 mProgressBar.setVisibility(View.INVISIBLE);
 
-                new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
+                new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).neutralText(R.string.device_not_supported_dialog_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
                     {
+                        finish();
+                    }
+                }).onNeutral(new MaterialDialog.SingleButtonCallback()
+                {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction which)
+                    {
+                        materialDialog.dismiss();
+
+                        mTools.openChromeCustomTabsUri(pageUri);
+
                         finish();
                     }
                 }).cancelListener(new DialogInterface.OnCancelListener()
@@ -350,7 +358,7 @@ public class MainWebViewActivity extends AppCompatActivity
                     {
                         finish();
                     }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
             }
         });
 
@@ -381,39 +389,32 @@ public class MainWebViewActivity extends AppCompatActivity
             }
         });
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        mWebView.setFindListener(new WebView.FindListener()
         {
-            mWebView.setFindListener(new WebView.FindListener()
+            @Override
+            public void onFindResultReceived(int i, int i2, boolean b)
             {
-                @Override
-                public void onFindResultReceived(int i, int i2, boolean b)
+                if(i2 == 0)
                 {
-                    if(i2 == 0)
-                    {
-                        mToolbarSearchCountTextView.setVisibility(View.GONE);
+                    mToolbarSearchCountTextView.setVisibility(View.GONE);
 
-                        mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
-                    }
-                    else
-                    {
-                        int active = i + 1;
-
-                        mToolbarSearchCountTextView.setText(active+"/"+i2);
-                        mToolbarSearchCountTextView.setVisibility(View.VISIBLE);
-                    }
+                    mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
                 }
-            });
-        }
+                else
+                {
+                    int active = i + 1;
+
+                    mToolbarSearchCountTextView.setText(active+"/"+i2);
+                    mToolbarSearchCountTextView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         CookieManager cookieManager = CookieManager.getInstance();
 
-        cookieManager.setCookie("http://bestpractice.bmj.com/", "BMJ-cookie-policy=close");
-        cookieManager.setCookie("https://helsenorge.no/", "mh-unsupportedbar=");
         cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
-        cookieManager.setCookie("http://nhi.no/", "userCategory=professional");
-        cookieManager.setCookie("http://tidsskriftet.no/", "osevencookiepromptclosed=1");
-        cookieManager.setCookie("http://www.gulesider.no/", "cookiesAccepted=true");
-        cookieManager.setCookie("http://www.helsebiblioteket.no/", "whycookie-visited=1");
+        cookieManager.setCookie("https://nhi.no/", "user-category=professional");
+        cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");
 
         if(savedInstanceState == null)
         {
@@ -567,7 +568,7 @@ public class MainWebViewActivity extends AppCompatActivity
             }
             case R.id.main_webview_menu_open_uri:
             {
-                mTools.openUri(mWebView.getUrl());
+                mTools.openChromeCustomTabsUri(mWebView.getUrl());
                 return true;
             }
             default:

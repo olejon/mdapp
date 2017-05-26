@@ -392,6 +392,15 @@
         <item name="android:scrollbarThumbVertical">@drawable/scrollbar_blue</item>
     </style>
 
+    <style name="medication_ssl_error_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:minWidth">256dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
     <!-- Substance -->
     <style name="substance_layout">
         <item name="android:layout_width">match_parent</item>

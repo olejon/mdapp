@@ -11,5 +11,6 @@
     <item android:id="@+id/medication_menu_slv" android:orderInCategory="7" app:showAsAction="never" android:title="@string/medication_menu_slv"/>
     <item android:id="@+id/medication_menu_note" android:orderInCategory="8" app:showAsAction="never" android:title="@string/medication_menu_note"/>
     <item android:id="@+id/medication_menu_print" android:orderInCategory="9" app:showAsAction="never" android:title="@string/medication_menu_print"/>
+    <item android:id="@+id/medication_menu_open_uri" android:orderInCategory="10" app:showAsAction="never" android:title="@string/medication_menu_open_uri"/>
 
 </menu>

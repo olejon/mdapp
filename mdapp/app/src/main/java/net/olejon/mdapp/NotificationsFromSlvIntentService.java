@@ -111,6 +111,7 @@ public class NotificationsFromSlvIntentService extends IntentService
                                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
 
                                 notificationBuilder.setWhen(mTools.getCurrentTime())
+                                        .setPriority(Notification.PRIORITY_HIGH)
                                         .setLargeIcon(bitmap)
                                         .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
                                         .setTicker(title)
@@ -120,8 +121,6 @@ public class NotificationsFromSlvIntentService extends IntentService
                                         .setContentIntent(readMorePendingIntent)
                                         .addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.service_notifications_from_slv_read_more), readMorePendingIntent)
                                         .addAction(R.drawable.ic_settings_white_24dp, getString(R.string.service_notifications_from_slv_settings), settingsPendingIntent);
-
-                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
                                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC).setCategory(Notification.CATEGORY_MESSAGE);
 
