@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "91884163123",
+    "firebase_url": "https://mdappmaps.firebaseio.com",
+    "project_id": "mdappmaps",
+    "storage_bucket": "mdappmaps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91884163123:android:66929fafb0febd3a",
+        "android_client_info": {
+          "package_name": "net.olejon.mdapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91884163123-i69pa4pemjtranfa6jpim0ptk9j0scar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyMIHk2-nQmAXCu9gVXCZPTbLeDshMmZw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

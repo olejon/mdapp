@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/atc_list_item_layout">
+
+    <TextView android:id="@+id/atc_substances_groups_list_item_code" style="@style/atc_substances_groups_list_item_code"/>
+    <TextView android:id="@+id/atc_substances_groups_list_item_name" style="@style/atc_list_item_name"/>
+
+</LinearLayout>

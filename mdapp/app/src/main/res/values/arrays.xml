@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Main -->
+    <string-array name="main_pages">
+        <item>@string/main_page_medications</item>
+        <item>@string/main_page_substances</item>
+        <item>@string/main_page_favorites</item>
+    </string-array>
+
+    <!-- Medication -->
+    <string-array name="medication_pages">
+        <item>@string/medication_nlh</item>
+        <item>@string/medication_felleskatalogen</item>
+    </string-array>
+
+    <!-- Diseases and treatments -->
+    <string-array name="diseases_and_treatments_language_dialog_choices">
+        <item>@string/diseases_and_treatments_english</item>
+        <item>@string/diseases_and_treatments_norwegian</item>
+    </string-array>
+
+    <!-- Welcome -->
+    <string-array name="welcome_pages">
+        <item>@string/welcome_page_1</item>
+        <item>@string/welcome_page_2</item>
+        <item>@string/welcome_page_3</item>
+        <item>@string/welcome_page_4</item>
+    </string-array>
+
+</resources>

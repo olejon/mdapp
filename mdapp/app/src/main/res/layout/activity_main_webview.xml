@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/main_webview_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/main_webview_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+
+        <LinearLayout android:id="@+id/main_webview_toolbar_search_layout" style="@style/toolbar_search_layout">
+            <EditText android:id="@+id/main_webview_toolbar_search" android:hint="@string/main_webview_toolbar_search_hint" style="@style/main_webview_toolbar_search_edittext"/>
+            <TextView android:id="@+id/main_webview_toolbar_search_count_textview" style="@style/main_webview_toolbar_search_count_textview"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ProgressBar android:id="@+id/main_webview_toolbar_progressbar_horizontal" android:layout_alignParentTop="true" android:max="100" style="@style/toolbar_progressbar_horizontal"/>
+
+    <WebView android:id="@+id/main_webview_content" android:layout_below="@+id/main_webview_toolbar" style="@style/main_webview_content"/>
+
+</RelativeLayout>

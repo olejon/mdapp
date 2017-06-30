@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/pharmacies_location_card" style="@style/pharmacies_location_card_layout">
+
+    <LinearLayout style="@style/pharmacies_location_card_inner_layout">
+
+        <TextView android:id="@+id/pharmacies_location_card_name" style="@style/pharmacies_location_card_name"/>
+        <TextView android:id="@+id/pharmacies_location_card_address" style="@style/pharmacies_location_card_information"/>
+
+        <View style="@style/colored_card_separator"/>
+
+        <LinearLayout style="@style/pharmacies_location_card_buttons_layout">
+
+            <TextView android:id="@+id/pharmacies_location_card_map_button" android:text="@string/pharmacies_location_card_map" style="@style/pharmacies_location_card_map_button"/>
+            <TextView android:id="@+id/pharmacies_location_card_contact_button" android:text="@string/pharmacies_location_card_contact" style="@style/pharmacies_location_card_contact_button"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

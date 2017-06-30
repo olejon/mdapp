@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_find_in_text" android:orderInCategory="1" app:showAsAction="always" android:title="@string/diseases_and_treatments_search_webview_menu_find_in_text" tools:ignore="AlwaysShowAction"/>
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_go_forward" android:orderInCategory="2" app:showAsAction="always" android:visible="false" android:icon="@drawable/ic_keyboard_arrow_right_white_24dp" android:title="@string/diseases_and_treatments_search_webview_menu_forward" tools:ignore="AlwaysShowAction"/>
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_save_article" android:orderInCategory="3" app:showAsAction="never" android:title="@string/diseases_and_treatments_search_webview_menu_save_article"/>
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_print" android:orderInCategory="4" app:showAsAction="never" android:title="@string/diseases_and_treatments_search_webview_menu_print"/>
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_reload" android:orderInCategory="5" app:showAsAction="never" android:title="@string/diseases_and_treatments_search_webview_menu_reload"/>
+    <item android:id="@+id/diseases_and_treatments_search_webview_menu_open_uri" android:orderInCategory="6" app:showAsAction="never" android:title="@string/diseases_and_treatments_search_webview_menu_open_uri"/>
+
+</menu>

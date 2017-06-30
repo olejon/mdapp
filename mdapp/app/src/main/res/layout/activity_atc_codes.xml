@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/atc_codes_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/atc_codes_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+
+    <ListView android:id="@+id/atc_codes_list" android:layout_below="@+id/atc_codes_toolbar" style="@style/atc_codes_list_layout"/>
+    <TextView android:id="@+id/atc_codes_list_empty" android:layout_below="@+id/atc_codes_toolbar" android:text="@string/atc_codes_list_empty" style="@style/atc_codes_list_empty"/>
+
+</RelativeLayout>

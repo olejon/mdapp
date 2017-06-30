@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- Medication -->
+    <string name="medication_nlh">Legemiddelhåndboka</string>
+    <string name="medication_felleskatalogen">Felleskatalogen</string>
+
+</resources>

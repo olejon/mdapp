@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/poisonings_cards_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/poisonings_cards_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+        <ProgressBar android:id="@+id/poisonings_cards_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/poisonings_cards_swipe_refresh_layout" android:layout_below="@+id/poisonings_cards_toolbar" style="@style/swipe_refresh_layout">
+        <android.support.v7.widget.RecyclerView android:id="@+id/poisonings_cards_cards" style="@style/poisonings_cards_cards"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout android:id="@+id/poisonings_cards_no_poisonings" android:layout_below="@+id/poisonings_cards_toolbar" style="@style/poisonings_cards_no_poisonings_layout">
+
+        <TextView android:text="@string/poisonings_cards_no_results" style="@style/poisonings_cards_no_poisonings_information"/>
+        <Button android:id="@+id/poisonings_cards_check_on_helsenorge" android:text="@string/poisonings_cards_search_on_helsenorge" style="@style/poisonings_cards_no_poisonings_button"/>
+        <Button android:id="@+id/poisonings_cards_check_on_helsebiblioteket" android:text="@string/poisonings_cards_search_in_helsebiblioteket" style="@style/poisonings_cards_no_poisonings_button"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

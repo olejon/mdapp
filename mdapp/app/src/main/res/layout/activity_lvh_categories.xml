@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/lvh_categories_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/lvh_categories_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/lvh_categories_cards" android:layout_below="@+id/lvh_categories_toolbar" style="@style/lvh_categories_cards"/>
+
+</RelativeLayout>

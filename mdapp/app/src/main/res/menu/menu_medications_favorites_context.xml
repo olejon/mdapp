@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/medications_favorites_menu_context_remove" android:orderInCategory="1" app:showAsAction="ifRoom" android:title="@string/main_medications_favorites_menu_context_remove"/>
+
+</menu>

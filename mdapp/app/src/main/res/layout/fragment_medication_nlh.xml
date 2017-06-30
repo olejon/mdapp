@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/medication_nlh_layout" style="@style/medication_fragment_layout">
+    <WebView android:id="@+id/medication_nlh_content" android:layout_alignParentTop="true" style="@style/medication_nlh_content"/>
+    <ProgressBar android:id="@+id/medication_nlh_progressbar" android:layout_centerInParent="true" style="@style/medication_fragment_progressbar"/>
+    <Button android:id="@+id/medication_nlh_ssl_error_button" android:layout_centerInParent="true" android:text="@string/device_not_supported_button_ssl_error_message" style="@style/medication_ssl_error_button"/>
+</RelativeLayout>
