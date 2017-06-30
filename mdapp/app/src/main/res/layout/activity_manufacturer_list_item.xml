@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturer_list_item_layout">
-
-    <TextView android:id="@+id/manufacturer_list_item_name" style="@style/manufacturer_list_item_name"/>
-    <TextView android:id="@+id/manufacturer_list_item_substance" style="@style/manufacturer_list_item_substance"/>
-
-</LinearLayout>

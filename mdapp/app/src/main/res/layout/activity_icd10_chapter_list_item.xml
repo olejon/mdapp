@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/icd10_chapter_list_item_layout">
-
-    <TextView android:id="@+id/icd10_chapter_list_item_code" style="@style/icd10_chapter_list_item_code"/>
-    <TextView android:id="@+id/icd10_chapter_list_item_name" style="@style/icd10_chapter_list_item_name"/>
-
-</LinearLayout>
