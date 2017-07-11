@@ -3,7 +3,8 @@
 Useful and intuitive app for doctors and other health care workers in Norway.
 
 #### Links
-* [Project website](http://www.olejon.net/code/mdapp/)
+* [Project website](https://www.olejon.net/code/mdapp/)
+* [Download from Google Play Store](https://www.olejon.net/code/mdapp/?page=android_app)
 
 _"Human knowledge belongs to the world"_
 
