@@ -8,4 +8,4 @@ This app is in Norwegian. Useful and intuitive app for doctors and other health 
 
 "Human knowledge belongs to the world"
 
-[![Image](https://www.paypalobjects.com/no_NO/i/btn/btn_donate_LG.gif)](http://www.olejon.net/code/mdapp/?page=donate)
+[![Image](https://www.paypalobjects.com/no_NO/i/btn/btn_donate_LG.gif)](https://www.olejon.net/code/mdapp/?page=donate)
