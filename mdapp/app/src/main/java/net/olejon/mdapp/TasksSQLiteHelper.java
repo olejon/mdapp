@@ -29,15 +29,15 @@ class TasksSQLiteHelper extends SQLiteOpenHelper
 
     private static final int DB_VERSION = 1;
 
-    public static final String TABLE = "tasks";
+    static final String TABLE = "tasks";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_TASK = "task";
-    public static final String COLUMN_CREATED_TIME = "created_time";
-    public static final String COLUMN_REMINDER_TIME = "reminder_time";
-    public static final String COLUMN_COMPLETED = "completed";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_TASK = "task";
+    static final String COLUMN_CREATED_TIME = "created_time";
+    static final String COLUMN_REMINDER_TIME = "reminder_time";
+    static final String COLUMN_COMPLETED = "completed";
 
-    public TasksSQLiteHelper(Context context)
+    TasksSQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -45,7 +45,7 @@ class TasksSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_TASK+" TEXT, "+COLUMN_CREATED_TIME+" TEXT, "+COLUMN_REMINDER_TIME+" TEXT, "+COLUMN_COMPLETED+" TEXT);");
+        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_TASK+" TEXT, "+COLUMN_CREATED_TIME+" TEXT, "+COLUMN_REMINDER_TIME+" TEXT, "+COLUMN_COMPLETED+" TEXT);");
     }
 
     @Override

@@ -26,78 +26,77 @@ import android.util.Log;
 
 class SlDataSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final int DB_VERSION = 3301;
+    static final int DB_VERSION = 3400;
 
-    public static final String DB_NAME = "data.db";
+    static final String DB_NAME = "data.db";
 
-    public static final String DB_CREATED = "SQLITE_DATABASE_CREATED"+DB_VERSION;
+    static final String DB_CREATED = "SQLITE_DATABASE_CREATED"+DB_VERSION;
 
-    public static final String TABLE_MEDICATIONS = "medications";
-    public static final String TABLE_SUBSTANCES = "substances";
-    public static final String TABLE_ATC_ANATOMICAL_GROUPS = "atc_anatomical_groups";
-    public static final String TABLE_ATC_PHARMACOLOGIC_GROUPS = "atc_pharmacologic_groups";
-    public static final String TABLE_ATC_THERAPEUTIC_GROUPS = "atc_therapeutic_groups";
-    public static final String TABLE_ATC_SUBSTANCES_GROUPS = "atc_substances_groups";
-    public static final String TABLE_ATC_CODES = "atc_codes";
-    public static final String TABLE_ICD_10 = "icd_10";
-    public static final String TABLE_MANUFACTURERS = "manufacturers";
-    public static final String TABLE_MUNICIPALITIES = "municipalities";
-    public static final String TABLE_PHARMACIES = "pharmacies";
+    static final String TABLE_ATC_ANATOMICAL_GROUPS = "atc_anatomical_groups";
+    static final String TABLE_ATC_CODES = "atc_codes";
+    static final String TABLE_ATC_PHARMACOLOGIC_GROUPS = "atc_pharmacologic_groups";
+    static final String TABLE_ATC_SUBSTANCES_GROUPS = "atc_substances_groups";
+    static final String TABLE_ATC_THERAPEUTIC_GROUPS = "atc_therapeutic_groups";
+    static final String TABLE_ICD_10 = "icd_10";
+    static final String TABLE_MANUFACTURERS = "manufacturers";
+    static final String TABLE_MEDICATIONS = "medications";
+    static final String TABLE_MUNICIPALITIES = "municipalities";
+    static final String TABLE_PHARMACIES = "pharmacies";
+    static final String TABLE_SUBSTANCES = "substances";
 
-    public static final String MEDICATIONS_COLUMN_ID = "_id";
-    public static final String MEDICATIONS_COLUMN_PRESCRIPTION_GROUP = "prescription_group";
-    public static final String MEDICATIONS_COLUMN_NAME = "name";
-    public static final String MEDICATIONS_COLUMN_SUBSTANCE = "substance";
-    public static final String MEDICATIONS_COLUMN_MANUFACTURER = "manufacturer";
-    private static final String MEDICATIONS_COLUMN_BLUE_PRESCRIPTION = "blue_prescription";
-    public static final String MEDICATIONS_COLUMN_ATC_CODE = "atc_code";
+    static final String ATC_ANATOMICAL_GROUPS_COLUMN_ID = "_id";
+    static final String ATC_ANATOMICAL_GROUPS_COLUMN_CODE = "code";
+    static final String ATC_ANATOMICAL_GROUPS_COLUMN_NAME = "name";
 
-    public static final String SUBSTANCES_COLUMN_ID = "_id";
-    public static final String SUBSTANCES_COLUMN_NAME = "name";
-    public static final String SUBSTANCES_COLUMN_ATC_CODE = "atc_code";
+    static final String ATC_CODES_COLUMN_ID = "_id";
+    static final String ATC_CODES_COLUMN_CODE = "code";
+    static final String ATC_CODES_COLUMN_NAME = "name";
 
-    private static final String ATC_ANATOMICAL_GROUPS_COLUMN_ID = "_id";
-    public static final String ATC_ANATOMICAL_GROUPS_COLUMN_CODE = "code";
-    public static final String ATC_ANATOMICAL_GROUPS_COLUMN_NAME = "name";
+    static final String ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID = "_id";
+    static final String ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE = "code";
+    static final String ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME = "name";
 
-    private static final String ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID = "_id";
-    public static final String ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE = "code";
-    public static final String ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME = "name";
+    static final String ATC_SUBSTANCES_GROUPS_COLUMN_ID = "_id";
+    static final String ATC_SUBSTANCES_GROUPS_COLUMN_CODE = "code";
+    static final String ATC_SUBSTANCES_GROUPS_COLUMN_NAME = "name";
 
-    private static final String ATC_THERAPEUTIC_GROUPS_COLUMN_ID = "_id";
-    public static final String ATC_THERAPEUTIC_GROUPS_COLUMN_CODE = "code";
-    public static final String ATC_THERAPEUTIC_GROUPS_COLUMN_NAME = "name";
+    static final String ATC_THERAPEUTIC_GROUPS_COLUMN_ID = "_id";
+    static final String ATC_THERAPEUTIC_GROUPS_COLUMN_CODE = "code";
+    static final String ATC_THERAPEUTIC_GROUPS_COLUMN_NAME = "name";
 
-    private static final String ATC_SUBSTANCES_GROUPS_COLUMN_ID = "_id";
-    public static final String ATC_SUBSTANCES_GROUPS_COLUMN_CODE = "code";
-    public static final String ATC_SUBSTANCES_GROUPS_COLUMN_NAME = "name";
+    static final String ICD_10_COLUMN_ID = "_id";
+    static final String ICD_10_COLUMN_CHAPTER = "chapter";
+    static final String ICD_10_COLUMN_CODES = "codes";
+    static final String ICD_10_COLUMN_NAME = "name";
+    static final String ICD_10_COLUMN_DATA = "data";
 
-    private static final String ATC_CODES_COLUMN_ID = "_id";
-    public static final String ATC_CODES_COLUMN_CODE = "code";
-    public static final String ATC_CODES_COLUMN_NAME = "name";
+    static final String MANUFACTURERS_COLUMN_ID = "_id";
+    static final String MANUFACTURERS_COLUMN_NAME = "name";
 
-    public static final String ICD_10_COLUMN_ID = "_id";
-    public static final String ICD_10_COLUMN_CHAPTER = "chapter";
-    public static final String ICD_10_COLUMN_CODES = "codes";
-    public static final String ICD_10_COLUMN_NAME = "name";
-    public static final String ICD_10_COLUMN_DATA = "data";
+    static final String MEDICATIONS_COLUMN_ID = "_id";
+    static final String MEDICATIONS_COLUMN_PRESCRIPTION_GROUP = "prescription_group";
+    static final String MEDICATIONS_COLUMN_NAME = "name";
+    static final String MEDICATIONS_COLUMN_SUBSTANCE = "substance";
+    static final String MEDICATIONS_COLUMN_MANUFACTURER = "manufacturer";
+    static final String MEDICATIONS_COLUMN_ATC_CODE = "atc_code";
 
-    public static final String MANUFACTURERS_COLUMN_ID = "_id";
-    public static final String MANUFACTURERS_COLUMN_NAME = "name";
+    static final String MUNICIPALITIES_COLUMN_ID = "_id";
+    static final String MUNICIPALITIES_COLUMN_NAME = "name";
 
-    private static final String MUNICIPALITIES_COLUMN_ID = "_id";
-    public static final String MUNICIPALITIES_COLUMN_NAME = "name";
+    static final String PHARMACIES_COLUMN_ID = "_id";
+    static final String PHARMACIES_COLUMN_NAME = "name";
+    static final String PHARMACIES_COLUMN_MUNICIPALITY = "municipality";
+    static final String PHARMACIES_COLUMN_ADDRESS = "address";
 
-    private static final String PHARMACIES_COLUMN_ID = "_id";
-    public static final String PHARMACIES_COLUMN_NAME = "name";
-    public static final String PHARMACIES_COLUMN_MUNICIPALITY = "municipality";
-    public static final String PHARMACIES_COLUMN_ADDRESS = "address";
+    static final String SUBSTANCES_COLUMN_ID = "_id";
+    static final String SUBSTANCES_COLUMN_NAME = "name";
+    static final String SUBSTANCES_COLUMN_ATC_CODE = "atc_code";
 
     private final MyTools mTools;
 
     private final boolean sqliteDatabaseHasBeenCreated;
 
-    public SlDataSQLiteHelper(Context context)
+    SlDataSQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
 
@@ -113,17 +112,17 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
         {
             try
             {
-                db.execSQL("CREATE TABLE "+TABLE_MEDICATIONS+"("+MEDICATIONS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MEDICATIONS_COLUMN_PRESCRIPTION_GROUP+" TEXT, "+MEDICATIONS_COLUMN_NAME+" TEXT, "+MEDICATIONS_COLUMN_SUBSTANCE+" TEXT, "+MEDICATIONS_COLUMN_MANUFACTURER+" TEXT, "+MEDICATIONS_COLUMN_BLUE_PRESCRIPTION+" TEXT, "+MEDICATIONS_COLUMN_ATC_CODE+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_SUBSTANCES+"("+SUBSTANCES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+SUBSTANCES_COLUMN_NAME+" TEXT, "+SUBSTANCES_COLUMN_ATC_CODE+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_ATC_ANATOMICAL_GROUPS+"("+ATC_ANATOMICAL_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_ANATOMICAL_GROUPS_COLUMN_CODE+" TEXT, "+ATC_ANATOMICAL_GROUPS_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_ATC_PHARMACOLOGIC_GROUPS+"("+ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" TEXT, "+ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_ATC_THERAPEUTIC_GROUPS+"("+ATC_THERAPEUTIC_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" TEXT, "+ATC_THERAPEUTIC_GROUPS_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_ATC_SUBSTANCES_GROUPS+"("+ATC_SUBSTANCES_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" TEXT, "+ATC_SUBSTANCES_GROUPS_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_ATC_CODES+"("+ATC_CODES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_CODES_COLUMN_CODE+" TEXT, "+ATC_CODES_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_ICD_10+"("+ICD_10_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ICD_10_COLUMN_CHAPTER+" TEXT, "+ICD_10_COLUMN_CODES+" TEXT, "+ICD_10_COLUMN_NAME+" TEXT, "+ICD_10_COLUMN_DATA+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_MANUFACTURERS+"("+MANUFACTURERS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MANUFACTURERS_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_MUNICIPALITIES+"("+MUNICIPALITIES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MUNICIPALITIES_COLUMN_NAME+" TEXT);");
-                db.execSQL("CREATE TABLE "+TABLE_PHARMACIES+"("+PHARMACIES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+PHARMACIES_COLUMN_NAME+" TEXT, "+PHARMACIES_COLUMN_MUNICIPALITY+" TEXT, "+PHARMACIES_COLUMN_ADDRESS+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ATC_ANATOMICAL_GROUPS+"("+ATC_ANATOMICAL_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_ANATOMICAL_GROUPS_COLUMN_CODE+" TEXT UNIQUE ON CONFLICT IGNORE, "+ATC_ANATOMICAL_GROUPS_COLUMN_NAME+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ATC_CODES+"("+ATC_CODES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_CODES_COLUMN_CODE+" TEXT UNIQUE ON CONFLICT IGNORE, "+ATC_CODES_COLUMN_NAME+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ATC_PHARMACOLOGIC_GROUPS+"("+ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" TEXT UNIQUE ON CONFLICT IGNORE, "+ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ATC_SUBSTANCES_GROUPS+"("+ATC_SUBSTANCES_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" TEXT UNIQUE ON CONFLICT IGNORE, "+ATC_SUBSTANCES_GROUPS_COLUMN_NAME+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ATC_THERAPEUTIC_GROUPS+"("+ATC_THERAPEUTIC_GROUPS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" TEXT UNIQUE ON CONFLICT IGNORE, "+ATC_THERAPEUTIC_GROUPS_COLUMN_NAME+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_ICD_10+"("+ICD_10_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+ICD_10_COLUMN_CHAPTER+" TEXT UNIQUE ON CONFLICT IGNORE, "+ICD_10_COLUMN_CODES+" TEXT, "+ICD_10_COLUMN_NAME+" TEXT, "+ICD_10_COLUMN_DATA+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_MANUFACTURERS+"("+MANUFACTURERS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MANUFACTURERS_COLUMN_NAME+" TEXT UNIQUE ON CONFLICT IGNORE);");
+                db.execSQL("CREATE TABLE "+TABLE_MEDICATIONS+"("+MEDICATIONS_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MEDICATIONS_COLUMN_PRESCRIPTION_GROUP+" TEXT, "+MEDICATIONS_COLUMN_NAME+" TEXT UNIQUE ON CONFLICT IGNORE, "+MEDICATIONS_COLUMN_SUBSTANCE+" TEXT, "+MEDICATIONS_COLUMN_MANUFACTURER+" TEXT, "+MEDICATIONS_COLUMN_ATC_CODE+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_MUNICIPALITIES+"("+MUNICIPALITIES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MUNICIPALITIES_COLUMN_NAME+" TEXT UNIQUE ON CONFLICT IGNORE);");
+                db.execSQL("CREATE TABLE "+TABLE_PHARMACIES+"("+PHARMACIES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+PHARMACIES_COLUMN_NAME+" TEXT UNIQUE ON CONFLICT IGNORE, "+PHARMACIES_COLUMN_MUNICIPALITY+" TEXT, "+PHARMACIES_COLUMN_ADDRESS+" TEXT);");
+                db.execSQL("CREATE TABLE "+TABLE_SUBSTANCES+"("+SUBSTANCES_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+SUBSTANCES_COLUMN_NAME+" TEXT UNIQUE ON CONFLICT IGNORE, "+SUBSTANCES_COLUMN_ATC_CODE+" TEXT);");
             }
             catch(Exception e)
             {
@@ -141,17 +140,17 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
         {
             try
             {
-                db.execSQL("DROP TABLE IF EXISTS "+TABLE_MEDICATIONS);
-                db.execSQL("DROP TABLE IF EXISTS "+TABLE_SUBSTANCES);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_ANATOMICAL_GROUPS);
-                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_PHARMACOLOGIC_GROUPS);
-                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_THERAPEUTIC_GROUPS);
-                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_SUBSTANCES_GROUPS);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_CODES);
+                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_PHARMACOLOGIC_GROUPS);
+                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_SUBSTANCES_GROUPS);
+                db.execSQL("DROP TABLE IF EXISTS "+TABLE_ATC_THERAPEUTIC_GROUPS);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_ICD_10);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_MANUFACTURERS);
+                db.execSQL("DROP TABLE IF EXISTS "+TABLE_MEDICATIONS);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_MUNICIPALITIES);
                 db.execSQL("DROP TABLE IF EXISTS "+TABLE_PHARMACIES);
+                db.execSQL("DROP TABLE IF EXISTS "+TABLE_SUBSTANCES);
 
                 onCreate(db);
             }

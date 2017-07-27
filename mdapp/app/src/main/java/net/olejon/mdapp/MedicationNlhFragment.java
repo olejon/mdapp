@@ -49,12 +49,12 @@ public class MedicationNlhFragment extends Fragment
     private WebView mWebView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medication_nlh, container, false);
 
         // Activity
-        final Activity activity = getActivity();
+        Activity activity = getActivity();
 
         // Context
         final Context context = activity.getApplicationContext();
@@ -63,7 +63,7 @@ public class MedicationNlhFragment extends Fragment
         final MyTools mTools = new MyTools(context);
 
         // Arguments
-        final String pageUri = getArguments().getString("uri");
+        String pageUri = getArguments().getString("uri");
 
         // Progress bar
         final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_nlh_progressbar);
@@ -78,7 +78,7 @@ public class MedicationNlhFragment extends Fragment
         // Web view
         mWebView = (WebView) viewGroup.findViewById(R.id.medication_nlh_content);
 
-        final WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = mWebView.getSettings();
 
         webSettings.setJavaScriptEnabled(true);
         webSettings.setAppCacheEnabled(true);

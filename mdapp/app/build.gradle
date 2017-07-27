@@ -10,8 +10,8 @@ android
         applicationId "net.olejon.mdapp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3301
-        versionName "3.3"
+        versionCode 3400
+        versionName "3.4"
     }
 
     buildTypes
@@ -27,9 +27,9 @@ android
 
 dependencies
 {
-    compile 'com.google.android.gms:play-services-maps:11.0.2'
-    compile 'com.google.firebase:firebase-core:11.0.2'
-    compile 'com.google.firebase:firebase-messaging:11.0.2'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.google.firebase:firebase-core:11.0.4'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -38,7 +38,7 @@ dependencies
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:2.3.0'
-    compile 'me.dm7.barcodescanner:zxing:1.9.3'
+    compile 'me.dm7.barcodescanner:zxing:1.9.4'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -35,6 +35,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -46,9 +47,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -95,7 +94,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
         }
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         mSearchLanguage = intent.getStringExtra("language");
 
@@ -107,6 +106,9 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_toolbar);
         mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, mSearchString));
+
+        TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
+        mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
         setSupportActionBar(mToolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -141,15 +143,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
         // Correct
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -256,15 +254,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
     {
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/diseases-and-treatments/"+mSearchLanguage+"/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/diseases-and-treatments/"+mSearchLanguage+"/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -317,11 +311,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<DiseasesAndTreatmentsSearchAdapter.DiseasesAndTreatmentsSearchViewHolder>
+    class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<DiseasesAndTreatmentsSearchAdapter.DiseasesAndTreatmentsSearchViewHolder>
     {
-        private final JSONArray mResults;
+        final JSONArray mResults;
 
-        private DiseasesAndTreatmentsSearchAdapter(JSONArray results)
+        DiseasesAndTreatmentsSearchAdapter(JSONArray results)
         {
             mResults = results;
         }
@@ -333,7 +327,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
             final TextView title;
             final TextView text;
 
-            public DiseasesAndTreatmentsSearchViewHolder(View view)
+            DiseasesAndTreatmentsSearchViewHolder(View view)
             {
                 super(view);
 
@@ -345,23 +339,23 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
         }
 
         @Override
-        public DiseasesAndTreatmentsSearchViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int i)
+        public DiseasesAndTreatmentsSearchViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
         {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_diseases_and_treatments_search_card, viewGroup, false);
             return new DiseasesAndTreatmentsSearchViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(DiseasesAndTreatmentsSearchViewHolder viewHolder, final int i)
+        public void onBindViewHolder(DiseasesAndTreatmentsSearchViewHolder viewHolder, int i)
         {
             try
             {
-                final JSONObject result = mResults.getJSONObject(i);
+                JSONObject result = mResults.getJSONObject(i);
 
-                final String type = result.getString("type");
                 final String title = result.getString("title");
-                final String text = result.getString("text");
                 final String uri = result.getString("uri");
+                String type = result.getString("type");
+                String text = result.getString("text");
 
                 viewHolder.title.setText(title);
 

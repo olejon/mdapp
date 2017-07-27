@@ -35,14 +35,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -83,7 +80,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
         setContentView(R.layout.activity_notifications_from_slv);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.notifications_from_slv_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.notifications_from_slv_toolbar);
         toolbar.setTitle(getString(R.string.notifications_from_slv_title));
 
         setSupportActionBar(toolbar);
@@ -147,15 +144,11 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
     // Get notifications
     private void getNotifications()
     {
-        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-        final Network network = new BasicNetwork(new HurlStack());
-
-        final RequestQueue requestQueue = new RequestQueue(cache, network);
+        final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
         requestQueue.start();
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/notifications-from-slv/", new Response.Listener<JSONArray>()
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/notifications-from-slv/", new Response.Listener<JSONArray>()
         {
             @Override
             public void onResponse(JSONArray response)
@@ -205,28 +198,28 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class NotificationsFromSlvAdapter extends RecyclerView.Adapter<NotificationsFromSlvAdapter.NotificationViewHolder>
+    class NotificationsFromSlvAdapter extends RecyclerView.Adapter<NotificationsFromSlvAdapter.NotificationViewHolder>
     {
-        private final JSONArray mNotifications;
+        final JSONArray mNotifications;
 
-        private int mLastPosition = -1;
+        int mLastPosition = -1;
 
-        private NotificationsFromSlvAdapter(JSONArray jsonArray)
+        NotificationsFromSlvAdapter(JSONArray jsonArray)
         {
             mNotifications = jsonArray;
         }
 
         class NotificationViewHolder extends RecyclerView.ViewHolder
         {
-            private final CardView card;
-            private final TextView title;
-            private final TextView date;
-            private final TextView type;
-            private final TextView message;
-            private final View uriSeparator;
-            private final TextView uri;
+            final CardView card;
+            final TextView title;
+            final TextView date;
+            final TextView type;
+            final TextView message;
+            final View uriSeparator;
+            final TextView uri;
 
-            public NotificationViewHolder(View view)
+            NotificationViewHolder(View view)
             {
                 super(view);
 
@@ -252,7 +245,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
         {
             try
             {
-                final JSONObject notificationsJsonObject = mNotifications.getJSONObject(i);
+                JSONObject notificationsJsonObject = mNotifications.getJSONObject(i);
 
                 viewHolder.title.setText(notificationsJsonObject.getString("title"));
                 viewHolder.date.setText(notificationsJsonObject.getString("date"));
@@ -331,8 +324,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
             {
                 mLastPosition = position;
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
-                view.startAnimation(animation);
+                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
             }
         }
     }

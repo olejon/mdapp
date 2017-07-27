@@ -36,7 +36,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -84,7 +83,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
         setContentView(R.layout.activity_clinicaltrials);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.clinicaltrials_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.clinicaltrials_toolbar);
         toolbar.setTitle(getString(R.string.clinicaltrials_title));
 
         setSupportActionBar(toolbar);
@@ -155,7 +154,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            final String voiceSearchString = voiceSearchArrayList.get(0);
+            String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -268,7 +267,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String searchString)
+    private void search(String searchString)
     {
         if(searchString.equals("")) return;
 
@@ -310,9 +309,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mActivityPaused && mCursor.getCount() > 0)
@@ -337,7 +334,6 @@ public class ClinicalTrialsActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
-
             mCursor = mSqLiteDatabase.query(ClinicalTrialsSQLiteHelper.TABLE, null, null, null, null, null, ClinicalTrialsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
             String[] fromColumns = {ClinicalTrialsSQLiteHelper.COLUMN_STRING};

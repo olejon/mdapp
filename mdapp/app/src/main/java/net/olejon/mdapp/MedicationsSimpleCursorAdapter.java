@@ -26,9 +26,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
+class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
 {
-    public MedicationsSimpleCursorAdapter(Context context, Cursor c, String[] from, int[] to)
+    MedicationsSimpleCursorAdapter(Context context, Cursor c, String[] from, int[] to)
     {
         super(context, R.layout.fragment_medications_list_item, c, from, to, 0);
     }

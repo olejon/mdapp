@@ -37,9 +37,7 @@ import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -62,7 +60,7 @@ import java.util.ArrayList;
 
 public class PharmaciesLocationMapActivity extends AppCompatActivity implements OnMapReadyCallback
 {
-    private final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 0;
+    private final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
 
     private final Activity mActivity = this;
 
@@ -90,7 +88,7 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         mPharmacyName = intent.getStringExtra("name");
         mPharmacyAddress = intent.getStringExtra("address");
@@ -102,7 +100,7 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_pharmacies_location_map);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_map_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_map_toolbar);
         toolbar.setTitle(mPharmacyName);
 
         setSupportActionBar(toolbar);
@@ -158,7 +156,7 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
     }
 
     // Information dialog
-    private void showInformationDialog(final boolean show)
+    private void showInformationDialog(boolean show)
     {
         if(!mTools.getSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG") || show)
         {
@@ -220,20 +218,16 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
             }
             else
             {
-                final Cache mPharmacyCache = new DiskBasedCache(getCacheDir(), 0);
+                final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
-                final Network mPharmacyNetwork = new BasicNetwork(new HurlStack());
+                requestQueue.start();
 
-                final RequestQueue mPharmacyRequestQueue = new RequestQueue(mPharmacyCache, mPharmacyNetwork);
-
-                mPharmacyRequestQueue.start();
-
-                JsonObjectRequest mPharmacyJsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
                 {
                     @Override
                     public void onResponse(JSONObject response)
                     {
-                        mPharmacyRequestQueue.stop();
+                        requestQueue.stop();
 
                         try
                         {
@@ -257,15 +251,15 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        mPharmacyRequestQueue.stop();
+                        requestQueue.stop();
 
                         Log.e("PharmaciesLocationMap", error.toString());
                     }
                 });
 
-                mPharmacyJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                mPharmacyRequestQueue.add(mPharmacyJsonObjectRequest);
+                requestQueue.add(jsonObjectRequest);
             }
 
             Handler handler = new Handler();
@@ -279,25 +273,21 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
                     {
                         for(int i = 0; i < mPharmacyAddressesSize; i++)
                         {
-                            final String pharmacyOtherName = mPharmacyNames.get(i);
-                            final String pharmacyOtherAddress = mPharmacyAddresses.get(i);
+                            String pharmacyOtherName = mPharmacyNames.get(i);
+                            String pharmacyOtherAddress = mPharmacyAddresses.get(i);
 
                             if(pharmacyOtherAddress.equals(mPharmacyAddress)) continue;
 
-                            final Cache mPharmacyOtherCache = new DiskBasedCache(getCacheDir(), 0);
+                            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
-                            final Network mPharmacyOtherNetwork = new BasicNetwork(new HurlStack());
+                            requestQueue.start();
 
-                            final RequestQueue mPharmacyOtherRequestQueue = new RequestQueue(mPharmacyOtherCache, mPharmacyOtherNetwork);
-
-                            mPharmacyOtherRequestQueue.start();
-
-                            JsonObjectRequest mPharmacyOtherJsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/geocode/?address="+URLEncoder.encode(pharmacyOtherAddress, "utf-8")+"&name="+URLEncoder.encode(pharmacyOtherName, "utf-8"), null, new Response.Listener<JSONObject>()
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/geocode/?address="+URLEncoder.encode(pharmacyOtherAddress, "utf-8")+"&name="+URLEncoder.encode(pharmacyOtherName, "utf-8"), null, new Response.Listener<JSONObject>()
                             {
                                 @Override
                                 public void onResponse(JSONObject response)
                                 {
-                                    mPharmacyOtherRequestQueue.stop();
+                                    requestQueue.stop();
 
                                     try
                                     {
@@ -326,15 +316,15 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
                                 @Override
                                 public void onErrorResponse(VolleyError error)
                                 {
-                                    mPharmacyOtherRequestQueue.stop();
+                                    requestQueue.stop();
 
                                     Log.e("PharmaciesLocationMap", error.toString());
                                 }
                             });
 
-                            mPharmacyOtherJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                            mPharmacyOtherRequestQueue.add(mPharmacyOtherJsonObjectRequest);
+                            requestQueue.add(jsonObjectRequest);
                         }
                     }
                     catch(Exception e)
@@ -342,7 +332,7 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
                         Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
                     }
                 }
-            }, 2000);
+            }, 1000);
         }
         catch(Exception e)
         {

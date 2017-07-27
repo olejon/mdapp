@@ -33,9 +33,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -52,7 +50,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class BarcodeScannerActivity extends Activity implements ZXingScannerView.ResultHandler
 {
-    private final int PERMISSIONS_REQUEST_CAMERA = 0;
+    private final int PERMISSIONS_REQUEST_CAMERA = 1;
 
     private final Activity mActivity = this;
 
@@ -60,7 +58,7 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
     private final MyTools mTools = new MyTools(mContext);
 
-    private ZXingScannerView mZXingScannerView;
+    private ZXingScannerView mScannerView;
 
     // Create activity
     @Override
@@ -90,13 +88,14 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
         grantPermissions();
 
-        mZXingScannerView = new ZXingScannerView(this);
+        mScannerView = new ZXingScannerView(this);
 
-        setContentView(mZXingScannerView);
+        setContentView(mScannerView);
 
-        mZXingScannerView.setResultHandler(this);
+        mScannerView.setResultHandler(this);
+        mScannerView.setAutoFocus(true);
 
-        mZXingScannerView.startCamera();
+        mScannerView.startCamera();
     }
 
     // Pause activity
@@ -105,7 +104,7 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
     {
         super.onPause();
 
-        mZXingScannerView.stopCamera();
+        mScannerView.stopCamera();
     }
 
     // Permissions
@@ -142,15 +141,11 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
 
         String barcode = result.getText();
 
-        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-        final Network network = new BasicNetwork(new HurlStack());
-
-        final RequestQueue requestQueue = new RequestQueue(cache, network);
+        final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
         requestQueue.start();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/barcode/?search="+barcode, null, new Response.Listener<JSONObject>()
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/barcode/?search="+barcode, null, new Response.Listener<JSONObject>()
         {
             @Override
             public void onResponse(JSONObject response)
@@ -170,9 +165,8 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
                     else
                     {
                         SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
                         String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-                        Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+medicationName+"%")+" COLLATE NOCASE", null, null, null, null);
+                        Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+medicationName+"%"), null, null, null, null);
 
                         if(cursor.moveToFirst())
                         {

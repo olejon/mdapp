@@ -38,8 +38,8 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
-    public final static int NOTIFICATION_MESSAGE_ID = 1;
-    public final static int NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID = 2;
+    public static final int NOTIFICATION_MESSAGE_ID = 1;
+    public static final int NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID = 2;
 
     private final Context mContext = this;
 
@@ -124,7 +124,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     @Override
     public void onDeletedMessages()
     {
-        NotificationManagerCompat.from(mContext).cancel(1);
-        NotificationManagerCompat.from(mContext).cancel(2);
+        NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_MESSAGE_ID);
+        NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
     }
 }

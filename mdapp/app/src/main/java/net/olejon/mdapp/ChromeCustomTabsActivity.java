@@ -31,11 +31,11 @@ public class ChromeCustomTabsActivity extends AppCompatActivity
     private final MyTools mTools = new MyTools(mContext);
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         if(intent.getDataString() == null)
         {
@@ -45,7 +45,7 @@ public class ChromeCustomTabsActivity extends AppCompatActivity
         }
         else
         {
-            final String pageUri = intent.getDataString();
+            String pageUri = intent.getDataString();
 
             mTools.openChromeCustomTabsUri(pageUri);
 

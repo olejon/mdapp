@@ -58,17 +58,17 @@ public class AtcCodesActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         mAtcCode = intent.getStringExtra("code");
 
-        final String atcCodes = mAtcCode.substring(0, 5);
+        String atcCodes = mAtcCode.substring(0, 5);
 
         // Layout
         setContentView(R.layout.activity_atc_codes);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.atc_codes_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.atc_codes_toolbar);
         toolbar.setTitle(atcCodes);
 
         setSupportActionBar(toolbar);
@@ -82,7 +82,8 @@ public class AtcCodesActivity extends AppCompatActivity
 
         // Get substances
         mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_CODES, null, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE+" LIKE "+mTools.sqe(atcCodes+"%"), null, null, null, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE);
+        String[] queryColumns = {SlDataSQLiteHelper.ATC_CODES_COLUMN_ID, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE, SlDataSQLiteHelper.ATC_CODES_COLUMN_NAME};
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_CODES, queryColumns, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE+" LIKE "+mTools.sqe(atcCodes+"%"), null, null, null, SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE);
 
         String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_CODES_COLUMN_CODE, SlDataSQLiteHelper.ATC_CODES_COLUMN_NAME};
         int[] toViews = new int[] {R.id.atc_codes_list_item_code, R.id.atc_codes_list_item_name};
@@ -172,7 +173,6 @@ public class AtcCodesActivity extends AppCompatActivity
     private void getSubstance(String substanceName)
     {
         SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
         String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID};
         Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(substanceName), null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID);
 
@@ -209,7 +209,7 @@ public class AtcCodesActivity extends AppCompatActivity
     // Adapter
     private class AtcCodesSimpleCursorAdapter extends SimpleCursorAdapter
     {
-        private AtcCodesSimpleCursorAdapter(String[] from, int[] to)
+        AtcCodesSimpleCursorAdapter(String[] from, int[] to)
         {
             super(mContext, R.layout.activity_atc_codes_list_item, mCursor, from, to, 0);
         }
@@ -217,14 +217,14 @@ public class AtcCodesActivity extends AppCompatActivity
         @Override
         public View getView(int position, View convertView, ViewGroup parent)
         {
-            final View view = super.getView(position, convertView, parent);
+            View view = super.getView(position, convertView, parent);
 
-            final LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.atc_codes_list_item_layout);
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.atc_codes_list_item_layout);
 
-            final TextView atcCodeTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_code);
-            final TextView atcNameTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_name);
+            TextView atcCodeTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_code);
+            TextView atcNameTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_name);
 
-            final String atcCode = atcCodeTextView.getText().toString();
+            String atcCode = atcCodeTextView.getText().toString();
 
             if(atcCode.equals(mAtcCode))
             {

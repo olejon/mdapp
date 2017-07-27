@@ -122,9 +122,9 @@ public class WelcomeActivity extends AppCompatActivity
     // View pager
     private class ViewPagerAdapter extends FragmentStatePagerAdapter
     {
-        private final String[] pages = getResources().getStringArray(R.array.welcome_pages);
+        final String[] pages = getResources().getStringArray(R.array.welcome_pages);
 
-        public ViewPagerAdapter(FragmentManager fragmentManager)
+        ViewPagerAdapter(FragmentManager fragmentManager)
         {
             super(fragmentManager);
         }
@@ -163,7 +163,7 @@ public class WelcomeActivity extends AppCompatActivity
 
     private class ViewPagerTransformer implements ViewPager.PageTransformer
     {
-        private final float minimumScale = 0.75f;
+        final float minimumScale = 0.75f;
 
         public void transformPage(View view, float position)
         {

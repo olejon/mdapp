@@ -36,7 +36,7 @@ class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
     private SQLiteDatabase mSqLiteDatabase;
     private Cursor mCursor;
 
-    public WidgetListFactory(Context context)
+    WidgetListFactory(Context context)
     {
         mContext = context;
 
@@ -47,9 +47,8 @@ class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
     public void onCreate()
     {
         mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
-
-        String[] favoritesQueryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
-        mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, favoritesQueryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+        String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+        mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
     }
 
     @Override
@@ -75,9 +74,8 @@ class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
                 remoteViews.setTextViewText(R.id.widget_list_item_manufacturer, medicationManufacturer);
 
                 SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
                 String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
 
                 if(cursor.moveToFirst())
                 {

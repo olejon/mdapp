@@ -46,7 +46,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -86,12 +85,12 @@ public class TasksActivity extends AppCompatActivity
         setContentView(R.layout.activity_tasks);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.tasks_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tasks_toolbar);
 
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.tasks_layout_appbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.tasks_layout_appbar);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
@@ -109,7 +108,7 @@ public class TasksActivity extends AppCompatActivity
             }
         });
 
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.tasks_toolbar_layout);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.tasks_toolbar_layout);
         collapsingToolbarLayout.setTitle(getString(R.string.tasks_title));
 
         // Floating action button
@@ -154,7 +153,6 @@ public class TasksActivity extends AppCompatActivity
                         else
                         {
                             ContentValues contentValues = new ContentValues();
-
                             contentValues.put(TasksSQLiteHelper.COLUMN_TASK, task);
                             contentValues.put(TasksSQLiteHelper.COLUMN_CREATED_TIME, "");
                             contentValues.put(TasksSQLiteHelper.COLUMN_REMINDER_TIME, "");
@@ -185,9 +183,7 @@ public class TasksActivity extends AppCompatActivity
             }
         });
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-        floatingActionButton.startAnimation(animation);
+        floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
         floatingActionButton.setVisibility(View.VISIBLE);
 
         // Empty
@@ -249,7 +245,7 @@ public class TasksActivity extends AppCompatActivity
     }
 
     // Information dialog
-    private void showInformationDialog(final boolean show)
+    private void showInformationDialog(boolean show)
     {
         if(!mTools.getSharedPreferencesBoolean("TASKS_HIDE_INFORMATION_DIALOG") || show)
         {
@@ -295,10 +291,9 @@ public class TasksActivity extends AppCompatActivity
         @Override
         protected Cursor doInBackground(Void... voids)
         {
-            mSqLiteDatabase = new TasksSQLiteHelper(mContext).getReadableDatabase();
-
+            mSqLiteDatabase = new TasksSQLiteHelper(mContext).getWritableDatabase();
             String[] queryColumns = {TasksSQLiteHelper.COLUMN_ID, TasksSQLiteHelper.COLUMN_TASK, TasksSQLiteHelper.COLUMN_COMPLETED};
-            mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, queryColumns, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK+" COLLATE NOCASE");
+            mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, queryColumns, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK);
 
             return mCursor;
         }
@@ -317,11 +312,11 @@ public class TasksActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksAdapterViewHolder>
+    class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksAdapterViewHolder>
     {
-        private final Cursor mCursor;
+        final Cursor mCursor;
 
-        private TasksAdapter(Cursor cursor)
+        TasksAdapter(Cursor cursor)
         {
             mCursor = cursor;
         }
@@ -331,7 +326,7 @@ public class TasksActivity extends AppCompatActivity
             final LinearLayout listItem;
             final TextView task;
 
-            public TasksAdapterViewHolder(View view)
+            TasksAdapterViewHolder(View view)
             {
                 super(view);
 
@@ -353,8 +348,8 @@ public class TasksActivity extends AppCompatActivity
             if(mCursor.moveToPosition(i))
             {
                 final int taskId = mCursor.getInt(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_ID));
-                final String task = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_TASK));
                 final String taskCompleted = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_COMPLETED));
+                String task = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_TASK));
 
                 viewHolder.task.setText(task);
 

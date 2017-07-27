@@ -29,15 +29,15 @@ class MedicationsFavoritesSQLiteHelper extends SQLiteOpenHelper
 
     private static final int DB_VERSION = 6;
 
-    public static final String TABLE = "medications_favorites";
+    static final String TABLE = "medications_favorites";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_PRESCRIPTION_GROUP = "prescription_group";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_SUBSTANCE = "substance";
-    public static final String COLUMN_MANUFACTURER = "manufacturer";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_PRESCRIPTION_GROUP = "prescription_group";
+    static final String COLUMN_NAME = "name";
+    static final String COLUMN_SUBSTANCE = "substance";
+    static final String COLUMN_MANUFACTURER = "manufacturer";
 
-    public MedicationsFavoritesSQLiteHelper(Context context)
+    MedicationsFavoritesSQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -45,7 +45,7 @@ class MedicationsFavoritesSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_PRESCRIPTION_GROUP+" TEXT, "+COLUMN_NAME+" TEXT, "+COLUMN_SUBSTANCE+" TEXT, "+COLUMN_MANUFACTURER+" TEXT);");
+        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_PRESCRIPTION_GROUP+" TEXT, "+COLUMN_NAME+" TEXT, "+COLUMN_SUBSTANCE+" TEXT, "+COLUMN_MANUFACTURER+" TEXT);");
     }
 
     @Override

@@ -29,15 +29,15 @@ class SavedArticlesSQLiteHelper extends SQLiteOpenHelper
 
     private static final int DB_VERSION = 1;
 
-    public static final String TABLE = "saved_articles";
+    static final String TABLE = "saved_articles";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_DOMAIN = "domain";
-    public static final String COLUMN_URI = "uri";
-    public static final String COLUMN_WEBVIEW = "webview";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_TITLE = "title";
+    static final String COLUMN_DOMAIN = "domain";
+    static final String COLUMN_URI = "uri";
+    static final String COLUMN_WEBVIEW = "webview";
 
-    public SavedArticlesSQLiteHelper(Context context)
+    SavedArticlesSQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -45,7 +45,7 @@ class SavedArticlesSQLiteHelper extends SQLiteOpenHelper
      @Override
      public void onCreate(SQLiteDatabase db)
      {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_TITLE+" TEXT, "+COLUMN_DOMAIN+" TEXT, "+COLUMN_URI+" TEXT, "+COLUMN_WEBVIEW+" TEXT);");
+        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_TITLE+" TEXT, "+COLUMN_DOMAIN+" TEXT, "+COLUMN_URI+" TEXT, "+COLUMN_WEBVIEW+" TEXT);");
      }
 
     @Override

@@ -123,11 +123,13 @@ public class SubstancesFragment extends Fragment
                 @Override
                 public Cursor runQuery(CharSequence charSequence)
                 {
-                    if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, null, null, null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME);
+                    String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE};
+
+                    if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, null, null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" COLLATE NOCASE");
 
                     String query = charSequence.toString().trim();
 
-                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME);
+                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" COLLATE NOCASE");
                 }
             });
         }
@@ -135,7 +137,8 @@ public class SubstancesFragment extends Fragment
         @Override
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
-            mCursor = MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, null, null, null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME);
+            String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE};
+            mCursor = MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, null, null, null, null, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" COLLATE NOCASE");
 
             String[] fromColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE};
             int[] toViews = {R.id.main_substances_list_item_name, R.id.main_substances_list_item_atc_code};

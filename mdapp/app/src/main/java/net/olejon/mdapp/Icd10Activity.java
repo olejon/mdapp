@@ -35,7 +35,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -79,7 +78,7 @@ public class Icd10Activity extends AppCompatActivity
         setContentView(R.layout.activity_icd10);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_toolbar);
         toolbar.setTitle(getString(R.string.icd10_title));
 
         setSupportActionBar(toolbar);
@@ -148,7 +147,7 @@ public class Icd10Activity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            final String voiceSearchString = voiceSearchArrayList.get(0);
+            String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -238,7 +237,7 @@ public class Icd10Activity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String searchString)
+    private void search(String searchString)
     {
         if(searchString.equals("")) return;
 
@@ -251,7 +250,7 @@ public class Icd10Activity extends AppCompatActivity
     private class GetChaptersTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
     {
         @Override
-        protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
+        protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
         {
             mListView.setAdapter(simpleCursorAdapter);
 
@@ -272,9 +271,7 @@ public class Icd10Activity extends AppCompatActivity
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
         }
 
@@ -282,7 +279,6 @@ public class Icd10Activity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_ID, SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
 

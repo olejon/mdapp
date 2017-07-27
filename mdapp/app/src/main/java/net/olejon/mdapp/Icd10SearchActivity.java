@@ -36,9 +36,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -80,7 +78,7 @@ public class Icd10SearchActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         mSearchString = intent.getStringExtra("search");
 
@@ -88,7 +86,7 @@ public class Icd10SearchActivity extends AppCompatActivity
         setContentView(R.layout.activity_icd10_search);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_search_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_search_toolbar);
         toolbar.setTitle(getString(R.string.icd10_search_search, mSearchString));
 
         setSupportActionBar(toolbar);
@@ -155,15 +153,11 @@ public class Icd10SearchActivity extends AppCompatActivity
 
                     try
                     {
-                        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-                        final Network network = new BasicNetwork(new HurlStack());
-
-                        final RequestQueue requestQueue = new RequestQueue(cache, network);
+                        final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
                         requestQueue.start();
 
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
                         {
                             @Override
                             public void onResponse(JSONObject response)
@@ -221,11 +215,10 @@ public class Icd10SearchActivity extends AppCompatActivity
         protected SimpleAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_DATA};
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
 
-            final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
+            ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
 
             mCodesArrayList = new ArrayList<>();
             mNamesArrayList = new ArrayList<>();
@@ -241,7 +234,7 @@ public class Icd10SearchActivity extends AppCompatActivity
                     {
                         try
                         {
-                            final JSONArray data = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ICD_10_COLUMN_DATA)));
+                            JSONArray data = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ICD_10_COLUMN_DATA)));
 
                             for(int n = 0; n < data.length(); n++)
                             {

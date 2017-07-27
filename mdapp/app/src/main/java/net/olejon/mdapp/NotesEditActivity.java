@@ -51,7 +51,7 @@ import java.util.ArrayList;
 
 public class NotesEditActivity extends AppCompatActivity
 {
-    private static final int MEDICATION_REQUEST_CODE = 1;
+    private static final int NOTES_EDIT_MEDICATION_REQUEST_CODE = 1;
 
     private final Context mContext = this;
 
@@ -79,9 +79,9 @@ public class NotesEditActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        final String noteTitle = intent.getStringExtra("title");
+        String noteTitle = intent.getStringExtra("title");
 
         mNoteId = intent.getIntExtra("id", 0);
 
@@ -106,9 +106,9 @@ public class NotesEditActivity extends AppCompatActivity
         setContentView(R.layout.activity_notes_edit);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_toolbar);
 
-        final String title = (mNoteId == 0) ? getString(R.string.notes_edit_title_new) : getString(R.string.notes_edit_title_edit);
+        String title = (mNoteId == 0) ? getString(R.string.notes_edit_title_new) : getString(R.string.notes_edit_title_edit);
 
         toolbar.setTitle(title);
 
@@ -116,11 +116,11 @@ public class NotesEditActivity extends AppCompatActivity
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Elements
-        final TextInputLayout patientIdInputLayout;
-        final TextInputLayout patientNameInputLayout;
-        final TextInputLayout patientDoctorInputLayout;
-        final TextInputLayout patientDepartmentInputLayout;
-        final TextInputLayout patientRoomInputLayout;
+        TextInputLayout patientIdInputLayout;
+        TextInputLayout patientNameInputLayout;
+        TextInputLayout patientDoctorInputLayout;
+        TextInputLayout patientDepartmentInputLayout;
+        TextInputLayout patientRoomInputLayout;
 
         mTitleInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_title_layout);
         mTextInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_text_layout);
@@ -155,7 +155,7 @@ public class NotesEditActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 Intent intent = new Intent(mContext, NotesEditMedicationsActivity.class);
-                startActivityForResult(intent, MEDICATION_REQUEST_CODE);
+                startActivityForResult(intent, NOTES_EDIT_MEDICATION_REQUEST_CODE);
             }
         });
 
@@ -169,21 +169,19 @@ public class NotesEditActivity extends AppCompatActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == MEDICATION_REQUEST_CODE && data != null)
+        if(requestCode == NOTES_EDIT_MEDICATION_REQUEST_CODE && data != null)
         {
             if(resultCode == RESULT_OK)
             {
                 mNoteHasBeenChanged = true;
 
                 String name = data.getStringExtra("name");
-                String manufacturer = data.getStringExtra("manufacturer");
 
                 try
                 {
                     JSONObject patientMedicationJsonObject = new JSONObject();
 
                     patientMedicationJsonObject.put("name", name);
-                    patientMedicationJsonObject.put("manufacturer", manufacturer);
 
                     mPatientMedicationsJsonArray.put(patientMedicationJsonObject);
 
@@ -259,7 +257,6 @@ public class NotesEditActivity extends AppCompatActivity
         if(mNoteId != 0)
         {
             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT, NotesSQLiteHelper.COLUMN_PATIENT_ID, NotesSQLiteHelper.COLUMN_PATIENT_NAME, NotesSQLiteHelper.COLUMN_PATIENT_DOCTOR, NotesSQLiteHelper.COLUMN_PATIENT_DEPARTMENT, NotesSQLiteHelper.COLUMN_PATIENT_ROOM, NotesSQLiteHelper.COLUMN_PATIENT_MEDICATIONS};
             Cursor cursor = sqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, NotesSQLiteHelper.COLUMN_ID+" = "+mNoteId, null, null, null, null);
 
@@ -431,7 +428,6 @@ public class NotesEditActivity extends AppCompatActivity
         else
         {
             ContentValues contentValues = new ContentValues();
-
             contentValues.put(NotesSQLiteHelper.COLUMN_TITLE, title);
             contentValues.put(NotesSQLiteHelper.COLUMN_TEXT, text);
             contentValues.put(NotesSQLiteHelper.COLUMN_DATA, "");
@@ -529,10 +525,9 @@ public class NotesEditActivity extends AppCompatActivity
     {
         try
         {
-            final int medicationsJsonArrayLength = mPatientMedicationsJsonArray.length();
+            int medicationsJsonArrayLength = mPatientMedicationsJsonArray.length();
 
             final ArrayList<String> medicationsNamesArrayList = new ArrayList<>();
-            final ArrayList<String> medicationsManufacturersArrayList = new ArrayList<>();
 
             final CharSequence[] medicationsNamesStringArrayList = new String[medicationsJsonArrayLength + 2];
 
@@ -544,10 +539,8 @@ public class NotesEditActivity extends AppCompatActivity
                 JSONObject medicationJsonObject = mPatientMedicationsJsonArray.getJSONObject(i);
 
                 String name = medicationJsonObject.getString("name");
-                String manufacturer = medicationJsonObject.getString("manufacturer");
 
                 medicationsNamesArrayList.add(name);
-                medicationsManufacturersArrayList.add(manufacturer);
 
                 medicationsNamesStringArrayList[i + 2] = name;
             }
@@ -561,7 +554,7 @@ public class NotesEditActivity extends AppCompatActivity
 
             medicationsNames = medicationsNames.replaceAll(", $", "");
 
-            final Button patientMedicationsButton = (Button) findViewById(R.id.notes_edit_patient_medications);
+            Button patientMedicationsButton = (Button) findViewById(R.id.notes_edit_patient_medications);
 
             if(medicationsJsonArrayLength == 0)
             {
@@ -604,6 +597,8 @@ public class NotesEditActivity extends AppCompatActivity
                                 {
                                     mPatientMedicationsJsonArray = new JSONArray("[]");
 
+                                    mNoteHasBeenChanged = true;
+
                                     getMedications();
                                 }
                                 catch(Exception e)
@@ -616,12 +611,10 @@ public class NotesEditActivity extends AppCompatActivity
                                 int position = i - 2;
 
                                 String medicationName = medicationsNamesArrayList.get(position);
-                                String medicationManufacturer = medicationsManufacturersArrayList.get(position);
 
                                 SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
                                 String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-                                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+                                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
 
                                 if(cursor.moveToFirst())
                                 {

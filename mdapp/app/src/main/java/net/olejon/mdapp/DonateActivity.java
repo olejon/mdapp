@@ -28,12 +28,9 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -76,7 +73,7 @@ public class DonateActivity extends AppCompatActivity
         setContentView(R.layout.activity_donate);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.donate_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.donate_toolbar);
         toolbar.setTitle(getString(R.string.donate_title));
 
         setSupportActionBar(toolbar);
@@ -158,36 +155,6 @@ public class DonateActivity extends AppCompatActivity
         unbindService(mServiceConnection);
     }
 
-    // Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_donate, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.donate_menu_reset:
-            {
-                resetDonations();
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
     // Donations
     private void makeDonation(String product)
     {
@@ -211,41 +178,6 @@ public class DonateActivity extends AppCompatActivity
         try
         {
             mIInAppBillingService.consumePurchase(3, getPackageName(), purchaseToken);
-        }
-        catch(Exception e)
-        {
-            new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-        }
-    }
-
-    private void resetDonations()
-    {
-        try
-        {
-            Bundle bundle = mIInAppBillingService.getPurchases(3, getPackageName(), "inapp", null);
-
-            int responseCode = bundle.getInt("RESPONSE_CODE");
-
-            if(responseCode == 0)
-            {
-                ArrayList<String> purchaseDataArrayList = bundle.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-
-                if(purchaseDataArrayList != null)
-                {
-                    for(String purchaseData : purchaseDataArrayList)
-                    {
-                        JSONObject purchaseDataJsonObject = new JSONObject(purchaseData);
-
-                        consumeDonation(purchaseDataJsonObject.getString("purchaseToken"));
-                    }
-
-                    mTools.showToast(getString(R.string.donate_reset_successful), 0);
-                }
-            }
-            else
-            {
-                new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-            }
         }
         catch(Exception e)
         {

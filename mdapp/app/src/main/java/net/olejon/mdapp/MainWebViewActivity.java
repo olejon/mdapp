@@ -76,7 +76,7 @@ public class MainWebViewActivity extends AppCompatActivity
     private boolean mWebViewHasBeenLoaded = false;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -100,7 +100,7 @@ public class MainWebViewActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_webview);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
@@ -163,7 +163,7 @@ public class MainWebViewActivity extends AppCompatActivity
         // Web view
         mWebView = (WebView) findViewById(R.id.main_webview_content);
 
-        final WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = mWebView.getSettings();
 
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
@@ -189,6 +189,9 @@ public class MainWebViewActivity extends AppCompatActivity
         }
         else if(pageUri.contains("interaksjoner.azurewebsites.net"))
         {
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0");
             webSettings.setDefaultTextEncodingName("iso-8859-15");
         }
         else if(pageUri.contains("legemiddelhandboka.no"))
@@ -279,7 +282,9 @@ public class MainWebViewActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url)
             {
-                toolbar.setTitle(mWebView.getTitle());
+                String toolbarTitle = (pageUri.contains("antibiotikaiallmennpraksis.no") || pageUri.contains("brukerhandboken.no")) ? pageTitle : mWebView.getTitle();
+
+                toolbar.setTitle(toolbarTitle);
 
                 mProgressBar.setVisibility(View.INVISIBLE);
 
@@ -314,7 +319,11 @@ public class MainWebViewActivity extends AppCompatActivity
                     }
                 }
 
-                if(pageUri.contains("brukerhandboken.no"))
+                if(pageUri.contains("antibiotikaiallmennpraksis.no"))
+                {
+                    mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
+                }
+                else if(pageUri.contains("brukerhandboken.no"))
                 {
                     mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
                 }
@@ -412,6 +421,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
         CookieManager cookieManager = CookieManager.getInstance();
 
+        cookieManager.setCookie("http://bestpractice.bmj.com/best-practice/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://nhi.no/", "user-category=professional");
         cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");

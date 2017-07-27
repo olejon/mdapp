@@ -35,7 +35,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -74,9 +73,9 @@ public class InteractionsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        final String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
+        String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -85,7 +84,7 @@ public class InteractionsActivity extends AppCompatActivity
         setContentView(R.layout.activity_interactions);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
         toolbar.setTitle(getString(R.string.interactions_title));
 
         setSupportActionBar(toolbar);
@@ -305,9 +304,7 @@ public class InteractionsActivity extends AppCompatActivity
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mActivityPaused && mCursor.getCount() > 0)
@@ -332,7 +329,6 @@ public class InteractionsActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
-
             mCursor = mSqLiteDatabase.query(InteractionsSQLiteHelper.TABLE, null, null, null, null, null, InteractionsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
             String[] fromColumns = {InteractionsSQLiteHelper.COLUMN_STRING};

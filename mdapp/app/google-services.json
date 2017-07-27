@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "91884163123",
-    "firebase_url": "https://mdappmaps.firebaseio.com",
-    "project_id": "mdappmaps",
-    "storage_bucket": "mdappmaps.appspot.com"
+    "project_number": "961760983141",
+    "firebase_url": "https://legeappen.firebaseio.com",
+    "project_id": "legeappen",
+    "storage_bucket": "legeappen.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:91884163123:android:66929fafb0febd3a",
+        "mobilesdk_app_id": "1:961760983141:android:66929fafb0febd3a",
         "android_client_info": {
           "package_name": "net.olejon.mdapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "91884163123-i69pa4pemjtranfa6jpim0ptk9j0scar.apps.googleusercontent.com",
+          "client_id": "961760983141-onnqo42mnbkvkb4g99lqdhbq9jdua8u5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDyMIHk2-nQmAXCu9gVXCZPTbLeDshMmZw"
+          "current_key": "AIzaSyBFpZOL1HfFd5AWPtol06XgRfaw3cZ1E7Y"
         }
       ],
       "services": {

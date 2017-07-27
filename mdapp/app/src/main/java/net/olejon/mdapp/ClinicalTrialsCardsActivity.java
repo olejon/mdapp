@@ -33,12 +33,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -47,9 +47,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -77,8 +75,6 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private LinearLayout mNoClinicalTrialsLayout;
 
-    private String searchString;
-
     // Create activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -96,9 +92,9 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         }
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        searchString = intent.getStringExtra("search");
+        final String searchString = intent.getStringExtra("search");
 
         // Layout
         setContentView(R.layout.activity_clinicaltrials_cards);
@@ -106,6 +102,9 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
         mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
+
+        TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
+        mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
         setSupportActionBar(mToolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -148,7 +147,8 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
                 {
                     Intent intent = new Intent(mContext, MainWebViewActivity.class);
                     intent.putExtra("title", getString(R.string.clinicaltrials_cards_search, searchString));
-                    intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?term="+URLEncoder.encode(searchString, "utf-8")+"&recr=Open");
+                    intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?cond="+URLEncoder.encode(searchString, "utf-8")+"&recrs=b&recrs=a&recrs=f&recrs=d&recrs=e&recrs=c&recrs=l");
+
                     mContext.startActivity(intent);
                 }
                 catch(Exception e)
@@ -164,15 +164,11 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         // Correct
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -261,15 +257,11 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
     {
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/clinicaltrials/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/clinicaltrials/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -335,27 +327,27 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTrialsCardsAdapter.ClinicalTrialsViewHolder>
+    class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTrialsCardsAdapter.ClinicalTrialsViewHolder>
     {
-        private final JSONArray mClinicalTrials;
+        final JSONArray mClinicalTrials;
 
-        private int mLastPosition = -1;
+        int mLastPosition = -1;
 
-        private ClinicalTrialsCardsAdapter(JSONArray jsonArray)
+        ClinicalTrialsCardsAdapter(JSONArray jsonArray)
         {
             mClinicalTrials = jsonArray;
         }
 
         class ClinicalTrialsViewHolder extends RecyclerView.ViewHolder
         {
-            private final CardView card;
-            private final TextView title;
-            private final TextView status;
-            private final TextView conditions;
-            private final TextView intervention;
-            private final TextView button;
+            final CardView card;
+            final TextView title;
+            final TextView status;
+            final TextView conditions;
+            final TextView intervention;
+            final TextView button;
 
-            public ClinicalTrialsViewHolder(View view)
+            ClinicalTrialsViewHolder(View view)
             {
                 super(view);
 
@@ -380,13 +372,13 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
         {
             try
             {
-                final JSONObject clinicalTrialsJsonObject = mClinicalTrials.getJSONObject(i);
+                JSONObject clinicalTrialsJsonObject = mClinicalTrials.getJSONObject(i);
 
                 final String title = clinicalTrialsJsonObject.getString("study");
-                final String status = clinicalTrialsJsonObject.getString("status");
-                final String conditions = clinicalTrialsJsonObject.getString("conditions");
-                final String intervention = clinicalTrialsJsonObject.getString("intervention");
                 final String uri = clinicalTrialsJsonObject.getString("uri");
+                String status = clinicalTrialsJsonObject.getString("status");
+                String conditions = clinicalTrialsJsonObject.getString("conditions");
+                String intervention = clinicalTrialsJsonObject.getString("intervention");
 
                 viewHolder.title.setText(title);
                 viewHolder.status.setText(status);
@@ -437,8 +429,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
             {
                 mLastPosition = position;
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
-                view.startAnimation(animation);
+                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
             }
         }
     }

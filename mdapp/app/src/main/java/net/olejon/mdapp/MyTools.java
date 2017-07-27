@@ -56,26 +56,26 @@ class MyTools
 
     private Toast mToast;
 
-    public MyTools(Context context)
+    MyTools(Context context)
     {
         mContext = context;
     }
 
     // Default shared preferences
-    public boolean getDefaultSharedPreferencesBoolean(String preference)
+    boolean getDefaultSharedPreferencesBoolean(String preference)
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         return sharedPreferences.getBoolean(preference, false);
     }
 
     // Shared preferences
-    public String getSharedPreferencesString(String preference)
+    String getSharedPreferencesString(String preference)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
         return sharedPreferences.getString(preference, "");
     }
 
-    public void setSharedPreferencesString(String preference, String string)
+    void setSharedPreferencesString(String preference, String string)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
@@ -83,13 +83,13 @@ class MyTools
         sharedPreferencesEditor.apply();
     }
 
-    public boolean getSharedPreferencesBoolean(String preference)
+    boolean getSharedPreferencesBoolean(String preference)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
         return sharedPreferences.getBoolean(preference, false);
     }
 
-    public void setSharedPreferencesBoolean(String preference, boolean bool)
+    void setSharedPreferencesBoolean(String preference, boolean bool)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
@@ -97,13 +97,13 @@ class MyTools
         sharedPreferencesEditor.apply();
     }
 
-    public long getSharedPreferencesLong(String preference)
+    long getSharedPreferencesLong(String preference)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
         return sharedPreferences.getLong(preference, 0);
     }
 
-    public void setSharedPreferencesLong(String preference, long l)
+    void setSharedPreferencesLong(String preference, long l)
     {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
@@ -112,7 +112,7 @@ class MyTools
     }
 
     // Project version
-    public int getProjectVersionCode()
+    int getProjectVersionCode()
     {
         int code = 0;
 
@@ -128,7 +128,7 @@ class MyTools
         return code;
     }
 
-    public String getProjectVersionName()
+    String getProjectVersionName()
     {
         String name = "0.0";
 
@@ -145,20 +145,20 @@ class MyTools
     }
 
     // Time
-    public long getCurrentTime()
+    long getCurrentTime()
     {
         Calendar calendar = Calendar.getInstance();
         return calendar.getTimeInMillis();
     }
 
     // Database
-    public String sqe(String string)
+    String sqe(String string)
     {
         return DatabaseUtils.sqlEscapeString(string);
     }
 
     // Network
-    public boolean isDeviceConnected()
+    boolean isDeviceConnected()
     {
         ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -167,7 +167,7 @@ class MyTools
     }
 
     // Download file
-    public void downloadFile(String title, String uri)
+    void downloadFile(String title, String uri)
     {
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
 
@@ -183,7 +183,7 @@ class MyTools
     }
 
     // Check if tablet
-    public boolean isTablet()
+    boolean isTablet()
     {
         int size = mContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 
@@ -191,19 +191,24 @@ class MyTools
     }
 
     // Strings
-    public String firstToUpper(String string)
+    String getApiUri()
+    {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) ? mContext.getString(R.string.project_https_api_uri) : mContext.getString(R.string.project_http_api_uri);
+    }
+
+    String firstToUpper(String string)
     {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
     // Statusbar
-    public void setStatusbarColor(Activity activity, int color)
+    void setStatusbarColor(Activity activity, int color)
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) activity.getWindow().setStatusBarColor(ContextCompat.getColor(mContext, color));
     }
 
     // Toast
-    public void showToast(String toast, int length)
+    void showToast(String toast, int length)
     {
         if(mToast != null) mToast.cancel();
 
@@ -212,7 +217,7 @@ class MyTools
     }
 
     // Printing
-    public void printDocument(WebView webView, String title)
+    void printDocument(WebView webView, String title)
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
         {
@@ -236,9 +241,9 @@ class MyTools
     }
 
     // Open URI
-    public void openChromeCustomTabsUri(final String uri)
+    void openChromeCustomTabsUri(String uri)
     {
-        final String packageName = "com.android.chrome";
+        String packageName = "com.android.chrome";
 
         boolean isGoogleChromeInstalled = false;
 
@@ -264,13 +269,13 @@ class MyTools
         }
         else
         {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            mContext.startActivity(browserIntent);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            mContext.startActivity(intent);
         }
     }
 
     // Up navigation
-    public void navigateUp(Activity activity)
+    void navigateUp(Activity activity)
     {
         Intent navigateUpIntent = NavUtils.getParentActivityIntent(activity);
 
@@ -285,7 +290,7 @@ class MyTools
     }
 
     // Saved articles
-    public void saveArticle(String title, String uri, String webview)
+    void saveArticle(String title, String uri, String webview)
     {
         String domain = uri.replaceAll("https?://", "").replaceAll("[w]{3}\\.", "").replaceAll("/.*", "");
 
@@ -305,13 +310,13 @@ class MyTools
     }
 
     // Pharmacies
-    public boolean pharmacyAddressIsPostBox(String pharmacyAddress)
+    boolean pharmacyAddressIsPostBox(String pharmacyAddress)
     {
         return (pharmacyAddress.startsWith("Boks") || pharmacyAddress.startsWith("Pb.") || pharmacyAddress.startsWith("Postboks") || pharmacyAddress.startsWith("Serviceboks"));
     }
 
     // Widget
-    public void updateWidget()
+    void updateWidget()
     {
         ComponentName componentName = new ComponentName(mContext, Widget.class);
 

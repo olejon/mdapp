@@ -34,13 +34,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -49,9 +49,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -98,7 +96,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
         }
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         mSearchString = intent.getStringExtra("search");
 
@@ -108,6 +106,9 @@ public class PoisoningsCardsActivity extends AppCompatActivity
         // Toolbar
         mToolbar = (Toolbar) findViewById(R.id.poisonings_cards_toolbar);
         mToolbar.setTitle(getString(R.string.poisonings_cards_search, mSearchString));
+
+        TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
+        mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
         setSupportActionBar(mToolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,25 +140,18 @@ public class PoisoningsCardsActivity extends AppCompatActivity
         // No poisonings
         mNoPoisoningsLayout = (LinearLayout) findViewById(R.id.poisonings_cards_no_poisonings);
 
-        Button noPoisoningsHelsenorgeButton = (Button) findViewById(R.id.poisonings_cards_check_on_helsenorge);
-        Button noPoisoningsHelsebiblioteketButton = (Button) findViewById(R.id.poisonings_cards_check_on_helsebiblioteket);
+        Button noPoisoningsHelsenorgeButton = (Button) findViewById(R.id.poisonings_cards_search_on_helsenorge);
+        Button noPoisoningsHelsebiblioteketButton = (Button) findViewById(R.id.poisonings_cards_search_on_helsebiblioteket);
 
         noPoisoningsHelsenorgeButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                try
-                {
-                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.poisonings_cards_search_on_helsenorge));
-                    intent.putExtra("uri", "https://helsenorge.no/Giftinformasjon/");
-                    mContext.startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    Log.e("PoisoningsCardsActivity", Log.getStackTraceString(e));
-                }
+                Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                intent.putExtra("title", getString(R.string.poisonings_cards_search_on_helsenorge));
+                intent.putExtra("uri", "https://helsenorge.no/giftinformasjon/");
+                mContext.startActivity(intent);
             }
         });
 
@@ -166,17 +160,10 @@ public class PoisoningsCardsActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                try
-                {
-                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.poisonings_cards_search_in_helsebiblioteket));
-                    intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/");
-                    mContext.startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    Log.e("PoisoningsCardsActivity", Log.getStackTraceString(e));
-                }
+                Intent intent = new Intent(mContext, MainWebViewActivity.class);
+                intent.putExtra("title", getString(R.string.poisonings_cards_search_on_helsebiblioteket));
+                intent.putExtra("uri", "http://www.helsebiblioteket.no/forgiftninger/");
+                mContext.startActivity(intent);
             }
         });
 
@@ -186,15 +173,11 @@ public class PoisoningsCardsActivity extends AppCompatActivity
         // Correct
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -304,15 +287,11 @@ public class PoisoningsCardsActivity extends AppCompatActivity
     {
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/poisonings/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/poisonings/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
             {
                 @Override
                 public void onResponse(JSONArray response)
@@ -378,26 +357,26 @@ public class PoisoningsCardsActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCardsAdapter.PoisoningsViewHolder>
+    class PoisoningsCardsAdapter extends RecyclerView.Adapter<PoisoningsCardsAdapter.PoisoningsViewHolder>
     {
-        private final JSONArray mPoisonings;
+        final JSONArray mPoisonings;
 
-        private int mLastPosition = -1;
+        int mLastPosition = -1;
 
-        private PoisoningsCardsAdapter(JSONArray jsonArray)
+        PoisoningsCardsAdapter(JSONArray jsonArray)
         {
             mPoisonings = jsonArray;
         }
 
         class PoisoningsViewHolder extends RecyclerView.ViewHolder
         {
-            private final CardView card;
-            private final TextView type;
-            private final TextView title;
-            private final TextView text;
-            private final TextView buttonUri;
+            final CardView card;
+            final TextView type;
+            final TextView title;
+            final TextView text;
+            final TextView uri;
 
-            public PoisoningsViewHolder(View view)
+            PoisoningsViewHolder(View view)
             {
                 super(view);
 
@@ -405,7 +384,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
                 type = (TextView) view.findViewById(R.id.poisonings_cards_card_type);
                 title = (TextView) view.findViewById(R.id.poisonings_cards_card_title);
                 text = (TextView) view.findViewById(R.id.poisonings_cards_card_text);
-                buttonUri = (TextView) view.findViewById(R.id.poisonings_cards_card_button_uri);
+                uri = (TextView) view.findViewById(R.id.poisonings_cards_card_button_uri);
             }
         }
 
@@ -421,12 +400,12 @@ public class PoisoningsCardsActivity extends AppCompatActivity
         {
             try
             {
-                final JSONObject interactionJsonObject = mPoisonings.getJSONObject(i);
+                JSONObject interactionJsonObject = mPoisonings.getJSONObject(i);
 
-                final String type = interactionJsonObject.getString("type");
                 final String title = interactionJsonObject.getString("title");
-                final String text = interactionJsonObject.getString("text");
                 final String uri = interactionJsonObject.getString("uri");
+                String type = interactionJsonObject.getString("type");
+                String text = interactionJsonObject.getString("text");
 
                 viewHolder.title.setText(title);
                 viewHolder.text.setText(text);
@@ -452,7 +431,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
                     }
                 });
 
-                viewHolder.buttonUri.setOnClickListener(new View.OnClickListener()
+                viewHolder.uri.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View view)
@@ -484,8 +463,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
             {
                 mLastPosition = position;
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
-                view.startAnimation(animation);
+                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
             }
         }
     }

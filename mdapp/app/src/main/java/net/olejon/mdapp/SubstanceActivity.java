@@ -49,8 +49,8 @@ public class SubstanceActivity extends AppCompatActivity
     private MenuItem mAtcCodeMenuItem;
     private ListView mListView;
 
-    private String substanceAtcCode;
     private String substanceName;
+    private String substanceAtcCode;
 
     // Create activity
     @Override
@@ -59,35 +59,34 @@ public class SubstanceActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        final long substanceId = intent.getLongExtra("id", 0);
+        long substanceId = intent.getLongExtra("id", 0);
 
         // Open database
         SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
-        String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME};
+        String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE};
         Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID+" = "+substanceId, null, null, null, null);
 
         if(cursor.moveToFirst())
         {
             // Substance
-            substanceAtcCode = cursor.getString(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE));
             substanceName = cursor.getString(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME));
+            substanceAtcCode = cursor.getString(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.SUBSTANCES_COLUMN_ATC_CODE));
 
             // Layout
             setContentView(R.layout.activity_substance);
 
             // Toolbar
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.substance_toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.substance_toolbar);
             toolbar.setTitle(substanceName);
 
             setSupportActionBar(toolbar);
             if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             // ATC code
-            TextView atcCodeTextView = (TextView) findViewById(R.id.substance_atc_code);
-            atcCodeTextView.setText(substanceAtcCode);
+            TextView textView = (TextView) findViewById(R.id.substance_atc_code);
+            textView.setText(substanceAtcCode);
 
             // List
             mListView = (ListView) findViewById(R.id.substance_list);
@@ -184,9 +183,8 @@ public class SubstanceActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
-            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+substanceName+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+substanceName+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME);
 
             String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
             int[] toViews = {R.id.substance_list_item_name, R.id.substance_list_item_manufacturer};

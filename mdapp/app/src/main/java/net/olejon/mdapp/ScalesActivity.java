@@ -43,14 +43,14 @@ public class ScalesActivity extends AppCompatActivity
         setContentView(R.layout.activity_scales);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.scales_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.scales_toolbar);
         toolbar.setTitle(getString(R.string.scales_title));
 
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Scales
-        final TextView scalesMedscape = (TextView) findViewById(R.id.scales_medscape);
+        TextView scalesMedscape = (TextView) findViewById(R.id.scales_medscape);
 
         scalesMedscape.setOnClickListener(new View.OnClickListener()
         {
@@ -64,9 +64,9 @@ public class ScalesActivity extends AppCompatActivity
             }
         });
 
-        final TextView scalesVasTitle = (TextView) findViewById(R.id.scales_vas_title);
-        final ImageView scalesVasImage = (ImageView) findViewById(R.id.scales_vas_image);
-        final TextView scalesVasButton = (TextView) findViewById(R.id.scales_vas_button);
+        TextView scalesVasTitle = (TextView) findViewById(R.id.scales_vas_title);
+        ImageView scalesVasImage = (ImageView) findViewById(R.id.scales_vas_image);
+        TextView scalesVasButton = (TextView) findViewById(R.id.scales_vas_button);
 
         scalesVasTitle.setOnClickListener(new View.OnClickListener()
         {
@@ -95,9 +95,9 @@ public class ScalesActivity extends AppCompatActivity
             }
         });
 
-        final TextView scalesGcsTitle = (TextView) findViewById(R.id.scales_gcs_title);
-        final ImageView scalesGcsImage = (ImageView) findViewById(R.id.scales_gcs_image);
-        final TextView scalesGcsButton = (TextView) findViewById(R.id.scales_gcs_button);
+        TextView scalesGcsTitle = (TextView) findViewById(R.id.scales_gcs_title);
+        ImageView scalesGcsImage = (ImageView) findViewById(R.id.scales_gcs_image);
+        TextView scalesGcsButton = (TextView) findViewById(R.id.scales_gcs_button);
 
         scalesGcsTitle.setOnClickListener(new View.OnClickListener()
         {
@@ -126,9 +126,9 @@ public class ScalesActivity extends AppCompatActivity
             }
         });
 
-        final TextView scalesMewsTitle = (TextView) findViewById(R.id.scales_mews_title);
-        final ImageView scalesMewsImage = (ImageView) findViewById(R.id.scales_mews_image);
-        final TextView scalesMewsButton = (TextView) findViewById(R.id.scales_mews_button);
+        TextView scalesMewsTitle = (TextView) findViewById(R.id.scales_mews_title);
+        ImageView scalesMewsImage = (ImageView) findViewById(R.id.scales_mews_image);
+        TextView scalesMewsButton = (TextView) findViewById(R.id.scales_mews_button);
 
         scalesMewsTitle.setOnClickListener(new View.OnClickListener()
         {

@@ -37,7 +37,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -79,7 +78,7 @@ public class ManufacturersActivity extends AppCompatActivity
         setContentView(R.layout.activity_manufacturers);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.manufacturers_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.manufacturers_toolbar);
         toolbar.setTitle(getString(R.string.manufacturers_title));
 
         setSupportActionBar(toolbar);
@@ -249,9 +248,7 @@ public class ManufacturersActivity extends AppCompatActivity
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mActivityPaused)

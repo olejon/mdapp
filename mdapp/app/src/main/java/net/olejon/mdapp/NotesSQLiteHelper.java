@@ -29,20 +29,20 @@ class NotesSQLiteHelper extends SQLiteOpenHelper
 
     private static final int DB_VERSION = 1;
 
-    public static final String TABLE = "notes";
+    static final String TABLE = "notes";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_TEXT = "text";
-    public static final String COLUMN_DATA = "data";
-    public static final String COLUMN_PATIENT_ID = "patient_id";
-    public static final String COLUMN_PATIENT_NAME = "patient_name";
-    public static final String COLUMN_PATIENT_DOCTOR = "patient_doctor";
-    public static final String COLUMN_PATIENT_DEPARTMENT = "patient_department";
-    public static final String COLUMN_PATIENT_ROOM = "patient_room";
-    public static final String COLUMN_PATIENT_MEDICATIONS = "patient_medications";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_TITLE = "title";
+    static final String COLUMN_TEXT = "text";
+    static final String COLUMN_DATA = "data";
+    static final String COLUMN_PATIENT_ID = "patient_id";
+    static final String COLUMN_PATIENT_NAME = "patient_name";
+    static final String COLUMN_PATIENT_DOCTOR = "patient_doctor";
+    static final String COLUMN_PATIENT_DEPARTMENT = "patient_department";
+    static final String COLUMN_PATIENT_ROOM = "patient_room";
+    static final String COLUMN_PATIENT_MEDICATIONS = "patient_medications";
 
-    public NotesSQLiteHelper(Context context)
+    NotesSQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -50,7 +50,7 @@ class NotesSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_TITLE+" TEXT, "+COLUMN_TEXT+" TEXT, "+COLUMN_DATA+" TEXT, "+COLUMN_PATIENT_ID+" TEXT, "+COLUMN_PATIENT_NAME+" TEXT, "+COLUMN_PATIENT_DOCTOR+" TEXT, "+COLUMN_PATIENT_DEPARTMENT+" TEXT, "+COLUMN_PATIENT_ROOM+" TEXT, "+COLUMN_PATIENT_MEDICATIONS+" TEXT);");
+        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_TITLE+" TEXT, "+COLUMN_TEXT+" TEXT, "+COLUMN_DATA+" TEXT, "+COLUMN_PATIENT_ID+" TEXT, "+COLUMN_PATIENT_NAME+" TEXT, "+COLUMN_PATIENT_DOCTOR+" TEXT, "+COLUMN_PATIENT_DEPARTMENT+" TEXT, "+COLUMN_PATIENT_ROOM+" TEXT, "+COLUMN_PATIENT_MEDICATIONS+" TEXT);");
     }
 
     @Override

@@ -135,6 +135,20 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <!-- Antibiotics guides -->
+    <style name="antibiotics_guides_list_empty_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Antibiotics guides cards -->
+    <style name="antibiotics_guides_cards_no_antibiotics_guides_information_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="antibiotics_guides_cards_card_title_base">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <!-- Nasjonale retningslinjer -->
     <style name="nasjonale_retningslinjer_list_empty_base">
         <item name="android:fontFamily">sans-serif-medium</item>

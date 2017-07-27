@@ -36,16 +36,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -90,7 +87,7 @@ public class LvhActivity extends AppCompatActivity
         setContentView(R.layout.activity_lvh);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.lvh_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.lvh_toolbar);
         toolbar.setTitle(R.string.lvh_title);
 
         setSupportActionBar(toolbar);
@@ -145,15 +142,11 @@ public class LvhActivity extends AppCompatActivity
     // Get categories
     private void getCategories()
     {
-        final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-        final Network network = new BasicNetwork(new HurlStack());
-
-        final RequestQueue requestQueue = new RequestQueue(cache, network);
+        final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
         requestQueue.start();
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getString(R.string.project_website_uri)+"api/1/lvh/", new Response.Listener<JSONArray>()
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/lvh/", new Response.Listener<JSONArray>()
         {
             @Override
             public void onResponse(JSONArray response)
@@ -184,15 +177,15 @@ public class LvhActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHolder>
+    class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHolder>
     {
-        private final LayoutInflater mLayoutInflater;
+        final LayoutInflater mLayoutInflater;
 
-        private final JSONArray mCategories;
+        final JSONArray mCategories;
 
-        private int mLastPosition = -1;
+        int mLastPosition = -1;
 
-        private LvhAdapter(JSONArray jsonArray)
+        LvhAdapter(JSONArray jsonArray)
         {
             mLayoutInflater =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -201,12 +194,12 @@ public class LvhActivity extends AppCompatActivity
 
         class CategoryViewHolder extends RecyclerView.ViewHolder
         {
-            private final CardView card;
-            private final ImageView icon;
-            private final TextView title;
-            private final LinearLayout categories;
+            final CardView card;
+            final ImageView icon;
+            final TextView title;
+            final LinearLayout categories;
 
-            public CategoryViewHolder(View view)
+            CategoryViewHolder(View view)
             {
                 super(view);
 
@@ -232,7 +225,7 @@ public class LvhActivity extends AppCompatActivity
                 final String color;
                 final String icon;
 
-                final JSONObject categoriesJsonObject = mCategories.getJSONObject(i);
+                JSONObject categoriesJsonObject = mCategories.getJSONObject(i);
 
                 switch(i)
                 {
@@ -290,16 +283,16 @@ public class LvhActivity extends AppCompatActivity
 
                 viewHolder.categories.removeAllViews();
 
-                final JSONArray categoriesJsonArray = categoriesJsonObject.getJSONArray("categories");
+                JSONArray categoriesJsonArray = categoriesJsonObject.getJSONArray("categories");
 
                 for(int f = 0; f < categoriesJsonArray.length(); f++)
                 {
-                    final JSONObject categoryJsonObject = categoriesJsonArray.getJSONObject(f);
+                    JSONObject categoryJsonObject = categoriesJsonArray.getJSONObject(f);
 
                     final String title = categoryJsonObject.getString("title");
                     final String subcategories = categoryJsonObject.getString("subcategories");
 
-                    final TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_lvh_card_categories_item, null);
+                    TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_lvh_card_categories_item, null);
                     textView.setText(categoryJsonObject.getString("title"));
 
                     textView.setOnClickListener(new View.OnClickListener()
@@ -339,8 +332,7 @@ public class LvhActivity extends AppCompatActivity
             {
                 mLastPosition = position;
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
-                view.startAnimation(animation);
+                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
             }
         }
     }

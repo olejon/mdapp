@@ -49,12 +49,12 @@ public class MedicationFelleskatalogenFragment extends Fragment
     private WebView mWebView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medication_felleskatalogen, container, false);
 
         // Activity
-        final Activity activity = getActivity();
+        Activity activity = getActivity();
 
         // Context
         final Context context = activity.getApplicationContext();
@@ -63,7 +63,7 @@ public class MedicationFelleskatalogenFragment extends Fragment
         final MyTools mTools = new MyTools(context);
 
         // Arguments
-        final String pageUri = getArguments().getString("uri");
+        String pageUri = getArguments().getString("uri");
 
         // Progress bar
         final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_felleskatalogen_progressbar);
@@ -78,7 +78,7 @@ public class MedicationFelleskatalogenFragment extends Fragment
         // Web view
         mWebView = (WebView) viewGroup.findViewById(R.id.medication_felleskatalogen_content);
 
-        final WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = mWebView.getSettings();
 
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0");

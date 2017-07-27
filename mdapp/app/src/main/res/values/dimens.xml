@@ -2,7 +2,7 @@
 
 <resources>
 
-    <dimen name="main_drawer">-1dp</dimen>
+    <dimen name="drawer">-1dp</dimen>
     <dimen name="welcome_padding">24dp</dimen>
     <dimen name="welcome_page_button_margin">24dp</dimen>
     <dimen name="list_item_layout_padding">16dp</dimen>

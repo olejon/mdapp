@@ -4,12 +4,14 @@
 
     <!-- Project -->
     <string name="project_name">LegeAppen</string>
-    <string name="project_website_uri">http://www.olejon.net/code/mdapp/</string>
-    <string name="project_developer_website_uri">http://www.olejon.net/code/mdapp/?page=olejondotnet</string>
+    <string name="project_http_api_uri">http://www.olejon.net/code/mdapp/</string>
+    <string name="project_https_api_uri">https://www.olejon.net/code/mdapp/</string>
+    <string name="project_website_uri">https://olejon.github.io/mdapp/</string>
+    <string name="project_developer_website_uri">https://www.olejon.net/</string>
     <string name="project_developer_privacy_uri">https://github.com/olejon/mdapp/wiki/Personvern</string>
-    <string name="project_developer_license_uri">http://www.olejon.net/code/mdapp/?page=license</string>
-    <string name="project_developer_licenses_uri">http://www.olejon.net/code/mdapp/?page=licenses</string>
-    <string name="project_report_issue_uri">http://www.olejon.net/code/mdapp/?page=issues</string>
+    <string name="project_developer_license_uri">https://www.gnu.org/licenses/gpl.html</string>
+    <string name="project_developer_licenses_uri">https://github.com/olejon/mdapp/wiki/Lisenser</string>
+    <string name="project_report_issue_uri">https://github.com/olejon/mdapp/issues</string>
     <string name="project_feedback_text">Send tilbakemelding</string>
     <string name="project_feedback_uri">mailto:mail@olejon.net?subject=%1$s</string>
 
@@ -29,8 +31,8 @@
     <string name="main_menu_scan_barcode">Skann strekkode</string>
     <string name="main_menu_donate">Doner</string>
     <string name="main_menu_settings">Innstillinger</string>
-    <string name="main_decompressing_new_database">Dekomprimerer ny database</string>
-    <string name="main_new_database_decompressed">Ny database dekomprimert</string>
+    <string name="main_decompressing_new_database">Dekomprimerer ny database…</string>
+    <string name="main_new_database_decompressed">Ny database dekomprimert. Navn: \"%1$s\". Versjon: \"%2$d\".</string>
 
     <!-- Main web view -->
     <string name="main_webview_toolbar_search_hint">Finn i tekst…</string>
@@ -48,7 +50,6 @@
 
     <!-- Medications favorites -->
     <string name="main_medications_favorites_list_empty">Ingen favoritter</string>
-    <string name="main_medications_favorites_menu_context_remove">Fjern fra favoritter</string>
 
     <!-- Medication -->
     <string name="medication_nlh">Legemiddel…</string>
@@ -71,9 +72,8 @@
     <string name="medication_not_connected_dialog_positive_button">Prøv på nytt</string>
     <string name="medication_not_connected_dialog_negative_button">Lukk</string>
     <string name="medication_note_dialog_title">Ingen PIN-kode</string>
-    <string name="medication_note_dialog_message">Før du kan opprette notater må du opprette en PIN-kode.</string>
-    <string name="medication_note_dialog_positive_button">Opprett PIN-kode</string>
-    <string name="medication_note_dialog_negative_button">Avbryt</string>
+    <string name="medication_note_dialog_message">Før du kan opprette notater må du opprette en PIN-kode. Åpne sidemenyen, skroll ned og åpne Notater.</string>
+    <string name="medication_note_dialog_positive_button">OK</string>
     <string name="medication_menu_find_in_text">Finn i tekst</string>
     <string name="medication_menu_add_favorite">Legg til i favoritter</string>
     <string name="medication_menu_remove_favorite">Fjern fra favoritter</string>
@@ -189,13 +189,29 @@
     <string name="poisonings_cards_card_button_uri">LES MER</string>
     <string name="poisonings_cards_no_results">Fant ingen resultater</string>
     <string name="poisonings_cards_search_on_helsenorge">Søk på Helsenorge.no</string>
-    <string name="poisonings_cards_search_in_helsebiblioteket">Søk i Helsebiblioteket</string>
+    <string name="poisonings_cards_search_on_helsebiblioteket">Søk i Helsebiblioteket</string>
     <string name="poisonings_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
     <string name="poisonings_cards_menu_call">Ring Giftinformasjonen</string>
 
+    <!-- Antibiotics guides -->
+    <string name="antibiotics_guides_title">Antibiotikaveileder</string>
+    <string name="antibiotics_guides_toolbar_search_hint">Søk på norsk…</string>
+    <string name="antibiotics_guides_no_recent_searches">Ingen nylige søk</string>
+    <string name="antibiotics_guides_information">Søk etter et antibiotikum.\n\nKildene som brukes er <i>Antibiotikabruk i primærhelsetjenesten</i> og <i>Helsedirektoratet</i>.</string>
+    <string name="antibiotics_guides_recent_searches">Søk på norsk…</string>
+    <string name="antibiotics_guides_recent_searches_removed">Nylige søk fjernet</string>
+    <string name="antibiotics_guides_menu_clear_recent_searches">Fjern nylige søk</string>
+
+    <!-- Antibiotics guides cards -->
+    <string name="antibiotics_guides_cards_search">Søk: \"%1$s\"</string>
+    <string name="antibiotics_guides_cards_card_button_uri">LES MER</string>
+    <string name="antibiotics_guides_cards_no_results">Fant ingen resultater</string>
+    <string name="antibiotics_guides_cards_search_on_primaerhelsetjenesten">Søk i Primærhelsetjenesten</string>
+    <string name="antibiotics_guides_cards_search_on_helsedirektoratet">Søk i Helsedirektoratet</string>
+    <string name="antibiotics_guides_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
+
     <!-- Nasjonale retningslinjer -->
     <string name="nasjonale_retningslinjer_title">Nasjonale retningslinjer</string>
-    <string name="nasjonale_retningslinjer_search">Søk: \"%1$s\"</string>
     <string name="nasjonale_retningslinjer_toolbar_search_hint">Søk på norsk…</string>
     <string name="nasjonale_retningslinjer_no_recent_searches">Ingen nylige søk</string>
     <string name="nasjonale_retningslinjer_information">Kilden som brukes er <i>Nasjonale faglige retningslinjer</i> fra Helsedirektoratet</string>
@@ -451,9 +467,7 @@
     <string name="donate_information">Når du trykker på en av knappene over vil det komme opp en dialog hvor du kan bekrefte eller avbryte donasjonen.\n\nNB: Donasjoner går til utvikler, ikke innholdskildene.\n\nTusen takk!</string>
     <string name="donate_thank_you">Tusen takk for din donasjon!</string>
     <string name="donate_something_went_wrong">Noe gikk galt. Vennligst prøv igjen.</string>
-    <string name="donate_reset_successful">Suksess</string>
     <string name="donate_donate">Doner\u0020</string>
-    <string name="donate_menu_reset">Tilbakestill</string>
 
     <!-- Barcode scanner -->
     <string name="barcode_scanner_scan">Skann strekkoden på en preparatpakning</string>
@@ -503,6 +517,7 @@
     <string name="drawer_item_lvh">Legevakthåndboken</string>
     <string name="drawer_item_interactions">Interaksjonsanalyse</string>
     <string name="drawer_item_poisonings">Giftinformasjonen</string>
+    <string name="drawer_item_antibiotics_guides">Antibiotikaveileder</string>
     <string name="drawer_item_nasjonale_retningslinjer">Nasjonale retningslinjer</string>
     <string name="drawer_item_clinicaltrials">Kliniske studier</string>
     <string name="drawer_item_atc">ATC-register</string>

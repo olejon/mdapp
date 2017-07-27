@@ -67,7 +67,7 @@ public class CalculatorsActivity extends AppCompatActivity
         setContentView(R.layout.activity_calculators);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.calculators_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.calculators_toolbar);
         toolbar.setTitle(getString(R.string.calculators_title));
 
         setSupportActionBar(toolbar);
@@ -80,7 +80,7 @@ public class CalculatorsActivity extends AppCompatActivity
         mBmiHeightInputLayout.setHintAnimationEnabled(true);
 
         final EditText bmiEditText = (EditText) findViewById(R.id.calculators_bmi_height);
-        final TextView bmiButton = (TextView) findViewById(R.id.calculators_bmi_button);
+        TextView bmiButton = (TextView) findViewById(R.id.calculators_bmi_button);
 
         bmiButton.setOnClickListener(new View.OnClickListener()
         {
@@ -116,7 +116,7 @@ public class CalculatorsActivity extends AppCompatActivity
         mWaistMeasurementInputLayout.setHintAnimationEnabled(true);
 
         final EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
-        final TextView waistMeasurementButton = (TextView) findViewById(R.id.calculators_waist_measurement_button);
+        TextView waistMeasurementButton = (TextView) findViewById(R.id.calculators_waist_measurement_button);
 
         waistMeasurementButton.setOnClickListener(new View.OnClickListener()
         {
@@ -154,7 +154,7 @@ public class CalculatorsActivity extends AppCompatActivity
         mRrIntervalEditTextLayout.setHintAnimationEnabled(true);
 
         final EditText correctedQtTimeEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
-        final TextView correctedQtTimeButton = (TextView) findViewById(R.id.calculators_corrected_qt_time_button);
+        TextView correctedQtTimeButton = (TextView) findViewById(R.id.calculators_corrected_qt_time_button);
 
         correctedQtTimeButton.setOnClickListener(new View.OnClickListener()
         {
@@ -458,7 +458,7 @@ public class CalculatorsActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
                         intent.putExtra("title", getString(R.string.calculators_corrected_qt_time_dialog_title));
-                        intent.putExtra("uri", "http://tidsskriftet.no/article/218317");
+                        intent.putExtra("uri", "http://tidsskriftet.no/2000/11/merkesteiner-i-norsk-medisin/lang-qt-tid-som-bivirkning-risiko-fatale-arytmier");
                         startActivity(intent);
                     }
                 }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();

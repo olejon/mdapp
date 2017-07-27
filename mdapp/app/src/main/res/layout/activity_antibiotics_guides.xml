@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/antibiotics_guides_layout">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/antibiotics_guides_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+
+        <LinearLayout android:id="@+id/antibiotics_guides_toolbar_search_layout" style="@style/toolbar_search_layout">
+            <EditText android:id="@+id/antibiotics_guides_toolbar_search" android:hint="@string/antibiotics_guides_toolbar_search_hint" style="@style/antibiotics_guides_toolbar_search_edittext"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ListView android:id="@+id/antibiotics_guides_list" android:layout_below="@+id/antibiotics_guides_toolbar" style="@style/antibiotics_guides_list_layout"/>
+
+    <ScrollView android:id="@+id/antibiotics_guides_list_empty" android:layout_below="@+id/antibiotics_guides_toolbar" style="@style/antibiotics_guides_list_empty_layout">
+
+        <LinearLayout style="@style/antibiotics_guides_list_empty_inner_layout">
+            <TextView android:text="@string/antibiotics_guides_no_recent_searches" style="@style/antibiotics_guides_list_empty"/>
+            <TextView android:text="@string/antibiotics_guides_information" style="@style/antibiotics_guides_list_information"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton android:id="@+id/antibiotics_guides_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
+
+</RelativeLayout>

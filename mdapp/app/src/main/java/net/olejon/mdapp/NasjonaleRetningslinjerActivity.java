@@ -38,7 +38,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -52,9 +51,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -103,7 +100,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
         setContentView(R.layout.activity_nasjonale_retningslinjer);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.nasjonale_retningslinjer_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.nasjonale_retningslinjer_toolbar);
         toolbar.setTitle(getString(R.string.nasjonale_retningslinjer_title));
 
         setSupportActionBar(toolbar);
@@ -177,7 +174,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            final String voiceSearchString = voiceSearchArrayList.get(0);
+            String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -290,7 +287,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String originalSearchString)
+    private void search(String originalSearchString)
     {
         if(!mTools.isDeviceConnected()) mTools.showToast(getString(R.string.device_not_connected), 1);
 
@@ -304,15 +301,11 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
 
         try
         {
-            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-            final Network network = new BasicNetwork(new HurlStack());
-
-            final RequestQueue requestQueue = new RequestQueue(cache, network);
+            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
             requestQueue.start();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
             {
                 @Override
                 public void onResponse(JSONObject response)
@@ -332,7 +325,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                             try
                             {
                                 Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search, searchString));
+                                intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_title));
                                 intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString, "utf-8"));
                                 startActivity(intent);
                             }
@@ -353,7 +346,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                                     try
                                     {
                                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search, correctSearchString));
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_title));
                                         intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(correctSearchString, "utf-8"));
                                         startActivity(intent);
                                     }
@@ -372,7 +365,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                                     try
                                     {
                                         Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_search, searchString));
+                                        intent.putExtra("title", getString(R.string.nasjonale_retningslinjer_title));
                                         intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer#k="+URLEncoder.encode(searchString, "utf-8"));
                                         startActivity(intent);
                                     }
@@ -454,9 +447,7 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mActivityPaused && mCursor.getCount() > 0)
@@ -481,7 +472,6 @@ public class NasjonaleRetningslinjerActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new NasjonaleRetningslinjerSQLiteHelper(mContext).getWritableDatabase();
-
             mCursor = mSqLiteDatabase.query(NasjonaleRetningslinjerSQLiteHelper.TABLE, null, null, null, null, null, NasjonaleRetningslinjerSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
             String[] fromColumns = {NasjonaleRetningslinjerSQLiteHelper.COLUMN_STRING};

@@ -37,7 +37,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -80,7 +79,7 @@ public class PharmaciesActivity extends AppCompatActivity
         setContentView(R.layout.activity_pharmacies);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_toolbar);
         toolbar.setTitle(getString(R.string.pharmacies_title));
 
         setSupportActionBar(toolbar);
@@ -242,20 +241,20 @@ public class PharmaciesActivity extends AppCompatActivity
                 {
                     if(mSqLiteDatabase != null)
                     {
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, null, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME);
+                        String[] queryColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_ID, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
+
+                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
 
                         String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME);
+                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
                     }
 
                     return null;
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(!mActivityPaused)
@@ -280,7 +279,8 @@ public class PharmaciesActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, null, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME);
+            String[] queryColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_ID, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
+            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
 
             String[] fromColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
             int[] toViews = {R.id.pharmacies_list_item_municipality};

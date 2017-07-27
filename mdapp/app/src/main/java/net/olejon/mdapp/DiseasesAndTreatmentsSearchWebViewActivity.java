@@ -78,7 +78,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
     // Create activity
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -96,7 +96,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         }
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         pageTitle = intent.getStringExtra("title");
         pageUri = intent.getStringExtra("uri");
@@ -166,7 +166,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
         // Web view
         mWebView = (WebView) findViewById(R.id.diseases_and_treatments_search_webview_content);
 
-        final WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = mWebView.getSettings();
 
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
@@ -253,7 +253,9 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
             @Override
             public void onPageFinished(WebView view, String url)
             {
-                toolbar.setTitle(mWebView.getTitle());
+                String toolbarTitle = (pageUri.contains("brukerhandboken.no")) ? pageTitle : mWebView.getTitle();
+
+                toolbar.setTitle(toolbarTitle);
 
                 mProgressBar.setVisibility(View.INVISIBLE);
 
@@ -372,6 +374,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
         CookieManager cookieManager = CookieManager.getInstance();
 
+        cookieManager.setCookie("http://bestpractice.bmj.com/best-practice/", "BMJ-cookie-policy=close");
         cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
         cookieManager.setCookie("https://nhi.no/", "user-category=professional");
         cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");

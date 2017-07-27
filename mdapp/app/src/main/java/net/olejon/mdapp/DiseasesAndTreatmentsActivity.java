@@ -84,7 +84,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
         setContentView(R.layout.activity_diseases_and_treatments);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_toolbar);
         toolbar.setTitle(getString(R.string.diseases_and_treatments_title));
 
         setSupportActionBar(toolbar);
@@ -150,7 +150,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            final String voiceSearchString = voiceSearchArrayList.get(0);
+            String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -309,7 +309,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
         }, 125);
     }
 
-    private void search(final String searchString)
+    private void search(String searchString)
     {
         if(searchString.equals("")) return;
 
@@ -338,7 +338,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
             });
 
             Animation fabAnimation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
             mFloatingActionButton.startAnimation(fabAnimation);
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
@@ -361,7 +360,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
-
             mCursor = mSqLiteDatabase.query(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, null, null, null, null, DiseasesAndTreatmentsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
             String[] fromColumns = {DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING};

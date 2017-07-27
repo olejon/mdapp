@@ -37,7 +37,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -80,9 +79,9 @@ public class PoisoningsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        final String searchString = intent.getStringExtra("search");
+        String searchString = intent.getStringExtra("search");
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -91,7 +90,7 @@ public class PoisoningsActivity extends AppCompatActivity
         setContentView(R.layout.activity_poisonings);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
         toolbar.setTitle(getString(R.string.poisonings_title));
 
         setSupportActionBar(toolbar);
@@ -165,7 +164,7 @@ public class PoisoningsActivity extends AppCompatActivity
         {
             ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            final String voiceSearchString = voiceSearchArrayList.get(0);
+            String voiceSearchString = voiceSearchArrayList.get(0);
 
             search(voiceSearchString);
         }
@@ -292,7 +291,7 @@ public class PoisoningsActivity extends AppCompatActivity
     }
 
     // Search
-    private void search(final String searchString)
+    private void search(String searchString)
     {
         if(searchString.equals("")) return;
 
@@ -334,9 +333,7 @@ public class PoisoningsActivity extends AppCompatActivity
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG"))

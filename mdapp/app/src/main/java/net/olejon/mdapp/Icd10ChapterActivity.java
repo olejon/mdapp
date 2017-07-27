@@ -39,7 +39,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -50,9 +49,7 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -106,7 +103,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         mChapterId = intent.getLongExtra("chapter", 0);
 
@@ -274,7 +271,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
     // Populate list view
     private void populateListView(String searchString)
     {
-        final ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
 
         mCodesArrayList = new ArrayList<>();
         mNamesArrayList = new ArrayList<>();
@@ -362,15 +359,11 @@ public class Icd10ChapterActivity extends AppCompatActivity
 
                         try
                         {
-                            final Cache cache = new DiskBasedCache(getCacheDir(), 0);
-
-                            final Network network = new BasicNetwork(new HurlStack());
-
-                            final RequestQueue requestQueue = new RequestQueue(cache, network);
+                            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
                             requestQueue.start();
 
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, getString(R.string.project_website_uri)+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
                             {
                                 @Override
                                 public void onResponse(JSONObject response)
@@ -428,9 +421,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
 
             populateListView(null);
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
         }
 
@@ -438,8 +429,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
         protected Void doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
-            String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_ID, SlDataSQLiteHelper.ICD_10_COLUMN_NAME, SlDataSQLiteHelper.ICD_10_COLUMN_DATA};
+            String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_NAME, SlDataSQLiteHelper.ICD_10_COLUMN_DATA};
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, SlDataSQLiteHelper.ICD_10_COLUMN_ID+" = "+mChapterId, null, null, null, null);
 
             if(mCursor.moveToFirst())

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/main_drawer_layout" style="@style/main_drawer_layout">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/main_drawer_layout" style="@style/drawer_layout">
 
     <RelativeLayout android:id="@+id/main_layout" style="@style/main_layout">
 
@@ -20,13 +20,13 @@
 
     </RelativeLayout>
 
-    <android.support.design.widget.NavigationView android:id="@+id/main_drawer" style="@style/main_drawer">
+    <android.support.design.widget.NavigationView android:id="@+id/main_drawer" style="@style/drawer">
 
-        <ScrollView style="@style/main_drawer_inner">
+        <ScrollView style="@style/drawer_inner">
 
-            <LinearLayout style="@style/main_drawer_inner_inner">
+            <LinearLayout style="@style/drawer_inner_inner">
 
-                <ImageView android:id="@+id/drawer_banner" android:src="@drawable/drawer_banner" android:contentDescription="@string/drawer_banner_image_content_description" style="@style/main_drawer_banner"/>
+                <ImageView android:id="@+id/drawer_banner" android:src="@drawable/drawer_banner" android:contentDescription="@string/drawer_banner_image_content_description" style="@style/drawer_banner"/>
 
                 <TextView android:text="@string/drawer_subheader_encyclopedias" style="@style/drawer_subheader"/>
 
@@ -61,6 +61,7 @@
                 <TextView android:id="@+id/drawer_item_lvh" android:drawableStart="@drawable/ic_healing_grey600_24dp" android:drawableLeft="@drawable/ic_healing_grey600_24dp" android:text="@string/drawer_item_lvh" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_interactions" android:drawableStart="@drawable/ic_warning_grey600_24dp" android:drawableLeft="@drawable/ic_warning_grey600_24dp" android:text="@string/drawer_item_interactions" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_poisonings" android:drawableStart="@drawable/ic_error_grey600_24dp" android:drawableLeft="@drawable/ic_error_grey600_24dp" android:text="@string/drawer_item_poisonings" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+                <TextView android:id="@+id/drawer_item_antibiotics_guides" android:drawableStart="@drawable/ic_colorize_grey600_24dp" android:drawableLeft="@drawable/ic_colorize_grey600_24dp" android:text="@string/drawer_item_antibiotics_guides" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_nasjonale_retningslinjer" android:drawableStart="@drawable/ic_format_list_bulleted_grey600_24dp" android:drawableLeft="@drawable/ic_format_list_bulleted_grey600_24dp" android:text="@string/drawer_item_nasjonale_retningslinjer" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_clinicaltrials" android:drawableStart="@drawable/ic_content_paste_grey600_24dp" android:drawableLeft="@drawable/ic_content_paste_grey600_24dp" android:text="@string/drawer_item_clinicaltrials" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
                 <TextView android:id="@+id/drawer_item_atc" android:drawableStart="@drawable/ic_my_library_books_grey600_24dp" android:drawableLeft="@drawable/ic_my_library_books_grey600_24dp" android:text="@string/drawer_item_atc" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
@@ -89,8 +90,8 @@
 
                 <View style="@style/drawer_separator"/>
 
-                <TextView android:id="@+id/drawer_version_name" style="@style/main_drawer_version_text"/>
-                <TextView android:id="@+id/drawer_version_code" style="@style/main_drawer_version_text"/>
+                <TextView android:id="@+id/drawer_version_name" style="@style/drawer_version_text"/>
+                <TextView android:id="@+id/drawer_version_code" style="@style/drawer_version_text"/>
 
             </LinearLayout>
 

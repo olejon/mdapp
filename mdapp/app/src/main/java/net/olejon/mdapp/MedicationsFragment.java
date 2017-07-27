@@ -95,7 +95,7 @@ public class MedicationsFragment extends Fragment
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, final int i, long id)
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
                     Intent intent = new Intent(mContext, MedicationActivity.class);
 
@@ -109,7 +109,7 @@ public class MedicationsFragment extends Fragment
             mSearchEditText.addTextChangedListener(new TextWatcher()
             {
                 @Override
-                public void onTextChanged(final CharSequence charSequence, int i, int i2, int i3)
+                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
                 {
                     if(MainActivity.VIEW_PAGER_POSITION == 0) medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
                 }
@@ -132,7 +132,7 @@ public class MedicationsFragment extends Fragment
 
                     String query = charSequence.toString().trim();
 
-                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
                 }
             });
         }

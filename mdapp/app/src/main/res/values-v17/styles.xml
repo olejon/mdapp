@@ -41,6 +41,16 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <!-- Antibiotics guides -->
+    <style name="antibiotics_guides_list_information_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- Antibiotics guides cards -->
+    <style name="antibiotics_guides_cards_card_text_base">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
     <!-- Nasjonale retningslinjer -->
     <style name="nasjonale_retningslinjer_list_information_base">
         <item name="android:fontFamily">sans-serif-light</item>
@@ -66,7 +76,6 @@
     </style>
 
     <!-- ICD-10 search -->
-
     <style name="icd10_search_list_item_code_base">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>

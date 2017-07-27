@@ -24,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
@@ -48,7 +47,7 @@ public class WelcomeThirdFragment extends Fragment
     }
 
     @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser)
+    public void setUserVisibleHint(boolean isVisibleToUser)
     {
         super.setUserVisibleHint(isVisibleToUser);
 
@@ -67,9 +66,7 @@ public class WelcomeThirdFragment extends Fragment
 
     private void animateTextView(TextView textView)
     {
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_guide);
-
         textView.setVisibility(View.VISIBLE);
-        textView.startAnimation(animation);
+        textView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_guide));
     }
 }

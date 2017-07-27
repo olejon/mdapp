@@ -35,7 +35,6 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -73,7 +72,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
         setContentView(R.layout.activity_notes_edit_medications);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_medications_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_medications_toolbar);
         toolbar.setTitle(getString(R.string.notes_edit_medications_title));
 
         setSupportActionBar(toolbar);
@@ -181,7 +180,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
                 {
-                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME};
                     mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+id, null, null, null, null);
 
                     if(mCursor.moveToFirst())
@@ -189,11 +188,9 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
                         mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
                         String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
-                        String manufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER));
 
                         Intent intent = new Intent();
                         intent.putExtra("name", name);
-                        intent.putExtra("manufacturer", manufacturer);
                         setResult(RESULT_OK, intent);
                         finish();
                     }
@@ -228,16 +225,14 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 
                         String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
                     }
 
                     return null;
                 }
             });
 
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-            mFloatingActionButton.startAnimation(animation);
+            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
             mFloatingActionButton.setVisibility(View.VISIBLE);
 
             Handler handler = new Handler();
@@ -259,7 +254,6 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
         protected SimpleCursorAdapter doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
 

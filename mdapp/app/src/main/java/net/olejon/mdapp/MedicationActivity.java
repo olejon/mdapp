@@ -59,6 +59,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONObject;
 
@@ -97,7 +98,7 @@ public class MedicationActivity extends AppCompatActivity
 
     // Create activity
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -105,7 +106,7 @@ public class MedicationActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
         medicationId = intent.getLongExtra("id", 0);
 
@@ -327,15 +328,7 @@ public class MedicationActivity extends AppCompatActivity
             {
                 if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
                 {
-                    new MaterialDialog.Builder(mContext).title(R.string.medication_note_dialog_title).content(getString(R.string.medication_note_dialog_message)).positiveText(R.string.medication_note_dialog_positive_button).negativeText(R.string.medication_note_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
-                    {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                        {
-                            Intent intent = new Intent(mContext, NotesActivity.class);
-                            startActivity(intent);
-                        }
-                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+                    new MaterialDialog.Builder(mContext).title(R.string.medication_note_dialog_title).content(getString(R.string.medication_note_dialog_message)).positiveText(R.string.medication_note_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
                 }
                 else
                 {
@@ -382,14 +375,7 @@ public class MedicationActivity extends AppCompatActivity
             }
             case R.id.medication_menu_open_uri:
             {
-                if(mWebView.getUrl() == null)
-                {
-                    showSslErrorDialog(getUri("felleskatalogen"));
-                }
-                else
-                {
-                    mTools.openChromeCustomTabsUri(mWebView.getUrl());
-                }
+                mTools.openChromeCustomTabsUri(getUri(""));
 
                 return true;
             }
@@ -401,7 +387,7 @@ public class MedicationActivity extends AppCompatActivity
     }
 
     // Get URI
-    private String getUri(String page)
+    private String getUri(String uri)
     {
         String searchString = "";
 
@@ -414,16 +400,20 @@ public class MedicationActivity extends AppCompatActivity
             Log.e("MedicationActivity", Log.getStackTraceString(e));
         }
 
-        return (page.equals("nlh")) ? "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString : "http://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString;
+        if(uri.equals(""))
+        {
+            return (mViewPagerPosition == 0) ? "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString : "https://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString;
+        }
+
+        return (uri.equals("nlh")) ? "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString : "https://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString;
     }
 
     // Favorite
     private boolean isFavorite()
     {
         SQLiteDatabase sqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
-
-        String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
-        Cursor cursor = sqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+        String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID};
+        Cursor cursor = sqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
 
         int count = cursor.getCount();
 
@@ -441,7 +431,7 @@ public class MedicationActivity extends AppCompatActivity
 
         if(isFavorite())
         {
-            sqLiteDatabase.delete(MedicationsFavoritesSQLiteHelper.TABLE, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" = "+mTools.sqe(medicationName)+" AND "+MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER+" = "+mTools.sqe(medicationManufacturer), null);
+            sqLiteDatabase.delete(MedicationsFavoritesSQLiteHelper.TABLE, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" = "+mTools.sqe(medicationName), null);
 
             mFavoriteMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp).setTitle(getString(R.string.medication_menu_add_favorite));
 
@@ -450,17 +440,12 @@ public class MedicationActivity extends AppCompatActivity
         else
         {
             ContentValues contentValues = new ContentValues();
-
             contentValues.put(MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, medicationPrescriptionGroup);
             contentValues.put(MedicationsFavoritesSQLiteHelper.COLUMN_NAME, medicationName);
             contentValues.put(MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, medicationSubstance);
             contentValues.put(MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER, medicationManufacturer);
 
             sqLiteDatabase.insert(MedicationsFavoritesSQLiteHelper.TABLE, null, contentValues);
-
-            Intent intent = new Intent();
-            intent.setAction("update");
-            mContext.sendBroadcast(intent);
 
             mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
 
@@ -474,13 +459,12 @@ public class MedicationActivity extends AppCompatActivity
             {
                 favorite();
             }
-        }).setActionTextColor(ContextCompat.getColor(mContext,R.color.orange));
+        }).setActionTextColor(ContextCompat.getColor(mContext,R.color.blue));
 
-        View snackbarView = snackbar.getView();
+        View view = snackbar.getView();
 
-        TextView snackbarTextView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-
-        snackbarTextView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+        TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
         snackbar.show();
 
@@ -493,7 +477,6 @@ public class MedicationActivity extends AppCompatActivity
     private void getManufacturer()
     {
         SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
         String[] queryColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID};
         Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, queryColumns, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
 
@@ -513,9 +496,9 @@ public class MedicationActivity extends AppCompatActivity
     // View pager
     private class ViewPagerAdapter extends FragmentPagerAdapter
     {
-        private final String[] pages = getResources().getStringArray(R.array.medication_pages);
+        final String[] pages = getResources().getStringArray(R.array.medication_pages);
 
-        public ViewPagerAdapter(FragmentManager fragmentManager)
+        ViewPagerAdapter(FragmentManager fragmentManager)
         {
             super(fragmentManager);
         }
@@ -697,6 +680,16 @@ public class MedicationActivity extends AppCompatActivity
 
                 if(mTools.isDeviceConnected())
                 {
+                    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Event.VIEW_ITEM, "medication");
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(medicationId));
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, medicationName);
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, medicationPrescriptionGroup);
+
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
                     PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
                     mViewPager.setAdapter(pagerAdapter);
@@ -717,15 +710,15 @@ public class MedicationActivity extends AppCompatActivity
                         }
                     });
 
-                    final Button nlhSslErrorButton = (Button) findViewById(R.id.medication_nlh_ssl_error_button);
-                    final Button felleskatalogenSslErrorButton = (Button) findViewById(R.id.medication_felleskatalogen_ssl_error_button);
+                    Button nlhSslErrorButton = (Button) findViewById(R.id.medication_nlh_ssl_error_button);
+                    Button felleskatalogenSslErrorButton = (Button) findViewById(R.id.medication_felleskatalogen_ssl_error_button);
 
                     nlhSslErrorButton.setOnClickListener(new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View view)
                         {
-                            showSslErrorDialog("http://m.legemiddelhandboka.no/");
+                            showSslErrorDialog(getUri("nlh"));
                         }
                     });
 
@@ -734,7 +727,7 @@ public class MedicationActivity extends AppCompatActivity
                         @Override
                         public void onClick(View view)
                         {
-                            showSslErrorDialog("http://www.felleskatalogen.no/ir/medisin/");
+                            showSslErrorDialog(getUri("felleskatalogen"));
                         }
                     });
 
@@ -809,7 +802,6 @@ public class MedicationActivity extends AppCompatActivity
         protected Void doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE};
             mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+medicationId, null, null, null, null);
 

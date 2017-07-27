@@ -45,7 +45,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -87,13 +86,13 @@ public class NotesActivity extends AppCompatActivity
         setContentView(R.layout.activity_notes);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.notes_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.notes_toolbar);
         toolbar.setTitle(getString(R.string.notes_title));
 
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.notes_layout_appbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.notes_layout_appbar);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
@@ -111,7 +110,7 @@ public class NotesActivity extends AppCompatActivity
             }
         });
 
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.notes_toolbar_layout);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.notes_toolbar_layout);
         collapsingToolbarLayout.setTitle(getString(R.string.notes_title));
 
         // Empty
@@ -137,9 +136,7 @@ public class NotesActivity extends AppCompatActivity
             }
         });
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-        floatingActionButton.startAnimation(animation);
+        floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
         floatingActionButton.setVisibility(View.VISIBLE);
     }
 
@@ -336,9 +333,7 @@ public class NotesActivity extends AppCompatActivity
                             mTools.setSharedPreferencesString("NOTES_PIN_CODE", "");
 
                             SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
-
                             sqLiteDatabase.delete(NotesSQLiteHelper.TABLE, null, null);
-
                             sqLiteDatabase.close();
 
                             mTools.showToast(getString(R.string.notes_dialog_reset_pin_code_reset), 1);
@@ -411,7 +406,6 @@ public class NotesActivity extends AppCompatActivity
         protected Cursor doInBackground(Void... voids)
         {
             mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
-
             String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
             mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
 
@@ -420,19 +414,19 @@ public class NotesActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>
+    class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>
     {
-        private int mLastPosition = -1;
+        int mLastPosition = -1;
 
-        private NotesAdapter() { }
+        NotesAdapter() { }
 
         class NoteViewHolder extends RecyclerView.ViewHolder
         {
-            private final CardView card;
-            private final TextView title;
-            private final TextView text;
+            final CardView card;
+            final TextView title;
+            final TextView text;
 
-            public NoteViewHolder(View view)
+            NoteViewHolder(View view)
             {
                 super(view);
 
@@ -455,8 +449,8 @@ public class NotesActivity extends AppCompatActivity
             if(mCursor.moveToPosition(i))
             {
                 final int id = mCursor.getInt(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_ID));
-                final String title = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TITLE));
-                final String text = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TEXT));
+                String title = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TITLE));
+                String text = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TEXT));
 
                 viewHolder.title.setText(title);
                 viewHolder.text.setText(text);
@@ -488,8 +482,7 @@ public class NotesActivity extends AppCompatActivity
             {
                 mLastPosition = position;
 
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.card);
-                view.startAnimation(animation);
+                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
             }
         }
     }

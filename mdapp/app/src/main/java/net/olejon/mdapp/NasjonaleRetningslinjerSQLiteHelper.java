@@ -27,14 +27,14 @@ class NasjonaleRetningslinjerSQLiteHelper extends SQLiteOpenHelper
 {
     private static final String DB_NAME = "nasjonale_retningslinjer_recent_searches.db";
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 3400;
 
-    public static final String TABLE = "nasjonale_retningslinjer_recent_searches";
+    static final String TABLE = "nasjonale_retningslinjer_recent_searches";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_STRING = "string";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_STRING = "string";
 
-    public NasjonaleRetningslinjerSQLiteHelper(Context context)
+    NasjonaleRetningslinjerSQLiteHelper(Context context)
     {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -42,7 +42,7 @@ class NasjonaleRetningslinjerSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COLUMN_STRING+" TEXT);");
+        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_STRING+" TEXT);");
     }
 
     @Override

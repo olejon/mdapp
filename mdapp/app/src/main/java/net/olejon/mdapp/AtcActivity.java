@@ -139,7 +139,8 @@ public class AtcActivity extends AppCompatActivity
         mGroup = "anatomical_groups";
 
         mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_ANATOMICAL_GROUPS, null, null, null, null, null, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE);
+        String[] queryColumns = {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_ANATOMICAL_GROUPS, queryColumns, null, null, null, null, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE);
 
         String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
         int[] toViews = new int[] {R.id.atc_anatomical_groups_list_item_code, R.id.atc_anatomical_groups_list_item_name};
@@ -171,7 +172,8 @@ public class AtcActivity extends AppCompatActivity
 
         mGroup = "pharmacologic_groups";
 
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_PHARMACOLOGIC_GROUPS, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mAnatomicalGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE);
+        String[] queryColumns = {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_PHARMACOLOGIC_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mAnatomicalGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE);
 
         String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
         int[] toViews = new int[] {R.id.atc_pharmacologic_groups_list_item_code, R.id.atc_pharmacologic_groups_list_item_name};
@@ -203,7 +205,8 @@ public class AtcActivity extends AppCompatActivity
 
         mGroup = "therapeutic_groups";
 
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_THERAPEUTIC_GROUPS, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mPharmacologicGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE);
+        String[] queryColumns = {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_THERAPEUTIC_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mPharmacologicGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE);
 
         String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
         int[] toViews = new int[] {R.id.atc_therapeutic_groups_list_item_code, R.id.atc_therapeutic_groups_list_item_name};
@@ -235,7 +238,8 @@ public class AtcActivity extends AppCompatActivity
 
         mGroup = "substances_groups";
 
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_SUBSTANCES_GROUPS, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mTherapeuticGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE);
+        String[] queryColumns = {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
+        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_SUBSTANCES_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mTherapeuticGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE);
 
         String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
         int[] toViews = new int[] {R.id.atc_substances_groups_list_item_code, R.id.atc_substances_groups_list_item_name};

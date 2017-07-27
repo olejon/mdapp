@@ -119,9 +119,9 @@ public class MainActivity extends AppCompatActivity
         PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
         // Installed
-        final long installed = mTools.getSharedPreferencesLong("INSTALLED_320");
+        long installed = mTools.getSharedPreferencesLong("INSTALLED_3400");
 
-        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_320", mTools.getCurrentTime());
+        if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_3400", mTools.getCurrentTime());
 
         // Input manager
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setTitle(getString(R.string.main_title));
 
         setSupportActionBar(toolbar);
@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity
         mWikipediaEnglishTextView = (TextView) findViewById(R.id.drawer_item_wikipedia_english);
         mEncyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
 
-        final TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
-        final TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
+        TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
+        TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
 
         drawerVersionNameTextView.setText(getString(R.string.drawer_version_name, mTools.getProjectVersionName()));
         drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code, mTools.getProjectVersionCode()));
@@ -398,6 +398,12 @@ public class MainActivity extends AppCompatActivity
                         startActivity(intent);
                         break;
                     }
+                    case R.id.drawer_item_antibiotics_guides:
+                    {
+                        Intent intent = new Intent(mContext, AntibioticsGuides.class);
+                        startActivity(intent);
+                        break;
+                    }
                     case R.id.drawer_item_nasjonale_retningslinjer:
                     {
                         Intent intent = new Intent(mContext, NasjonaleRetningslinjerActivity.class);
@@ -534,20 +540,18 @@ public class MainActivity extends AppCompatActivity
         }, 250);
 
         // Floating action button
-        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-
-        mFloatingActionButton.startAnimation(animation);
+        mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
         mFloatingActionButton.setVisibility(View.VISIBLE);
 
         // Rate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_320"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3400"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_320");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3400");
 
             if(currentTime - installedTime > 1000 * 3600 * 48)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_320", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3400", true);
 
                 new MaterialDialog.Builder(mContext).title(R.string.main_rate_dialog_title).content(getString(R.string.main_rate_dialog_message)).positiveText(R.string.main_rate_dialog_positive_button).negativeText(R.string.main_rate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
@@ -562,14 +566,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Donate
-        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_320"))
+        if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3400"))
         {
             long currentTime = mTools.getCurrentTime();
-            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_320");
+            long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3400");
 
             if(currentTime - installedTime > 1000 * 3600 * 96)
             {
-                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_320", true);
+                mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3400", true);
 
                 new MaterialDialog.Builder(mContext).title(R.string.main_donate_dialog_title).content(getString(R.string.main_donate_dialog_message)).positiveText(R.string.main_donate_dialog_positive_button).negativeText(R.string.main_donate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
                 {
@@ -723,9 +727,9 @@ public class MainActivity extends AppCompatActivity
     // View pager
     private class ViewPagerAdapter extends FragmentPagerAdapter
     {
-        private final String[] pages = getResources().getStringArray(R.array.main_pages);
+        final String[] pages = getResources().getStringArray(R.array.main_pages);
 
-        private ViewPagerAdapter(FragmentManager fragmentManager)
+        ViewPagerAdapter(FragmentManager fragmentManager)
         {
             super(fragmentManager);
         }
@@ -845,6 +849,9 @@ public class MainActivity extends AppCompatActivity
                 {
                     Log.w("LOG", getString(R.string.main_decompressing_new_database));
 
+                    String dbName = SlDataSQLiteHelper.DB_NAME;
+                    int dbVersion = SlDataSQLiteHelper.DB_VERSION;
+
                     File file = getDatabasePath(SlDataSQLiteHelper.DB_NAME);
 
                     InputStream inputStream = mContext.getAssets().open(SlDataSQLiteHelper.DB_NAME);
@@ -862,7 +869,7 @@ public class MainActivity extends AppCompatActivity
                     outputStream.close();
                     inputStream.close();
 
-                    Log.w("LOG", getString(R.string.main_new_database_decompressed));
+                    Log.w("LOG", getString(R.string.main_new_database_decompressed, dbName, dbVersion));
                 }
                 catch(Exception e)
                 {

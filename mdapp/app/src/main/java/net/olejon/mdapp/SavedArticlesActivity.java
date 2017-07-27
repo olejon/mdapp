@@ -71,12 +71,12 @@ public class SavedArticlesActivity extends AppCompatActivity
         setContentView(R.layout.activity_saved_articles);
 
         // Toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.saved_articles_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.saved_articles_toolbar);
 
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.saved_articles_appbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.saved_articles_appbar);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
@@ -94,7 +94,7 @@ public class SavedArticlesActivity extends AppCompatActivity
             }
         });
 
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.saved_articles_toolbar_layout);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.saved_articles_toolbar_layout);
         collapsingToolbarLayout.setTitle(getString(R.string.saved_articles_title));
 
         // Empty
@@ -211,7 +211,6 @@ public class SavedArticlesActivity extends AppCompatActivity
         protected Cursor doInBackground(Void... voids)
         {
             mSqLiteDatabase = new SavedArticlesSQLiteHelper(mContext).getWritableDatabase();
-
             mCursor = mSqLiteDatabase.query(SavedArticlesSQLiteHelper.TABLE, null, null, null, null, null, SavedArticlesSQLiteHelper.COLUMN_ID+" DESC");
 
             return mCursor;
@@ -219,11 +218,11 @@ public class SavedArticlesActivity extends AppCompatActivity
     }
 
     // Adapter
-    private class SavedArticlesAdapter extends RecyclerView.Adapter<SavedArticlesAdapter.SavedArticlesAdapterViewHolder>
+    class SavedArticlesAdapter extends RecyclerView.Adapter<SavedArticlesAdapter.SavedArticlesAdapterViewHolder>
     {
-        private final Cursor mCursor;
+        final Cursor mCursor;
 
-        private SavedArticlesAdapter(Cursor cursor)
+        SavedArticlesAdapter(Cursor cursor)
         {
             mCursor = cursor;
         }
@@ -234,7 +233,7 @@ public class SavedArticlesActivity extends AppCompatActivity
             final TextView titleTextView;
             final TextView domainTextView;
 
-            public SavedArticlesAdapterViewHolder(View view)
+            SavedArticlesAdapterViewHolder(View view)
             {
                 super(view);
 
@@ -258,9 +257,9 @@ public class SavedArticlesActivity extends AppCompatActivity
             {
                 final long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_ID));
                 final String title = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_TITLE));
-                final String domain = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_DOMAIN));
                 final String uri = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_URI));
                 final String webview = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_WEBVIEW));
+                String domain = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_DOMAIN));
 
                 viewHolder.titleTextView.setText(title);
                 viewHolder.domainTextView.setText(domain);

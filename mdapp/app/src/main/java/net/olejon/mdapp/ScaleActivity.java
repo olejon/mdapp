@@ -43,9 +43,9 @@ public class ScaleActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // Intent
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        final int image = intent.getIntExtra("scale", 0);
+        int image = intent.getIntExtra("scale", 0);
 
         // Layout
         setContentView(R.layout.activity_scale);

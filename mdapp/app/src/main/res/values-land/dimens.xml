@@ -2,6 +2,6 @@
 
 <resources>
 
-    <dimen name="main_drawer">280dp</dimen>
+    <dimen name="drawer">280dp</dimen>
 
 </resources>
