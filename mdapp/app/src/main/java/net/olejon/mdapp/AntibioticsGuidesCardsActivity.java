@@ -65,385 +65,385 @@ import java.net.URLEncoder;
 
 public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
-
-    private final MyTools mTools = new MyTools(mContext);
-
-    private Toolbar mToolbar;
-    private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private LinearLayout mNoAntibioticsGuidesTextView;
-
-    private String mSearchString;
-
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        // Connected?
-        if(!mTools.isDeviceConnected())
-        {
-            mTools.showToast(getString(R.string.device_not_connected), 1);
-
-            finish();
-
-            return;
-        }
-
-        // Intent
-        Intent intent = getIntent();
-
-        mSearchString = intent.getStringExtra("search");
-
-        // Layout
-        setContentView(R.layout.activity_antibiotics_guides_cards);
-
-        // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.antibiotics_guides_cards_toolbar);
-        mToolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, mSearchString));
-
-        TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-        mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-
-        setSupportActionBar(mToolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Progress bar
-        mProgressBar = (ProgressBar) findViewById(R.id.antibiotics_guides_cards_toolbar_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        // Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.antibiotics_guides_cards_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                search(mSearchString);
-            }
-        });
-
-        // Recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.antibiotics_guides_cards_cards);
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new AntibioticsGuidesCardsAdapter(new JSONArray()));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
-        // No antibiotics guides
-        mNoAntibioticsGuidesTextView = (LinearLayout) findViewById(R.id.antibiotics_guides_cards_no_antibiotics_guides);
-
-        Button noAntibioticsGuidesPrimaerhelsetjenestenButton = (Button) findViewById(R.id.antibiotics_guides_cards_search_on_primaerhelsetjenesten);
-        Button noAntibioticsGuidesHelsedirektoratetButton = (Button) findViewById(R.id.antibiotics_guides_cards_search_on_helsedirektoratet);
-
-        noAntibioticsGuidesPrimaerhelsetjenestenButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                try
-                {
-                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.antibiotics_guides_cards_search_on_primaerhelsetjenesten));
-                    intent.putExtra("uri", "http://www.antibiotikaiallmennpraksis.no/");
-                    mContext.startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    Log.e("AntibioticsActivity", Log.getStackTraceString(e));
-                }
-            }
-        });
-
-        noAntibioticsGuidesHelsedirektoratetButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                try
-                {
-                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.antibiotics_guides_cards_search_on_helsedirektoratet));
-                    intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer/antibiotika-i-sykehus/");
-                    mContext.startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    Log.e("AntibioticsActivity", Log.getStackTraceString(e));
-                }
-            }
-        });
-
-        // Search
-        search(mSearchString);
-
-        // Correct
-        try
-        {
-            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-            requestQueue.start();
-
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+ URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
-            {
-                @Override
-                public void onResponse(JSONObject response)
-                {
-                    requestQueue.stop();
-
-                    try
-                    {
-                        final String correctSearchString = response.getString("correct");
-
-                        if(!correctSearchString.equals(""))
-                        {
-                            new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
-                            {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                                {
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(AntibioticsGuidesSQLiteHelper.COLUMN_STRING, correctSearchString);
-
-                                    SQLiteDatabase sqLiteDatabase = new AntibioticsGuidesSQLiteHelper(mContext).getWritableDatabase();
-
-                                    sqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, AntibioticsGuidesSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(mSearchString)+" COLLATE NOCASE", null);
-                                    sqLiteDatabase.insert(AntibioticsGuidesSQLiteHelper.TABLE, null, contentValues);
-
-                                    sqLiteDatabase.close();
-
-                                    mToolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, correctSearchString));
-
-                                    mProgressBar.setVisibility(View.VISIBLE);
-
-                                    mNoAntibioticsGuidesTextView.setVisibility(View.GONE);
-                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                                    search(correctSearchString);
-                                }
-                            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("AntibioticsActivity", Log.getStackTraceString(e));
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    requestQueue.stop();
-
-                    Log.e("AntibioticsActivity", error.toString());
-                }
-            });
-
-            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(jsonObjectRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("AntibioticsActivity", Log.getStackTraceString(e));
-        }
-    }
-
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
-    // Search
-    private void search(final String searchString)
-    {
-        try
-        {
-            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-            requestQueue.start();
-
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/antibiotics-guides/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
-            {
-                @Override
-                public void onResponse(JSONArray response)
-                {
-                    requestQueue.stop();
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
-                    if(response.length() == 0)
-                    {
-                        mSwipeRefreshLayout.setVisibility(View.GONE);
-                        mNoAntibioticsGuidesTextView.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
-                        if(mTools.isTablet())
-                        {
-                            int spanCount = (response.length() == 1) ? 1 : 2;
-
-                            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-                        }
-
-                        mRecyclerView.setAdapter(new AntibioticsGuidesCardsAdapter(response));
-
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(AntibioticsGuidesSQLiteHelper.COLUMN_STRING, searchString);
-
-                        SQLiteDatabase sqLiteDatabase = new AntibioticsGuidesSQLiteHelper(mContext).getWritableDatabase();
-
-                        sqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, AntibioticsGuidesSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
-                        sqLiteDatabase.insert(AntibioticsGuidesSQLiteHelper.TABLE, null, contentValues);
-
-                        sqLiteDatabase.close();
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    requestQueue.stop();
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
-                    mTools.showToast(getString(R.string.antibiotics_guides_cards_something_went_wrong), 1);
-
-                    Log.e("AntibioticsActivity", error.toString());
-
-                    finish();
-                }
-            });
-
-            jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(jsonArrayRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("AntibioticsActivity", Log.getStackTraceString(e));
-        }
-    }
-
-    // Adapter
-    class AntibioticsGuidesCardsAdapter extends RecyclerView.Adapter<AntibioticsGuidesCardsAdapter.AntibioticsGuidesViewHolder>
-    {
-        final JSONArray mAntibioticsGuides;
-
-        int mLastPosition = -1;
-
-        AntibioticsGuidesCardsAdapter(JSONArray jsonArray)
-        {
-            mAntibioticsGuides = jsonArray;
-        }
-
-        class AntibioticsGuidesViewHolder extends RecyclerView.ViewHolder
-        {
-            final CardView card;
-            final TextView title;
-            final TextView text;
-            final TextView uri;
-
-            AntibioticsGuidesViewHolder(View view)
-            {
-                super(view);
-
-                card = (CardView) view.findViewById(R.id.antibiotics_guides_cards_card);
-                title = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_title);
-                text = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_text);
-                uri = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_button_uri);
-            }
-        }
-
-        @Override
-        public AntibioticsGuidesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-        {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_antibiotics_guides_card, viewGroup, false);
-            return new AntibioticsGuidesViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(AntibioticsGuidesViewHolder viewHolder, int i)
-        {
-            try
-            {
-                JSONObject interactionJsonObject = mAntibioticsGuides.getJSONObject(i);
-
-                final String title = interactionJsonObject.getString("title");
-                final String uri = interactionJsonObject.getString("uri");
-                String text = interactionJsonObject.getString("text");
-
-                viewHolder.title.setText(title);
-                viewHolder.text.setText(text);
-
-                viewHolder.title.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", title);
-                        intent.putExtra("uri", uri);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                viewHolder.uri.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", title);
-                        intent.putExtra("uri", uri);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                animateCard(viewHolder.card, i);
-            }
-            catch(Exception e)
-            {
-                Log.e("AntibioticsAdapter", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public int getItemCount()
-        {
-            return mAntibioticsGuides.length();
-        }
-
-        private void animateCard(View view, int position)
-        {
-            if(position > mLastPosition)
-            {
-                mLastPosition = position;
-
-                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
-            }
-        }
-    }
+	private final Context mContext = this;
+
+	private final MyTools mTools = new MyTools(mContext);
+
+	private Toolbar mToolbar;
+	private ProgressBar mProgressBar;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
+	private RecyclerView mRecyclerView;
+	private LinearLayout mNoAntibioticsGuidesTextView;
+
+	private String mSearchString;
+
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+
+		// Connected?
+		if(!mTools.isDeviceConnected())
+		{
+			mTools.showToast(getString(R.string.device_not_connected), 1);
+
+			finish();
+
+			return;
+		}
+
+		// Intent
+		Intent intent = getIntent();
+
+		mSearchString = intent.getStringExtra("search");
+
+		// Layout
+		setContentView(R.layout.activity_antibiotics_guides_cards);
+
+		// Toolbar
+		mToolbar = (Toolbar) findViewById(R.id.antibiotics_guides_cards_toolbar);
+		mToolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, mSearchString));
+
+		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
+		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+
+		setSupportActionBar(mToolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Progress bar
+		mProgressBar = (ProgressBar) findViewById(R.id.antibiotics_guides_cards_toolbar_progressbar);
+		mProgressBar.setVisibility(View.VISIBLE);
+
+		// Refresh
+		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.antibiotics_guides_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
+
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+		{
+			@Override
+			public void onRefresh()
+			{
+				search(mSearchString);
+			}
+		});
+
+		// Recycler view
+		mRecyclerView = (RecyclerView) findViewById(R.id.antibiotics_guides_cards_cards);
+
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setAdapter(new AntibioticsGuidesCardsAdapter(new JSONArray()));
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+		// No antibiotics guides
+		mNoAntibioticsGuidesTextView = (LinearLayout) findViewById(R.id.antibiotics_guides_cards_no_antibiotics_guides);
+
+		Button noAntibioticsGuidesPrimaerhelsetjenestenButton = (Button) findViewById(R.id.antibiotics_guides_cards_search_on_primaerhelsetjenesten);
+		Button noAntibioticsGuidesHelsedirektoratetButton = (Button) findViewById(R.id.antibiotics_guides_cards_search_on_helsedirektoratet);
+
+		noAntibioticsGuidesPrimaerhelsetjenestenButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				try
+				{
+					Intent intent = new Intent(mContext, MainWebViewActivity.class);
+					intent.putExtra("title", getString(R.string.antibiotics_guides_cards_search_on_primaerhelsetjenesten));
+					intent.putExtra("uri", "http://www.antibiotikaiallmennpraksis.no/");
+					mContext.startActivity(intent);
+				}
+				catch(Exception e)
+				{
+					Log.e("AntibioticsActivity", Log.getStackTraceString(e));
+				}
+			}
+		});
+
+		noAntibioticsGuidesHelsedirektoratetButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				try
+				{
+					Intent intent = new Intent(mContext, MainWebViewActivity.class);
+					intent.putExtra("title", getString(R.string.antibiotics_guides_cards_search_on_helsedirektoratet));
+					intent.putExtra("uri", "https://helsedirektoratet.no/retningslinjer/antibiotika-i-sykehus/");
+					mContext.startActivity(intent);
+				}
+				catch(Exception e)
+				{
+					Log.e("AntibioticsActivity", Log.getStackTraceString(e));
+				}
+			}
+		});
+
+		// Search
+		search(mSearchString);
+
+		// Correct
+		try
+		{
+			final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+			requestQueue.start();
+
+			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
+			{
+				@Override
+				public void onResponse(JSONObject response)
+				{
+					requestQueue.stop();
+
+					try
+					{
+						final String correctSearchString = response.getString("correct");
+
+						if(!correctSearchString.equals(""))
+						{
+							new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
+							{
+								@Override
+								public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+								{
+									ContentValues contentValues = new ContentValues();
+									contentValues.put(AntibioticsGuidesSQLiteHelper.COLUMN_STRING, correctSearchString);
+
+									SQLiteDatabase sqLiteDatabase = new AntibioticsGuidesSQLiteHelper(mContext).getWritableDatabase();
+
+									sqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, AntibioticsGuidesSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(mSearchString)+" COLLATE NOCASE", null);
+									sqLiteDatabase.insert(AntibioticsGuidesSQLiteHelper.TABLE, null, contentValues);
+
+									sqLiteDatabase.close();
+
+									mToolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, correctSearchString));
+
+									mProgressBar.setVisibility(View.VISIBLE);
+
+									mNoAntibioticsGuidesTextView.setVisibility(View.GONE);
+									mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+									search(correctSearchString);
+								}
+							}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+						}
+					}
+					catch(Exception e)
+					{
+						Log.e("AntibioticsActivity", Log.getStackTraceString(e));
+					}
+				}
+			}, new Response.ErrorListener()
+			{
+				@Override
+				public void onErrorResponse(VolleyError error)
+				{
+					requestQueue.stop();
+
+					Log.e("AntibioticsActivity", error.toString());
+				}
+			});
+
+			jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+			requestQueue.add(jsonObjectRequest);
+		}
+		catch(Exception e)
+		{
+			Log.e("AntibioticsActivity", Log.getStackTraceString(e));
+		}
+	}
+
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
+
+	// Search
+	private void search(final String searchString)
+	{
+		try
+		{
+			final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+			requestQueue.start();
+
+			JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/antibiotics-guides/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+			{
+				@Override
+				public void onResponse(JSONArray response)
+				{
+					requestQueue.stop();
+
+					mProgressBar.setVisibility(View.GONE);
+					mSwipeRefreshLayout.setRefreshing(false);
+
+					if(response.length() == 0)
+					{
+						mSwipeRefreshLayout.setVisibility(View.GONE);
+						mNoAntibioticsGuidesTextView.setVisibility(View.VISIBLE);
+					}
+					else
+					{
+						if(mTools.isTablet())
+						{
+							int spanCount = (response.length() == 1) ? 1 : 2;
+
+							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+						}
+
+						mRecyclerView.setAdapter(new AntibioticsGuidesCardsAdapter(response));
+
+						ContentValues contentValues = new ContentValues();
+						contentValues.put(AntibioticsGuidesSQLiteHelper.COLUMN_STRING, searchString);
+
+						SQLiteDatabase sqLiteDatabase = new AntibioticsGuidesSQLiteHelper(mContext).getWritableDatabase();
+
+						sqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, AntibioticsGuidesSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+						sqLiteDatabase.insert(AntibioticsGuidesSQLiteHelper.TABLE, null, contentValues);
+
+						sqLiteDatabase.close();
+					}
+				}
+			}, new Response.ErrorListener()
+			{
+				@Override
+				public void onErrorResponse(VolleyError error)
+				{
+					requestQueue.stop();
+
+					mProgressBar.setVisibility(View.GONE);
+					mSwipeRefreshLayout.setRefreshing(false);
+
+					mTools.showToast(getString(R.string.antibiotics_guides_cards_something_went_wrong), 1);
+
+					Log.e("AntibioticsActivity", error.toString());
+
+					finish();
+				}
+			});
+
+			jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+			requestQueue.add(jsonArrayRequest);
+		}
+		catch(Exception e)
+		{
+			Log.e("AntibioticsActivity", Log.getStackTraceString(e));
+		}
+	}
+
+	// Adapter
+	class AntibioticsGuidesCardsAdapter extends RecyclerView.Adapter<AntibioticsGuidesCardsAdapter.AntibioticsGuidesViewHolder>
+	{
+		final JSONArray mAntibioticsGuides;
+
+		int mLastPosition = - 1;
+
+		AntibioticsGuidesCardsAdapter(JSONArray jsonArray)
+		{
+			mAntibioticsGuides = jsonArray;
+		}
+
+		class AntibioticsGuidesViewHolder extends RecyclerView.ViewHolder
+		{
+			final CardView card;
+			final TextView title;
+			final TextView text;
+			final TextView uri;
+
+			AntibioticsGuidesViewHolder(View view)
+			{
+				super(view);
+
+				card = (CardView) view.findViewById(R.id.antibiotics_guides_cards_card);
+				title = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_title);
+				text = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_text);
+				uri = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_button_uri);
+			}
+		}
+
+		@Override
+		public AntibioticsGuidesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		{
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_antibiotics_guides_card, viewGroup, false);
+			return new AntibioticsGuidesViewHolder(view);
+		}
+
+		@Override
+		public void onBindViewHolder(AntibioticsGuidesViewHolder viewHolder, int i)
+		{
+			try
+			{
+				JSONObject interactionJsonObject = mAntibioticsGuides.getJSONObject(i);
+
+				final String title = interactionJsonObject.getString("title");
+				final String uri = interactionJsonObject.getString("uri");
+				String text = interactionJsonObject.getString("text");
+
+				viewHolder.title.setText(title);
+				viewHolder.text.setText(text);
+
+				viewHolder.title.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				viewHolder.uri.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				animateCard(viewHolder.card, i);
+			}
+			catch(Exception e)
+			{
+				Log.e("AntibioticsAdapter", Log.getStackTraceString(e));
+			}
+		}
+
+		@Override
+		public int getItemCount()
+		{
+			return mAntibioticsGuides.length();
+		}
+
+		private void animateCard(View view, int position)
+		{
+			if(position > mLastPosition)
+			{
+				mLastPosition = position;
+
+				view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
+			}
+		}
+	}
 }

@@ -28,52 +28,52 @@ import android.view.MenuItem;
 
 public class SettingsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Layout
-        setContentView(R.layout.activity_settings);
+		// Layout
+		setContentView(R.layout.activity_settings);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
-        toolbar.setTitle(getString(R.string.settings_title));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
+		toolbar.setTitle(getString(R.string.settings_title));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Fragment
-        getFragmentManager().beginTransaction().replace(R.id.settings_container, new SettingsFragment()).commit();
-    }
+		// Fragment
+		getFragmentManager().beginTransaction().replace(R.id.settings_container, new SettingsFragment()).commit();
+	}
 
-    // Resume activity
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
+	// Resume activity
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 
-        NotificationManagerCompat.from(mContext).cancel(MyFirebaseMessagingService.NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
-    }
+		NotificationManagerCompat.from(mContext).cancel(MyFirebaseMessagingService.NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                mTools.navigateUp(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				mTools.navigateUp(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 }

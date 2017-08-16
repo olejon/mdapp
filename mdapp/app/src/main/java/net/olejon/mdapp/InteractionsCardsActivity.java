@@ -67,480 +67,480 @@ import java.net.URLEncoder;
 
 public class InteractionsCardsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
-
-    private final MyTools mTools = new MyTools(mContext);
-
-    private Toolbar mToolbar;
-    private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private LinearLayout mNoInteractionsLayout;
-
-    private String searchString;
-
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        // Connected?
-        if(!mTools.isDeviceConnected())
-        {
-            mTools.showToast(getString(R.string.device_not_connected), 1);
-
-            finish();
-
-            return;
-        }
-
-        // Intent
-        Intent intent = getIntent();
-
-        searchString = intent.getStringExtra("search");
-
-        // Layout
-        setContentView(R.layout.activity_interactions_cards);
-
-        // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.interactions_cards_toolbar);
-        mToolbar.setTitle(getString(R.string.interactions_cards_search, searchString));
-
-        TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-        mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-
-        setSupportActionBar(mToolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Progress bar
-        mProgressBar = (ProgressBar) findViewById(R.id.interactions_cards_toolbar_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        // Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.interactions_cards_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                search(searchString);
-            }
-        });
-
-        // Recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.interactions_cards_cards);
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new InteractionsCardsAdapter(new JSONArray()));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
-        // No interactions
-        mNoInteractionsLayout = (LinearLayout) findViewById(R.id.interactions_cards_no_interactions);
-
-        Button noInteractionsButton = (Button) findViewById(R.id.interactions_cards_no_interactions_button);
-
-        noInteractionsButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                try
-                {
-                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.interactions_cards_search, searchString));
-                    intent.putExtra("uri", "https://interaksjoner.azurewebsites.net/analyser.asp?PreparatNavn="+URLEncoder.encode(searchString, "utf-8"));
-                    mContext.startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    Log.e("InteractionsCards", Log.getStackTraceString(e));
-                }
-            }
-        });
-
-        // Search
-        search(searchString);
-
-        // Correct
-        if(!searchString.contains("_"))
-        {
-            try
-            {
-                final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-                requestQueue.start();
-
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        requestQueue.stop();
-
-                        try
-                        {
-                            final String correctSearchString = response.getString("correct");
-
-                            if(! correctSearchString.equals(""))
-                            {
-                                new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
-                                {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                                    {
-                                        ContentValues contentValues = new ContentValues();
-                                        contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, correctSearchString);
-
-                                        SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
-
-                                        sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
-                                        sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
-
-                                        sqLiteDatabase.close();
-
-                                        mToolbar.setTitle(getString(R.string.interactions_cards_search, correctSearchString));
-
-                                        mProgressBar.setVisibility(View.VISIBLE);
-
-                                        mNoInteractionsLayout.setVisibility(View.GONE);
-                                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                                        search(correctSearchString);
-                                    }
-                                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
-                            }
-                        }
-                        catch(Exception e)
-                        {
-                            Log.e("InteractionsCards", Log.getStackTraceString(e));
-                        }
-                    }
-                }, new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        requestQueue.stop();
-
-                        Log.e("InteractionsCards", error.toString());
-                    }
-                });
-
-                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                requestQueue.add(jsonObjectRequest);
-            }
-            catch(Exception e)
-            {
-                Log.e("InteractionsCards", Log.getStackTraceString(e));
-            }
-        }
-    }
-
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
-    // Search
-    private void search(final String searchString)
-    {
-        try
-        {
-            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-            requestQueue.start();
-
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/interactions/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
-            {
-                @Override
-                public void onResponse(JSONArray response)
-                {
-                    requestQueue.stop();
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
-                    if(response.length() == 0)
-                    {
-                        mSwipeRefreshLayout.setVisibility(View.GONE);
-                        mNoInteractionsLayout.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
-                        if(mTools.isTablet())
-                        {
-                            int spanCount = (response.length() == 1) ? 1 : 2;
-
-                            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-                        }
-
-                        mRecyclerView.setAdapter(new InteractionsCardsAdapter(response));
-
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, searchString);
-
-                        SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
-
-                        sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
-                        sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
-
-                        sqLiteDatabase.close();
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    requestQueue.stop();
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
-                    mTools.showToast(getString(R.string.interactions_cards_something_went_wrong), 1);
-
-                    Log.e("InteractionsCards", error.toString());
-
-                    finish();
-                }
-            });
-
-            requestQueue.add(jsonArrayRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("InteractionsCards", Log.getStackTraceString(e));
-        }
-    }
-
-    // Adapter
-    class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsCardsAdapter.InteractionsViewHolder>
-    {
-        final JSONArray mInteractions;
-
-        int mLastPosition = -1;
-
-        InteractionsCardsAdapter(JSONArray jsonArray)
-        {
-            mInteractions = jsonArray;
-        }
-
-        class InteractionsViewHolder extends RecyclerView.ViewHolder
-        {
-            final CardView card;
-            final ImageView icon;
-            final TextView title;
-            final TextView text;
-            final TextView relevance;
-            final TextView handlingUri;
-            final TextView pubmedSearchUri;
-            final TextView uri;
-
-            InteractionsViewHolder(View view)
-            {
-                super(view);
-
-                card = (CardView) view.findViewById(R.id.interactions_cards_card);
-                icon = (ImageView) view.findViewById(R.id.interactions_cards_card_icon);
-                title = (TextView) view.findViewById(R.id.interactions_cards_card_title);
-                text = (TextView) view.findViewById(R.id.interactions_cards_card_text);
-                relevance = (TextView) view.findViewById(R.id.interactions_cards_card_relevance);
-                uri = (TextView) view.findViewById(R.id.interactions_cards_card_button_uri);
-                handlingUri = (TextView) view.findViewById(R.id.interactions_cards_card_button_handling);
-                pubmedSearchUri = (TextView) view.findViewById(R.id.interactions_cards_card_button_pubmed_search_uri);
-            }
-        }
-
-        @Override
-        public InteractionsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-        {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_interactions_card, viewGroup, false);
-            return new InteractionsViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(InteractionsViewHolder viewHolder, int i)
-        {
-            try
-            {
-                JSONObject interactionJsonObject = mInteractions.getJSONObject(i);
-
-                final String title = interactionJsonObject.getString("title");
-                final String uri = interactionJsonObject.getString("uri");
-                final String pubmedSearchUri = interactionJsonObject.getString("pubmed_search_uri");
-                String color = interactionJsonObject.getString("color");
-                String text = interactionJsonObject.getString("text");
-
-                viewHolder.title.setText(title);
-                viewHolder.text.setText(text);
-
-                switch(color)
-                {
-                    case "red":
-                    {
-                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_red)));
-                        viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
-
-                        break;
-                    }
-                    case "orange":
-                    {
-                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.orange));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_orange)));
-                        viewHolder.icon.setImageResource(R.drawable.ic_warning_white_24dp);
-
-                        break;
-                    }
-                    case "green":
-                    {
-                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_green)));
-                        viewHolder.icon.setImageResource(R.drawable.ic_check_white_24dp);
-
-                        break;
-                    }
-                    default:
-                    {
-                        viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                        viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_red)));
-                        viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
-
-                        break;
-                    }
-                }
-
-                viewHolder.uri.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", title);
-                        intent.putExtra("uri", uri);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                viewHolder.handlingUri.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        if(mTools.isDeviceConnected())
-                        {
-                            try
-                            {
-                                mProgressBar.setVisibility(View.VISIBLE);
-
-                                final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-                                requestQueue.start();
-
-                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/interactions/handling/?uri="+URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
-                                {
-                                    @Override
-                                    public void onResponse(JSONObject response)
-                                    {
-                                        requestQueue.stop();
-
-                                        mProgressBar.setVisibility(View.GONE);
-
-                                        try
-                                        {
-                                            String handling = response.getString("handling");
-
-                                            new MaterialDialog.Builder(mContext).title(R.string.interactions_cards_handling_dialog_title).content(handling).positiveText(R.string.interactions_cards_handling_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-                                        }
-                                        catch(Exception e)
-                                        {
-                                            mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);
-
-                                            Log.e("InteractionsCards", Log.getStackTraceString(e));
-                                        }
-                                    }
-                                }, new Response.ErrorListener()
-                                {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error)
-                                    {
-                                        requestQueue.stop();
-
-                                        mProgressBar.setVisibility(View.GONE);
-
-                                        mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);
-
-                                        Log.e("InteractionsCards", error.toString());
-                                    }
-                                });
-
-                                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                                requestQueue.add(jsonObjectRequest);
-                            }
-                            catch(Exception e)
-                            {
-                                Log.e("InteractionsCards", Log.getStackTraceString(e));
-                            }
-                        }
-                        else
-                        {
-                            mTools.showToast(mContext.getString(R.string.device_not_connected), 1);
-                        }
-                    }
-                });
-
-                viewHolder.pubmedSearchUri.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", "PubMed");
-                        intent.putExtra("uri", pubmedSearchUri);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                animateCard(viewHolder.card, i);
-            }
-            catch(Exception e)
-            {
-                Log.e("InteractionsCards", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public int getItemCount()
-        {
-            return mInteractions.length();
-        }
-
-        private void animateCard(View view, int position)
-        {
-            if(position > mLastPosition)
-            {
-                mLastPosition = position;
-
-                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
-            }
-        }
-    }
+	private final Context mContext = this;
+
+	private final MyTools mTools = new MyTools(mContext);
+
+	private Toolbar mToolbar;
+	private ProgressBar mProgressBar;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
+	private RecyclerView mRecyclerView;
+	private LinearLayout mNoInteractionsLayout;
+
+	private String searchString;
+
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+
+		// Connected?
+		if(!mTools.isDeviceConnected())
+		{
+			mTools.showToast(getString(R.string.device_not_connected), 1);
+
+			finish();
+
+			return;
+		}
+
+		// Intent
+		Intent intent = getIntent();
+
+		searchString = intent.getStringExtra("search");
+
+		// Layout
+		setContentView(R.layout.activity_interactions_cards);
+
+		// Toolbar
+		mToolbar = (Toolbar) findViewById(R.id.interactions_cards_toolbar);
+		mToolbar.setTitle(getString(R.string.interactions_cards_search, searchString));
+
+		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
+		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+
+		setSupportActionBar(mToolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Progress bar
+		mProgressBar = (ProgressBar) findViewById(R.id.interactions_cards_toolbar_progressbar);
+		mProgressBar.setVisibility(View.VISIBLE);
+
+		// Refresh
+		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.interactions_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
+
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+		{
+			@Override
+			public void onRefresh()
+			{
+				search(searchString);
+			}
+		});
+
+		// Recycler view
+		mRecyclerView = (RecyclerView) findViewById(R.id.interactions_cards_cards);
+
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setAdapter(new InteractionsCardsAdapter(new JSONArray()));
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+		// No interactions
+		mNoInteractionsLayout = (LinearLayout) findViewById(R.id.interactions_cards_no_interactions);
+
+		Button noInteractionsButton = (Button) findViewById(R.id.interactions_cards_no_interactions_button);
+
+		noInteractionsButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				try
+				{
+					Intent intent = new Intent(mContext, MainWebViewActivity.class);
+					intent.putExtra("title", getString(R.string.interactions_cards_search, searchString));
+					intent.putExtra("uri", "https://interaksjoner.azurewebsites.net/analyser.asp?PreparatNavn="+URLEncoder.encode(searchString, "utf-8"));
+					mContext.startActivity(intent);
+				}
+				catch(Exception e)
+				{
+					Log.e("InteractionsCards", Log.getStackTraceString(e));
+				}
+			}
+		});
+
+		// Search
+		search(searchString);
+
+		// Correct
+		if(!searchString.contains("_"))
+		{
+			try
+			{
+				final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+				requestQueue.start();
+
+				JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+				{
+					@Override
+					public void onResponse(JSONObject response)
+					{
+						requestQueue.stop();
+
+						try
+						{
+							final String correctSearchString = response.getString("correct");
+
+							if(!correctSearchString.equals(""))
+							{
+								new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
+								{
+									@Override
+									public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+									{
+										ContentValues contentValues = new ContentValues();
+										contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, correctSearchString);
+
+										SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
+
+										sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+										sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
+
+										sqLiteDatabase.close();
+
+										mToolbar.setTitle(getString(R.string.interactions_cards_search, correctSearchString));
+
+										mProgressBar.setVisibility(View.VISIBLE);
+
+										mNoInteractionsLayout.setVisibility(View.GONE);
+										mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+										search(correctSearchString);
+									}
+								}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+							}
+						}
+						catch(Exception e)
+						{
+							Log.e("InteractionsCards", Log.getStackTraceString(e));
+						}
+					}
+				}, new Response.ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError error)
+					{
+						requestQueue.stop();
+
+						Log.e("InteractionsCards", error.toString());
+					}
+				});
+
+				jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+				requestQueue.add(jsonObjectRequest);
+			}
+			catch(Exception e)
+			{
+				Log.e("InteractionsCards", Log.getStackTraceString(e));
+			}
+		}
+	}
+
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
+
+	// Search
+	private void search(final String searchString)
+	{
+		try
+		{
+			final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+			requestQueue.start();
+
+			JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/interactions/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+			{
+				@Override
+				public void onResponse(JSONArray response)
+				{
+					requestQueue.stop();
+
+					mProgressBar.setVisibility(View.GONE);
+					mSwipeRefreshLayout.setRefreshing(false);
+
+					if(response.length() == 0)
+					{
+						mSwipeRefreshLayout.setVisibility(View.GONE);
+						mNoInteractionsLayout.setVisibility(View.VISIBLE);
+					}
+					else
+					{
+						if(mTools.isTablet())
+						{
+							int spanCount = (response.length() == 1) ? 1 : 2;
+
+							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+						}
+
+						mRecyclerView.setAdapter(new InteractionsCardsAdapter(response));
+
+						ContentValues contentValues = new ContentValues();
+						contentValues.put(InteractionsSQLiteHelper.COLUMN_STRING, searchString);
+
+						SQLiteDatabase sqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
+
+						sqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, InteractionsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+						sqLiteDatabase.insert(InteractionsSQLiteHelper.TABLE, null, contentValues);
+
+						sqLiteDatabase.close();
+					}
+				}
+			}, new Response.ErrorListener()
+			{
+				@Override
+				public void onErrorResponse(VolleyError error)
+				{
+					requestQueue.stop();
+
+					mProgressBar.setVisibility(View.GONE);
+					mSwipeRefreshLayout.setRefreshing(false);
+
+					mTools.showToast(getString(R.string.interactions_cards_something_went_wrong), 1);
+
+					Log.e("InteractionsCards", error.toString());
+
+					finish();
+				}
+			});
+
+			requestQueue.add(jsonArrayRequest);
+		}
+		catch(Exception e)
+		{
+			Log.e("InteractionsCards", Log.getStackTraceString(e));
+		}
+	}
+
+	// Adapter
+	class InteractionsCardsAdapter extends RecyclerView.Adapter<InteractionsCardsAdapter.InteractionsViewHolder>
+	{
+		final JSONArray mInteractions;
+
+		int mLastPosition = - 1;
+
+		InteractionsCardsAdapter(JSONArray jsonArray)
+		{
+			mInteractions = jsonArray;
+		}
+
+		class InteractionsViewHolder extends RecyclerView.ViewHolder
+		{
+			final CardView card;
+			final ImageView icon;
+			final TextView title;
+			final TextView text;
+			final TextView relevance;
+			final TextView handlingUri;
+			final TextView pubmedSearchUri;
+			final TextView uri;
+
+			InteractionsViewHolder(View view)
+			{
+				super(view);
+
+				card = (CardView) view.findViewById(R.id.interactions_cards_card);
+				icon = (ImageView) view.findViewById(R.id.interactions_cards_card_icon);
+				title = (TextView) view.findViewById(R.id.interactions_cards_card_title);
+				text = (TextView) view.findViewById(R.id.interactions_cards_card_text);
+				relevance = (TextView) view.findViewById(R.id.interactions_cards_card_relevance);
+				uri = (TextView) view.findViewById(R.id.interactions_cards_card_button_uri);
+				handlingUri = (TextView) view.findViewById(R.id.interactions_cards_card_button_handling);
+				pubmedSearchUri = (TextView) view.findViewById(R.id.interactions_cards_card_button_pubmed_search_uri);
+			}
+		}
+
+		@Override
+		public InteractionsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		{
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_interactions_card, viewGroup, false);
+			return new InteractionsViewHolder(view);
+		}
+
+		@Override
+		public void onBindViewHolder(InteractionsViewHolder viewHolder, int i)
+		{
+			try
+			{
+				JSONObject interactionJsonObject = mInteractions.getJSONObject(i);
+
+				final String title = interactionJsonObject.getString("title");
+				final String uri = interactionJsonObject.getString("uri");
+				final String pubmedSearchUri = interactionJsonObject.getString("pubmed_search_uri");
+				String color = interactionJsonObject.getString("color");
+				String text = interactionJsonObject.getString("text");
+
+				viewHolder.title.setText(title);
+				viewHolder.text.setText(text);
+
+				switch(color)
+				{
+					case "red":
+					{
+						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+						viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_red)));
+						viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
+
+						break;
+					}
+					case "orange":
+					{
+						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.orange));
+						viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_orange)));
+						viewHolder.icon.setImageResource(R.drawable.ic_warning_white_24dp);
+
+						break;
+					}
+					case "green":
+					{
+						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+						viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_green)));
+						viewHolder.icon.setImageResource(R.drawable.ic_check_white_24dp);
+
+						break;
+					}
+					default:
+					{
+						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+						viewHolder.relevance.setText(mContext.getString(R.string.interactions_cards_relevance, mContext.getString(R.string.interactions_cards_relevance_red)));
+						viewHolder.icon.setImageResource(R.drawable.ic_error_white_24dp);
+
+						break;
+					}
+				}
+
+				viewHolder.uri.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				viewHolder.handlingUri.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						if(mTools.isDeviceConnected())
+						{
+							try
+							{
+								mProgressBar.setVisibility(View.VISIBLE);
+
+								final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+								requestQueue.start();
+
+								JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/interactions/handling/?uri="+URLEncoder.encode(uri, "utf-8"), null, new Response.Listener<JSONObject>()
+								{
+									@Override
+									public void onResponse(JSONObject response)
+									{
+										requestQueue.stop();
+
+										mProgressBar.setVisibility(View.GONE);
+
+										try
+										{
+											String handling = response.getString("handling");
+
+											new MaterialDialog.Builder(mContext).title(R.string.interactions_cards_handling_dialog_title).content(handling).positiveText(R.string.interactions_cards_handling_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+										}
+										catch(Exception e)
+										{
+											mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);
+
+											Log.e("InteractionsCards", Log.getStackTraceString(e));
+										}
+									}
+								}, new Response.ErrorListener()
+								{
+									@Override
+									public void onErrorResponse(VolleyError error)
+									{
+										requestQueue.stop();
+
+										mProgressBar.setVisibility(View.GONE);
+
+										mTools.showToast(mContext.getString(R.string.interactions_cards_no_handling_information_available), 1);
+
+										Log.e("InteractionsCards", error.toString());
+									}
+								});
+
+								jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+								requestQueue.add(jsonObjectRequest);
+							}
+							catch(Exception e)
+							{
+								Log.e("InteractionsCards", Log.getStackTraceString(e));
+							}
+						}
+						else
+						{
+							mTools.showToast(mContext.getString(R.string.device_not_connected), 1);
+						}
+					}
+				});
+
+				viewHolder.pubmedSearchUri.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", "PubMed");
+						intent.putExtra("uri", pubmedSearchUri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				animateCard(viewHolder.card, i);
+			}
+			catch(Exception e)
+			{
+				Log.e("InteractionsCards", Log.getStackTraceString(e));
+			}
+		}
+
+		@Override
+		public int getItemCount()
+		{
+			return mInteractions.length();
+		}
+
+		private void animateCard(View view, int position)
+		{
+			if(position > mLastPosition)
+			{
+				mLastPosition = position;
+
+				view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
+			}
+		}
+	}
 }

@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <PreferenceCategory android:title="@string/settings_category_notifications_from_slv">
-        <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_summary"/>
-        <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_sound_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_sound_summary"/>
-        <CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY_LED" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_led_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_led_summary"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/settings_category_about">
-        <Preference android:title="@string/settings_intent_project_developer_website_title" android:summary="@string/settings_intent_project_developer_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_website_uri"/></Preference>
-        <Preference android:title="@string/settings_intent_project_website_title" android:summary="@string/settings_intent_project_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_website_uri"/></Preference>
-        <Preference android:title="@string/settings_intent_project_privacy_title" android:summary="@string/settings_intent_project_privacy_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_privacy_uri"/></Preference>
-        <Preference android:title="@string/settings_intent_project_license_title" android:summary="@string/settings_intent_project_license_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_license_uri"/></Preference>
-        <Preference android:title="@string/settings_intent_project_licenses_title" android:summary="@string/settings_intent_project_licenses_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_licenses_uri"/></Preference>
-    </PreferenceCategory>
-
+	<PreferenceCategory android:title="@string/settings_category_notifications_from_slv">
+		<CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_summary"/>
+		<CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_sound_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_sound_summary"/>
+		<CheckBoxPreference android:key="NOTIFICATIONS_FROM_SLV_NOTIFY_LED" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_from_slv_notify_led_title" android:summary="@string/settings_checkbox_notifications_from_slv_notify_led_summary"/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_category_about">
+		<Preference android:title="@string/settings_intent_project_developer_website_title" android:summary="@string/settings_intent_project_developer_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_website_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_website_title" android:summary="@string/settings_intent_project_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_website_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_privacy_title" android:summary="@string/settings_intent_project_privacy_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_privacy_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_license_title" android:summary="@string/settings_intent_project_license_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_license_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_licenses_title" android:summary="@string/settings_intent_project_licenses_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_licenses_uri"/></Preference>
+	</PreferenceCategory>
 </PreferenceScreen>

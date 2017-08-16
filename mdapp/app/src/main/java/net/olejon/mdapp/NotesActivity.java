@@ -55,435 +55,435 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 public class NotesActivity extends AppCompatActivity
 {
-    private final Activity mActivity = this;
-
-    private final Context mContext = this;
-
-    private final MyTools mTools = new MyTools(mContext);
-
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
-
-    private InputMethodManager mInputMethodManager;
-
-    private TextView mEmptyTextView;
-    private RecyclerView mRecyclerView;
-
-    private boolean mIsAuthenticated = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        // Settings
-        PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
-
-        // Input manager
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Layout
-        setContentView(R.layout.activity_notes);
-
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.notes_toolbar);
-        toolbar.setTitle(getString(R.string.notes_title));
-
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.notes_layout_appbar);
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
-        {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
-            {
-                if(appBarLayout.getTotalScrollRange() == - verticalOffset)
-                {
-                    mTools.setStatusbarColor(mActivity, R.color.dark_blue);
-                }
-                else
-                {
-                    mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
-                }
-            }
-        });
-
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.notes_toolbar_layout);
-        collapsingToolbarLayout.setTitle(getString(R.string.notes_title));
-
-        // Empty
-        mEmptyTextView = (TextView) findViewById(R.id.notes_empty);
-
-        // Recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.notes_cards);
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new NotesAdapter());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
-        // Floating action button
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(mContext, NotesEditActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-        floatingActionButton.setVisibility(View.VISIBLE);
-    }
-
-    // Pause activity
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        mIsAuthenticated = true;
-    }
-
-    // Resume activity
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
-        {
-            new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_pin_code_title).customView(R.layout.activity_notes_dialog_pin_code, true).positiveText(R.string.notes_dialog_pin_code_positive_button).negativeText(R.string.notes_dialog_pin_code_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    final TextInputLayout pinCodeTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.notes_dialog_pin_code_layout);
-                    pinCodeTextInputLayout.setHintAnimationEnabled(true);
-
-                    EditText pinCodeEditText = (EditText) materialDialog.findViewById(R.id.notes_dialog_pin_code);
-
-                    pinCodeEditText.addTextChangedListener(new TextWatcher()
-                    {
-                        @Override
-                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-                        {
-                            pinCodeTextInputLayout.setError(null);
-                        }
-
-                        @Override
-                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-                        @Override
-                        public void afterTextChanged(Editable editable) { }
-                    });
-
-                    String pinCode = pinCodeEditText.getText().toString();
-
-                    if(pinCode.length() < 4)
-                    {
-                        pinCodeTextInputLayout.setError(getString(R.string.notes_dialog_pin_code_invalid));
-                    }
-                    else
-                    {
-                        mTools.setSharedPreferencesString("NOTES_PIN_CODE", pinCode);
-
-                        mIsAuthenticated = true;
-
-                        materialDialog.dismiss();
-
-                        getNotes();
-                    }
-                }
-            }).onNegative(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    materialDialog.dismiss();
-
-                    finish();
-                }
-            }).showListener(new DialogInterface.OnShowListener()
-            {
-                @Override
-                public void onShow(DialogInterface dialogInterface)
-                {
-                    mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                }
-            }).cancelListener(new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialogInterface)
-                {
-                    dialogInterface.dismiss();
-
-                    finish();
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).autoDismiss(false).show();
-        }
-        else
-        {
-            getNotes();
-        }
-    }
-
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
-
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                mTools.navigateUp(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
-    // Get notes
-    private void getNotes()
-    {
-        if(mIsAuthenticated)
-        {
-            GetNotesTask getNotesTask = new GetNotesTask();
-            getNotesTask.execute();
-        }
-        else
-        {
-            new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_verify_pin_code_title).customView(R.layout.activity_notes_dialog_verify_pin_code, true).positiveText(R.string.notes_dialog_verify_pin_code_positive_button).negativeText(R.string.notes_dialog_verify_pin_code_negative_button).neutralText(R.string.notes_dialog_verify_pin_code_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    final TextInputLayout pinCodeTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.notes_dialog_verify_pin_code_layout);
-                    pinCodeTextInputLayout.setHintAnimationEnabled(true);
-
-                    EditText pinCodeEditText = (EditText) materialDialog.findViewById(R.id.notes_dialog_verify_pin_code);
-
-                    pinCodeEditText.addTextChangedListener(new TextWatcher()
-                    {
-                        @Override
-                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-                        {
-                            pinCodeTextInputLayout.setError(null);
-                        }
-
-                        @Override
-                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-                        @Override
-                        public void afterTextChanged(Editable editable) { }
-                    });
-
-                    String pinCode = pinCodeEditText.getText().toString();
-
-                    if(pinCode.equals(mTools.getSharedPreferencesString("NOTES_PIN_CODE")))
-                    {
-                        GetNotesTask getNotesTask = new GetNotesTask();
-                        getNotesTask.execute();
-
-                        materialDialog.dismiss();
-                    }
-                    else
-                    {
-                        pinCodeTextInputLayout.setError(getString(R.string.notes_dialog_verify_pin_code_wrong));
-                    }
-                }
-            }).onNegative(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    materialDialog.dismiss();
-
-                    finish();
-                }
-            }).onNeutral(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    materialDialog.dismiss();
-
-                    new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_reset_pin_code_title).content(getString(R.string.notes_dialog_reset_pin_code_message)).positiveText(R.string.notes_dialog_reset_pin_code_positive_button).neutralText(R.string.notes_dialog_reset_pin_code_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
-                    {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                        {
-                            mTools.setSharedPreferencesString("NOTES_PIN_CODE", "");
-
-                            SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
-                            sqLiteDatabase.delete(NotesSQLiteHelper.TABLE, null, null);
-                            sqLiteDatabase.close();
-
-                            mTools.showToast(getString(R.string.notes_dialog_reset_pin_code_reset), 1);
-
-                            finish();
-                        }
-                    }).onNeutral(new MaterialDialog.SingleButtonCallback()
-                    {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                        {
-                            finish();
-                        }
-                    }).cancelListener(new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface)
-                        {
-                            finish();
-                        }
-                    }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
-                }
-            }).showListener(new DialogInterface.OnShowListener()
-            {
-                @Override
-                public void onShow(DialogInterface dialogInterface)
-                {
-                    mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                }
-            }).cancelListener(new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialogInterface)
-                {
-                    dialogInterface.dismiss();
-
-                    finish();
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).neutralColorRes(R.color.dark_blue).autoDismiss(false).show();
-        }
-    }
-
-    private class GetNotesTask extends AsyncTask<Void, Void, Cursor>
-    {
-        @Override
-        protected void onPostExecute(Cursor cursor)
-        {
-            if(mCursor.getCount() == 0)
-            {
-                mRecyclerView.setVisibility(View.GONE);
-                mEmptyTextView.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                mEmptyTextView.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
-
-                if(mTools.isTablet())
-                {
-                    int spanCount = (mCursor.getCount() == 1) ? 1 : 2;
-
-                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-                }
-
-                mRecyclerView.setAdapter(new NotesAdapter());
-            }
-        }
-
-        @Override
-        protected Cursor doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
-            String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
-            mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
-
-            return mCursor;
-        }
-    }
-
-    // Adapter
-    class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>
-    {
-        int mLastPosition = -1;
-
-        NotesAdapter() { }
-
-        class NoteViewHolder extends RecyclerView.ViewHolder
-        {
-            final CardView card;
-            final TextView title;
-            final TextView text;
-
-            NoteViewHolder(View view)
-            {
-                super(view);
-
-                card = (CardView) view.findViewById(R.id.notes_card);
-                title = (TextView) view.findViewById(R.id.notes_card_title);
-                text = (TextView) view.findViewById(R.id.notes_card_text);
-            }
-        }
-
-        @Override
-        public NoteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-        {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notes_card, viewGroup, false);
-            return new NoteViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(NoteViewHolder viewHolder, int i)
-        {
-            if(mCursor.moveToPosition(i))
-            {
-                final int id = mCursor.getInt(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_ID));
-                String title = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TITLE));
-                String text = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TEXT));
-
-                viewHolder.title.setText(title);
-                viewHolder.text.setText(text);
-
-                viewHolder.card.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, NotesEditActivity.class);
-                        intent.putExtra("id", id);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                animateCard(viewHolder.card, i);
-            }
-        }
-
-        @Override
-        public int getItemCount()
-        {
-            return (mCursor == null) ? 0 : mCursor.getCount();
-        }
-
-        private void animateCard(View view, int position)
-        {
-            if(position > mLastPosition)
-            {
-                mLastPosition = position;
-
-                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
-            }
-        }
-    }
+	private final Activity mActivity = this;
+
+	private final Context mContext = this;
+
+	private final MyTools mTools = new MyTools(mContext);
+
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
+
+	private InputMethodManager mInputMethodManager;
+
+	private TextView mEmptyTextView;
+	private RecyclerView mRecyclerView;
+
+	private boolean mIsAuthenticated = false;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+
+		// Settings
+		PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
+
+		// Input manager
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		// Layout
+		setContentView(R.layout.activity_notes);
+
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.notes_toolbar);
+		toolbar.setTitle(getString(R.string.notes_title));
+
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.notes_layout_appbar);
+
+		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
+		{
+			@Override
+			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+			{
+				if(appBarLayout.getTotalScrollRange() == - verticalOffset)
+				{
+					mTools.setStatusbarColor(mActivity, R.color.dark_blue);
+				}
+				else
+				{
+					mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+				}
+			}
+		});
+
+		CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.notes_toolbar_layout);
+		collapsingToolbarLayout.setTitle(getString(R.string.notes_title));
+
+		// Empty
+		mEmptyTextView = (TextView) findViewById(R.id.notes_empty);
+
+		// Recycler view
+		mRecyclerView = (RecyclerView) findViewById(R.id.notes_cards);
+
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setAdapter(new NotesAdapter());
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+		// Floating action button
+		FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
+
+		floatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Intent intent = new Intent(mContext, NotesEditActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+		floatingActionButton.setVisibility(View.VISIBLE);
+	}
+
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		mIsAuthenticated = true;
+	}
+
+	// Resume activity
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+
+		if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
+		{
+			new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_pin_code_title).customView(R.layout.activity_notes_dialog_pin_code, true).positiveText(R.string.notes_dialog_pin_code_positive_button).negativeText(R.string.notes_dialog_pin_code_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					final TextInputLayout pinCodeTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.notes_dialog_pin_code_layout);
+					pinCodeTextInputLayout.setHintAnimationEnabled(true);
+
+					EditText pinCodeEditText = (EditText) materialDialog.findViewById(R.id.notes_dialog_pin_code);
+
+					pinCodeEditText.addTextChangedListener(new TextWatcher()
+					{
+						@Override
+						public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+						{
+							pinCodeTextInputLayout.setError(null);
+						}
+
+						@Override
+						public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+						@Override
+						public void afterTextChanged(Editable editable) { }
+					});
+
+					String pinCode = pinCodeEditText.getText().toString();
+
+					if(pinCode.length() < 4)
+					{
+						pinCodeTextInputLayout.setError(getString(R.string.notes_dialog_pin_code_invalid));
+					}
+					else
+					{
+						mTools.setSharedPreferencesString("NOTES_PIN_CODE", pinCode);
+
+						mIsAuthenticated = true;
+
+						materialDialog.dismiss();
+
+						getNotes();
+					}
+				}
+			}).onNegative(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					materialDialog.dismiss();
+
+					finish();
+				}
+			}).showListener(new DialogInterface.OnShowListener()
+			{
+				@Override
+				public void onShow(DialogInterface dialogInterface)
+				{
+					mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+				}
+			}).cancelListener(new DialogInterface.OnCancelListener()
+			{
+				@Override
+				public void onCancel(DialogInterface dialogInterface)
+				{
+					dialogInterface.dismiss();
+
+					finish();
+				}
+			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).autoDismiss(false).show();
+		}
+		else
+		{
+			getNotes();
+		}
+	}
+
+	// Destroy activity
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
+
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				mTools.navigateUp(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
+
+	// Get notes
+	private void getNotes()
+	{
+		if(mIsAuthenticated)
+		{
+			GetNotesTask getNotesTask = new GetNotesTask();
+			getNotesTask.execute();
+		}
+		else
+		{
+			new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_verify_pin_code_title).customView(R.layout.activity_notes_dialog_verify_pin_code, true).positiveText(R.string.notes_dialog_verify_pin_code_positive_button).negativeText(R.string.notes_dialog_verify_pin_code_negative_button).neutralText(R.string.notes_dialog_verify_pin_code_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					final TextInputLayout pinCodeTextInputLayout = (TextInputLayout) materialDialog.findViewById(R.id.notes_dialog_verify_pin_code_layout);
+					pinCodeTextInputLayout.setHintAnimationEnabled(true);
+
+					EditText pinCodeEditText = (EditText) materialDialog.findViewById(R.id.notes_dialog_verify_pin_code);
+
+					pinCodeEditText.addTextChangedListener(new TextWatcher()
+					{
+						@Override
+						public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+						{
+							pinCodeTextInputLayout.setError(null);
+						}
+
+						@Override
+						public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+						@Override
+						public void afterTextChanged(Editable editable) { }
+					});
+
+					String pinCode = pinCodeEditText.getText().toString();
+
+					if(pinCode.equals(mTools.getSharedPreferencesString("NOTES_PIN_CODE")))
+					{
+						GetNotesTask getNotesTask = new GetNotesTask();
+						getNotesTask.execute();
+
+						materialDialog.dismiss();
+					}
+					else
+					{
+						pinCodeTextInputLayout.setError(getString(R.string.notes_dialog_verify_pin_code_wrong));
+					}
+				}
+			}).onNegative(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					materialDialog.dismiss();
+
+					finish();
+				}
+			}).onNeutral(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					materialDialog.dismiss();
+
+					new MaterialDialog.Builder(mContext).title(R.string.notes_dialog_reset_pin_code_title).content(getString(R.string.notes_dialog_reset_pin_code_message)).positiveText(R.string.notes_dialog_reset_pin_code_positive_button).neutralText(R.string.notes_dialog_reset_pin_code_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
+					{
+						@Override
+						public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+						{
+							mTools.setSharedPreferencesString("NOTES_PIN_CODE", "");
+
+							SQLiteDatabase sqLiteDatabase = new NotesSQLiteHelper(mContext).getWritableDatabase();
+							sqLiteDatabase.delete(NotesSQLiteHelper.TABLE, null, null);
+							sqLiteDatabase.close();
+
+							mTools.showToast(getString(R.string.notes_dialog_reset_pin_code_reset), 1);
+
+							finish();
+						}
+					}).onNeutral(new MaterialDialog.SingleButtonCallback()
+					{
+						@Override
+						public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+						{
+							finish();
+						}
+					}).cancelListener(new DialogInterface.OnCancelListener()
+					{
+						@Override
+						public void onCancel(DialogInterface dialogInterface)
+						{
+							finish();
+						}
+					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+				}
+			}).showListener(new DialogInterface.OnShowListener()
+			{
+				@Override
+				public void onShow(DialogInterface dialogInterface)
+				{
+					mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+				}
+			}).cancelListener(new DialogInterface.OnCancelListener()
+			{
+				@Override
+				public void onCancel(DialogInterface dialogInterface)
+				{
+					dialogInterface.dismiss();
+
+					finish();
+				}
+			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).neutralColorRes(R.color.dark_blue).autoDismiss(false).show();
+		}
+	}
+
+	private class GetNotesTask extends AsyncTask<Void,Void,Cursor>
+	{
+		@Override
+		protected void onPostExecute(Cursor cursor)
+		{
+			if(mCursor.getCount() == 0)
+			{
+				mRecyclerView.setVisibility(View.GONE);
+				mEmptyTextView.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				mEmptyTextView.setVisibility(View.GONE);
+				mRecyclerView.setVisibility(View.VISIBLE);
+
+				if(mTools.isTablet())
+				{
+					int spanCount = (mCursor.getCount() == 1) ? 1 : 2;
+
+					mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+				}
+
+				mRecyclerView.setAdapter(new NotesAdapter());
+			}
+		}
+
+		@Override
+		protected Cursor doInBackground(Void... voids)
+		{
+			mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
+			String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
+			mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
+
+			return mCursor;
+		}
+	}
+
+	// Adapter
+	class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>
+	{
+		int mLastPosition = - 1;
+
+		NotesAdapter() { }
+
+		class NoteViewHolder extends RecyclerView.ViewHolder
+		{
+			final CardView card;
+			final TextView title;
+			final TextView text;
+
+			NoteViewHolder(View view)
+			{
+				super(view);
+
+				card = (CardView) view.findViewById(R.id.notes_card);
+				title = (TextView) view.findViewById(R.id.notes_card_title);
+				text = (TextView) view.findViewById(R.id.notes_card_text);
+			}
+		}
+
+		@Override
+		public NoteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		{
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notes_card, viewGroup, false);
+			return new NoteViewHolder(view);
+		}
+
+		@Override
+		public void onBindViewHolder(NoteViewHolder viewHolder, int i)
+		{
+			if(mCursor.moveToPosition(i))
+			{
+				final int id = mCursor.getInt(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_ID));
+				String title = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TITLE));
+				String text = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TEXT));
+
+				viewHolder.title.setText(title);
+				viewHolder.text.setText(text);
+
+				viewHolder.card.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, NotesEditActivity.class);
+						intent.putExtra("id", id);
+						mContext.startActivity(intent);
+					}
+				});
+
+				animateCard(viewHolder.card, i);
+			}
+		}
+
+		@Override
+		public int getItemCount()
+		{
+			return (mCursor == null) ? 0 : mCursor.getCount();
+		}
+
+		private void animateCard(View view, int position)
+		{
+			if(position > mLastPosition)
+			{
+				mLastPosition = position;
+
+				view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
+			}
+		}
+	}
 }

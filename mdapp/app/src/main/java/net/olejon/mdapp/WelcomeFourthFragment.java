@@ -29,34 +29,34 @@ import android.widget.TextView;
 
 public class WelcomeFourthFragment extends Fragment
 {
-    private Activity mActivity;
+	private Activity mActivity;
 
-    private MyTools mTools;
+	private MyTools mTools;
 
-    // Create fragment view
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        mActivity = getActivity();
+	// Create fragment view
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		mActivity = getActivity();
 
-        mTools = new MyTools(mActivity);
+		mTools = new MyTools(mActivity);
 
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_fourth, container, false);
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_fourth, container, false);
 
-        TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_4_button);
+		TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_4_button);
 
-        textView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mTools.setSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN", true);
+		textView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				mTools.setSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN", true);
 
-                mActivity.finish();
-                mActivity.overridePendingTransition(0, R.anim.welcome_finish);
-            }
-        });
+				mActivity.finish();
+				mActivity.overridePendingTransition(0, R.anim.welcome_finish);
+			}
+		});
 
-        return viewGroup;
-    }
+		return viewGroup;
+	}
 }

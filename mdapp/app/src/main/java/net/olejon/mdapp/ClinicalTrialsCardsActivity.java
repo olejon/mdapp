@@ -65,372 +65,372 @@ import java.net.URLEncoder;
 
 public class ClinicalTrialsCardsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
-
-    private final MyTools mTools = new MyTools(mContext);
-
-    private Toolbar mToolbar;
-    private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private LinearLayout mNoClinicalTrialsLayout;
-
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        // Connected?
-        if(!mTools.isDeviceConnected())
-        {
-            mTools.showToast(getString(R.string.device_not_connected), 1);
-
-            finish();
-
-            return;
-        }
-
-        // Intent
-        Intent intent = getIntent();
-
-        final String searchString = intent.getStringExtra("search");
-
-        // Layout
-        setContentView(R.layout.activity_clinicaltrials_cards);
-
-        // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
-        mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
-
-        TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-        mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-
-        setSupportActionBar(mToolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Progress bar
-        mProgressBar = (ProgressBar) findViewById(R.id.clinicaltrials_cards_toolbar_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        // Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.clinicaltrials_cards_swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                search(searchString);
-            }
-        });
-
-        // Recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.clinicaltrials_cards_cards);
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(new JSONArray()));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
-        // No clinical trials
-        mNoClinicalTrialsLayout = (LinearLayout) findViewById(R.id.clinicaltrials_cards_no_clinicaltrials);
-
-        Button noClinicalTrialsButton = (Button) findViewById(R.id.clinicaltrials_cards_no_results_button);
-
-        noClinicalTrialsButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                try
-                {
-                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                    intent.putExtra("title", getString(R.string.clinicaltrials_cards_search, searchString));
-                    intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?cond="+URLEncoder.encode(searchString, "utf-8")+"&recrs=b&recrs=a&recrs=f&recrs=d&recrs=e&recrs=c&recrs=l");
-
-                    mContext.startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
-                }
-            }
-        });
-
-        // Search
-        search(searchString);
-
-        // Correct
-        try
-        {
-            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-            requestQueue.start();
-
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
-            {
-                @Override
-                public void onResponse(JSONObject response)
-                {
-                    requestQueue.stop();
-
-                    try
-                    {
-                        final String correctSearchString = response.getString("correct");
-
-                        if(!correctSearchString.equals(""))
-                        {
-                            new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
-                            {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                                {
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(ClinicalTrialsSQLiteHelper.COLUMN_STRING, correctSearchString);
-
-                                    SQLiteDatabase sqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
-
-                                    sqLiteDatabase.delete(ClinicalTrialsSQLiteHelper.TABLE, ClinicalTrialsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
-                                    sqLiteDatabase.insert(ClinicalTrialsSQLiteHelper.TABLE, null, contentValues);
-
-                                    sqLiteDatabase.close();
-
-                                    mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, correctSearchString));
-
-                                    mProgressBar.setVisibility(View.VISIBLE);
-
-                                    mNoClinicalTrialsLayout.setVisibility(View.GONE);
-                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                                    search(correctSearchString);
-                                }
-                            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    requestQueue.stop();
-
-                    Log.e("ClinicalTrialsCards", error.toString());
-                }
-            });
-
-            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(jsonObjectRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
-        }
-    }
-
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
-    // Search
-    private void search(final String searchString)
-    {
-        try
-        {
-            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
-
-            requestQueue.start();
-
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/clinicaltrials/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
-            {
-                @Override
-                public void onResponse(JSONArray response)
-                {
-                    requestQueue.stop();
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
-                    if(response.length() == 0)
-                    {
-                        mSwipeRefreshLayout.setVisibility(View.GONE);
-                        mNoClinicalTrialsLayout.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
-                        if(mTools.isTablet())
-                        {
-                            int spanCount = (response.length() == 1) ? 1 : 2;
-
-                            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-                        }
-
-                        mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(response));
-
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(ClinicalTrialsSQLiteHelper.COLUMN_STRING, searchString);
-
-                        SQLiteDatabase sqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
-
-                        sqLiteDatabase.delete(ClinicalTrialsSQLiteHelper.TABLE, ClinicalTrialsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
-                        sqLiteDatabase.insert(ClinicalTrialsSQLiteHelper.TABLE, null, contentValues);
-
-                        sqLiteDatabase.close();
-                    }
-                }
-            }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    requestQueue.stop();
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setRefreshing(false);
-
-                    mTools.showToast(getString(R.string.clinicaltrials_cards_something_went_wrong), 1);
-
-                    Log.e("ClinicalTrialsCards", error.toString());
-
-                    finish();
-                }
-            });
-
-            jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(jsonArrayRequest);
-        }
-        catch(Exception e)
-        {
-            Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
-        }
-    }
-
-    // Adapter
-    class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTrialsCardsAdapter.ClinicalTrialsViewHolder>
-    {
-        final JSONArray mClinicalTrials;
-
-        int mLastPosition = -1;
-
-        ClinicalTrialsCardsAdapter(JSONArray jsonArray)
-        {
-            mClinicalTrials = jsonArray;
-        }
-
-        class ClinicalTrialsViewHolder extends RecyclerView.ViewHolder
-        {
-            final CardView card;
-            final TextView title;
-            final TextView status;
-            final TextView conditions;
-            final TextView intervention;
-            final TextView button;
-
-            ClinicalTrialsViewHolder(View view)
-            {
-                super(view);
-
-                card = (CardView) view.findViewById(R.id.clinicaltrials_cards_card);
-                title = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_title);
-                status = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_status);
-                conditions = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_conditions);
-                intervention = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_intervention);
-                button = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_button_uri);
-            }
-        }
-
-        @Override
-        public ClinicalTrialsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-        {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_clinicaltrials_card, viewGroup, false);
-            return new ClinicalTrialsViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ClinicalTrialsViewHolder viewHolder, int i)
-        {
-            try
-            {
-                JSONObject clinicalTrialsJsonObject = mClinicalTrials.getJSONObject(i);
-
-                final String title = clinicalTrialsJsonObject.getString("study");
-                final String uri = clinicalTrialsJsonObject.getString("uri");
-                String status = clinicalTrialsJsonObject.getString("status");
-                String conditions = clinicalTrialsJsonObject.getString("conditions");
-                String intervention = clinicalTrialsJsonObject.getString("intervention");
-
-                viewHolder.title.setText(title);
-                viewHolder.status.setText(status);
-                viewHolder.conditions.setText(conditions);
-                viewHolder.intervention.setText(intervention);
-
-                viewHolder.title.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", title);
-                        intent.putExtra("uri", uri);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                viewHolder.button.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                        intent.putExtra("title", title);
-                        intent.putExtra("uri", uri);
-                        mContext.startActivity(intent);
-                    }
-                });
-
-                animateCard(viewHolder.card, i);
-            }
-            catch(Exception e)
-            {
-                Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public int getItemCount()
-        {
-            return mClinicalTrials.length();
-        }
-
-        private void animateCard(View view, int position)
-        {
-            if(position > mLastPosition)
-            {
-                mLastPosition = position;
-
-                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
-            }
-        }
-    }
+	private final Context mContext = this;
+
+	private final MyTools mTools = new MyTools(mContext);
+
+	private Toolbar mToolbar;
+	private ProgressBar mProgressBar;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
+	private RecyclerView mRecyclerView;
+	private LinearLayout mNoClinicalTrialsLayout;
+
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+
+		// Connected?
+		if(!mTools.isDeviceConnected())
+		{
+			mTools.showToast(getString(R.string.device_not_connected), 1);
+
+			finish();
+
+			return;
+		}
+
+		// Intent
+		Intent intent = getIntent();
+
+		final String searchString = intent.getStringExtra("search");
+
+		// Layout
+		setContentView(R.layout.activity_clinicaltrials_cards);
+
+		// Toolbar
+		mToolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
+		mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
+
+		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
+		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+
+		setSupportActionBar(mToolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Progress bar
+		mProgressBar = (ProgressBar) findViewById(R.id.clinicaltrials_cards_toolbar_progressbar);
+		mProgressBar.setVisibility(View.VISIBLE);
+
+		// Refresh
+		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.clinicaltrials_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
+
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+		{
+			@Override
+			public void onRefresh()
+			{
+				search(searchString);
+			}
+		});
+
+		// Recycler view
+		mRecyclerView = (RecyclerView) findViewById(R.id.clinicaltrials_cards_cards);
+
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(new JSONArray()));
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+		// No clinical trials
+		mNoClinicalTrialsLayout = (LinearLayout) findViewById(R.id.clinicaltrials_cards_no_clinicaltrials);
+
+		Button noClinicalTrialsButton = (Button) findViewById(R.id.clinicaltrials_cards_no_results_button);
+
+		noClinicalTrialsButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				try
+				{
+					Intent intent = new Intent(mContext, MainWebViewActivity.class);
+					intent.putExtra("title", getString(R.string.clinicaltrials_cards_search, searchString));
+					intent.putExtra("uri", "https://clinicaltrials.gov/ct2/results?cond="+URLEncoder.encode(searchString, "utf-8")+"&recrs=b&recrs=a&recrs=f&recrs=d&recrs=e&recrs=c&recrs=l");
+
+					mContext.startActivity(intent);
+				}
+				catch(Exception e)
+				{
+					Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+				}
+			}
+		});
+
+		// Search
+		search(searchString);
+
+		// Correct
+		try
+		{
+			final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+			requestQueue.start();
+
+			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
+			{
+				@Override
+				public void onResponse(JSONObject response)
+				{
+					requestQueue.stop();
+
+					try
+					{
+						final String correctSearchString = response.getString("correct");
+
+						if(!correctSearchString.equals(""))
+						{
+							new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
+							{
+								@Override
+								public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+								{
+									ContentValues contentValues = new ContentValues();
+									contentValues.put(ClinicalTrialsSQLiteHelper.COLUMN_STRING, correctSearchString);
+
+									SQLiteDatabase sqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
+
+									sqLiteDatabase.delete(ClinicalTrialsSQLiteHelper.TABLE, ClinicalTrialsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+									sqLiteDatabase.insert(ClinicalTrialsSQLiteHelper.TABLE, null, contentValues);
+
+									sqLiteDatabase.close();
+
+									mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, correctSearchString));
+
+									mProgressBar.setVisibility(View.VISIBLE);
+
+									mNoClinicalTrialsLayout.setVisibility(View.GONE);
+									mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+									search(correctSearchString);
+								}
+							}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+						}
+					}
+					catch(Exception e)
+					{
+						Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+					}
+				}
+			}, new Response.ErrorListener()
+			{
+				@Override
+				public void onErrorResponse(VolleyError error)
+				{
+					requestQueue.stop();
+
+					Log.e("ClinicalTrialsCards", error.toString());
+				}
+			});
+
+			jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+			requestQueue.add(jsonObjectRequest);
+		}
+		catch(Exception e)
+		{
+			Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+		}
+	}
+
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
+
+	// Search
+	private void search(final String searchString)
+	{
+		try
+		{
+			final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+
+			requestQueue.start();
+
+			JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/clinicaltrials/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+			{
+				@Override
+				public void onResponse(JSONArray response)
+				{
+					requestQueue.stop();
+
+					mProgressBar.setVisibility(View.GONE);
+					mSwipeRefreshLayout.setRefreshing(false);
+
+					if(response.length() == 0)
+					{
+						mSwipeRefreshLayout.setVisibility(View.GONE);
+						mNoClinicalTrialsLayout.setVisibility(View.VISIBLE);
+					}
+					else
+					{
+						if(mTools.isTablet())
+						{
+							int spanCount = (response.length() == 1) ? 1 : 2;
+
+							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+						}
+
+						mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(response));
+
+						ContentValues contentValues = new ContentValues();
+						contentValues.put(ClinicalTrialsSQLiteHelper.COLUMN_STRING, searchString);
+
+						SQLiteDatabase sqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
+
+						sqLiteDatabase.delete(ClinicalTrialsSQLiteHelper.TABLE, ClinicalTrialsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
+						sqLiteDatabase.insert(ClinicalTrialsSQLiteHelper.TABLE, null, contentValues);
+
+						sqLiteDatabase.close();
+					}
+				}
+			}, new Response.ErrorListener()
+			{
+				@Override
+				public void onErrorResponse(VolleyError error)
+				{
+					requestQueue.stop();
+
+					mProgressBar.setVisibility(View.GONE);
+					mSwipeRefreshLayout.setRefreshing(false);
+
+					mTools.showToast(getString(R.string.clinicaltrials_cards_something_went_wrong), 1);
+
+					Log.e("ClinicalTrialsCards", error.toString());
+
+					finish();
+				}
+			});
+
+			jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+			requestQueue.add(jsonArrayRequest);
+		}
+		catch(Exception e)
+		{
+			Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+		}
+	}
+
+	// Adapter
+	class ClinicalTrialsCardsAdapter extends RecyclerView.Adapter<ClinicalTrialsCardsAdapter.ClinicalTrialsViewHolder>
+	{
+		final JSONArray mClinicalTrials;
+
+		int mLastPosition = - 1;
+
+		ClinicalTrialsCardsAdapter(JSONArray jsonArray)
+		{
+			mClinicalTrials = jsonArray;
+		}
+
+		class ClinicalTrialsViewHolder extends RecyclerView.ViewHolder
+		{
+			final CardView card;
+			final TextView title;
+			final TextView status;
+			final TextView conditions;
+			final TextView intervention;
+			final TextView button;
+
+			ClinicalTrialsViewHolder(View view)
+			{
+				super(view);
+
+				card = (CardView) view.findViewById(R.id.clinicaltrials_cards_card);
+				title = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_title);
+				status = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_status);
+				conditions = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_conditions);
+				intervention = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_intervention);
+				button = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_button_uri);
+			}
+		}
+
+		@Override
+		public ClinicalTrialsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		{
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_clinicaltrials_card, viewGroup, false);
+			return new ClinicalTrialsViewHolder(view);
+		}
+
+		@Override
+		public void onBindViewHolder(ClinicalTrialsViewHolder viewHolder, int i)
+		{
+			try
+			{
+				JSONObject clinicalTrialsJsonObject = mClinicalTrials.getJSONObject(i);
+
+				final String title = clinicalTrialsJsonObject.getString("study");
+				final String uri = clinicalTrialsJsonObject.getString("uri");
+				String status = clinicalTrialsJsonObject.getString("status");
+				String conditions = clinicalTrialsJsonObject.getString("conditions");
+				String intervention = clinicalTrialsJsonObject.getString("intervention");
+
+				viewHolder.title.setText(title);
+				viewHolder.status.setText(status);
+				viewHolder.conditions.setText(conditions);
+				viewHolder.intervention.setText(intervention);
+
+				viewHolder.title.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				viewHolder.button.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				animateCard(viewHolder.card, i);
+			}
+			catch(Exception e)
+			{
+				Log.e("ClinicalTrialsCards", Log.getStackTraceString(e));
+			}
+		}
+
+		@Override
+		public int getItemCount()
+		{
+			return mClinicalTrials.length();
+		}
+
+		private void animateCard(View view, int position)
+		{
+			if(position > mLastPosition)
+			{
+				mLastPosition = position;
+
+				view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
+			}
+		}
+	}
 }

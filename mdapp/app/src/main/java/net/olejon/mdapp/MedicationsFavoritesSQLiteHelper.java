@@ -25,34 +25,34 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class MedicationsFavoritesSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final String DB_NAME = "medications_favorites.db";
+	private static final String DB_NAME = "medications_favorites.db";
 
-    private static final int DB_VERSION = 6;
+	private static final int DB_VERSION = 6;
 
-    static final String TABLE = "medications_favorites";
+	static final String TABLE = "medications_favorites";
 
-    static final String COLUMN_ID = "_id";
-    static final String COLUMN_PRESCRIPTION_GROUP = "prescription_group";
-    static final String COLUMN_NAME = "name";
-    static final String COLUMN_SUBSTANCE = "substance";
-    static final String COLUMN_MANUFACTURER = "manufacturer";
+	static final String COLUMN_ID = "_id";
+	static final String COLUMN_PRESCRIPTION_GROUP = "prescription_group";
+	static final String COLUMN_NAME = "name";
+	static final String COLUMN_SUBSTANCE = "substance";
+	static final String COLUMN_MANUFACTURER = "manufacturer";
 
-    MedicationsFavoritesSQLiteHelper(Context context)
-    {
-        super(context, DB_NAME, null, DB_VERSION);
-    }
+	MedicationsFavoritesSQLiteHelper(Context context)
+	{
+		super(context, DB_NAME, null, DB_VERSION);
+	}
 
-    @Override
-    public void onCreate(SQLiteDatabase db)
-    {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_PRESCRIPTION_GROUP+" TEXT, "+COLUMN_NAME+" TEXT, "+COLUMN_SUBSTANCE+" TEXT, "+COLUMN_MANUFACTURER+" TEXT);");
-    }
+	@Override
+	public void onCreate(SQLiteDatabase db)
+	{
+		db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_PRESCRIPTION_GROUP+" TEXT, "+COLUMN_NAME+" TEXT, "+COLUMN_SUBSTANCE+" TEXT, "+COLUMN_MANUFACTURER+" TEXT);");
+	}
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE);
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+	{
+		db.execSQL("DROP TABLE IF EXISTS "+TABLE);
 
-        onCreate(db);
-    }
+		onCreate(db);
+	}
 }

@@ -50,164 +50,167 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class BarcodeScannerActivity extends Activity implements ZXingScannerView.ResultHandler
 {
-    private final int PERMISSIONS_REQUEST_CAMERA = 1;
+	private final int PERMISSIONS_REQUEST_CAMERA = 1;
 
-    private final Activity mActivity = this;
+	private final Activity mActivity = this;
 
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private ZXingScannerView mScannerView;
+	private ZXingScannerView mScannerView;
 
-    // Create activity
-    @Override
-    public void onCreate(Bundle state)
-    {
-        super.onCreate(state);
+	// Create activity
+	@Override
+	public void onCreate(Bundle state)
+	{
+		super.onCreate(state);
 
-        // Connected?
-        if(!mTools.isDeviceConnected())
-        {
-            mTools.showToast(getString(R.string.device_not_connected), 1);
+		// Connected?
+		if(!mTools.isDeviceConnected())
+		{
+			mTools.showToast(getString(R.string.device_not_connected), 1);
 
-            finish();
+			finish();
 
-            return;
-        }
+			return;
+		}
 
-        // Window
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
+		// Window
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
 
-    // Resume activity
-    @Override
-    public void onResume()
-    {
-        super.onResume();
+	// Resume activity
+	@Override
+	public void onResume()
+	{
+		super.onResume();
 
-        grantPermissions();
+		grantPermissions();
 
-        mScannerView = new ZXingScannerView(this);
+		mScannerView = new ZXingScannerView(this);
 
-        setContentView(mScannerView);
+		setContentView(mScannerView);
 
-        mScannerView.setResultHandler(this);
-        mScannerView.setAutoFocus(true);
+		mScannerView.setResultHandler(this);
+		mScannerView.setAutoFocus(true);
 
-        mScannerView.startCamera();
-    }
+		mScannerView.startCamera();
+	}
 
-    // Pause activity
-    @Override
-    public void onPause()
-    {
-        super.onPause();
+	// Pause activity
+	@Override
+	public void onPause()
+	{
+		super.onPause();
 
-        mScannerView.stopCamera();
-    }
+		mScannerView.stopCamera();
+	}
 
-    // Permissions
-    private void grantPermissions()
-    {
-        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            String[] permissions = {Manifest.permission.CAMERA};
+	// Permissions
+	private void grantPermissions()
+	{
+		if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+		{
+			String[] permissions = {Manifest.permission.CAMERA};
 
-            ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_CAMERA);
-        }
-        else
-        {
-            mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
-        }
-    }
+			ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_CAMERA);
+		}
+		else
+		{
+			mTools.showToast(getString(R.string.barcode_scanner_scan), 1);
+		}
+	}
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        if(requestCode == PERMISSIONS_REQUEST_CAMERA && grantResults[0] != PackageManager.PERMISSION_GRANTED)
-        {
-            mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	{
+		if(requestCode == PERMISSIONS_REQUEST_CAMERA && grantResults[0] != PackageManager.PERMISSION_GRANTED)
+		{
+			mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
 
-            finish();
-        }
-    }
+			finish();
+		}
+	}
 
-    // Result
-    @Override
-    public void handleResult(Result result)
-    {
-        mTools.showToast(getString(R.string.barcode_scanner_wait), 0);
+	// Result
+	@Override
+	public void handleResult(Result result)
+	{
+		mTools.showToast(getString(R.string.barcode_scanner_wait), 0);
 
-        String barcode = result.getText();
+		String barcode = result.getText();
 
-        final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+		final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
-        requestQueue.start();
+		requestQueue.start();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/barcode/?search="+barcode, null, new Response.Listener<JSONObject>()
-        {
-            @Override
-            public void onResponse(JSONObject response)
-            {
-                requestQueue.stop();
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/barcode/?search="+barcode, null, new Response.Listener<JSONObject>()
+		{
+			@Override
+			public void onResponse(JSONObject response)
+			{
+				requestQueue.stop();
 
-                try
-                {
-                    String medicationName = response.getString("name");
+				try
+				{
+					String medicationName = response.getString("name");
 
-                    if(medicationName.equals(""))
-                    {
-                        mTools.showToast(getString(R.string.barcode_scanner_no_results), 1);
+					if(medicationName.equals(""))
+					{
+						mTools.showToast(getString(R.string.barcode_scanner_no_results), 1);
 
-                        finish();
-                    }
-                    else
-                    {
-                        SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-                        String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-                        Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+medicationName+"%"), null, null, null, null);
+						finish();
+					}
+					else
+					{
+						SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+						String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+						Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+medicationName+"%"), null, null, null, null);
 
-                        if(cursor.moveToFirst())
-                        {
-                            long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+						if(cursor.moveToFirst())
+						{
+							long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
 
-                            Intent intent = new Intent(mContext, MedicationActivity.class);
+							Intent intent = new Intent(mContext, MedicationActivity.class);
 
-                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+							if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
+							{
+								intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+							}
 
-                            intent.putExtra("id", id);
-                            startActivity(intent);
-                        }
+							intent.putExtra("id", id);
+							startActivity(intent);
+						}
 
-                        cursor.close();
-                        sqLiteDatabase.close();
+						cursor.close();
+						sqLiteDatabase.close();
 
-                        finish();
-                    }
-                }
-                catch(Exception e)
-                {
-                    mTools.showToast(getString(R.string.barcode_scanner_no_results), 1);
+						finish();
+					}
+				}
+				catch(Exception e)
+				{
+					mTools.showToast(getString(R.string.barcode_scanner_no_results), 1);
 
-                    Log.e("BarcodeScannerActivity", Log.getStackTraceString(e));
+					Log.e("BarcodeScannerActivity", Log.getStackTraceString(e));
 
-                    finish();
-                }
-            }
-        }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                requestQueue.stop();
+					finish();
+				}
+			}
+		}, new Response.ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+				requestQueue.stop();
 
-                Log.e("BarcodeScannerActivity", error.toString());
-            }
-        });
+				Log.e("BarcodeScannerActivity", error.toString());
+			}
+		});
 
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+		jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        requestQueue.add(jsonObjectRequest);
-    }
+		requestQueue.add(jsonObjectRequest);
+	}
 }

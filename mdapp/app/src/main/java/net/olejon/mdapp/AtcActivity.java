@@ -35,233 +35,233 @@ import android.widget.SimpleCursorAdapter;
 
 public class AtcActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    private Toolbar mToolbar;
-    private ListView mListView;
+	private Toolbar mToolbar;
+	private ListView mListView;
 
-    private String mGroup;
-    private String mAnatomicalGroupsCode;
-    private String mPharmacologicGroupsTitle;
-    private String mPharmacologicGroupsCode;
-    private String mTherapeuticGroupsTitle;
-    private String mTherapeuticGroupsCode;
-    private String mSubstancesGroupsTitle;
+	private String mGroup;
+	private String mAnatomicalGroupsCode;
+	private String mPharmacologicGroupsTitle;
+	private String mPharmacologicGroupsCode;
+	private String mTherapeuticGroupsTitle;
+	private String mTherapeuticGroupsCode;
+	private String mSubstancesGroupsTitle;
 
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Layout
-        setContentView(R.layout.activity_atc);
+		// Layout
+		setContentView(R.layout.activity_atc);
 
-        // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.atc_toolbar);
-        mToolbar.setTitle(getString(R.string.atc_title));
+		// Toolbar
+		mToolbar = (Toolbar) findViewById(R.id.atc_toolbar);
+		mToolbar.setTitle(getString(R.string.atc_title));
 
-        setSupportActionBar(mToolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(mToolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // List
-        mListView = (ListView) findViewById(R.id.atc_list);
+		// List
+		mListView = (ListView) findViewById(R.id.atc_list);
 
-        // Get ATC
-        getAnatomicalGroups();
-    }
+		// Get ATC
+		getAnatomicalGroups();
+	}
 
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    // Back button
-    @Override
-    public void onBackPressed()
-    {
-        switch(mGroup)
-        {
-            case "pharmacologic_groups":
-            {
-                getAnatomicalGroups();
-                break;
-            }
-            case "therapeutic_groups":
-            {
-                getPharmacologicGroups();
-                break;
-            }
-            case "substances_groups":
-            {
-                getTherapeuticGroups();
-                break;
-            }
-            default:
-            {
-                super.onBackPressed();
-            }
-        }
-    }
+	// Back button
+	@Override
+	public void onBackPressed()
+	{
+		switch(mGroup)
+		{
+			case "pharmacologic_groups":
+			{
+				getAnatomicalGroups();
+				break;
+			}
+			case "therapeutic_groups":
+			{
+				getPharmacologicGroups();
+				break;
+			}
+			case "substances_groups":
+			{
+				getTherapeuticGroups();
+				break;
+			}
+			default:
+			{
+				super.onBackPressed();
+			}
+		}
+	}
 
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Get ATC
-    private void getAnatomicalGroups()
-    {
-        mToolbar.setTitle(getString(R.string.atc_title));
+	// Get ATC
+	private void getAnatomicalGroups()
+	{
+		mToolbar.setTitle(getString(R.string.atc_title));
 
-        mGroup = "anatomical_groups";
+		mGroup = "anatomical_groups";
 
-        mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-        String[] queryColumns = {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_ANATOMICAL_GROUPS, queryColumns, null, null, null, null, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE);
+		mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+		String[] queryColumns = {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_ANATOMICAL_GROUPS, queryColumns, null, null, null, null, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE);
 
-        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
-        int[] toViews = new int[] {R.id.atc_anatomical_groups_list_item_code, R.id.atc_anatomical_groups_list_item_name};
+		String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME};
+		int[] toViews = new int[] {R.id.atc_anatomical_groups_list_item_code, R.id.atc_anatomical_groups_list_item_name};
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_anatomical_groups_list_item, mCursor, fromColumns, toViews, 0);
+		SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_anatomical_groups_list_item, mCursor, fromColumns, toViews, 0);
 
-        mListView.setAdapter(simpleCursorAdapter);
+		mListView.setAdapter(simpleCursorAdapter);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
-                if(mCursor.moveToPosition(i))
-                {
-                    mAnatomicalGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE));
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				if(mCursor.moveToPosition(i))
+				{
+					mAnatomicalGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_CODE));
 
-                    mPharmacologicGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME));
+					mPharmacologicGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_ANATOMICAL_GROUPS_COLUMN_NAME));
 
-                    getPharmacologicGroups();
-                }
-            }
-        });
-    }
+					getPharmacologicGroups();
+				}
+			}
+		});
+	}
 
-    private void getPharmacologicGroups()
-    {
-        mToolbar.setTitle(mPharmacologicGroupsTitle);
+	private void getPharmacologicGroups()
+	{
+		mToolbar.setTitle(mPharmacologicGroupsTitle);
 
-        mGroup = "pharmacologic_groups";
+		mGroup = "pharmacologic_groups";
 
-        String[] queryColumns = {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_PHARMACOLOGIC_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mAnatomicalGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE);
+		String[] queryColumns = {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_PHARMACOLOGIC_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mAnatomicalGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE);
 
-        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
-        int[] toViews = new int[] {R.id.atc_pharmacologic_groups_list_item_code, R.id.atc_pharmacologic_groups_list_item_name};
+		String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME};
+		int[] toViews = new int[] {R.id.atc_pharmacologic_groups_list_item_code, R.id.atc_pharmacologic_groups_list_item_name};
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_pharmacologic_groups_list_item, mCursor, fromColumns, toViews, 0);
+		SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_pharmacologic_groups_list_item, mCursor, fromColumns, toViews, 0);
 
-        mListView.setAdapter(simpleCursorAdapter);
+		mListView.setAdapter(simpleCursorAdapter);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
-                if(mCursor.moveToPosition(i))
-                {
-                    mPharmacologicGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE));
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				if(mCursor.moveToPosition(i))
+				{
+					mPharmacologicGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_CODE));
 
-                    mTherapeuticGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME));
+					mTherapeuticGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_PHARMACOLOGIC_GROUPS_COLUMN_NAME));
 
-                    getTherapeuticGroups();
-                }
-            }
-        });
-    }
+					getTherapeuticGroups();
+				}
+			}
+		});
+	}
 
-    private void getTherapeuticGroups()
-    {
-        mToolbar.setTitle(mTherapeuticGroupsTitle);
+	private void getTherapeuticGroups()
+	{
+		mToolbar.setTitle(mTherapeuticGroupsTitle);
 
-        mGroup = "therapeutic_groups";
+		mGroup = "therapeutic_groups";
 
-        String[] queryColumns = {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_THERAPEUTIC_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mPharmacologicGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE);
+		String[] queryColumns = {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_THERAPEUTIC_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mPharmacologicGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE);
 
-        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
-        int[] toViews = new int[] {R.id.atc_therapeutic_groups_list_item_code, R.id.atc_therapeutic_groups_list_item_name};
+		String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME};
+		int[] toViews = new int[] {R.id.atc_therapeutic_groups_list_item_code, R.id.atc_therapeutic_groups_list_item_name};
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_therapeutic_groups_list_item, mCursor, fromColumns, toViews, 0);
+		SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_therapeutic_groups_list_item, mCursor, fromColumns, toViews, 0);
 
-        mListView.setAdapter(simpleCursorAdapter);
+		mListView.setAdapter(simpleCursorAdapter);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
-                if(mCursor.moveToPosition(i))
-                {
-                    mTherapeuticGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE));
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				if(mCursor.moveToPosition(i))
+				{
+					mTherapeuticGroupsCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_CODE));
 
-                    mSubstancesGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME));
+					mSubstancesGroupsTitle = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_THERAPEUTIC_GROUPS_COLUMN_NAME));
 
-                    getSubstancesGroups();
-                }
-            }
-        });
-    }
+					getSubstancesGroups();
+				}
+			}
+		});
+	}
 
-    private void getSubstancesGroups()
-    {
-        mToolbar.setTitle(mSubstancesGroupsTitle);
+	private void getSubstancesGroups()
+	{
+		mToolbar.setTitle(mSubstancesGroupsTitle);
 
-        mGroup = "substances_groups";
+		mGroup = "substances_groups";
 
-        String[] queryColumns = {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
-        mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_SUBSTANCES_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mTherapeuticGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE);
+		String[] queryColumns = {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_ID, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ATC_SUBSTANCES_GROUPS, queryColumns, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE+" LIKE "+mTools.sqe(mTherapeuticGroupsCode+"%"), null, null, null, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE);
 
-        String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
-        int[] toViews = new int[] {R.id.atc_substances_groups_list_item_code, R.id.atc_substances_groups_list_item_name};
+		String[] fromColumns = new String[] {SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE, SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_NAME};
+		int[] toViews = new int[] {R.id.atc_substances_groups_list_item_code, R.id.atc_substances_groups_list_item_name};
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_substances_groups_list_item, mCursor, fromColumns, toViews, 0);
+		SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(mContext, R.layout.activity_atc_substances_groups_list_item, mCursor, fromColumns, toViews, 0);
 
-        mListView.setAdapter(simpleCursorAdapter);
+		mListView.setAdapter(simpleCursorAdapter);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
-                if(mCursor.moveToPosition(i))
-                {
-                    String code = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE));
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				if(mCursor.moveToPosition(i))
+				{
+					String code = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ATC_SUBSTANCES_GROUPS_COLUMN_CODE));
 
-                    Intent intent = new Intent(mContext, AtcCodesActivity.class);
-                    intent.putExtra("code", code);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
+					Intent intent = new Intent(mContext, AtcCodesActivity.class);
+					intent.putExtra("code", code);
+					startActivity(intent);
+				}
+			}
+		});
+	}
 }

@@ -30,33 +30,33 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class ScaleActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Window
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		// Window
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Intent
-        Intent intent = getIntent();
+		// Intent
+		Intent intent = getIntent();
 
-        int image = intent.getIntExtra("scale", 0);
+		int image = intent.getIntExtra("scale", 0);
 
-        // Layout
-        setContentView(R.layout.activity_scale);
+		// Layout
+		setContentView(R.layout.activity_scale);
 
-        // Picture
-        ImageViewTouch imageViewTouch = (ImageViewTouch) findViewById(R.id.scale_image);
+		// Picture
+		ImageViewTouch imageViewTouch = (ImageViewTouch) findViewById(R.id.scale_image);
 
-        imageViewTouch.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-        imageViewTouch.setImageResource(image);
+		imageViewTouch.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+		imageViewTouch.setImageResource(image);
 
-        // Toast
-        mTools.showToast(getString(R.string.scale_guide), 1);
-    }
+		// Toast
+		mTools.showToast(getString(R.string.scale_guide), 1);
+	}
 }

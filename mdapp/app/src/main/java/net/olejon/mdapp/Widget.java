@@ -29,31 +29,31 @@ import android.widget.RemoteViews;
 
 public class Widget extends AppWidgetProvider
 {
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
-    {
-        final MyTools mTools = new MyTools(context);
+	@Override
+	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
+	{
+		final MyTools mTools = new MyTools(context);
 
-        for(int appWidgetId : appWidgetIds)
-        {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
+		for(int appWidgetId : appWidgetIds)
+		{
+			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
 
-            Intent intent = new Intent(context, WidgetService.class);
-            intent.putExtra("time", mTools.getCurrentTime());
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+			Intent intent = new Intent(context, WidgetService.class);
+			intent.putExtra("time", mTools.getCurrentTime());
+			intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-            remoteViews.setRemoteAdapter(R.id.widget_list, intent);
-            remoteViews.setEmptyView(R.id.widget_list, R.id.widget_list_empty);
+			remoteViews.setRemoteAdapter(R.id.widget_list, intent);
+			remoteViews.setEmptyView(R.id.widget_list, R.id.widget_list_empty);
 
-            Intent launchMedicationActivityIntent = new Intent(context, MedicationActivity.class);
-            launchMedicationActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent launchMedicationActivityPendingIntent = PendingIntent.getActivity(context, 0, launchMedicationActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			Intent launchMedicationActivityIntent = new Intent(context, MedicationActivity.class);
+			launchMedicationActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			PendingIntent launchMedicationActivityPendingIntent = PendingIntent.getActivity(context, 0, launchMedicationActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            remoteViews.setPendingIntentTemplate(R.id.widget_list, launchMedicationActivityPendingIntent);
+			remoteViews.setPendingIntentTemplate(R.id.widget_list, launchMedicationActivityPendingIntent);
 
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-        }
+			appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+		}
 
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
-    }
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
+	}
 }

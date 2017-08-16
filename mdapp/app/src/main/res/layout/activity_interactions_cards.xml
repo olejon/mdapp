@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/interactions_cards_layout">
-
-    <android.support.v7.widget.Toolbar android:id="@+id/interactions_cards_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
-        <ProgressBar android:id="@+id/interactions_cards_toolbar_progressbar" style="@style/toolbar_progressbar"/>
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.v4.widget.SwipeRefreshLayout android:id="@+id/interactions_cards_swipe_refresh_layout" android:layout_below="@+id/interactions_cards_toolbar" style="@style/swipe_refresh_layout">
-        <android.support.v7.widget.RecyclerView android:id="@+id/interactions_cards_cards" style="@style/interactions_cards_cards"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <LinearLayout android:id="@+id/interactions_cards_no_interactions" android:layout_below="@+id/interactions_cards_toolbar" style="@style/interactions_cards_no_interactions_layout">
-
-        <TextView android:text="@string/interactions_cards_no_relevant_interactions_found" style="@style/interactions_cards_no_interactions_information"/>
-        <Button android:id="@+id/interactions_cards_no_interactions_button" android:text="@string/interactions_cards_check_on_the_web" style="@style/interactions_cards_no_interactions_button"/>
-
-    </LinearLayout>
-
+	<android.support.v7.widget.Toolbar android:id="@+id/interactions_cards_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+		<ProgressBar android:id="@+id/interactions_cards_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+	</android.support.v7.widget.Toolbar>
+	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/interactions_cards_swipe_refresh_layout" android:layout_below="@+id/interactions_cards_toolbar" style="@style/swipe_refresh_layout">
+		<android.support.v7.widget.RecyclerView android:id="@+id/interactions_cards_cards" style="@style/interactions_cards_cards"/>
+	</android.support.v4.widget.SwipeRefreshLayout>
+	<LinearLayout android:id="@+id/interactions_cards_no_interactions" android:layout_below="@+id/interactions_cards_toolbar" style="@style/interactions_cards_no_interactions_layout">
+		<TextView android:text="@string/interactions_cards_no_relevant_interactions_found" style="@style/interactions_cards_no_interactions_information"/>
+		<Button android:id="@+id/interactions_cards_no_interactions_button" android:text="@string/interactions_cards_check_on_the_web" style="@style/interactions_cards_no_interactions_button"/>
+	</LinearLayout>
 </RelativeLayout>

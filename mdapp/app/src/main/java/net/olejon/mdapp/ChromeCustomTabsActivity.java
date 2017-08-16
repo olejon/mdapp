@@ -26,30 +26,30 @@ import android.support.v7.app.AppCompatActivity;
 
 public class ChromeCustomTabsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
+		Intent intent = getIntent();
 
-        if(intent.getDataString() == null)
-        {
-            mTools.showToast(getString(R.string.device_something_went_wrong), 1);
+		if(intent.getDataString() == null)
+		{
+			mTools.showToast(getString(R.string.device_something_went_wrong), 1);
 
-            finish();
-        }
-        else
-        {
-            String pageUri = intent.getDataString();
+			finish();
+		}
+		else
+		{
+			String pageUri = intent.getDataString();
 
-            mTools.openChromeCustomTabsUri(pageUri);
+			mTools.openChromeCustomTabsUri(pageUri);
 
-            finish();
-        }
-    }
+			finish();
+		}
+	}
 }

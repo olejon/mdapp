@@ -38,115 +38,124 @@ import android.widget.ListView;
 
 public class MedicationsFragment extends Fragment
 {
-    private Context mContext;
+	private Context mContext;
 
-    private MyTools mTools;
+	private MyTools mTools;
 
-    private Cursor mCursor;
+	private Cursor mCursor;
 
-    private EditText mSearchEditText;
-    private ListView mListView;
-    private View mListViewEmpty;
+	private EditText mSearchEditText;
+	private ListView mListView;
+	private View mListViewEmpty;
 
-    // Create fragment view
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medications, container, false);
+	// Create fragment view
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medications, container, false);
 
-        // Context
-        mContext = viewGroup.getContext();
+		// Context
+		mContext = viewGroup.getContext();
 
-        // Tools
-        mTools = new MyTools(mContext);
+		// Tools
+		mTools = new MyTools(mContext);
 
-        // Search
-        mSearchEditText = (EditText) getActivity().findViewById(R.id.main_search_edittext);
+		// Search
+		mSearchEditText = (EditText) getActivity().findViewById(R.id.main_search_edittext);
 
-        // List
-        mListView = (ListView) viewGroup.findViewById(R.id.main_medications_list);
-        mListViewEmpty = viewGroup.findViewById(R.id.main_medications_list_empty);
+		// List
+		mListView = (ListView) viewGroup.findViewById(R.id.main_medications_list);
+		mListViewEmpty = viewGroup.findViewById(R.id.main_medications_list_empty);
 
-        // Get medications
-        GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
-        getMedicationsTask.execute();
+		// Get medications
+		GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
+		getMedicationsTask.execute();
 
-        return viewGroup;
-    }
+		return viewGroup;
+	}
 
-    // Destroy fragment
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
+	// Destroy fragment
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+	}
 
-    // Get medications
-    private class GetMedicationsTask extends AsyncTask<Void, Void, MedicationsSimpleCursorAdapter>
-    {
-        @Override
-        protected void onPostExecute(final MedicationsSimpleCursorAdapter medicationsSimpleCursorAdapter)
-        {
-            mListView.setAdapter(medicationsSimpleCursorAdapter);
-            mListView.setEmptyView(mListViewEmpty);
+	// Get medications
+	private class GetMedicationsTask extends AsyncTask<Void,Void,MedicationsSimpleCursorAdapter>
+	{
+		@Override
+		protected void onPostExecute(final MedicationsSimpleCursorAdapter medicationsSimpleCursorAdapter)
+		{
+			mListView.setAdapter(medicationsSimpleCursorAdapter);
+			mListView.setEmptyView(mListViewEmpty);
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
-                {
-                    Intent intent = new Intent(mContext, MedicationActivity.class);
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+				{
+					Intent intent = new Intent(mContext, MedicationActivity.class);
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+					if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
+					{
+						intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+					}
 
-                    intent.putExtra("id", id);
-                    startActivity(intent);
-                }
-            });
+					intent.putExtra("id", id);
+					startActivity(intent);
+				}
+			});
 
-            mSearchEditText.addTextChangedListener(new TextWatcher()
-            {
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
-                {
-                    if(MainActivity.VIEW_PAGER_POSITION == 0) medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
-                }
+			mSearchEditText.addTextChangedListener(new TextWatcher()
+			{
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+				{
+					if(MainActivity.VIEW_PAGER_POSITION == 0)
+					{
+						medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
+					}
+				}
 
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
 
-                @Override
-                public void afterTextChanged(Editable editable) { }
-            });
+				@Override
+				public void afterTextChanged(Editable editable) { }
+			});
 
-            medicationsSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
-            {
-                @Override
-                public Cursor runQuery(CharSequence charSequence)
-                {
-                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+			medicationsSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
+			{
+				@Override
+				public Cursor runQuery(CharSequence charSequence)
+				{
+					String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
 
-                    if(charSequence.length() == 0) return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+					if(charSequence.length() == 0)
+					{
+						return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+					}
 
-                    String query = charSequence.toString().trim();
+					String query = charSequence.toString().trim();
 
-                    return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
-                }
-            });
-        }
+					return MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+				}
+			});
+		}
 
-        @Override
-        protected MedicationsSimpleCursorAdapter doInBackground(Void... voids)
-        {
-            String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
-            mCursor = MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+		@Override
+		protected MedicationsSimpleCursorAdapter doInBackground(Void... voids)
+		{
+			String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+			mCursor = MainActivity.SQLITE_DATABASE.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
 
-            String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
-            int[] toViews = {R.id.main_medications_list_item_prescription_group, R.id.main_medications_list_item_name, R.id.main_medications_list_item_substance, R.id.main_medications_list_item_manufacturer};
+			String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+			int[] toViews = {R.id.main_medications_list_item_prescription_group, R.id.main_medications_list_item_name, R.id.main_medications_list_item_substance, R.id.main_medications_list_item_manufacturer};
 
-            return new MedicationsSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
-        }
-    }
+			return new MedicationsSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
+		}
+	}
 }

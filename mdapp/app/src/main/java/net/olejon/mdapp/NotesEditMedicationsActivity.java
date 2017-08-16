@@ -46,221 +46,224 @@ import android.widget.SimpleCursorAdapter;
 
 public class NotesEditMedicationsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    private InputMethodManager mInputMethodManager;
+	private InputMethodManager mInputMethodManager;
 
-    private LinearLayout mToolbarSearchLayout;
-    private EditText mToolbarSearchEditText;
-    private FloatingActionButton mFloatingActionButton;
-    private ListView mListView;
+	private LinearLayout mToolbarSearchLayout;
+	private EditText mToolbarSearchEditText;
+	private FloatingActionButton mFloatingActionButton;
+	private ListView mListView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Input manager
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		// Input manager
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // Layout
-        setContentView(R.layout.activity_notes_edit_medications);
+		// Layout
+		setContentView(R.layout.activity_notes_edit_medications);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_medications_toolbar);
-        toolbar.setTitle(getString(R.string.notes_edit_medications_title));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_medications_toolbar);
+		toolbar.setTitle(getString(R.string.notes_edit_medications_title));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.notes_edit_medications_toolbar_search_layout);
-        mToolbarSearchEditText = (EditText) findViewById(R.id.notes_edit_medications_toolbar_search);
+		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.notes_edit_medications_toolbar_search_layout);
+		mToolbarSearchEditText = (EditText) findViewById(R.id.notes_edit_medications_toolbar_search);
 
-        // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.notes_edit_medications_fab);
+		// Floating action button
+		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.notes_edit_medications_fab);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                mToolbarSearchEditText.requestFocus();
+		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				mToolbarSearchLayout.setVisibility(View.VISIBLE);
+				mToolbarSearchEditText.requestFocus();
 
-                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-            }
-        });
+				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+			}
+		});
 
-        // List
-        mListView = (ListView) findViewById(R.id.notes_edit_medications_list);
+		// List
+		mListView = (ListView) findViewById(R.id.notes_edit_medications_list);
 
-        // Get medications
-        GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
-        getMedicationsTask.execute();
-    }
+		// Get medications
+		GetMedicationsTask getMedicationsTask = new GetMedicationsTask();
+		getMedicationsTask.execute();
+	}
 
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+	// Destroy activity
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    // Back button
-    @Override
-    public void onBackPressed()
-    {
-        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-        {
-            mToolbarSearchLayout.setVisibility(View.GONE);
-            mToolbarSearchEditText.setText("");
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }
+	// Back button
+	@Override
+	public void onBackPressed()
+	{
+		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		{
+			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setText("");
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+	}
 
-    // Search button
-    @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_SEARCH)
-        {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.requestFocus();
+	// Search button
+	@Override
+	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH)
+		{
+			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
-            return true;
-        }
+			return true;
+		}
 
-        return super.onKeyUp(keyCode, event);
-    }
+		return super.onKeyUp(keyCode, event);
+	}
 
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                finish();
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				finish();
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Get medications
-    private class GetMedicationsTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
-    {
-        @Override
-        protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
-        {
-            mListView.setAdapter(simpleCursorAdapter);
+	// Get medications
+	private class GetMedicationsTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
+	{
+		@Override
+		protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
+		{
+			mListView.setAdapter(simpleCursorAdapter);
 
-            View listViewEmpty = findViewById(R.id.notes_edit_medications_list_empty);
-            mListView.setEmptyView(listViewEmpty);
+			View listViewEmpty = findViewById(R.id.notes_edit_medications_list_empty);
+			mListView.setEmptyView(listViewEmpty);
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
-                {
-                    String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME};
-                    mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+id, null, null, null, null);
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+				{
+					String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME};
+					mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+id, null, null, null, null);
 
-                    if(mCursor.moveToFirst())
-                    {
-                        mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+					if(mCursor.moveToFirst())
+					{
+						mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-                        String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
+						String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
 
-                        Intent intent = new Intent();
-                        intent.putExtra("name", name);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                }
-            });
+						Intent intent = new Intent();
+						intent.putExtra("name", name);
+						setResult(RESULT_OK, intent);
+						finish();
+					}
+				}
+			});
 
-            mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
-            {
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
-                {
-                    simpleCursorAdapter.getFilter().filter(charSequence);
-                }
+			mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+			{
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+				{
+					simpleCursorAdapter.getFilter().filter(charSequence);
+				}
 
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
 
-                @Override
-                public void afterTextChanged(Editable editable) { }
-            });
+				@Override
+				public void afterTextChanged(Editable editable) { }
+			});
 
-            simpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
-            {
-                @Override
-                public Cursor runQuery(CharSequence charSequence)
-                {
-                    if(mSqLiteDatabase != null)
-                    {
-                        String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+			simpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
+			{
+				@Override
+				public Cursor runQuery(CharSequence charSequence)
+				{
+					if(mSqLiteDatabase != null)
+					{
+						String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
 
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+						if(charSequence.length() == 0)
+						{
+							return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+						}
 
-                        String query = charSequence.toString().trim();
+						String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
-                    }
+						return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+					}
 
-                    return null;
-                }
-            });
+					return null;
+				}
+			});
 
-            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-            mFloatingActionButton.setVisibility(View.VISIBLE);
+			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+			mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            Handler handler = new Handler();
+			Handler handler = new Handler();
 
-            handler.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                    mToolbarSearchEditText.requestFocus();
+			handler.postDelayed(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.requestFocus();
 
-                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                }
-            }, 500);
-        }
+					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				}
+			}, 500);
+		}
 
-        @Override
-        protected SimpleCursorAdapter doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-            String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
-            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
+		@Override
+		protected SimpleCursorAdapter doInBackground(Void... voids)
+		{
+			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+			String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, null, null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
 
-            String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
-            int[] toViews = {R.id.notes_edit_medications_list_item_name, R.id.notes_edit_medications_list_item_manufacturer};
+			String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER};
+			int[] toViews = {R.id.notes_edit_medications_list_item_name, R.id.notes_edit_medications_list_item_manufacturer};
 
-            return new SimpleCursorAdapter(mContext, R.layout.activity_notes_edit_medications_list_item, mCursor, fromColumns, toViews, 0);
-        }
-    }
+			return new SimpleCursorAdapter(mContext, R.layout.activity_notes_edit_medications_list_item, mCursor, fromColumns, toViews, 0);
+		}
+	}
 }

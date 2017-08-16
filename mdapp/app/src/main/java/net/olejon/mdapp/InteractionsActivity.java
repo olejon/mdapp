@@ -50,291 +50,294 @@ import java.util.regex.Pattern;
 
 public class InteractionsActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    private InputMethodManager mInputMethodManager;
+	private InputMethodManager mInputMethodManager;
 
-    private LinearLayout mToolbarSearchLayout;
-    private EditText mToolbarSearchEditText;
-    private FloatingActionButton mFloatingActionButton;
-    private ListView mListView;
+	private LinearLayout mToolbarSearchLayout;
+	private EditText mToolbarSearchEditText;
+	private FloatingActionButton mFloatingActionButton;
+	private ListView mListView;
 
-    private boolean mActivityPaused = false;
+	private boolean mActivityPaused = false;
 
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Intent
-        Intent intent = getIntent();
+		// Intent
+		Intent intent = getIntent();
 
-        String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
+		String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
 
-        // Input manager
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		// Input manager
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // Layout
-        setContentView(R.layout.activity_interactions);
+		// Layout
+		setContentView(R.layout.activity_interactions);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
-        toolbar.setTitle(getString(R.string.interactions_title));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
+		toolbar.setTitle(getString(R.string.interactions_title));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.interactions_toolbar_search_layout);
-        mToolbarSearchEditText = (EditText) findViewById(R.id.interactions_toolbar_search);
+		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.interactions_toolbar_search_layout);
+		mToolbarSearchEditText = (EditText) findViewById(R.id.interactions_toolbar_search);
 
-        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			@Override
+			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+			{
+				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				{
+					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-                    search(mToolbarSearchEditText.getText().toString());
+					search(mToolbarSearchEditText.getText().toString());
 
-                    return true;
-                }
+					return true;
+				}
 
-                return false;
-            }
-        });
+				return false;
+			}
+		});
 
-        if(!searchString.equals(""))
-        {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.setText(searchString+" ");
-            mToolbarSearchEditText.setSelection(mToolbarSearchEditText.getText().length());
+		if(!searchString.equals(""))
+		{
+			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.setText(searchString+" ");
+			mToolbarSearchEditText.setSelection(mToolbarSearchEditText.getText().length());
 
-            mTools.showToast(getString(R.string.interactions_search_other_medications_or_substances), 1);
-        }
+			mTools.showToast(getString(R.string.interactions_search_other_medications_or_substances), 1);
+		}
 
-        // List
-        mListView = (ListView) findViewById(R.id.interactions_list);
+		// List
+		mListView = (ListView) findViewById(R.id.interactions_list);
 
-        View listViewEmpty = findViewById(R.id.interactions_list_empty);
-        mListView.setEmptyView(listViewEmpty);
+		View listViewEmpty = findViewById(R.id.interactions_list_empty);
+		mListView.setEmptyView(listViewEmpty);
 
-        View listViewHeader = getLayoutInflater().inflate(R.layout.activity_interactions_list_subheader, mListView, false);
-        mListView.addHeaderView(listViewHeader, null, false);
+		View listViewHeader = getLayoutInflater().inflate(R.layout.activity_interactions_list_subheader, mListView, false);
+		mListView.addHeaderView(listViewHeader, null, false);
 
-        // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.interactions_fab);
+		// Floating action button
+		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.interactions_fab);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-                {
-                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				{
+					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-                    search(mToolbarSearchEditText.getText().toString());
-                }
-                else
-                {
-                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                    mToolbarSearchEditText.requestFocus();
+					search(mToolbarSearchEditText.getText().toString());
+				}
+				else
+				{
+					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.requestFocus();
 
-                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                }
-            }
-        });
-    }
+					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				}
+			}
+		});
+	}
 
-    // Resume activity
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
+	// Resume activity
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 
-        getRecentSearches();
-    }
+		getRecentSearches();
+	}
 
-    // Pause activity
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
 
-        mActivityPaused = true;
-    }
+		mActivityPaused = true;
+	}
 
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+	// Destroy activity
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    // Back button
-    @Override
-    public void onBackPressed()
-    {
-        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-        {
-            mToolbarSearchLayout.setVisibility(View.GONE);
-            mToolbarSearchEditText.setText("");
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }
+	// Back button
+	@Override
+	public void onBackPressed()
+	{
+		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		{
+			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setText("");
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+	}
 
-    // Search button
-    @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_SEARCH)
-        {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.requestFocus();
+	// Search button
+	@Override
+	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH)
+		{
+			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
-            return true;
-        }
+			return true;
+		}
 
-        return super.onKeyUp(keyCode, event);
-    }
+		return super.onKeyUp(keyCode, event);
+	}
 
-    // Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_interactions, menu);
-        return true;
-    }
+	// Menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_interactions, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.interactions_menu_clear_recent_searches:
-            {
-                clearRecentSearches();
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			case R.id.interactions_menu_clear_recent_searches:
+			{
+				clearRecentSearches();
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Search
-    private void search(String searchString)
-    {
-        if(searchString.equals("")) return;
+	// Search
+	private void search(String searchString)
+	{
+		if(searchString.equals("")) return;
 
-        Pattern pattern = Pattern.compile("([A-Za-z][0-9]{2}[A-Za-z]\\s+[A-Za-z][0-9]{2})");
-        Matcher matcher = pattern.matcher(searchString);
+		Pattern pattern = Pattern.compile("([A-Za-z][0-9]{2}[A-Za-z]\\s+[A-Za-z][0-9]{2})");
+		Matcher matcher = pattern.matcher(searchString);
 
-        while(matcher.find())
-        {
-            searchString = searchString.replace(matcher.group(0), "");
+		while(matcher.find())
+		{
+			searchString = searchString.replace(matcher.group(0), "");
 
-            searchString += " "+matcher.group(1).replace(" ", "")+" ";
-        }
+			searchString += " "+matcher.group(1).replace(" ", "")+" ";
+		}
 
-        searchString = searchString.replaceAll("\\s{2,}", " ").trim();
+		searchString = searchString.replaceAll("\\s{2,}", " ").trim();
 
-        Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
-        intent.putExtra("search", mTools.firstToUpper(searchString));
-        startActivity(intent);
-    }
+		Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
+		intent.putExtra("search", mTools.firstToUpper(searchString));
+		startActivity(intent);
+	}
 
-    private void getRecentSearches()
-    {
-        GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-        getRecentSearchesTask.execute();
-    }
+	private void getRecentSearches()
+	{
+		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
+		getRecentSearchesTask.execute();
+	}
 
-    private void clearRecentSearches()
-    {
-        mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+	private void clearRecentSearches()
+	{
+		mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-        mSqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, null, null);
+		mSqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, null, null);
 
-        mToolbarSearchLayout.setVisibility(View.GONE);
-        mToolbarSearchEditText.setText("");
+		mToolbarSearchLayout.setVisibility(View.GONE);
+		mToolbarSearchEditText.setText("");
 
-        mTools.showToast(getString(R.string.interactions_recent_searches_removed), 0);
+		mTools.showToast(getString(R.string.interactions_recent_searches_removed), 0);
 
-        getRecentSearches();
-    }
+		getRecentSearches();
+	}
 
-    private class GetRecentSearchesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
-    {
-        @Override
-        protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-        {
-            mListView.setAdapter(simpleCursorAdapter);
+	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
+	{
+		@Override
+		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
+		{
+			mListView.setAdapter(simpleCursorAdapter);
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-                {
-                    int index = i - 1;
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+				{
+					int index = i - 1;
 
-                    if(mCursor.moveToPosition(index)) search(mCursor.getString(mCursor.getColumnIndexOrThrow(InteractionsSQLiteHelper.COLUMN_STRING)));
-                }
-            });
+					if(mCursor.moveToPosition(index))
+					{
+						search(mCursor.getString(mCursor.getColumnIndexOrThrow(InteractionsSQLiteHelper.COLUMN_STRING)));
+					}
+				}
+			});
 
-            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-            mFloatingActionButton.setVisibility(View.VISIBLE);
+			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+			mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            if(!mActivityPaused && mCursor.getCount() > 0)
-            {
-                Handler handler = new Handler();
+			if(!mActivityPaused && mCursor.getCount() > 0)
+			{
+				Handler handler = new Handler();
 
-                handler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                        mToolbarSearchEditText.requestFocus();
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						mToolbarSearchLayout.setVisibility(View.VISIBLE);
+						mToolbarSearchEditText.requestFocus();
 
-                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                    }
-                }, 500);
-            }
-        }
+						mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					}
+				}, 500);
+			}
+		}
 
-        @Override
-        protected SimpleCursorAdapter doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
-            mCursor = mSqLiteDatabase.query(InteractionsSQLiteHelper.TABLE, null, null, null, null, null, InteractionsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+		@Override
+		protected SimpleCursorAdapter doInBackground(Void... voids)
+		{
+			mSqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
+			mCursor = mSqLiteDatabase.query(InteractionsSQLiteHelper.TABLE, null, null, null, null, null, InteractionsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
-            String[] fromColumns = {InteractionsSQLiteHelper.COLUMN_STRING};
-            int[] toViews = {R.id.interactions_list_item_string};
+			String[] fromColumns = {InteractionsSQLiteHelper.COLUMN_STRING};
+			int[] toViews = {R.id.interactions_list_item_string};
 
-            return new SimpleCursorAdapter(mContext, R.layout.activity_interactions_list_item, mCursor, fromColumns, toViews, 0);
-        }
-    }
+			return new SimpleCursorAdapter(mContext, R.layout.activity_interactions_list_item, mCursor, fromColumns, toViews, 0);
+		}
+	}
 }

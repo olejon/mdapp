@@ -32,155 +32,155 @@ import android.widget.TextView;
 
 public class ScalesActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Layout
-        setContentView(R.layout.activity_scales);
+		// Layout
+		setContentView(R.layout.activity_scales);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.scales_toolbar);
-        toolbar.setTitle(getString(R.string.scales_title));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.scales_toolbar);
+		toolbar.setTitle(getString(R.string.scales_title));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Scales
-        TextView scalesMedscape = (TextView) findViewById(R.id.scales_medscape);
+		// Scales
+		TextView scalesMedscape = (TextView) findViewById(R.id.scales_medscape);
 
-        scalesMedscape.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                intent.putExtra("title", mContext.getString(R.string.scales_medscape_title));
-                intent.putExtra("uri", "http://search.medscape.com/search/?q=Scale");
-                mContext.startActivity(intent);
-            }
-        });
+		scalesMedscape.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Intent intent = new Intent(mContext, MainWebViewActivity.class);
+				intent.putExtra("title", mContext.getString(R.string.scales_medscape_title));
+				intent.putExtra("uri", "http://search.medscape.com/search/?q=Scale");
+				mContext.startActivity(intent);
+			}
+		});
 
-        TextView scalesVasTitle = (TextView) findViewById(R.id.scales_vas_title);
-        ImageView scalesVasImage = (ImageView) findViewById(R.id.scales_vas_image);
-        TextView scalesVasButton = (TextView) findViewById(R.id.scales_vas_button);
+		TextView scalesVasTitle = (TextView) findViewById(R.id.scales_vas_title);
+		ImageView scalesVasImage = (ImageView) findViewById(R.id.scales_vas_image);
+		TextView scalesVasButton = (TextView) findViewById(R.id.scales_vas_button);
 
-        scalesVasTitle.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.vas);
-            }
-        });
+		scalesVasTitle.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.vas);
+			}
+		});
 
-        scalesVasImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.vas);
-            }
-        });
+		scalesVasImage.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.vas);
+			}
+		});
 
-        scalesVasButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.vas);
-            }
-        });
+		scalesVasButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.vas);
+			}
+		});
 
-        TextView scalesGcsTitle = (TextView) findViewById(R.id.scales_gcs_title);
-        ImageView scalesGcsImage = (ImageView) findViewById(R.id.scales_gcs_image);
-        TextView scalesGcsButton = (TextView) findViewById(R.id.scales_gcs_button);
+		TextView scalesGcsTitle = (TextView) findViewById(R.id.scales_gcs_title);
+		ImageView scalesGcsImage = (ImageView) findViewById(R.id.scales_gcs_image);
+		TextView scalesGcsButton = (TextView) findViewById(R.id.scales_gcs_button);
 
-        scalesGcsTitle.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.gcs);
-            }
-        });
+		scalesGcsTitle.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.gcs);
+			}
+		});
 
-        scalesGcsImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.gcs);
-            }
-        });
+		scalesGcsImage.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.gcs);
+			}
+		});
 
-        scalesGcsButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.gcs);
-            }
-        });
+		scalesGcsButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.gcs);
+			}
+		});
 
-        TextView scalesMewsTitle = (TextView) findViewById(R.id.scales_mews_title);
-        ImageView scalesMewsImage = (ImageView) findViewById(R.id.scales_mews_image);
-        TextView scalesMewsButton = (TextView) findViewById(R.id.scales_mews_button);
+		TextView scalesMewsTitle = (TextView) findViewById(R.id.scales_mews_title);
+		ImageView scalesMewsImage = (ImageView) findViewById(R.id.scales_mews_image);
+		TextView scalesMewsButton = (TextView) findViewById(R.id.scales_mews_button);
 
-        scalesMewsTitle.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.mews);
-            }
-        });
+		scalesMewsTitle.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.mews);
+			}
+		});
 
-        scalesMewsImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.mews);
-            }
-        });
+		scalesMewsImage.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.mews);
+			}
+		});
 
-        scalesMewsButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showScale(R.drawable.mews);
-            }
-        });
-    }
+		scalesMewsButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				showScale(R.drawable.mews);
+			}
+		});
+	}
 
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Scales
-    private void showScale(int scale)
-    {
-        Intent intent = new Intent(mContext, ScaleActivity.class);
-        intent.putExtra("scale", scale);
-        startActivity(intent);
-    }
+	// Scales
+	private void showScale(int scale)
+	{
+		Intent intent = new Intent(mContext, ScaleActivity.class);
+		intent.putExtra("scale", scale);
+		startActivity(intent);
+	}
 }

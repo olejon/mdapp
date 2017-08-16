@@ -49,243 +49,246 @@ import android.widget.TextView;
 
 public class PharmaciesActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    private InputMethodManager mInputMethodManager;
+	private InputMethodManager mInputMethodManager;
 
-    private LinearLayout mToolbarSearchLayout;
-    private EditText mToolbarSearchEditText;
-    private FloatingActionButton mFloatingActionButton;
-    private ListView mListView;
-    private View mListViewEmpty;
+	private LinearLayout mToolbarSearchLayout;
+	private EditText mToolbarSearchEditText;
+	private FloatingActionButton mFloatingActionButton;
+	private ListView mListView;
+	private View mListViewEmpty;
 
-    private boolean mActivityPaused = false;
+	private boolean mActivityPaused = false;
 
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Input manager
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		// Input manager
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // Layout
-        setContentView(R.layout.activity_pharmacies);
+		// Layout
+		setContentView(R.layout.activity_pharmacies);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_toolbar);
-        toolbar.setTitle(getString(R.string.pharmacies_title));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_toolbar);
+		toolbar.setTitle(getString(R.string.pharmacies_title));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_toolbar_search_layout);
-        mToolbarSearchEditText = (EditText) findViewById(R.id.pharmacies_toolbar_search);
+		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.pharmacies_toolbar_search_layout);
+		mToolbarSearchEditText = (EditText) findViewById(R.id.pharmacies_toolbar_search);
 
-        // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.pharmacies_fab);
+		// Floating action button
+		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.pharmacies_fab);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                mToolbarSearchEditText.requestFocus();
+		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				mToolbarSearchLayout.setVisibility(View.VISIBLE);
+				mToolbarSearchEditText.requestFocus();
 
-                mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-            }
-        });
+				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+			}
+		});
 
-        // List
-        mListView = (ListView) findViewById(R.id.pharmacies_list);
-        mListViewEmpty = findViewById(R.id.pharmacies_list_empty);
+		// List
+		mListView = (ListView) findViewById(R.id.pharmacies_list);
+		mListViewEmpty = findViewById(R.id.pharmacies_list_empty);
 
-        // Get municipalities
-        GetMunicipalitiesTask getMunicipalitiesTask = new GetMunicipalitiesTask();
-        getMunicipalitiesTask.execute();
-    }
+		// Get municipalities
+		GetMunicipalitiesTask getMunicipalitiesTask = new GetMunicipalitiesTask();
+		getMunicipalitiesTask.execute();
+	}
 
-    // Pause activity
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
 
-        mActivityPaused = true;
-    }
+		mActivityPaused = true;
+	}
 
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+	// Destroy activity
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    // Back button
-    @Override
-    public void onBackPressed()
-    {
-        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-        {
-            mToolbarSearchLayout.setVisibility(View.GONE);
-            mToolbarSearchEditText.setText("");
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }
+	// Back button
+	@Override
+	public void onBackPressed()
+	{
+		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		{
+			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setText("");
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+	}
 
-    // Search button
-    @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_SEARCH)
-        {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.requestFocus();
+	// Search button
+	@Override
+	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH)
+		{
+			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
-            return true;
-        }
+			return true;
+		}
 
-        return super.onKeyUp(keyCode, event);
-    }
+		return super.onKeyUp(keyCode, event);
+	}
 
-    // Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_pharmacies, menu);
-        return true;
-    }
+	// Menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_pharmacies, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.pharmacies_menu_overview:
-            {
-                Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                intent.putExtra("title", getString(R.string.pharmacies_menu_overview));
-                intent.putExtra("uri", "https://legemiddelverket.no/import-og-salg/apotekdrift/apotekoversikt/");
-                startActivity(intent);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			case R.id.pharmacies_menu_overview:
+			{
+				Intent intent = new Intent(mContext, MainWebViewActivity.class);
+				intent.putExtra("title", getString(R.string.pharmacies_menu_overview));
+				intent.putExtra("uri", "https://legemiddelverket.no/import-og-salg/apotekdrift/apotekoversikt/");
+				startActivity(intent);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Get pharmacies
-    private class GetMunicipalitiesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
-    {
-        @Override
-        protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
-        {
-            mListView.setAdapter(simpleCursorAdapter);
-            mListView.setEmptyView(mListViewEmpty);
+	// Get pharmacies
+	private class GetMunicipalitiesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
+	{
+		@Override
+		protected void onPostExecute(final SimpleCursorAdapter simpleCursorAdapter)
+		{
+			mListView.setAdapter(simpleCursorAdapter);
+			mListView.setEmptyView(mListViewEmpty);
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
-                {
-                    TextView municipalityTextView = (TextView) view.findViewById(R.id.pharmacies_list_item_municipality);
-                    String municipality = municipalityTextView.getText().toString();
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+				{
+					TextView municipalityTextView = (TextView) view.findViewById(R.id.pharmacies_list_item_municipality);
+					String municipality = municipalityTextView.getText().toString();
 
-                    Intent intent = new Intent(mContext, PharmaciesLocationActivity.class);
-                    intent.putExtra("municipality", municipality);
-                    startActivity(intent);
-                }
-            });
+					Intent intent = new Intent(mContext, PharmaciesLocationActivity.class);
+					intent.putExtra("municipality", municipality);
+					startActivity(intent);
+				}
+			});
 
-            mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
-            {
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
-                {
-                    simpleCursorAdapter.getFilter().filter(charSequence);
-                }
+			mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+			{
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+				{
+					simpleCursorAdapter.getFilter().filter(charSequence);
+				}
 
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
 
-                @Override
-                public void afterTextChanged(Editable editable) { }
-            });
+				@Override
+				public void afterTextChanged(Editable editable) { }
+			});
 
-            simpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
-            {
-                @Override
-                public Cursor runQuery(CharSequence charSequence)
-                {
-                    if(mSqLiteDatabase != null)
-                    {
-                        String[] queryColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_ID, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
+			simpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
+			{
+				@Override
+				public Cursor runQuery(CharSequence charSequence)
+				{
+					if(mSqLiteDatabase != null)
+					{
+						String[] queryColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_ID, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
 
-                        if(charSequence.length() == 0) return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
+						if(charSequence.length() == 0)
+						{
+							return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
+						}
 
-                        String query = charSequence.toString().trim();
+						String query = charSequence.toString().trim();
 
-                        return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
-                    }
+						return mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
+					}
 
-                    return null;
-                }
-            });
+					return null;
+				}
+			});
 
-            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-            mFloatingActionButton.setVisibility(View.VISIBLE);
+			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+			mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            if(!mActivityPaused)
-            {
-                Handler handler = new Handler();
+			if(!mActivityPaused)
+			{
+				Handler handler = new Handler();
 
-                handler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                        mToolbarSearchEditText.requestFocus();
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						mToolbarSearchLayout.setVisibility(View.VISIBLE);
+						mToolbarSearchEditText.requestFocus();
 
-                        mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                    }
-                }, 500);
-            }
-        }
+						mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					}
+				}, 500);
+			}
+		}
 
-        @Override
-        protected SimpleCursorAdapter doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-            String[] queryColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_ID, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
-            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
+		@Override
+		protected SimpleCursorAdapter doInBackground(Void... voids)
+		{
+			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+			String[] queryColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_ID, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
+			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MUNICIPALITIES, queryColumns, null, null, null, null, SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME+" COLLATE NOCASE");
 
-            String[] fromColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
-            int[] toViews = {R.id.pharmacies_list_item_municipality};
+			String[] fromColumns = {SlDataSQLiteHelper.MUNICIPALITIES_COLUMN_NAME};
+			int[] toViews = {R.id.pharmacies_list_item_municipality};
 
-            return new SimpleCursorAdapter(mContext, R.layout.activity_pharmacies_list_item, mCursor, fromColumns, toViews, 0);
-        }
-    }
+			return new SimpleCursorAdapter(mContext, R.layout.activity_pharmacies_list_item, mCursor, fromColumns, toViews, 0);
+		}
+	}
 }

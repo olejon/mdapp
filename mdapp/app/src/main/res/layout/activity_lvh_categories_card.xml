@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/lvh_categories_card" style="@style/lvh_categories_card_layout">
-
-    <RelativeLayout style="@style/lvh_categories_card_inner_layout">
-
-        <ImageView android:id="@+id/lvh_categories_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/lvh_categories_card_image_content_description" style="@style/lvh_categories_card_icon"/>
-
-        <TextView android:id="@+id/lvh_categories_card_title" android:layout_alignParentTop="true" style="@style/lvh_categories_card_title"/>
-
-        <LinearLayout android:id="@+id/lvh_categories_card_categories" android:layout_below="@+id/lvh_categories_card_title" style="@style/lvh_categories_card_categories_layout"/>
-
-    </RelativeLayout>
-
+	<RelativeLayout style="@style/lvh_categories_card_inner_layout">
+		<ImageView android:id="@+id/lvh_categories_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/lvh_categories_card_image_content_description" style="@style/lvh_categories_card_icon"/>
+		<TextView android:id="@+id/lvh_categories_card_title" android:layout_alignParentTop="true" style="@style/lvh_categories_card_title"/>
+		<LinearLayout android:id="@+id/lvh_categories_card_categories" android:layout_below="@+id/lvh_categories_card_title" style="@style/lvh_categories_card_categories_layout"/>
+	</RelativeLayout>
 </android.support.v7.widget.CardView>

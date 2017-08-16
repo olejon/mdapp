@@ -29,44 +29,44 @@ import android.widget.TextView;
 
 public class WelcomeFirstFragment extends Fragment
 {
-    private boolean mViewIsShown = false;
+	private boolean mViewIsShown = false;
 
-    // Create fragment view
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_first, container, false);
+	// Create fragment view
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_first, container, false);
 
-        if(!mViewIsShown)
-        {
-            TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_1_guide);
-            animateTextView(textView);
-        }
+		if(!mViewIsShown)
+		{
+			TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_1_guide);
+			animateTextView(textView);
+		}
 
-        return viewGroup;
-    }
+		return viewGroup;
+	}
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser)
-    {
-        super.setUserVisibleHint(isVisibleToUser);
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser)
+	{
+		super.setUserVisibleHint(isVisibleToUser);
 
-        if(getView() == null)
-        {
-            mViewIsShown = false;
-        }
-        else
-        {
-            mViewIsShown = true;
+		if(getView() == null)
+		{
+			mViewIsShown = false;
+		}
+		else
+		{
+			mViewIsShown = true;
 
-            TextView textView = (TextView) getView().getRootView().findViewById(R.id.welcome_page_1_guide);
-            animateTextView(textView);
-        }
-    }
+			TextView textView = (TextView) getView().getRootView().findViewById(R.id.welcome_page_1_guide);
+			animateTextView(textView);
+		}
+	}
 
-    private void animateTextView(TextView textView)
-    {
-        textView.setVisibility(View.VISIBLE);
-        textView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_guide));
-    }
+	private void animateTextView(TextView textView)
+	{
+		textView.setVisibility(View.VISIBLE);
+		textView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_guide));
+	}
 }

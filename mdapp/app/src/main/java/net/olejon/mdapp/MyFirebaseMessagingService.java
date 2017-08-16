@@ -38,93 +38,76 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
-    public static final int NOTIFICATION_MESSAGE_ID = 1;
-    public static final int NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID = 2;
+	public static final int NOTIFICATION_MESSAGE_ID = 1;
+	public static final int NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID = 2;
 
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    @Override
-    public void onMessageReceived(RemoteMessage remoteMessage)
-    {
-        if(remoteMessage.getData().size() > 0 && remoteMessage.getData().containsKey("type") && remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("text") && remoteMessage.getData().containsKey("big_text") && remoteMessage.getData().containsKey("uri_text") && remoteMessage.getData().containsKey("uri"))
-        {
-            long sentTime = remoteMessage.getSentTime();
+	@Override
+	public void onMessageReceived(RemoteMessage remoteMessage)
+	{
+		if(remoteMessage.getData().size() > 0 && remoteMessage.getData().containsKey("type") && remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("text") && remoteMessage.getData().containsKey("big_text") && remoteMessage.getData().containsKey("uri_text") && remoteMessage.getData().containsKey("uri"))
+		{
+			long sentTime = remoteMessage.getSentTime();
 
-            Map<String, String> data = remoteMessage.getData();
+			Map<String,String> data = remoteMessage.getData();
 
-            String type = data.get("type");
-            String title = data.get("title");
-            String text = data.get("text");
-            String bigText = data.get("big_text");
-            String uri_text = data.get("uri_text");
-            String uri = data.get("uri");
+			String type = data.get("type");
+			String title = data.get("title");
+			String text = data.get("text");
+			String bigText = data.get("big_text");
+			String uri_text = data.get("uri_text");
+			String uri = data.get("uri");
 
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
+			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext);
 
-            notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setWhen(sentTime)
-                    .setAutoCancel(true)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
-                    .setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
-                    .setLargeIcon(bitmap)
-                    .setColor(ContextCompat.getColor(mContext, R.color.light_blue));
+			notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH).setWhen(sentTime).setAutoCancel(true).setContentTitle(title).setContentText(text).setStyle(new NotificationCompat.BigTextStyle().bigText(bigText)).setSmallIcon(R.drawable.ic_local_hospital_white_24dp).setLargeIcon(bitmap).setColor(ContextCompat.getColor(mContext, R.color.light_blue));
 
-            if(type.equals("notifications_from_slv"))
-            {
-                Intent readMoreActionIntent = new Intent(mContext, NotificationsFromSlvActivity.class);
-                readMoreActionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent readMoreActionPendingIntent = PendingIntent.getActivity(mContext, 0, readMoreActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			Intent uriActionIntent;
 
-                Intent settingsActionIntent = new Intent(mContext, SettingsActivity.class);
-                settingsActionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent settingsActionPendingIntent = PendingIntent.getActivity(mContext, 0, settingsActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			if(uri.equals(""))
+			{
+				uriActionIntent = new Intent(mContext, MainActivity.class);
+				uriActionIntent.setAction("android.intent.action.MAIN");
+				uriActionIntent.addCategory("android.intent.category.LAUNCHER");
+			}
+			else
+			{
+				uriActionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+			}
 
-                notificationBuilder.setContentIntent(readMoreActionPendingIntent)
-                        .addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.service_notifications_from_slv_read_more), readMoreActionPendingIntent)
-                        .addAction(R.drawable.ic_settings_white_24dp, getString(R.string.service_notifications_from_slv_settings), settingsActionPendingIntent);
+			PendingIntent uriActionPendingIntent = PendingIntent.getActivity(mContext, 0, uriActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND")) notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-                if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_LED")) notificationBuilder.setLights(Color.BLUE, 1000, 2000);
+			if(type.equals("notifications_from_slv"))
+			{
+				Intent settingsActionIntent = new Intent(mContext, SettingsActivity.class);
+				settingsActionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				PendingIntent settingsActionPendingIntent = PendingIntent.getActivity(mContext, 0, settingsActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                NotificationManagerCompat.from(mContext).notify(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID, notificationBuilder.build());
-            }
-            else
-            {
-                Intent actionIntent;
+				notificationBuilder.setContentIntent(uriActionPendingIntent).addAction(R.drawable.ic_notifications_white_24dp, uri_text, uriActionPendingIntent).addAction(R.drawable.ic_settings_white_24dp, getString(R.string.service_notifications_from_slv_settings), settingsActionPendingIntent);
 
-                if(uri.equals(""))
-                {
-                    actionIntent = new Intent(mContext, MainActivity.class);
-                    actionIntent.setAction("android.intent.action.MAIN");
-                    actionIntent.addCategory("android.intent.category.LAUNCHER");
-                }
-                else
-                {
-                    actionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                }
+				if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_SOUND")) notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+				if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_FROM_SLV_NOTIFY_LED")) notificationBuilder.setLights(Color.BLUE, 1000, 2000);
 
-                PendingIntent actionPendingIntent = PendingIntent.getActivity(mContext, 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				NotificationManagerCompat.from(mContext).notify(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID, notificationBuilder.build());
+			}
+			else
+			{
+				notificationBuilder.setContentIntent(uriActionPendingIntent).addAction(R.drawable.ic_local_hospital_white_24dp, uri_text, uriActionPendingIntent).setLights(Color.BLUE, 1000, 2000).setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-                notificationBuilder.setContentIntent(actionPendingIntent)
-                        .addAction(R.drawable.ic_local_hospital_white_24dp, uri_text, actionPendingIntent)
-                        .setLights(Color.BLUE, 1000, 2000)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+				NotificationManagerCompat.from(mContext).notify(NOTIFICATION_MESSAGE_ID, notificationBuilder.build());
+			}
+		}
+	}
 
-                NotificationManagerCompat.from(mContext).notify(NOTIFICATION_MESSAGE_ID, notificationBuilder.build());
-            }
-        }
-    }
-
-    @Override
-    public void onDeletedMessages()
-    {
-        NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_MESSAGE_ID);
-        NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
-    }
+	@Override
+	public void onDeletedMessages()
+	{
+		NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_MESSAGE_ID);
+		NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
+	}
 }

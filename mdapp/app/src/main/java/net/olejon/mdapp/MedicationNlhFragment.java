@@ -46,170 +46,170 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MedicationNlhFragment extends Fragment
 {
-    private WebView mWebView;
+	private WebView mWebView;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medication_nlh, container, false);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medication_nlh, container, false);
 
-        // Activity
-        Activity activity = getActivity();
+		// Activity
+		Activity activity = getActivity();
 
-        // Context
-        final Context context = activity.getApplicationContext();
+		// Context
+		final Context context = activity.getApplicationContext();
 
-        // Tools
-        final MyTools mTools = new MyTools(context);
+		// Tools
+		final MyTools mTools = new MyTools(context);
 
-        // Arguments
-        String pageUri = getArguments().getString("uri");
+		// Arguments
+		String pageUri = getArguments().getString("uri");
 
-        // Progress bar
-        final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_nlh_progressbar);
+		// Progress bar
+		final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_nlh_progressbar);
 
-        // Toolbar
-        final LinearLayout toolbarSearchLayout = (LinearLayout) activity.findViewById(R.id.medication_toolbar_search_layout);
-        final EditText toolbarSearchEditText = (EditText) activity.findViewById(R.id.medication_toolbar_search);
+		// Toolbar
+		final LinearLayout toolbarSearchLayout = (LinearLayout) activity.findViewById(R.id.medication_toolbar_search_layout);
+		final EditText toolbarSearchEditText = (EditText) activity.findViewById(R.id.medication_toolbar_search);
 
-        // SSL error button
-        final Button sslErrorButton = (Button) viewGroup.findViewById(R.id.medication_nlh_ssl_error_button);
+		// SSL error button
+		final Button sslErrorButton = (Button) viewGroup.findViewById(R.id.medication_nlh_ssl_error_button);
 
-        // Web view
-        mWebView = (WebView) viewGroup.findViewById(R.id.medication_nlh_content);
+		// Web view
+		mWebView = (WebView) viewGroup.findViewById(R.id.medication_nlh_content);
 
-        WebSettings webSettings = mWebView.getSettings();
+		WebSettings webSettings = mWebView.getSettings();
 
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setAppCachePath(context.getCacheDir().getAbsolutePath());
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setAppCacheEnabled(true);
+		webSettings.setDomStorageEnabled(true);
+		webSettings.setAppCachePath(context.getCacheDir().getAbsolutePath());
+		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        mWebView.setWebViewClient(new WebViewClient()
-        {
-            @SuppressWarnings("deprecation")
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url)
-            {
-                if(!mTools.isDeviceConnected())
-                {
-                    mTools.showToast(getString(R.string.device_not_connected), 0);
-                    return true;
-                }
-                else if(url.matches(".*/[^#]+#[^/]+$"))
-                {
-                    mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
-                    return true;
-                }
-                else if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
-                {
-                    mTools.showToast(getString(R.string.device_not_supported), 1);
-                    return true;
-                }
-                else if(url.matches("^https?://.*?\\.pdf$") || url.matches("^https?://.*?\\.docx?$") || url.matches("^https?://.*?\\.xlsx?$") || url.matches("^https?://.*?\\.pptx?$"))
-                {
-                    mTools.downloadFile(view.getTitle(), url);
-                    return true;
-                }
-                else if(url.startsWith("mailto:"))
-                {
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
-                    startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
-                    return true;
-                }
-                else if(url.startsWith("tel:"))
-                {
-                    try
-                    {
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-                        startActivity(intent);
-                    }
-                    catch(Exception e)
-                    {
-                        new MaterialDialog.Builder(context).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-                    }
+		mWebView.setWebViewClient(new WebViewClient()
+		{
+			@SuppressWarnings("deprecation")
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url)
+			{
+				if(!mTools.isDeviceConnected())
+				{
+					mTools.showToast(getString(R.string.device_not_connected), 0);
+					return true;
+				}
+				else if(url.matches(".*/[^#]+#[^/]+$"))
+				{
+					mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
+					return true;
+				}
+				else if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
+				{
+					mTools.showToast(getString(R.string.device_not_supported), 1);
+					return true;
+				}
+				else if(url.matches("^https?://.*?\\.pdf$") || url.matches("^https?://.*?\\.docx?$") || url.matches("^https?://.*?\\.xlsx?$") || url.matches("^https?://.*?\\.pptx?$"))
+				{
+					mTools.downloadFile(view.getTitle(), url);
+					return true;
+				}
+				else if(url.startsWith("mailto:"))
+				{
+					Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+					startActivity(Intent.createChooser(intent, getString(R.string.project_feedback_text)));
+					return true;
+				}
+				else if(url.startsWith("tel:"))
+				{
+					try
+					{
+						Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+						startActivity(intent);
+					}
+					catch(Exception e)
+					{
+						new MaterialDialog.Builder(context).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					}
 
-                    return true;
-                }
+					return true;
+				}
 
-                return false;
-            }
+				return false;
+			}
 
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon)
-            {
-                progressBar.setVisibility(View.VISIBLE);
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon)
+			{
+				progressBar.setVisibility(View.VISIBLE);
 
-                toolbarSearchLayout.setVisibility(View.GONE);
-                toolbarSearchEditText.setText("");
-            }
+				toolbarSearchLayout.setVisibility(View.GONE);
+				toolbarSearchEditText.setText("");
+			}
 
-            @Override
-            public void onPageFinished(WebView view, String url)
-            {
-                progressBar.setVisibility(View.GONE);
+			@Override
+			public void onPageFinished(WebView view, String url)
+			{
+				progressBar.setVisibility(View.GONE);
 
-                mWebView.loadUrl("javascript:if(document.getElementById('mainframe') != null) { document.getElementById('mainframe').firstElementChild.style.display = 'none'; } void(0);");
-            }
+				mWebView.loadUrl("javascript:if(document.getElementById('mainframe') != null) { document.getElementById('mainframe').firstElementChild.style.display = 'none'; } void(0);");
+			}
 
-            @Override
-            public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
-            {
-                handler.cancel();
+			@Override
+			public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error)
+			{
+				handler.cancel();
 
-                mWebView.stopLoading();
+				mWebView.stopLoading();
 
-                mWebView.setVisibility(View.GONE);
+				mWebView.setVisibility(View.GONE);
 
-                progressBar.setVisibility(View.GONE);
+				progressBar.setVisibility(View.GONE);
 
-                sslErrorButton.setVisibility(View.VISIBLE);
-            }
-        });
+				sslErrorButton.setVisibility(View.VISIBLE);
+			}
+		});
 
-        if(savedInstanceState == null)
-        {
-            mWebView.loadUrl(pageUri);
-        }
-        else
-        {
-            mWebView.restoreState(savedInstanceState);
-        }
+		if(savedInstanceState == null)
+		{
+			mWebView.loadUrl(pageUri);
+		}
+		else
+		{
+			mWebView.restoreState(savedInstanceState);
+		}
 
-        return viewGroup;
-    }
+		return viewGroup;
+	}
 
-    // Resume fragment
-    @Override
-    public void onResume()
-    {
-        super.onResume();
+	// Resume fragment
+	@Override
+	public void onResume()
+	{
+		super.onResume();
 
-        mWebView.resumeTimers();
-    }
+		mWebView.resumeTimers();
+	}
 
-    // Pause fragment
-    @Override
-    public void onPause()
-    {
-        super.onPause();
+	// Pause fragment
+	@Override
+	public void onPause()
+	{
+		super.onPause();
 
-        mWebView.pauseTimers();
+		mWebView.pauseTimers();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-        {
-            //noinspection deprecation
-            CookieSyncManager.getInstance().sync();
-        }
-    }
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+		{
+			//noinspection deprecation
+			CookieSyncManager.getInstance().sync();
+		}
+	}
 
-    // Save fragment
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
+	// Save fragment
+	@Override
+	public void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
 
-        mWebView.saveState(outState);
-    }
+		mWebView.saveState(outState);
+	}
 }

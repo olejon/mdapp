@@ -29,106 +29,106 @@ import android.widget.RemoteViewsService;
 
 class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory
 {
-    private final Context mContext;
+	private final Context mContext;
 
-    private final MyTools mTools;
+	private final MyTools mTools;
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    WidgetListFactory(Context context)
-    {
-        mContext = context;
+	WidgetListFactory(Context context)
+	{
+		mContext = context;
 
-        mTools = new MyTools(mContext);
-    }
+		mTools = new MyTools(mContext);
+	}
 
-    @Override
-    public void onCreate()
-    {
-        mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
-        String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
-        mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
-    }
+	@Override
+	public void onCreate()
+	{
+		mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
+		String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+		mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME);
+	}
 
-    @Override
-    public void onDestroy()
-    {
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+	@Override
+	public void onDestroy()
+	{
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    @Override
-    public RemoteViews getViewAt(int i)
-    {
-        RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+	@Override
+	public RemoteViews getViewAt(int i)
+	{
+		RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
 
-        try
-        {
-            if(mCursor.moveToPosition(i))
-            {
-                String medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_NAME));
-                String medicationManufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER));
+		try
+		{
+			if(mCursor.moveToPosition(i))
+			{
+				String medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_NAME));
+				String medicationManufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER));
 
-                remoteViews.setTextViewText(R.id.widget_list_item_name, medicationName);
-                remoteViews.setTextViewText(R.id.widget_list_item_manufacturer, medicationManufacturer);
+				remoteViews.setTextViewText(R.id.widget_list_item_name, medicationName);
+				remoteViews.setTextViewText(R.id.widget_list_item_manufacturer, medicationManufacturer);
 
-                SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-                String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-                Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
+				SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+				String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+				Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
 
-                if(cursor.moveToFirst())
-                {
-                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+				if(cursor.moveToFirst())
+				{
+					long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
 
-                    Intent intent = new Intent();
-                    intent.putExtra("id", id);
+					Intent intent = new Intent();
+					intent.putExtra("id", id);
 
-                    remoteViews.setOnClickFillInIntent(R.id.widget_list_item, intent);
-                }
+					remoteViews.setOnClickFillInIntent(R.id.widget_list_item, intent);
+				}
 
-                cursor.close();
-                sqLiteDatabase.close();
-            }
-        }
-        catch(Exception e)
-        {
-            Log.e("WidgetListFactory", Log.getStackTraceString(e));
-        }
+				cursor.close();
+				sqLiteDatabase.close();
+			}
+		}
+		catch(Exception e)
+		{
+			Log.e("WidgetListFactory", Log.getStackTraceString(e));
+		}
 
-        return remoteViews;
-    }
+		return remoteViews;
+	}
 
-    @Override
-    public RemoteViews getLoadingView()
-    {
-        return new RemoteViews(mContext.getPackageName(), R.layout.widget_list_loading);
-    }
+	@Override
+	public RemoteViews getLoadingView()
+	{
+		return new RemoteViews(mContext.getPackageName(), R.layout.widget_list_loading);
+	}
 
-    @Override
-    public int getCount()
-    {
-        return mCursor.getCount();
-    }
+	@Override
+	public int getCount()
+	{
+		return mCursor.getCount();
+	}
 
-    @Override
-    public int getViewTypeCount()
-    {
-        return 1;
-    }
+	@Override
+	public int getViewTypeCount()
+	{
+		return 1;
+	}
 
-    @Override
-    public long getItemId(int i)
-    {
-        return i;
-    }
+	@Override
+	public long getItemId(int i)
+	{
+		return i;
+	}
 
-    @Override
-    public boolean hasStableIds()
-    {
-        return true;
-    }
+	@Override
+	public boolean hasStableIds()
+	{
+		return true;
+	}
 
-    @Override
-    public void onDataSetChanged() { }
+	@Override
+	public void onDataSetChanged() { }
 }

@@ -25,31 +25,31 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class AntibioticsGuidesSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final String DB_NAME = "antibiotics_guides_recent_searches.db";
+	private static final String DB_NAME = "antibiotics_guides_recent_searches.db";
 
-    private static final int DB_VERSION = 3400;
+	private static final int DB_VERSION = 3400;
 
-    static final String TABLE = "antibiotics_guides_recent_searches";
+	static final String TABLE = "antibiotics_guides_recent_searches";
 
-    static final String COLUMN_ID = "_id";
-    static final String COLUMN_STRING = "string";
+	static final String COLUMN_ID = "_id";
+	static final String COLUMN_STRING = "string";
 
-    AntibioticsGuidesSQLiteHelper(Context context)
-    {
-        super(context, DB_NAME, null, DB_VERSION);
-    }
+	AntibioticsGuidesSQLiteHelper(Context context)
+	{
+		super(context, DB_NAME, null, DB_VERSION);
+	}
 
-    @Override
-    public void onCreate(SQLiteDatabase db)
-    {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_STRING+" TEXT);");
-    }
+	@Override
+	public void onCreate(SQLiteDatabase db)
+	{
+		db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_STRING+" TEXT);");
+	}
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE);
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+	{
+		db.execSQL("DROP TABLE IF EXISTS "+TABLE);
 
-        onCreate(db);
-    }
+		onCreate(db);
+	}
 }

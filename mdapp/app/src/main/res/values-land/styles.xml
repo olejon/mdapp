@@ -2,16 +2,16 @@
 
 <resources>
 
-    <!-- Main -->
-    <style name="main_tabs_base_base">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="tabMode">scrollable</item>
-    </style>
+	<!-- Main -->
+	<style name="main_tabs_base_base">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="tabMode">scrollable</item>
+	</style>
 
-    <!-- Medication -->
-    <style name="medication_tabs_base_base">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="tabMode">scrollable</item>
-    </style>
+	<!-- Medication -->
+	<style name="medication_tabs_base_base">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="tabMode">scrollable</item>
+	</style>
 
 </resources>

@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/poisonings_cards_card" style="@style/poisonings_cards_card_layout">
-
-    <LinearLayout style="@style/poisonings_cards_card_inner_layout">
-
-        <TextView android:id="@+id/poisonings_cards_card_title" style="@style/poisonings_cards_card_title"/>
-        <TextView android:id="@+id/poisonings_cards_card_text" style="@style/poisonings_cards_card_text"/>
-        <TextView android:id="@+id/poisonings_cards_card_type" style="@style/poisonings_cards_card_type"/>
-
-        <View style="@style/card_separator"/>
-
-        <TextView android:id="@+id/poisonings_cards_card_button_uri" android:text="@string/poisonings_cards_card_button_uri" style="@style/poisonings_cards_card_button"/>
-
-    </LinearLayout>
-
+	<LinearLayout style="@style/poisonings_cards_card_inner_layout">
+		<TextView android:id="@+id/poisonings_cards_card_title" style="@style/poisonings_cards_card_title"/>
+		<TextView android:id="@+id/poisonings_cards_card_text" style="@style/poisonings_cards_card_text"/>
+		<TextView android:id="@+id/poisonings_cards_card_type" style="@style/poisonings_cards_card_type"/>
+		<View style="@style/card_separator"/>
+		<TextView android:id="@+id/poisonings_cards_card_button_uri" android:text="@string/poisonings_cards_card_button_uri" style="@style/poisonings_cards_card_button"/>
+	</LinearLayout>
 </android.support.v7.widget.CardView>

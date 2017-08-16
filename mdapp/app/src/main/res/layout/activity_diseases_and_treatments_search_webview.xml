@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/diseases_and_treatments_search_webview_layout">
-
-    <android.support.v7.widget.Toolbar android:id="@+id/diseases_and_treatments_search_webview_toolbar" android:layout_alignParentTop="true" style="@style/toolbar_dark">
-
-        <LinearLayout android:id="@+id/diseases_and_treatments_search_webview_toolbar_search_layout" style="@style/toolbar_search_layout">
-            <EditText android:id="@+id/diseases_and_treatments_search_webview_toolbar_search" android:hint="@string/main_webview_toolbar_search_hint" style="@style/main_webview_toolbar_search_edittext"/>
-            <TextView android:id="@+id/diseases_and_treatments_search_webview_toolbar_search_count_textview" style="@style/main_webview_toolbar_search_count_textview"/>
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <ProgressBar android:id="@+id/diseases_and_treatments_search_webview_toolbar_progressbar_horizontal" android:layout_alignBottom="@+id/diseases_and_treatments_search_webview_toolbar" style="@style/toolbar_progressbar_horizontal"/>
-
-    <WebView android:id="@+id/diseases_and_treatments_search_webview_content" android:layout_below="@+id/diseases_and_treatments_search_webview_toolbar" style="@style/diseases_and_treatments_search_webview_content"/>
-
+	<android.support.v7.widget.Toolbar android:id="@+id/diseases_and_treatments_search_webview_toolbar" android:layout_alignParentTop="true" style="@style/toolbar_dark">
+		<LinearLayout android:id="@+id/diseases_and_treatments_search_webview_toolbar_search_layout" style="@style/toolbar_search_layout">
+			<EditText android:id="@+id/diseases_and_treatments_search_webview_toolbar_search" android:hint="@string/main_webview_toolbar_search_hint" style="@style/main_webview_toolbar_search_edittext"/>
+			<TextView android:id="@+id/diseases_and_treatments_search_webview_toolbar_search_count_textview" style="@style/main_webview_toolbar_search_count_textview"/>
+		</LinearLayout>
+	</android.support.v7.widget.Toolbar>
+	<ProgressBar android:id="@+id/diseases_and_treatments_search_webview_toolbar_progressbar_horizontal" android:layout_alignBottom="@+id/diseases_and_treatments_search_webview_toolbar" style="@style/toolbar_progressbar_horizontal"/>
+	<WebView android:id="@+id/diseases_and_treatments_search_webview_content" android:layout_below="@+id/diseases_and_treatments_search_webview_toolbar" style="@style/diseases_and_treatments_search_webview_content"/>
 </RelativeLayout>

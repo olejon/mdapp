@@ -25,39 +25,39 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class NotesSQLiteHelper extends SQLiteOpenHelper
 {
-    private static final String DB_NAME = "notes.db";
+	private static final String DB_NAME = "notes.db";
 
-    private static final int DB_VERSION = 1;
+	private static final int DB_VERSION = 1;
 
-    static final String TABLE = "notes";
+	static final String TABLE = "notes";
 
-    static final String COLUMN_ID = "_id";
-    static final String COLUMN_TITLE = "title";
-    static final String COLUMN_TEXT = "text";
-    static final String COLUMN_DATA = "data";
-    static final String COLUMN_PATIENT_ID = "patient_id";
-    static final String COLUMN_PATIENT_NAME = "patient_name";
-    static final String COLUMN_PATIENT_DOCTOR = "patient_doctor";
-    static final String COLUMN_PATIENT_DEPARTMENT = "patient_department";
-    static final String COLUMN_PATIENT_ROOM = "patient_room";
-    static final String COLUMN_PATIENT_MEDICATIONS = "patient_medications";
+	static final String COLUMN_ID = "_id";
+	static final String COLUMN_TITLE = "title";
+	static final String COLUMN_TEXT = "text";
+	static final String COLUMN_DATA = "data";
+	static final String COLUMN_PATIENT_ID = "patient_id";
+	static final String COLUMN_PATIENT_NAME = "patient_name";
+	static final String COLUMN_PATIENT_DOCTOR = "patient_doctor";
+	static final String COLUMN_PATIENT_DEPARTMENT = "patient_department";
+	static final String COLUMN_PATIENT_ROOM = "patient_room";
+	static final String COLUMN_PATIENT_MEDICATIONS = "patient_medications";
 
-    NotesSQLiteHelper(Context context)
-    {
-        super(context, DB_NAME, null, DB_VERSION);
-    }
+	NotesSQLiteHelper(Context context)
+	{
+		super(context, DB_NAME, null, DB_VERSION);
+	}
 
-    @Override
-    public void onCreate(SQLiteDatabase db)
-    {
-        db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_TITLE+" TEXT, "+COLUMN_TEXT+" TEXT, "+COLUMN_DATA+" TEXT, "+COLUMN_PATIENT_ID+" TEXT, "+COLUMN_PATIENT_NAME+" TEXT, "+COLUMN_PATIENT_DOCTOR+" TEXT, "+COLUMN_PATIENT_DEPARTMENT+" TEXT, "+COLUMN_PATIENT_ROOM+" TEXT, "+COLUMN_PATIENT_MEDICATIONS+" TEXT);");
-    }
+	@Override
+	public void onCreate(SQLiteDatabase db)
+	{
+		db.execSQL("CREATE TABLE "+TABLE+"("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE ON CONFLICT IGNORE, "+COLUMN_TITLE+" TEXT, "+COLUMN_TEXT+" TEXT, "+COLUMN_DATA+" TEXT, "+COLUMN_PATIENT_ID+" TEXT, "+COLUMN_PATIENT_NAME+" TEXT, "+COLUMN_PATIENT_DOCTOR+" TEXT, "+COLUMN_PATIENT_DEPARTMENT+" TEXT, "+COLUMN_PATIENT_ROOM+" TEXT, "+COLUMN_PATIENT_MEDICATIONS+" TEXT);");
+	}
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE);
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+	{
+		db.execSQL("DROP TABLE IF EXISTS "+TABLE);
 
-        onCreate(db);
-    }
+		onCreate(db);
+	}
 }

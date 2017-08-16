@@ -28,44 +28,44 @@ import android.widget.TextView;
 
 class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
 {
-    MedicationsSimpleCursorAdapter(Context context, Cursor c, String[] from, int[] to)
-    {
-        super(context, R.layout.fragment_medications_list_item, c, from, to, 0);
-    }
+	MedicationsSimpleCursorAdapter(Context context, Cursor c, String[] from, int[] to)
+	{
+		super(context, R.layout.fragment_medications_list_item, c, from, to, 0);
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        View view = super.getView(position, convertView, parent);
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
+		View view = super.getView(position, convertView, parent);
 
-        TextView textView = (TextView) view.findViewById(R.id.main_medications_list_item_prescription_group);
+		TextView textView = (TextView) view.findViewById(R.id.main_medications_list_item_prescription_group);
 
-        String prescriptionGroup = textView.getText().toString();
+		String prescriptionGroup = textView.getText().toString();
 
-        switch(prescriptionGroup)
-        {
-            case "A":
-            {
-                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_red);
-                break;
-            }
-            case "B":
-            {
-                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_orange);
-                break;
-            }
-            case "C":
-            {
-                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_green);
-                break;
-            }
-            case "F":
-            {
-                textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_green);
-                break;
-            }
-        }
+		switch(prescriptionGroup)
+		{
+			case "A":
+			{
+				textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_red);
+				break;
+			}
+			case "B":
+			{
+				textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_orange);
+				break;
+			}
+			case "C":
+			{
+				textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_green);
+				break;
+			}
+			case "F":
+			{
+				textView.setBackgroundResource(R.drawable.main_medications_list_item_circle_green);
+				break;
+			}
+		}
 
-        return view;
-    }
+		return view;
+	}
 }

@@ -25,7 +25,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
@@ -45,15 +45,11 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.util.ArrayList;
-
-public class Icd10Activity extends AppCompatActivity
+public class AntibioticsGuidesActivity extends AppCompatActivity
 {
-	private static final int VOICE_SEARCH_REQUEST_CODE = 1;
-
 	private final Context mContext = this;
+
+	private final MyTools mTools = new MyTools(mContext);
 
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
@@ -65,6 +61,8 @@ public class Icd10Activity extends AppCompatActivity
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
 
+	private boolean mActivityPaused = false;
+
 	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -75,17 +73,17 @@ public class Icd10Activity extends AppCompatActivity
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
-		setContentView(R.layout.activity_icd10);
+		setContentView(R.layout.activity_antibiotics_guides);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_toolbar);
-		toolbar.setTitle(getString(R.string.icd10_title));
+		Toolbar toolbar = (Toolbar) findViewById(R.id.antibiotics_guides_toolbar);
+		toolbar.setTitle(getString(R.string.antibiotics_guides_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.icd10_toolbar_search);
+		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.antibiotics_guides_toolbar_search_layout);
+		mToolbarSearchEditText = (EditText) findViewById(R.id.antibiotics_guides_toolbar_search);
 
 		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -105,11 +103,8 @@ public class Icd10Activity extends AppCompatActivity
 			}
 		});
 
-		// List
-		mListView = (ListView) findViewById(R.id.icd10_list);
-
 		// Floating action button
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.icd10_fab);
+		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.antibiotics_guides_fab);
 
 		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -132,25 +127,32 @@ public class Icd10Activity extends AppCompatActivity
 			}
 		});
 
-		// Get chapters
-		GetChaptersTask getChaptersTask = new GetChaptersTask();
-		getChaptersTask.execute();
+		// List
+		mListView = (ListView) findViewById(R.id.antibiotics_guides_list);
+
+		View listViewEmpty = findViewById(R.id.antibiotics_guides_list_empty);
+		mListView.setEmptyView(listViewEmpty);
+
+		View listViewHeader = getLayoutInflater().inflate(R.layout.activity_antibiotics_guides_list_subheader, mListView, false);
+		mListView.addHeaderView(listViewHeader, null, false);
 	}
 
-	// Activity result
+	// Resume activity
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	protected void onResume()
 	{
-		super.onActivityResult(requestCode, resultCode, data);
+		super.onResume();
 
-		if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
-		{
-			ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+		getRecentSearches();
+	}
 
-			String voiceSearchString = voiceSearchArrayList.get(0);
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
 
-			search(voiceSearchString);
-		}
+		mActivityPaused = true;
 	}
 
 	// Destroy activity
@@ -199,7 +201,7 @@ public class Icd10Activity extends AppCompatActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getMenuInflater().inflate(R.menu.menu_icd10, menu);
+		getMenuInflater().inflate(R.menu.menu_antibiotics_guides, menu);
 		return true;
 	}
 
@@ -213,20 +215,9 @@ public class Icd10Activity extends AppCompatActivity
 				NavUtils.navigateUpFromSameTask(this);
 				return true;
 			}
-			case R.id.icd10_menu_voice_search:
+			case R.id.antibiotics_guides_menu_clear_recent_searches:
 			{
-				try
-				{
-					Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
-					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-					startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
-				}
-				catch(Exception e)
-				{
-					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-				}
-
+				clearRecentSearches();
 				return true;
 			}
 			default:
@@ -241,13 +232,27 @@ public class Icd10Activity extends AppCompatActivity
 	{
 		if(searchString.equals("")) return;
 
-		Intent intent = new Intent(mContext, Icd10SearchActivity.class);
-		intent.putExtra("search", searchString);
+		Intent intent = new Intent(mContext, AntibioticsGuidesCardsActivity.class);
+		intent.putExtra("search", mTools.firstToUpper(searchString));
 		startActivity(intent);
 	}
 
-	// Get chapters
-	private class GetChaptersTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
+	private void getRecentSearches()
+	{
+		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
+		getRecentSearchesTask.execute();
+	}
+
+	private void clearRecentSearches()
+	{
+		mSqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, null, null);
+
+		mTools.showToast(getString(R.string.antibiotics_guides_recent_searches_removed), 0);
+
+		getRecentSearches();
+	}
+
+	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
 	{
 		@Override
 		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
@@ -257,35 +262,48 @@ public class Icd10Activity extends AppCompatActivity
 			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 			{
 				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
 				{
-					mToolbarSearchLayout.setVisibility(View.GONE);
-					mToolbarSearchEditText.setText("");
+					int index = i-1;
 
-					if(mCursor.moveToPosition(i))
+					if(mCursor.moveToPosition(index))
 					{
-						Intent intent = new Intent(mContext, Icd10ChapterActivity.class);
-						intent.putExtra("chapter", id);
-						startActivity(intent);
+						search(mCursor.getString(mCursor.getColumnIndexOrThrow(AntibioticsGuidesSQLiteHelper.COLUMN_STRING)));
 					}
 				}
 			});
 
 			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
 			mFloatingActionButton.setVisibility(View.VISIBLE);
+
+			if(!mActivityPaused && mCursor.getCount() > 0)
+			{
+				Handler handler = new Handler();
+
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						mToolbarSearchLayout.setVisibility(View.VISIBLE);
+						mToolbarSearchEditText.requestFocus();
+
+						mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					}
+				}, 500);
+			}
 		}
 
 		@Override
 		protected SimpleCursorAdapter doInBackground(Void... voids)
 		{
-			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-			String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_ID, SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
-			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
+			mSqLiteDatabase = new AntibioticsGuidesSQLiteHelper(mContext).getWritableDatabase();
+			mCursor = mSqLiteDatabase.query(AntibioticsGuidesSQLiteHelper.TABLE, null, null, null, null, null, AntibioticsGuidesSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
-			String[] fromColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
-			int[] toViews = {R.id.icd10_list_item_chapter, R.id.icd10_list_item_codes, R.id.icd10_list_item_name};
+			String[] fromColumns = {AntibioticsGuidesSQLiteHelper.COLUMN_STRING};
+			int[] toViews = {R.id.antibiotics_guides_list_item_string};
 
-			return new SimpleCursorAdapter(mContext, R.layout.activity_icd10_list_item, mCursor, fromColumns, toViews, 0);
+			return new SimpleCursorAdapter(mContext, R.layout.activity_antibiotics_guides_list_item, mCursor, fromColumns, toViews, 0);
 		}
 	}
 }

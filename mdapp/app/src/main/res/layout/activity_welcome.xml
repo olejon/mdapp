@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/welcome_layout">
-
-    <android.support.v4.view.ViewPager android:id="@+id/welcome_pager" android:layout_alignParentTop="true" style="@style/welcome_pager"/>
-
-    <LinearLayout android:id="@+id/welcome_pager_indicator_layout" android:layout_alignParentBottom="true" style="@style/welcome_pager_indicator_layout">
-
-        <ImageView android:id="@+id/welcome_pager_indicator_page_1" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
-        <ImageView android:id="@+id/welcome_pager_indicator_page_2" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
-        <ImageView android:id="@+id/welcome_pager_indicator_page_3" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
-        <ImageView android:id="@+id/welcome_pager_indicator_page_4" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
-
-    </LinearLayout>
-
+	<android.support.v4.view.ViewPager android:id="@+id/welcome_pager" android:layout_alignParentTop="true" style="@style/welcome_pager"/>
+	<LinearLayout android:id="@+id/welcome_pager_indicator_layout" android:layout_alignParentBottom="true" style="@style/welcome_pager_indicator_layout">
+		<ImageView android:id="@+id/welcome_pager_indicator_page_1" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
+		<ImageView android:id="@+id/welcome_pager_indicator_page_2" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
+		<ImageView android:id="@+id/welcome_pager_indicator_page_3" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
+		<ImageView android:id="@+id/welcome_pager_indicator_page_4" android:contentDescription="@string/welcome_image_content_description" style="@style/welcome_pager_indicator"/>
+	</LinearLayout>
 </RelativeLayout>

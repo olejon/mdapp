@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/donate_layout">
-
-    <android.support.v7.widget.Toolbar android:id="@+id/donate_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
-
-    <ScrollView android:layout_below="@+id/donate_toolbar" style="@style/donate_inner_layout">
-
-        <LinearLayout style="@style/donate_inner_inner_layout">
-
-            <Button android:id="@+id/donate_make_small_donation" android:text="@string/donate_getting_product" style="@style/donate_button"/>
-            <Button android:id="@+id/donate_make_medium_donation" android:text="@string/donate_getting_product" style="@style/donate_button"/>
-            <Button android:id="@+id/donate_make_big_donation" android:text="@string/donate_getting_product" style="@style/donate_button"/>
-
-            <TextView android:text="@string/donate_information" style="@style/donate_information"/>
-
-        </LinearLayout>
-
-    </ScrollView>
-
+	<android.support.v7.widget.Toolbar android:id="@+id/donate_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+	<ScrollView android:layout_below="@+id/donate_toolbar" style="@style/donate_inner_layout">
+		<LinearLayout style="@style/donate_inner_inner_layout">
+			<Button android:id="@+id/donate_make_small_donation" android:text="@string/donate_getting_product" style="@style/donate_button"/>
+			<Button android:id="@+id/donate_make_medium_donation" android:text="@string/donate_getting_product" style="@style/donate_button"/>
+			<Button android:id="@+id/donate_make_big_donation" android:text="@string/donate_getting_product" style="@style/donate_button"/>
+			<TextView android:text="@string/donate_information" style="@style/donate_information"/>
+		</LinearLayout>
+	</ScrollView>
 </RelativeLayout>

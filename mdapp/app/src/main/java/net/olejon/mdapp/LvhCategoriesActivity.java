@@ -44,226 +44,226 @@ import org.json.JSONObject;
 
 public class LvhCategoriesActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Transition
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+		// Transition
+		overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
 
-        // Intent
-        Intent intent = getIntent();
+		// Intent
+		Intent intent = getIntent();
 
-        String categoryColor = intent.getStringExtra("color");
-        String categoryIcon = intent.getStringExtra("icon");
-        String categoryTitle = intent.getStringExtra("title");
+		String categoryColor = intent.getStringExtra("color");
+		String categoryIcon = intent.getStringExtra("icon");
+		String categoryTitle = intent.getStringExtra("title");
 
-        JSONArray subcategories;
+		JSONArray subcategories;
 
-        try
-        {
-            subcategories = new JSONArray(intent.getStringExtra("subcategories"));
-        }
-        catch(Exception e)
-        {
-            subcategories = new JSONArray();
+		try
+		{
+			subcategories = new JSONArray(intent.getStringExtra("subcategories"));
+		}
+		catch(Exception e)
+		{
+			subcategories = new JSONArray();
 
-            Log.e("LvhCategoriesActivity", Log.getStackTraceString(e));
-        }
+			Log.e("LvhCategoriesActivity", Log.getStackTraceString(e));
+		}
 
-        // Layout
-        setContentView(R.layout.activity_lvh_categories);
+		// Layout
+		setContentView(R.layout.activity_lvh_categories);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.lvh_categories_toolbar);
-        toolbar.setTitle(categoryTitle);
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.lvh_categories_toolbar);
+		toolbar.setTitle(categoryTitle);
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Recycler view
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.lvh_categories_cards);
+		// Recycler view
+		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.lvh_categories_cards);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+		recyclerView.setHasFixedSize(true);
+		recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
-        if(mTools.isTablet())
-        {
-            int spanCount = (subcategories.length() == 1) ? 1 : 2;
+		if(mTools.isTablet())
+		{
+			int spanCount = (subcategories.length() == 1) ? 1 : 2;
 
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-        }
+			recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+		}
 
-        // Get categories
-        recyclerView.setAdapter(new LvhCategoriesAdapter(subcategories, categoryColor, categoryIcon));
-    }
+		// Get categories
+		recyclerView.setAdapter(new LvhCategoriesAdapter(subcategories, categoryColor, categoryIcon));
+	}
 
-    @Override
-    public void onBackPressed()
-    {
-        super.onBackPressed();
+	@Override
+	public void onBackPressed()
+	{
+		super.onBackPressed();
 
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-    }
+		overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+	}
 
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                finish();
-                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				finish();
+				overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Adapter
-    class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdapter.CategoryViewHolder>
-    {
-        final LayoutInflater mLayoutInflater;
+	// Adapter
+	class LvhCategoriesAdapter extends RecyclerView.Adapter<LvhCategoriesAdapter.CategoryViewHolder>
+	{
+		final LayoutInflater mLayoutInflater;
 
-        final JSONArray mCategories;
+		final JSONArray mCategories;
 
-        final String mColor;
-        final String mIcon;
+		final String mColor;
+		final String mIcon;
 
-        int mLastPosition = -1;
+		int mLastPosition = - 1;
 
-        LvhCategoriesAdapter(JSONArray jsonArray, String color, String icon)
-        {
-            mLayoutInflater =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LvhCategoriesAdapter(JSONArray jsonArray, String color, String icon)
+		{
+			mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            mCategories = jsonArray;
+			mCategories = jsonArray;
 
-            mColor = color;
-            mIcon = icon;
-        }
+			mColor = color;
+			mIcon = icon;
+		}
 
-        class CategoryViewHolder extends RecyclerView.ViewHolder
-        {
-            final CardView card;
-            final ImageView icon;
-            final TextView title;
-            final LinearLayout categories;
+		class CategoryViewHolder extends RecyclerView.ViewHolder
+		{
+			final CardView card;
+			final ImageView icon;
+			final TextView title;
+			final LinearLayout categories;
 
-            CategoryViewHolder(View view)
-            {
-                super(view);
+			CategoryViewHolder(View view)
+			{
+				super(view);
 
-                card = (CardView) view.findViewById(R.id.lvh_categories_card);
-                icon = (ImageView) view.findViewById(R.id.lvh_categories_card_icon);
-                title = (TextView) view.findViewById(R.id.lvh_categories_card_title);
-                categories = (LinearLayout) view.findViewById(R.id.lvh_categories_card_categories);
-            }
-        }
+				card = (CardView) view.findViewById(R.id.lvh_categories_card);
+				icon = (ImageView) view.findViewById(R.id.lvh_categories_card_icon);
+				title = (TextView) view.findViewById(R.id.lvh_categories_card_title);
+				categories = (LinearLayout) view.findViewById(R.id.lvh_categories_card_categories);
+			}
+		}
 
-        @Override
-        public CategoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-        {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_categories_card, viewGroup, false);
-            return new CategoryViewHolder(view);
-        }
+		@Override
+		public CategoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		{
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_categories_card, viewGroup, false);
+			return new CategoryViewHolder(view);
+		}
 
-        @Override
-        public void onBindViewHolder(CategoryViewHolder viewHolder, int i)
-        {
-            try
-            {
-                JSONObject categoriesJsonObject = mCategories.getJSONObject(i);
+		@Override
+		public void onBindViewHolder(CategoryViewHolder viewHolder, int i)
+		{
+			try
+			{
+				JSONObject categoriesJsonObject = mCategories.getJSONObject(i);
 
-                viewHolder.card.setCardBackgroundColor(Color.parseColor(mColor));
+				viewHolder.card.setCardBackgroundColor(Color.parseColor(mColor));
 
-                switch(mIcon)
-                {
-                    case "lvh_urgent":
-                    {
-                        viewHolder.icon.setImageResource(R.drawable.ic_favorite_white_24dp);
-                        break;
-                    }
-                    case "lvh_symptoms":
-                    {
-                        viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
-                        break;
-                    }
-                    case "lvh_injuries":
-                    {
-                        viewHolder.icon.setImageResource(R.drawable.ic_healing_white_24dp);
-                        break;
-                    }
-                    case "lvh_administrative":
-                    {
-                        viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
-                        break;
-                    }
-                }
+				switch(mIcon)
+				{
+					case "lvh_urgent":
+					{
+						viewHolder.icon.setImageResource(R.drawable.ic_favorite_white_24dp);
+						break;
+					}
+					case "lvh_symptoms":
+					{
+						viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
+						break;
+					}
+					case "lvh_injuries":
+					{
+						viewHolder.icon.setImageResource(R.drawable.ic_healing_white_24dp);
+						break;
+					}
+					case "lvh_administrative":
+					{
+						viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
+						break;
+					}
+				}
 
-                viewHolder.title.setText(categoriesJsonObject.getString("title"));
+				viewHolder.title.setText(categoriesJsonObject.getString("title"));
 
-                viewHolder.categories.removeAllViews();
+				viewHolder.categories.removeAllViews();
 
-                JSONArray itemsJsonArray = categoriesJsonObject.getJSONArray("items");
+				JSONArray itemsJsonArray = categoriesJsonObject.getJSONArray("items");
 
-                for(int f = 0; f < itemsJsonArray.length(); f++)
-                {
-                    JSONObject categoryJsonObject = itemsJsonArray.getJSONObject(f);
+				for(int f = 0; f < itemsJsonArray.length(); f++)
+				{
+					JSONObject categoryJsonObject = itemsJsonArray.getJSONObject(f);
 
-                    final String name = categoryJsonObject.getString("name");
-                    final String uri = categoryJsonObject.getString("uri");
+					final String name = categoryJsonObject.getString("name");
+					final String uri = categoryJsonObject.getString("uri");
 
-                    TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_lvh_categories_card_categories_item, null);
-                    textView.setText(name);
+					TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_lvh_categories_card_categories_item, null);
+					textView.setText(name);
 
-                    textView.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                            intent.putExtra("title", name);
-                            intent.putExtra("uri", uri);
-                            mContext.startActivity(intent);
-                        }
-                    });
+					textView.setOnClickListener(new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View view)
+						{
+							Intent intent = new Intent(mContext, MainWebViewActivity.class);
+							intent.putExtra("title", name);
+							intent.putExtra("uri", uri);
+							mContext.startActivity(intent);
+						}
+					});
 
-                    viewHolder.categories.addView(textView);
-                }
+					viewHolder.categories.addView(textView);
+				}
 
-                animateCard(viewHolder.card, i);
-            }
-            catch(Exception e)
-            {
-                Log.e("LvhCategoriesAdapter", Log.getStackTraceString(e));
-            }
-        }
+				animateCard(viewHolder.card, i);
+			}
+			catch(Exception e)
+			{
+				Log.e("LvhCategoriesAdapter", Log.getStackTraceString(e));
+			}
+		}
 
-        @Override
-        public int getItemCount()
-        {
-            return mCategories.length();
-        }
+		@Override
+		public int getItemCount()
+		{
+			return mCategories.length();
+		}
 
-        private void animateCard(View view, int position)
-        {
-            if(position > mLastPosition)
-            {
-                mLastPosition = position;
+		private void animateCard(View view, int position)
+		{
+			if(position > mLastPosition)
+			{
+				mLastPosition = position;
 
-                view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
-            }
-        }
-    }
+				view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.card));
+			}
+		}
+	}
 }

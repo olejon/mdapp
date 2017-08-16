@@ -2,254 +2,259 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="net.olejon.mdapp">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="com.android.vending.BILLING"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="com.android.vending.BILLING"/>
 
-    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+	<uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
-    <application
-        android:allowBackup="true"
-        android:fullBackupContent="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:label="@string/project_name"
-        android:theme="@style/app_theme"
-        tools:ignore="ExportedReceiver,ExportedService,GoogleAppIndexingWarning,ManifestResource,UnusedAttribute">
-        <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/main_theme"
-            android:windowSoftInputMode="stateHidden">
-            <!--suppress AndroidElementNotAllowed -->
-            <layout android:defaultWidth="1200dp" android:defaultHeight="600dp" android:minWidth="240dp" android:minHeight="240dp"/>
-            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
-            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
-        </activity>
-        <activity
-            android:name=".MainWebViewActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".MedicationActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".SubstanceActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".SavedArticlesActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".DiseasesAndTreatmentsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".DiseasesAndTreatmentsSearchActivity"
-            android:parentActivityName=".DiseasesAndTreatmentsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DiseasesAndTreatmentsActivity"/>
-        </activity>
-        <activity
-            android:name=".DiseasesAndTreatmentsSearchWebViewActivity"
-            android:parentActivityName=".DiseasesAndTreatmentsSearchActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DiseasesAndTreatmentsSearchActivity"/>
-        </activity>
-        <activity
-            android:name=".LvhActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".LvhCategoriesActivity"
-            android:parentActivityName=".LvhActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhActivity"/>
-        </activity>
-        <activity
-            android:name=".InteractionsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".InteractionsCardsActivity"
-            android:parentActivityName=".InteractionsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".InteractionsActivity"/>
-        </activity>
-        <activity
-            android:name=".PoisoningsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".PoisoningsCardsActivity"
-            android:parentActivityName=".PoisoningsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsActivity"/>
-        </activity>
-        <activity
-            android:name=".AntibioticsGuides"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".AntibioticsGuidesCardsActivity"
-            android:parentActivityName=".AntibioticsGuides">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".AntibioticsGuides"/>
-        </activity>
-        <activity
-            android:name=".NasjonaleRetningslinjerActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".ClinicalTrialsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".ClinicalTrialsCardsActivity"
-            android:parentActivityName=".ClinicalTrialsActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsActivity"/>
-        </activity>
-        <activity
-            android:name=".AtcActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".AtcCodesActivity"
-            android:parentActivityName=".AtcActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".AtcActivity"/>
-        </activity>
-        <activity
-            android:name=".Icd10Activity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".Icd10SearchActivity"
-            android:parentActivityName=".Icd10Activity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
-        </activity>
-        <activity
-            android:name=".Icd10ChapterActivity"
-            android:parentActivityName=".Icd10Activity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
-        </activity>
-        <activity
-            android:name=".ManufacturersActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".ManufacturerActivity"
-            android:parentActivityName=".ManufacturersActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ManufacturersActivity"/>
-        </activity>
-        <activity
-            android:name=".PharmaciesActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".PharmaciesLocationActivity"
-            android:parentActivityName=".PharmaciesActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesActivity"/>
-        </activity>
-        <activity
-            android:name=".PharmaciesLocationMapActivity"
-            android:parentActivityName=".PharmaciesLocationActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesLocationActivity"/>
-        </activity>
-        <activity
-            android:name=".ScalesActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".ScaleActivity"
-            android:parentActivityName=".ScalesActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ScalesActivity"/>
-        </activity>
-        <activity
-            android:name=".NotificationsFromSlvActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".CalculatorsActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".NotesActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".NotesEditActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".NotesActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotesActivity"/>
-        </activity>
-        <activity
-            android:name=".NotesEditMedicationsActivity"
-            android:parentActivityName=".NotesEditActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotesEditActivity"/>
-        </activity>
-        <activity
-            android:name=".TasksActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".DonateActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".BarcodeScannerActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".WelcomeActivity"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/welcome_theme">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".ChromeCustomTabsActivity"
-            android:parentActivityName=".MainActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
-        </activity>
+	<application
+		android:allowBackup="true"
+		android:fullBackupContent="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/project_name"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:theme="@style/app_theme"
+		tools:ignore="ExportedReceiver,ExportedService,GoogleAppIndexingWarning,ManifestResource,UnusedAttribute">
+		<activity
+			android:name=".MainActivity"
+			android:launchMode="singleTop"
+			android:theme="@style/main_theme"
+			android:windowSoftInputMode="stateHidden">
+			<!--suppress AndroidElementNotAllowed -->
+			<layout android:defaultHeight="600dp" android:defaultWidth="1200dp" android:minHeight="240dp" android:minWidth="240dp"/>
+			<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+			<meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
+		</activity>
+		<activity
+			android:name=".MainWebViewActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".MedicationActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".SubstanceActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".SavedArticlesActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".DiseasesAndTreatmentsActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".DiseasesAndTreatmentsSearchActivity"
+			android:parentActivityName=".DiseasesAndTreatmentsActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DiseasesAndTreatmentsActivity"/>
+		</activity>
+		<activity
+			android:name=".DiseasesAndTreatmentsSearchWebViewActivity"
+			android:parentActivityName=".DiseasesAndTreatmentsSearchActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".DiseasesAndTreatmentsSearchActivity"/>
+		</activity>
+		<activity
+			android:name=".LvhActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".LvhCategoriesActivity"
+			android:parentActivityName=".LvhActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".LvhActivity"/>
+		</activity>
+		<activity
+			android:name=".InteractionsActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".InteractionsCardsActivity"
+			android:parentActivityName=".InteractionsActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".InteractionsActivity"/>
+		</activity>
+		<activity
+			android:name=".PoisoningsActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".PoisoningsCardsActivity"
+			android:parentActivityName=".PoisoningsActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PoisoningsActivity"/>
+		</activity>
+		<activity
+			android:name=".AntibioticsGuidesActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".AntibioticsGuidesCardsActivity"
+			android:parentActivityName=".AntibioticsGuidesActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".AntibioticsGuidesActivity"/>
+		</activity>
+		<activity
+			android:name=".NasjonaleRetningslinjerActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".ClinicalTrialsActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".ClinicalTrialsCardsActivity"
+			android:parentActivityName=".ClinicalTrialsActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ClinicalTrialsActivity"/>
+		</activity>
+		<activity
+			android:name=".AtcActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".AtcCodesActivity"
+			android:parentActivityName=".AtcActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".AtcActivity"/>
+		</activity>
+		<activity
+			android:name=".Icd10Activity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".Icd10SearchActivity"
+			android:parentActivityName=".Icd10Activity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
+		</activity>
+		<activity
+			android:name=".Icd10ChapterActivity"
+			android:parentActivityName=".Icd10Activity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".Icd10Activity"/>
+		</activity>
+		<activity
+			android:name=".ManufacturersActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".ManufacturerActivity"
+			android:parentActivityName=".ManufacturersActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ManufacturersActivity"/>
+		</activity>
+		<activity
+			android:name=".PharmaciesActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".PharmaciesLocationActivity"
+			android:parentActivityName=".PharmaciesActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesActivity"/>
+		</activity>
+		<activity
+			android:name=".PharmaciesLocationMapActivity"
+			android:parentActivityName=".PharmaciesLocationActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".PharmaciesLocationActivity"/>
+		</activity>
+		<activity
+			android:name=".ScalesActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".ScaleActivity"
+			android:parentActivityName=".ScalesActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ScalesActivity"/>
+		</activity>
+		<activity
+			android:name=".NotificationsFromSlvActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".CalculatorsActivity"
+			android:parentActivityName=".MainActivity"
+			android:windowSoftInputMode="stateHidden">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".NotesActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".NotesEditActivity"
+			android:parentActivityName=".NotesActivity"
+			android:windowSoftInputMode="stateHidden">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotesActivity"/>
+		</activity>
+		<activity
+			android:name=".NotesEditMedicationsActivity"
+			android:parentActivityName=".NotesEditActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".NotesEditActivity"/>
+		</activity>
+		<activity
+			android:name=".TasksActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".SettingsActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".DonateActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".BarcodeScannerActivity"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".WelcomeActivity"
+			android:parentActivityName=".MainActivity"
+			android:theme="@style/welcome_theme">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
+		<activity
+			android:name=".ChromeCustomTabsActivity"
+			android:excludeFromRecents="true"
+			android:noHistory="true"
+			android:parentActivityName=".MainActivity">
+			<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+		</activity>
 
-        <receiver android:name=".Widget" android:label="@string/widget_title"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/widget"/></receiver>
+		<receiver android:name=".Widget" android:label="@string/widget_title">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider" android:resource="@xml/widget"/>
+		</receiver>
 
-        <service android:name=".WidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
-        <service android:name=".MyFirebaseMessagingService"><intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT"/></intent-filter></service>
+		<service android:name=".WidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+		<service android:name=".MyFirebaseMessagingService"><intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT"/></intent-filter></service>
 
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
-        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAupTNzPt90BaJ4tZ0HfHxl0U6SZ44ALy0"/>
-        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_local_hospital_white_24dp"/>
-        <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/light_blue"/>
+		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAupTNzPt90BaJ4tZ0HfHxl0U6SZ44ALy0"/>
+		<meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_local_hospital_white_24dp"/>
+		<meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/light_blue"/>
 
-    </application>
+	</application>
 
 </manifest>

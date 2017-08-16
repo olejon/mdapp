@@ -54,330 +54,333 @@ import java.util.ArrayList;
 
 public class PoisoningsActivity extends AppCompatActivity
 {
-    private static final int VOICE_SEARCH_REQUEST_CODE = 1;
+	private static final int VOICE_SEARCH_REQUEST_CODE = 1;
 
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    private InputMethodManager mInputMethodManager;
+	private InputMethodManager mInputMethodManager;
 
-    private LinearLayout mToolbarSearchLayout;
-    private EditText mToolbarSearchEditText;
-    private FloatingActionButton mFloatingActionButton;
-    private ListView mListView;
+	private LinearLayout mToolbarSearchLayout;
+	private EditText mToolbarSearchEditText;
+	private FloatingActionButton mFloatingActionButton;
+	private ListView mListView;
 
-    private boolean mActivityPaused = false;
+	private boolean mActivityPaused = false;
 
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Intent
-        Intent intent = getIntent();
+		// Intent
+		Intent intent = getIntent();
 
-        String searchString = intent.getStringExtra("search");
+		String searchString = intent.getStringExtra("search");
 
-        // Input manager
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		// Input manager
+		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // Layout
-        setContentView(R.layout.activity_poisonings);
+		// Layout
+		setContentView(R.layout.activity_poisonings);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
-        toolbar.setTitle(getString(R.string.poisonings_title));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
+		toolbar.setTitle(getString(R.string.poisonings_title));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mToolbarSearchLayout = (LinearLayout) findViewById(R.id.poisonings_toolbar_search_layout);
-        mToolbarSearchEditText = (EditText) findViewById(R.id.poisonings_toolbar_search);
+		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.poisonings_toolbar_search_layout);
+		mToolbarSearchEditText = (EditText) findViewById(R.id.poisonings_toolbar_search);
 
-        mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-            {
-                if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			@Override
+			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+			{
+				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				{
+					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-                    search(mToolbarSearchEditText.getText().toString().trim());
+					search(mToolbarSearchEditText.getText().toString().trim());
 
-                    return true;
-                }
+					return true;
+				}
 
-                return false;
-            }
-        });
+				return false;
+			}
+		});
 
-        // Floating action button
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.poisonings_fab);
+		// Floating action button
+		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.poisonings_fab);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-                {
-                    mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				{
+					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
-                    search(mToolbarSearchEditText.getText().toString().trim());
-                }
-                else
-                {
-                    mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                    mToolbarSearchEditText.requestFocus();
+					search(mToolbarSearchEditText.getText().toString().trim());
+				}
+				else
+				{
+					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.requestFocus();
 
-                    mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                }
-            }
-        });
+					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				}
+			}
+		});
 
-        // List
-        mListView = (ListView) findViewById(R.id.poisonings_list);
+		// List
+		mListView = (ListView) findViewById(R.id.poisonings_list);
 
-        View listViewEmpty = findViewById(R.id.poisonings_list_empty);
-        mListView.setEmptyView(listViewEmpty);
+		View listViewEmpty = findViewById(R.id.poisonings_list_empty);
+		mListView.setEmptyView(listViewEmpty);
 
-        View listViewHeader = getLayoutInflater().inflate(R.layout.activity_poisonings_list_subheader, mListView, false);
-        mListView.addHeaderView(listViewHeader, null, false);
+		View listViewHeader = getLayoutInflater().inflate(R.layout.activity_poisonings_list_subheader, mListView, false);
+		mListView.addHeaderView(listViewHeader, null, false);
 
-        // Search
-        if(searchString != null) search(searchString.split(" ")[0]);
-    }
+		// Search
+		if(searchString != null) search(searchString.split(" ")[0]);
+	}
 
-    // Activity result
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
+	// Activity result
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
-        {
-            ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+		if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
+		{
+			ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-            String voiceSearchString = voiceSearchArrayList.get(0);
+			String voiceSearchString = voiceSearchArrayList.get(0);
 
-            search(voiceSearchString);
-        }
-    }
+			search(voiceSearchString);
+		}
+	}
 
-    // Resume activity
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
+	// Resume activity
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 
-        getRecentSearches();
-    }
+		getRecentSearches();
+	}
 
-    // Pause activity
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
 
-        mActivityPaused = true;
-    }
+		mActivityPaused = true;
+	}
 
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+	// Destroy activity
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    // Back button
-    @Override
-    public void onBackPressed()
-    {
-        if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
-        {
-            mToolbarSearchLayout.setVisibility(View.GONE);
-            mToolbarSearchEditText.setText("");
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }
+	// Back button
+	@Override
+	public void onBackPressed()
+	{
+		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		{
+			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setText("");
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+	}
 
-    // Search button
-    @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-    {
-        if(keyCode == KeyEvent.KEYCODE_SEARCH)
-        {
-            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-            mToolbarSearchEditText.requestFocus();
+	// Search button
+	@Override
+	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_SEARCH)
+		{
+			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.requestFocus();
 
-            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 
-            return true;
-        }
+			return true;
+		}
 
-        return super.onKeyUp(keyCode, event);
-    }
+		return super.onKeyUp(keyCode, event);
+	}
 
-    // Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_poisonings, menu);
-        return true;
-    }
+	// Menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_poisonings, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            case R.id.poisonings_menu_call:
-            {
-                try
-                {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
-                    startActivity(intent);
-                }
-                catch(Exception e)
-                {
-                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-                }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			case R.id.poisonings_menu_call:
+			{
+				try
+				{
+					Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+4722591300"));
+					startActivity(intent);
+				}
+				catch(Exception e)
+				{
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+				}
 
-                return true;
-            }
-            case R.id.poisonings_menu_voice_search:
-            {
-                try
-                {
-                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                    startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
-                }
-                catch(Exception e)
-                {
-                    new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-                }
+				return true;
+			}
+			case R.id.poisonings_menu_voice_search:
+			{
+				try
+				{
+					Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
+					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+					startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
+				}
+				catch(Exception e)
+				{
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+				}
 
-                return true;
-            }
-            case R.id.poisonings_menu_clear_recent_searches:
-            {
-                clearRecentSearches();
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+				return true;
+			}
+			case R.id.poisonings_menu_clear_recent_searches:
+			{
+				clearRecentSearches();
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Search
-    private void search(String searchString)
-    {
-        if(searchString.equals("")) return;
+	// Search
+	private void search(String searchString)
+	{
+		if(searchString.equals("")) return;
 
-        Intent intent = new Intent(mContext, PoisoningsCardsActivity.class);
-        intent.putExtra("search", mTools.firstToUpper(searchString));
-        startActivity(intent);
-    }
+		Intent intent = new Intent(mContext, PoisoningsCardsActivity.class);
+		intent.putExtra("search", mTools.firstToUpper(searchString));
+		startActivity(intent);
+	}
 
-    private void getRecentSearches()
-    {
-        GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-        getRecentSearchesTask.execute();
-    }
+	private void getRecentSearches()
+	{
+		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
+		getRecentSearchesTask.execute();
+	}
 
-    private void clearRecentSearches()
-    {
-        mSqLiteDatabase.delete(PoisoningsSQLiteHelper.TABLE, null, null);
+	private void clearRecentSearches()
+	{
+		mSqLiteDatabase.delete(PoisoningsSQLiteHelper.TABLE, null, null);
 
-        mTools.showToast(getString(R.string.poisonings_recent_searches_removed), 0);
+		mTools.showToast(getString(R.string.poisonings_recent_searches_removed), 0);
 
-        getRecentSearches();
-    }
+		getRecentSearches();
+	}
 
-    private class GetRecentSearchesTask extends AsyncTask<Void, Void, SimpleCursorAdapter>
-    {
-        @Override
-        protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-        {
-            mListView.setAdapter(simpleCursorAdapter);
+	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
+	{
+		@Override
+		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
+		{
+			mListView.setAdapter(simpleCursorAdapter);
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-                {
-                    int index = i - 1;
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+				{
+					int index = i - 1;
 
-                    if(mCursor.moveToPosition(index)) search(mCursor.getString(mCursor.getColumnIndexOrThrow(PoisoningsSQLiteHelper.COLUMN_STRING)));
-                }
-            });
+					if(mCursor.moveToPosition(index))
+					{
+						search(mCursor.getString(mCursor.getColumnIndexOrThrow(PoisoningsSQLiteHelper.COLUMN_STRING)));
+					}
+				}
+			});
 
-            mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-            mFloatingActionButton.setVisibility(View.VISIBLE);
+			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+			mFloatingActionButton.setVisibility(View.VISIBLE);
 
-            if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG"))
-            {
-                if(!mActivityPaused && mCursor.getCount() > 0)
-                {
-                    Handler handler = new Handler();
+			if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG"))
+			{
+				if(!mActivityPaused && mCursor.getCount() > 0)
+				{
+					Handler handler = new Handler();
 
-                    handler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            mToolbarSearchLayout.setVisibility(View.VISIBLE);
-                            mToolbarSearchEditText.requestFocus();
+					handler.postDelayed(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							mToolbarSearchLayout.setVisibility(View.VISIBLE);
+							mToolbarSearchEditText.requestFocus();
 
-                            mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-                        }
-                    }, 500);
-                }
-            }
-            else
-            {
-                new MaterialDialog.Builder(mContext).title(R.string.poisonings_information_dialog_title).content(getString(R.string.poisonings_information_dialog_message)).positiveText(R.string.poisonings_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
-                {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                    {
-                        mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG", true);
-                    }
-                }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-            }
-        }
+							mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+						}
+					}, 500);
+				}
+			}
+			else
+			{
+				new MaterialDialog.Builder(mContext).title(R.string.poisonings_information_dialog_title).content(getString(R.string.poisonings_information_dialog_message)).positiveText(R.string.poisonings_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
+				{
+					@Override
+					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+					{
+						mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG", true);
+					}
+				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+			}
+		}
 
-        @Override
-        protected SimpleCursorAdapter doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
-            mCursor = mSqLiteDatabase.query(PoisoningsSQLiteHelper.TABLE, null, null, null, null, null, PoisoningsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+		@Override
+		protected SimpleCursorAdapter doInBackground(Void... voids)
+		{
+			mSqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
+			mCursor = mSqLiteDatabase.query(PoisoningsSQLiteHelper.TABLE, null, null, null, null, null, PoisoningsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
 
-            String[] fromColumns = {PoisoningsSQLiteHelper.COLUMN_STRING};
-            int[] toViews = {R.id.poisonings_list_item_string};
+			String[] fromColumns = {PoisoningsSQLiteHelper.COLUMN_STRING};
+			int[] toViews = {R.id.poisonings_list_item_string};
 
-            return new SimpleCursorAdapter(mContext, R.layout.activity_poisonings_list_item, mCursor, fromColumns, toViews, 0);
-        }
-    }
+			return new SimpleCursorAdapter(mContext, R.layout.activity_poisonings_list_item, mCursor, fromColumns, toViews, 0);
+		}
+	}
 }

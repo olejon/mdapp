@@ -60,283 +60,286 @@ import java.util.ArrayList;
 
 public class PharmaciesLocationMapActivity extends AppCompatActivity implements OnMapReadyCallback
 {
-    private final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
+	private final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
 
-    private final Activity mActivity = this;
+	private final Activity mActivity = this;
 
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private String mPharmacyName;
-    private String mPharmacyAddress;
+	private String mPharmacyName;
+	private String mPharmacyAddress;
 
-    private ArrayList<String> mPharmacyNames;
-    private ArrayList<String> mPharmacyAddresses;
+	private ArrayList<String> mPharmacyNames;
+	private ArrayList<String> mPharmacyAddresses;
 
-    private int mPharmacyAddressesSize;
+	private int mPharmacyAddressesSize;
 
-    private double mOtherPharmacyLatitude = 0;
-    private double mOtherPharmacyLongitude = 0;
+	private double mOtherPharmacyLatitude = 0;
+	private double mOtherPharmacyLongitude = 0;
 
-    private boolean mPharmacyAddressNotFound = true;
+	private boolean mPharmacyAddressNotFound = true;
 
-    // Create activity
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	// Create activity
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Intent
-        Intent intent = getIntent();
+		// Intent
+		Intent intent = getIntent();
 
-        mPharmacyName = intent.getStringExtra("name");
-        mPharmacyAddress = intent.getStringExtra("address");
-        mPharmacyNames = intent.getStringArrayListExtra("names");
-        mPharmacyAddresses = intent.getStringArrayListExtra("addresses");
-        mPharmacyAddressesSize = mPharmacyAddresses.size();
+		mPharmacyName = intent.getStringExtra("name");
+		mPharmacyAddress = intent.getStringExtra("address");
+		mPharmacyNames = intent.getStringArrayListExtra("names");
+		mPharmacyAddresses = intent.getStringArrayListExtra("addresses");
+		mPharmacyAddressesSize = mPharmacyAddresses.size();
 
-        // Layout
-        setContentView(R.layout.activity_pharmacies_location_map);
+		// Layout
+		setContentView(R.layout.activity_pharmacies_location_map);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_map_toolbar);
-        toolbar.setTitle(mPharmacyName);
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.pharmacies_location_map_toolbar);
+		toolbar.setTitle(mPharmacyName);
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Permissions
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+		// Permissions
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		{
+			String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
-            if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
-            }
-            else
-            {
-                showMap();
-            }
-        }
-        else
-        {
-            showMap();
-        }
-    }
+			if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+			{
+				ActivityCompat.requestPermissions(mActivity, permissions, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+			}
+			else
+			{
+				showMap();
+			}
+		}
+		else
+		{
+			showMap();
+		}
+	}
 
-    // Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_pharmacies_location_map, menu);
-        return true;
-    }
+	// Menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_pharmacies_location_map, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                finish();
-                return true;
-            }
-            case R.id.pharmacies_location_map_menu_information:
-            {
-                showInformationDialog(true);
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				finish();
+				return true;
+			}
+			case R.id.pharmacies_location_map_menu_information:
+			{
+				showInformationDialog(true);
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Information dialog
-    private void showInformationDialog(boolean show)
-    {
-        if(!mTools.getSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG") || show)
-        {
-            new MaterialDialog.Builder(mContext).title(R.string.pharmacies_location_map_information_dialog_title).content(getString(R.string.pharmacies_location_map_information_dialog_message)).positiveText(R.string.pharmacies_location_map_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
-            {
-                @Override
-                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-                {
-                    mTools.setSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG", true);
-                }
-            }).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-        }
-    }
+	// Information dialog
+	private void showInformationDialog(boolean show)
+	{
+		if(!mTools.getSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG") || show)
+		{
+			new MaterialDialog.Builder(mContext).title(R.string.pharmacies_location_map_information_dialog_title).content(getString(R.string.pharmacies_location_map_information_dialog_message)).positiveText(R.string.pharmacies_location_map_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					mTools.setSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG", true);
+				}
+			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+		}
+	}
 
-    // Permissions
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        if(requestCode == PERMISSIONS_REQUEST_ACCESS_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        {
-            showMap();
-        }
-        else
-        {
-            mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
+	// Permissions
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	{
+		if(requestCode == PERMISSIONS_REQUEST_ACCESS_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+		{
+			showMap();
+		}
+		else
+		{
+			mTools.showToast(getString(R.string.device_permissions_not_granted), 1);
 
-            finish();
-        }
-    }
+			finish();
+		}
+	}
 
-    // Map
-    private void showMap()
-    {
-        if(mPharmacyAddressesSize == 0)
-        {
-            mTools.showToast(getString(R.string.pharmacies_location_map_location_not_found), 1);
+	// Map
+	private void showMap()
+	{
+		if(mPharmacyAddressesSize == 0)
+		{
+			mTools.showToast(getString(R.string.pharmacies_location_map_location_not_found), 1);
 
-            finish();
-        }
-        else
-        {
-            mTools.showToast(getString(R.string.pharmacies_location_map_locating), 0);
+			finish();
+		}
+		else
+		{
+			mTools.showToast(getString(R.string.pharmacies_location_map_locating), 0);
 
-            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.pharmacies_location_map_map);
-            mapFragment.getMapAsync(this);
-        }
-    }
+			MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.pharmacies_location_map_map);
+			mapFragment.getMapAsync(this);
+		}
+	}
 
-    @Override
-    public void onMapReady(final GoogleMap googleMap)
-    {
-        if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) googleMap.setMyLocationEnabled(true);
+	@Override
+	public void onMapReady(final GoogleMap googleMap)
+	{
+		if(ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+		{
+			googleMap.setMyLocationEnabled(true);
+		}
 
-        try
-        {
-            if(mTools.pharmacyAddressIsPostBox(mPharmacyAddress))
-            {
-                new MaterialDialog.Builder(mContext).title(R.string.pharmacies_location_map_pharmacy_not_found_dialog_title).content(getString(R.string.pharmacies_location_map_pharmacy_not_found_dialog_message)).positiveText(R.string.pharmacies_location_map_pharmacy_not_found_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-            }
-            else
-            {
-                final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+		try
+		{
+			if(mTools.pharmacyAddressIsPostBox(mPharmacyAddress))
+			{
+				new MaterialDialog.Builder(mContext).title(R.string.pharmacies_location_map_pharmacy_not_found_dialog_title).content(getString(R.string.pharmacies_location_map_pharmacy_not_found_dialog_message)).positiveText(R.string.pharmacies_location_map_pharmacy_not_found_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+			}
+			else
+			{
+				final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
-                requestQueue.start();
+				requestQueue.start();
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        requestQueue.stop();
+				JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/geocode/?address="+URLEncoder.encode(mPharmacyAddress, "utf-8"), null, new Response.Listener<JSONObject>()
+				{
+					@Override
+					public void onResponse(JSONObject response)
+					{
+						requestQueue.stop();
 
-                        try
-                        {
-                            mPharmacyAddressNotFound = false;
+						try
+						{
+							mPharmacyAddressNotFound = false;
 
-                            double latitude = response.getDouble("latitude");
-                            double longitude = response.getDouble("longitude");
+							double latitude = response.getDouble("latitude");
+							double longitude = response.getDouble("longitude");
 
-                            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName)).showInfoWindow();
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13.5f));
+							googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(mPharmacyName)).showInfoWindow();
+							googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13.5f));
 
-                            showInformationDialog(false);
-                        }
-                        catch(Exception e)
-                        {
-                            Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
-                        }
-                    }
-                }, new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        requestQueue.stop();
+							showInformationDialog(false);
+						}
+						catch(Exception e)
+						{
+							Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
+						}
+					}
+				}, new Response.ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError error)
+					{
+						requestQueue.stop();
 
-                        Log.e("PharmaciesLocationMap", error.toString());
-                    }
-                });
+						Log.e("PharmaciesLocationMap", error.toString());
+					}
+				});
 
-                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+				jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                requestQueue.add(jsonObjectRequest);
-            }
+				requestQueue.add(jsonObjectRequest);
+			}
 
-            Handler handler = new Handler();
+			Handler handler = new Handler();
 
-            handler.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        for(int i = 0; i < mPharmacyAddressesSize; i++)
-                        {
-                            String pharmacyOtherName = mPharmacyNames.get(i);
-                            String pharmacyOtherAddress = mPharmacyAddresses.get(i);
+			handler.postDelayed(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						for(int i = 0; i < mPharmacyAddressesSize; i++)
+						{
+							String pharmacyOtherName = mPharmacyNames.get(i);
+							String pharmacyOtherAddress = mPharmacyAddresses.get(i);
 
-                            if(pharmacyOtherAddress.equals(mPharmacyAddress)) continue;
+							if(pharmacyOtherAddress.equals(mPharmacyAddress)) continue;
 
-                            final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+							final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
-                            requestQueue.start();
+							requestQueue.start();
 
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/geocode/?address="+URLEncoder.encode(pharmacyOtherAddress, "utf-8")+"&name="+URLEncoder.encode(pharmacyOtherName, "utf-8"), null, new Response.Listener<JSONObject>()
-                            {
-                                @Override
-                                public void onResponse(JSONObject response)
-                                {
-                                    requestQueue.stop();
+							JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/geocode/?address="+URLEncoder.encode(pharmacyOtherAddress, "utf-8")+"&name="+URLEncoder.encode(pharmacyOtherName, "utf-8"), null, new Response.Listener<JSONObject>()
+							{
+								@Override
+								public void onResponse(JSONObject response)
+								{
+									requestQueue.stop();
 
-                                    try
-                                    {
-                                        String name = response.getString("name");
+									try
+									{
+										String name = response.getString("name");
 
-                                        double latitude = response.getDouble("latitude");
-                                        double longitude = response.getDouble("longitude");
+										double latitude = response.getDouble("latitude");
+										double longitude = response.getDouble("longitude");
 
-                                        googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name));
+										googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name));
 
-                                        if(mPharmacyAddressNotFound && mOtherPharmacyLatitude == 0 && mOtherPharmacyLongitude == 0)
-                                        {
-                                            mOtherPharmacyLatitude = latitude;
-                                            mOtherPharmacyLongitude = longitude;
+										if(mPharmacyAddressNotFound && mOtherPharmacyLatitude == 0 && mOtherPharmacyLongitude == 0)
+										{
+											mOtherPharmacyLatitude = latitude;
+											mOtherPharmacyLongitude = longitude;
 
-                                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOtherPharmacyLatitude, mOtherPharmacyLongitude), 13.5f));
-                                        }
-                                    }
-                                    catch(Exception e)
-                                    {
-                                        Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
-                                    }
-                                }
-                            }, new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error)
-                                {
-                                    requestQueue.stop();
+											googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOtherPharmacyLatitude, mOtherPharmacyLongitude), 13.5f));
+										}
+									}
+									catch(Exception e)
+									{
+										Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
+									}
+								}
+							}, new Response.ErrorListener()
+							{
+								@Override
+								public void onErrorResponse(VolleyError error)
+								{
+									requestQueue.stop();
 
-                                    Log.e("PharmaciesLocationMap", error.toString());
-                                }
-                            });
+									Log.e("PharmaciesLocationMap", error.toString());
+								}
+							});
 
-                            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+							jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                            requestQueue.add(jsonObjectRequest);
-                        }
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
-                    }
-                }
-            }, 1000);
-        }
-        catch(Exception e)
-        {
-            Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
-        }
-    }
+							requestQueue.add(jsonObjectRequest);
+						}
+					}
+					catch(Exception e)
+					{
+						Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
+					}
+				}
+			}, 1000);
+		}
+		catch(Exception e)
+		{
+			Log.e("PharmaciesLocationMap", Log.getStackTraceString(e));
+		}
+	}
 }

@@ -2,41 +2,41 @@
 
 <resources>
 
-    <!-- Main -->
-    <style name="main_search_base_base">
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingRight">28dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingLeft">28dp</item>
-    </style>
+	<!-- Main -->
+	<style name="main_search_base_base">
+		<item name="android:paddingTop">4dp</item>
+		<item name="android:paddingRight">28dp</item>
+		<item name="android:paddingBottom">4dp</item>
+		<item name="android:paddingLeft">28dp</item>
+	</style>
 
-    <style name="main_tabs_base_base">
-        <item name="android:layout_height">64dp</item>
-        <item name="tabMode">scrollable</item>
-        <item name="tabMinWidth">154dp</item>
-    </style>
+	<style name="main_tabs_base_base">
+		<item name="android:layout_height">64dp</item>
+		<item name="tabMode">scrollable</item>
+		<item name="tabMinWidth">154dp</item>
+	</style>
 
-    <!-- Medication -->
-    <style name="medication_tabs_base_base">
-        <item name="android:layout_height">64dp</item>
-        <item name="tabMode">scrollable</item>
-        <item name="tabMinWidth">200dp</item>
-    </style>
+	<!-- Medication -->
+	<style name="medication_tabs_base_base">
+		<item name="android:layout_height">64dp</item>
+		<item name="tabMode">scrollable</item>
+		<item name="tabMinWidth">200dp</item>
+	</style>
 
-    <!-- Scales -->
-    <style name="scales_card_layout_base">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginRight">32dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:layout_marginLeft">32dp</item>
-    </style>
+	<!-- Scales -->
+	<style name="scales_card_layout_base">
+		<item name="android:layout_marginTop">8dp</item>
+		<item name="android:layout_marginRight">32dp</item>
+		<item name="android:layout_marginBottom">8dp</item>
+		<item name="android:layout_marginLeft">32dp</item>
+	</style>
 
-    <!-- Calculators -->
-    <style name="calculators_card_layout_base">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginRight">32dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:layout_marginLeft">32dp</item>
-    </style>
+	<!-- Calculators -->
+	<style name="calculators_card_layout_base">
+		<item name="android:layout_marginTop">8dp</item>
+		<item name="android:layout_marginRight">32dp</item>
+		<item name="android:layout_marginBottom">8dp</item>
+		<item name="android:layout_marginLeft">32dp</item>
+	</style>
 
 </resources>

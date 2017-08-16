@@ -2,8 +2,8 @@
 
 <resources>
 
-    <!-- Medication -->
-    <string name="medication_nlh">Legemiddelhåndboka</string>
-    <string name="medication_felleskatalogen">Felleskatalogen</string>
+	<!-- Medication -->
+	<string name="medication_nlh">Legemiddelhåndboka</string>
+	<string name="medication_felleskatalogen">Felleskatalogen</string>
 
 </resources>

@@ -56,216 +56,216 @@ import java.util.HashMap;
 
 public class Icd10SearchActivity extends AppCompatActivity
 {
-    private final Context mContext = this;
+	private final Context mContext = this;
 
-    private final MyTools mTools = new MyTools(mContext);
+	private final MyTools mTools = new MyTools(mContext);
 
-    private SQLiteDatabase mSqLiteDatabase;
-    private Cursor mCursor;
+	private SQLiteDatabase mSqLiteDatabase;
+	private Cursor mCursor;
 
-    private ProgressBar mProgressBar;
-    private ListView mListView;
-    private View mListViewEmpty;
+	private ProgressBar mProgressBar;
+	private ListView mListView;
+	private View mListViewEmpty;
 
-    private String mSearchString;
+	private String mSearchString;
 
-    private ArrayList<String> mCodesArrayList;
-    private ArrayList<String> mNamesArrayList;
+	private ArrayList<String> mCodesArrayList;
+	private ArrayList<String> mNamesArrayList;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Intent
-        Intent intent = getIntent();
+		// Intent
+		Intent intent = getIntent();
 
-        mSearchString = intent.getStringExtra("search");
+		mSearchString = intent.getStringExtra("search");
 
-        // Layout
-        setContentView(R.layout.activity_icd10_search);
+		// Layout
+		setContentView(R.layout.activity_icd10_search);
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_search_toolbar);
-        toolbar.setTitle(getString(R.string.icd10_search_search, mSearchString));
+		// Toolbar
+		Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_search_toolbar);
+		toolbar.setTitle(getString(R.string.icd10_search_search, mSearchString));
 
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Progress bar
-        mProgressBar = (ProgressBar) findViewById(R.id.icd10_search_toolbar_progressbar);
-        mProgressBar.setVisibility(View.VISIBLE);
+		// Progress bar
+		mProgressBar = (ProgressBar) findViewById(R.id.icd10_search_toolbar_progressbar);
+		mProgressBar.setVisibility(View.VISIBLE);
 
-        // List
-        mListView = (ListView) findViewById(R.id.icd10_search_list);
-        mListViewEmpty = findViewById(R.id.icd10_search_list_empty);
+		// List
+		mListView = (ListView) findViewById(R.id.icd10_search_list);
+		mListViewEmpty = findViewById(R.id.icd10_search_list_empty);
 
-        // Get search
-        GetSearchTask getSearchTask = new GetSearchTask();
-        getSearchTask.execute();
-    }
+		// Get search
+		GetSearchTask getSearchTask = new GetSearchTask();
+		getSearchTask.execute();
+	}
 
-    // Destroy activity
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
+	// Destroy activity
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
 
-        if(mCursor != null && !mCursor.isClosed()) mCursor.close();
-        if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
-    }
+		if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+		if(mSqLiteDatabase != null && mSqLiteDatabase.isOpen()) mSqLiteDatabase.close();
+	}
 
-    // Menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case android.R.id.home:
-            {
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-            {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
+	// Menu
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case android.R.id.home:
+			{
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}
 
-    // Get search
-    private class GetSearchTask extends AsyncTask<Void, Void, SimpleAdapter>
-    {
-        @Override
-        protected void onPostExecute(SimpleAdapter simpleAdapter)
-        {
-            mProgressBar.setVisibility(View.GONE);
+	// Get search
+	private class GetSearchTask extends AsyncTask<Void,Void,SimpleAdapter>
+	{
+		@Override
+		protected void onPostExecute(SimpleAdapter simpleAdapter)
+		{
+			mProgressBar.setVisibility(View.GONE);
 
-            mListView.setAdapter(simpleAdapter);
-            mListView.setEmptyView(mListViewEmpty);
+			mListView.setAdapter(simpleAdapter);
+			mListView.setEmptyView(mListViewEmpty);
 
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
-                {
-                    mProgressBar.setVisibility(View.VISIBLE);
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l)
+				{
+					mProgressBar.setVisibility(View.VISIBLE);
 
-                    try
-                    {
-                        final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
+					try
+					{
+						final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
-                        requestQueue.start();
+						requestQueue.start();
 
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
-                        {
-                            @Override
-                            public void onResponse(JSONObject response)
-                            {
-                                requestQueue.stop();
+						JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/icd-10/search/?uri="+URLEncoder.encode("http://www.icd10data.com/Search.aspx?search="+mCodesArrayList.get(i), "utf-8"), null, new Response.Listener<JSONObject>()
+						{
+							@Override
+							public void onResponse(JSONObject response)
+							{
+								requestQueue.stop();
 
-                                try
-                                {
-                                    mProgressBar.setVisibility(View.GONE);
+								try
+								{
+									mProgressBar.setVisibility(View.GONE);
 
-                                    String uri = response.getString("uri");
+									String uri = response.getString("uri");
 
-                                    Intent intent = new Intent(mContext, MainWebViewActivity.class);
-                                    intent.putExtra("title", mNamesArrayList.get(i));
-                                    intent.putExtra("uri", uri);
-                                    startActivity(intent);
-                                }
-                                catch(Exception e)
-                                {
-                                    mProgressBar.setVisibility(View.GONE);
+									Intent intent = new Intent(mContext, MainWebViewActivity.class);
+									intent.putExtra("title", mNamesArrayList.get(i));
+									intent.putExtra("uri", uri);
+									startActivity(intent);
+								}
+								catch(Exception e)
+								{
+									mProgressBar.setVisibility(View.GONE);
 
-                                    mTools.showToast(getString(R.string.icd10_search_could_not_find_code), 1);
+									mTools.showToast(getString(R.string.icd10_search_could_not_find_code), 1);
 
-                                    Log.e("Icd10SearchActivity", Log.getStackTraceString(e));
-                                }
-                            }
-                        }, new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error)
-                            {
-                                requestQueue.stop();
+									Log.e("Icd10SearchActivity", Log.getStackTraceString(e));
+								}
+							}
+						}, new Response.ErrorListener()
+						{
+							@Override
+							public void onErrorResponse(VolleyError error)
+							{
+								requestQueue.stop();
 
-                                mProgressBar.setVisibility(View.GONE);
+								mProgressBar.setVisibility(View.GONE);
 
-                                mTools.showToast(getString(R.string.icd10_search_could_not_find_code), 1);
+								mTools.showToast(getString(R.string.icd10_search_could_not_find_code), 1);
 
-                                Log.e("Icd10SearchActivity", error.toString());
-                            }
-                        });
+								Log.e("Icd10SearchActivity", error.toString());
+							}
+						});
 
-                        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+						jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                        requestQueue.add(jsonObjectRequest);
-                    }
-                    catch(Exception e)
-                    {
-                        Log.e("Icd10SearchActivity", Log.getStackTraceString(e));
-                    }
-                }
-            });
-        }
+						requestQueue.add(jsonObjectRequest);
+					}
+					catch(Exception e)
+					{
+						Log.e("Icd10SearchActivity", Log.getStackTraceString(e));
+					}
+				}
+			});
+		}
 
-        @Override
-        protected SimpleAdapter doInBackground(Void... voids)
-        {
-            mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-            String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_DATA};
-            mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
+		@Override
+		protected SimpleAdapter doInBackground(Void... voids)
+		{
+			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+			String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_DATA};
+			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
 
-            ArrayList<HashMap<String, String>> itemsArrayList = new ArrayList<>();
+			ArrayList<HashMap<String,String>> itemsArrayList = new ArrayList<>();
 
-            mCodesArrayList = new ArrayList<>();
-            mNamesArrayList = new ArrayList<>();
+			mCodesArrayList = new ArrayList<>();
+			mNamesArrayList = new ArrayList<>();
 
-            String[] fromColumns = new String[] {"code", "name"};
-            int[] toViews = new int[] {R.id.icd10_search_list_item_code, R.id.icd10_search_list_item_name};
+			String[] fromColumns = new String[] {"code", "name"};
+			int[] toViews = new int[] {R.id.icd10_search_list_item_code, R.id.icd10_search_list_item_name};
 
-            if(mCursor.moveToFirst())
-            {
-                for(int i = 0; i < mCursor.getCount(); i++)
-                {
-                    if(mCursor.moveToPosition(i))
-                    {
-                        try
-                        {
-                            JSONArray data = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ICD_10_COLUMN_DATA)));
+			if(mCursor.moveToFirst())
+			{
+				for(int i = 0; i < mCursor.getCount(); i++)
+				{
+					if(mCursor.moveToPosition(i))
+					{
+						try
+						{
+							JSONArray data = new JSONArray(mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.ICD_10_COLUMN_DATA)));
 
-                            for(int n = 0; n < data.length(); n++)
-                            {
-                                HashMap<String, String> item = new HashMap<>();
+							for(int n = 0; n < data.length(); n++)
+							{
+								HashMap<String,String> item = new HashMap<>();
 
-                                JSONObject itemJsonObject = data.getJSONObject(n);
+								JSONObject itemJsonObject = data.getJSONObject(n);
 
-                                String code = itemJsonObject.getString("code");
-                                String name = itemJsonObject.getString("name");
+								String code = itemJsonObject.getString("code");
+								String name = itemJsonObject.getString("name");
 
-                                if(code.matches("(?i).*?"+mSearchString+".*") || name.matches("(?i).*?"+mSearchString+".*"))
-                                {
-                                    item.put("code", code);
-                                    item.put("name", name);
+								if(code.matches("(?i).*?"+mSearchString+".*") || name.matches("(?i).*?"+mSearchString+".*"))
+								{
+									item.put("code", code);
+									item.put("name", name);
 
-                                    itemsArrayList.add(item);
+									itemsArrayList.add(item);
 
-                                    mCodesArrayList.add(code);
-                                    mNamesArrayList.add(name);
-                                }
-                            }
-                        }
-                        catch(JSONException e)
-                        {
-                            Log.e("Icd10SearchActivity", Log.getStackTraceString(e));
-                        }
-                    }
-                }
-            }
+									mCodesArrayList.add(code);
+									mNamesArrayList.add(name);
+								}
+							}
+						}
+						catch(JSONException e)
+						{
+							Log.e("Icd10SearchActivity", Log.getStackTraceString(e));
+						}
+					}
+				}
+			}
 
-            return new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_icd10_search_list_item, fromColumns, toViews);
-        }
-    }
+			return new SimpleAdapter(mContext, itemsArrayList, R.layout.activity_icd10_search_list_item, fromColumns, toViews);
+		}
+	}
 }

@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/manufacturers_layout">
-
-    <android.support.v7.widget.Toolbar android:id="@+id/manufacturers_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
-
-        <LinearLayout android:id="@+id/manufacturers_toolbar_search_layout" style="@style/toolbar_search_layout">
-            <EditText android:id="@+id/manufacturers_toolbar_search" android:hint="@string/manufacturers_toolbar_search_hint" style="@style/toolbar_search_edittext"/>
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <ListView android:id="@+id/manufacturers_list" android:layout_below="@+id/manufacturers_toolbar" style="@style/manufacturers_list_layout"/>
-    <TextView android:id="@+id/manufacturers_list_empty" android:layout_below="@+id/manufacturers_toolbar" android:text="@string/manufacturers_list_empty" style="@style/manufacturers_list_empty"/>
-
-    <android.support.design.widget.FloatingActionButton android:id="@+id/manufacturers_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
-
+	<android.support.v7.widget.Toolbar android:id="@+id/manufacturers_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+		<LinearLayout android:id="@+id/manufacturers_toolbar_search_layout" style="@style/toolbar_search_layout">
+			<EditText android:id="@+id/manufacturers_toolbar_search" android:hint="@string/manufacturers_toolbar_search_hint" style="@style/toolbar_search_edittext"/>
+		</LinearLayout>
+	</android.support.v7.widget.Toolbar>
+	<ListView android:id="@+id/manufacturers_list" android:layout_below="@+id/manufacturers_toolbar" style="@style/manufacturers_list_layout"/>
+	<TextView android:id="@+id/manufacturers_list_empty" android:layout_below="@+id/manufacturers_toolbar" android:text="@string/manufacturers_list_empty" style="@style/manufacturers_list_empty"/>
+	<android.support.design.widget.FloatingActionButton android:id="@+id/manufacturers_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 </RelativeLayout>

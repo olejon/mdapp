@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item android:id="@+id/pharmacies_location_menu_contact_information_to_all" android:orderInCategory="1" app:showAsAction="never" android:title="@string/pharmacies_location_menu_contact_information_to_all"/>
-
+	<item android:id="@+id/pharmacies_location_menu_contact_information_to_all" android:orderInCategory="1" app:showAsAction="never" android:title="@string/pharmacies_location_menu_contact_information_to_all"/>
 </menu>

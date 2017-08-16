@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/clinicaltrials_layout">
-
-    <android.support.v7.widget.Toolbar android:id="@+id/clinicaltrials_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
-
-        <LinearLayout android:id="@+id/clinicaltrials_toolbar_search_layout" style="@style/toolbar_search_layout">
-            <EditText android:id="@+id/clinicaltrials_toolbar_search" android:hint="@string/clinicaltrials_toolbar_search_hint" style="@style/clinicaltrials_toolbar_search_edittext"/>
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <ListView android:id="@+id/clinicaltrials_list" android:layout_below="@+id/clinicaltrials_toolbar" style="@style/clinicaltrials_list_layout"/>
-
-    <ScrollView android:id="@+id/clinicaltrials_list_empty" android:layout_below="@+id/clinicaltrials_toolbar" style="@style/clinicaltrials_list_empty_layout">
-
-        <LinearLayout style="@style/clinicaltrials_list_empty_inner_layout">
-            <TextView android:text="@string/clinicaltrials_no_recent_searches" style="@style/clinicaltrials_list_empty"/>
-            <TextView android:text="@string/clinicaltrials_information" style="@style/clinicaltrials_list_information"/>
-        </LinearLayout>
-
-    </ScrollView>
-
-    <android.support.design.widget.FloatingActionButton android:id="@+id/clinicaltrials_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
-
+	<android.support.v7.widget.Toolbar android:id="@+id/clinicaltrials_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+		<LinearLayout android:id="@+id/clinicaltrials_toolbar_search_layout" style="@style/toolbar_search_layout">
+			<EditText android:id="@+id/clinicaltrials_toolbar_search" android:hint="@string/clinicaltrials_toolbar_search_hint" style="@style/clinicaltrials_toolbar_search_edittext"/>
+		</LinearLayout>
+	</android.support.v7.widget.Toolbar>
+	<ListView android:id="@+id/clinicaltrials_list" android:layout_below="@+id/clinicaltrials_toolbar" style="@style/clinicaltrials_list_layout"/>
+	<ScrollView android:id="@+id/clinicaltrials_list_empty" android:layout_below="@+id/clinicaltrials_toolbar" style="@style/clinicaltrials_list_empty_layout">
+		<LinearLayout style="@style/clinicaltrials_list_empty_inner_layout">
+			<TextView android:text="@string/clinicaltrials_no_recent_searches" style="@style/clinicaltrials_list_empty"/>
+			<TextView android:text="@string/clinicaltrials_information" style="@style/clinicaltrials_list_information"/>
+		</LinearLayout>
+	</ScrollView>
+	<android.support.design.widget.FloatingActionButton android:id="@+id/clinicaltrials_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 </RelativeLayout>
