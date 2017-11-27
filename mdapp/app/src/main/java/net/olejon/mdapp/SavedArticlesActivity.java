@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -59,6 +58,7 @@ public class SavedArticlesActivity extends AppCompatActivity
 	private TextView mEmptyTextView;
 	private RecyclerView mRecyclerView;
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -71,12 +71,12 @@ public class SavedArticlesActivity extends AppCompatActivity
 		setContentView(R.layout.activity_saved_articles);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.saved_articles_toolbar);
+		Toolbar toolbar = findViewById(R.id.saved_articles_toolbar);
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.saved_articles_appbar);
+		AppBarLayout appBarLayout = findViewById(R.id.saved_articles_appbar);
 
 		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
 		{
@@ -94,20 +94,20 @@ public class SavedArticlesActivity extends AppCompatActivity
 			}
 		});
 
-		CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.saved_articles_toolbar_layout);
+		CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.saved_articles_toolbar_layout);
 		collapsingToolbarLayout.setTitle(getString(R.string.saved_articles_title));
 
 		// Empty
-		mEmptyTextView = (TextView) findViewById(R.id.saved_articles_list_empty);
+		mEmptyTextView = findViewById(R.id.saved_articles_list_empty);
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.saved_articles_list);
-
+		mRecyclerView = findViewById(R.id.saved_articles_list);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new SavedArticlesAdapter(mCursor));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 	}
 
+	// Resume activity
 	@Override
 	protected void onResume()
 	{
@@ -174,8 +174,23 @@ public class SavedArticlesActivity extends AppCompatActivity
 	// Saved articles
 	private void getSavedArticles()
 	{
-		GetSavedArticlesTask getSavedArticlesTask = new GetSavedArticlesTask();
-		getSavedArticlesTask.execute();
+		mSqLiteDatabase = new SavedArticlesSQLiteHelper(mContext).getWritableDatabase();
+		mCursor = mSqLiteDatabase.query(SavedArticlesSQLiteHelper.TABLE, null, null, null, null, null, SavedArticlesSQLiteHelper.COLUMN_ID+" DESC");
+
+		if(mCursor.getCount() == 0)
+		{
+			mRecyclerView.setVisibility(View.GONE);
+			mEmptyTextView.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			mEmptyTextView.setVisibility(View.GONE);
+			mRecyclerView.setVisibility(View.VISIBLE);
+
+			mRecyclerView.setAdapter(new SavedArticlesAdapter(mCursor));
+		}
+
+		showInformationDialog(false);
 	}
 
 	private void removeSavedArticle(long id)
@@ -185,40 +200,8 @@ public class SavedArticlesActivity extends AppCompatActivity
 		getSavedArticles();
 	}
 
-	// Get saved articles
-	private class GetSavedArticlesTask extends AsyncTask<Void,Void,Cursor>
-	{
-		@Override
-		protected void onPostExecute(Cursor cursor)
-		{
-			if(mCursor.getCount() == 0)
-			{
-				mRecyclerView.setVisibility(View.GONE);
-				mEmptyTextView.setVisibility(View.VISIBLE);
-			}
-			else
-			{
-				mEmptyTextView.setVisibility(View.GONE);
-				mRecyclerView.setVisibility(View.VISIBLE);
-
-				mRecyclerView.setAdapter(new SavedArticlesAdapter(cursor));
-			}
-
-			showInformationDialog(false);
-		}
-
-		@Override
-		protected Cursor doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new SavedArticlesSQLiteHelper(mContext).getWritableDatabase();
-			mCursor = mSqLiteDatabase.query(SavedArticlesSQLiteHelper.TABLE, null, null, null, null, null, SavedArticlesSQLiteHelper.COLUMN_ID+" DESC");
-
-			return mCursor;
-		}
-	}
-
 	// Adapter
-	class SavedArticlesAdapter extends RecyclerView.Adapter<SavedArticlesAdapter.SavedArticlesAdapterViewHolder>
+	class SavedArticlesAdapter extends RecyclerView.Adapter<SavedArticlesAdapter.SavedArticlesViewHolder>
 	{
 		final Cursor mCursor;
 
@@ -227,38 +210,40 @@ public class SavedArticlesActivity extends AppCompatActivity
 			mCursor = cursor;
 		}
 
-		class SavedArticlesAdapterViewHolder extends RecyclerView.ViewHolder
+		class SavedArticlesViewHolder extends RecyclerView.ViewHolder
 		{
 			final LinearLayout listItem;
 			final TextView titleTextView;
 			final TextView domainTextView;
 
-			SavedArticlesAdapterViewHolder(View view)
+			SavedArticlesViewHolder(View view)
 			{
 				super(view);
 
-				listItem = (LinearLayout) view.findViewById(R.id.saved_articles_list_item_layout);
-				titleTextView = (TextView) view.findViewById(R.id.saved_articles_list_item_title);
-				domainTextView = (TextView) view.findViewById(R.id.saved_articles_list_item_domain);
+				listItem = view.findViewById(R.id.saved_articles_list_item_layout);
+				titleTextView = view.findViewById(R.id.saved_articles_list_item_title);
+				domainTextView = view.findViewById(R.id.saved_articles_list_item_domain);
 			}
 		}
 
 		@Override
-		public SavedArticlesAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public SavedArticlesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_saved_articles_list_item, viewGroup, false);
-			return new SavedArticlesAdapterViewHolder(view);
+			return new SavedArticlesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(SavedArticlesAdapterViewHolder viewHolder, int i)
+		public void onBindViewHolder(SavedArticlesViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{
 				final long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_ID));
+
 				final String title = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_TITLE));
 				final String uri = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_URI));
 				final String webview = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_WEBVIEW));
+
 				String domain = mCursor.getString(mCursor.getColumnIndexOrThrow(SavedArticlesSQLiteHelper.COLUMN_DOMAIN));
 
 				viewHolder.titleTextView.setText(title);

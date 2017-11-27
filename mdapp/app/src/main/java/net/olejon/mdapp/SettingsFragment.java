@@ -24,6 +24,7 @@ import android.preference.PreferenceFragment;
 
 public class SettingsFragment extends PreferenceFragment
 {
+	// Create fragment view
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{

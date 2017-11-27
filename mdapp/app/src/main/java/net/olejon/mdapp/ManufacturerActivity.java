@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -49,13 +48,7 @@ public class ManufacturerActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private Toolbar mToolbar;
-	private TextView mMedicationsCountTextView;
-	private ListView mListView;
-
 	private String manufacturerName;
-
-	private long manufacturerId;
 
 	// Create activity
 	@Override
@@ -66,25 +59,68 @@ public class ManufacturerActivity extends AppCompatActivity
 		// Intent
 		Intent intent = getIntent();
 
-		manufacturerId = intent.getLongExtra("id", 0);
-
-		// Layout
-		setContentView(R.layout.activity_manufacturer);
-
-		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.manufacturer_toolbar);
-
-		setSupportActionBar(mToolbar);
-		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		mMedicationsCountTextView = (TextView) findViewById(R.id.manufacturer_medications_count);
-
-		// List
-		mListView = (ListView) findViewById(R.id.manufacturer_list);
+		long manufacturerId = intent.getLongExtra("id", 0);
 
 		// Get manufacturer
-		GetManufacturerTask getManufacturersTask = new GetManufacturerTask();
-		getManufacturersTask.execute();
+		mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+		String[] manufacturersQueryColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, manufacturersQueryColumns, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID+" = "+manufacturerId, null, null, null, null);
+
+		if(mCursor.moveToFirst())
+		{
+			// Get medications
+			manufacturerName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME));
+
+			String[] medicationsQueryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE};
+			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, medicationsQueryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER + " = " + mTools.sqe(manufacturerName), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME + " COLLATE NOCASE");
+
+			String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE};
+			int[] toViews = {R.id.manufacturer_list_item_name, R.id.manufacturer_list_item_substance};
+
+			// Layout
+			setContentView(R.layout.activity_manufacturer);
+
+			// Toolbar
+			Toolbar toolbar = findViewById(R.id.manufacturer_toolbar);
+			toolbar.setTitle(manufacturerName);
+
+			setSupportActionBar(toolbar);
+			if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+			TextView medicationsCountTextView = findViewById(R.id.manufacturer_medications_count);
+
+			int medicationsCount = mCursor.getCount();
+
+			String medications = (medicationsCount == 1) ? getString(R.string.manufacturer_medication) : getString(R.string.manufacturer_medications);
+
+			medicationsCountTextView.setText(medicationsCount+" "+medications);
+
+			// List
+			ListView listView = findViewById(R.id.manufacturer_list);
+			listView.setAdapter(new SimpleCursorAdapter(mContext, R.layout.activity_manufacturer_list_item, mCursor, fromColumns, toViews, 0));
+
+			listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+				{
+					if(mCursor.moveToPosition(i))
+					{
+						long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+						Intent intent = new Intent(mContext, MedicationActivity.class);
+
+						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
+						{
+							intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+						}
+
+						intent.putExtra("id", id);
+						startActivity(intent);
+					}
+				}
+			});
+		}
 	}
 
 	// Destroy activity
@@ -133,69 +169,6 @@ public class ManufacturerActivity extends AppCompatActivity
 			{
 				return super.onOptionsItemSelected(item);
 			}
-		}
-	}
-
-	// Get manufacturer
-	private class GetManufacturerTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-		{
-			mToolbar.setTitle(manufacturerName);
-
-			int medicationsCount = mCursor.getCount();
-
-			String medications = (medicationsCount == 1) ? getString(R.string.manufacturer_medication) : getString(R.string.manufacturer_medications);
-
-			mMedicationsCountTextView.setText(medicationsCount+" "+medications);
-
-			mListView.setAdapter(simpleCursorAdapter);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-				{
-					if(mCursor.moveToPosition(i))
-					{
-						long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
-
-						Intent intent = new Intent(mContext, MedicationActivity.class);
-
-						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
-						{
-							intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-						}
-
-						intent.putExtra("id", id);
-						startActivity(intent);
-					}
-				}
-			});
-		}
-
-		@Override
-		protected SimpleCursorAdapter doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-			String[] manufacturersQueryColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME};
-			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, manufacturersQueryColumns, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID+" = "+manufacturerId, null, null, null, null);
-
-			if(mCursor.moveToFirst())
-			{
-				manufacturerName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME));
-
-				String[] medicationsQueryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE};
-				mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, medicationsQueryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER+" = "+mTools.sqe(manufacturerName), null, null, null, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" COLLATE NOCASE");
-
-				String[] fromColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE};
-				int[] toViews = {R.id.manufacturer_list_item_name, R.id.manufacturer_list_item_substance};
-
-				return new SimpleCursorAdapter(mContext, R.layout.activity_manufacturer_list_item, mCursor, fromColumns, toViews, 0);
-			}
-
-			return null;
 		}
 	}
 }

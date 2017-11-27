@@ -38,7 +38,7 @@ class MedicationsSimpleCursorAdapter extends SimpleCursorAdapter
 	{
 		View view = super.getView(position, convertView, parent);
 
-		TextView textView = (TextView) view.findViewById(R.id.main_medications_list_item_prescription_group);
+		TextView textView = view.findViewById(R.id.main_medications_list_item_prescription_group);
 
 		String prescriptionGroup = textView.getText().toString();
 

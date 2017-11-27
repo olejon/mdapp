@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/widget_layout">
-	<TextView android:id="@+id/widget_toolbar" android:layout_alignParentTop="true" android:text="@string/widget_toolbar_title" style="@style/widget_toolbar_layout"/>
-	<ListView android:id="@+id/widget_list" android:layout_below="@+id/widget_toolbar" style="@style/widget_list_layout"/>
-	<TextView android:id="@+id/widget_list_empty" android:layout_below="@+id/widget_toolbar" android:text="@string/widget_list_empty" style="@style/widget_list_empty"/>
-</RelativeLayout>

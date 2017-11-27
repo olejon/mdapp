@@ -69,7 +69,6 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
-	private Toolbar mToolbar;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
@@ -100,21 +99,21 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 		setContentView(R.layout.activity_clinicaltrials_cards);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.clinicaltrials_cards_toolbar);
-		mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
+		final Toolbar toolbar = findViewById(R.id.clinicaltrials_cards_toolbar);
+		toolbar.setTitle(getString(R.string.clinicaltrials_cards_search, searchString));
 
-		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+		TextView toolbarTextView = (TextView) toolbar.getChildAt(1);
+		toolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
-		setSupportActionBar(mToolbar);
+		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.clinicaltrials_cards_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.clinicaltrials_cards_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.clinicaltrials_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.clinicaltrials_cards_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -127,16 +126,15 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.clinicaltrials_cards_cards);
-
+		mRecyclerView = findViewById(R.id.clinicaltrials_cards_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new ClinicalTrialsCardsAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 		// No clinical trials
-		mNoClinicalTrialsLayout = (LinearLayout) findViewById(R.id.clinicaltrials_cards_no_clinicaltrials);
+		mNoClinicalTrialsLayout = findViewById(R.id.clinicaltrials_cards_no_clinicaltrials);
 
-		Button noClinicalTrialsButton = (Button) findViewById(R.id.clinicaltrials_cards_no_results_button);
+		Button noClinicalTrialsButton = findViewById(R.id.clinicaltrials_cards_no_results_button);
 
 		noClinicalTrialsButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -181,6 +179,15 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
 						if(!correctSearchString.equals(""))
 						{
+							mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+							{
+								@Override
+								public void onRefresh()
+								{
+									search(correctSearchString);
+								}
+							});
+
 							new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 							{
 								@Override
@@ -196,7 +203,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
 									sqLiteDatabase.close();
 
-									mToolbar.setTitle(getString(R.string.clinicaltrials_cards_search, correctSearchString));
+									toolbar.setTitle(getString(R.string.clinicaltrials_cards_search, correctSearchString));
 
 									mProgressBar.setVisibility(View.VISIBLE);
 
@@ -281,7 +288,6 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 						if(mTools.isTablet())
 						{
 							int spanCount = (response.length() == 1) ? 1 : 2;
-
 							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 						}
 
@@ -345,18 +351,18 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 			final TextView status;
 			final TextView conditions;
 			final TextView intervention;
-			final TextView button;
+			final Button uri;
 
 			ClinicalTrialsViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.clinicaltrials_cards_card);
-				title = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_title);
-				status = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_status);
-				conditions = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_conditions);
-				intervention = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_intervention);
-				button = (TextView) view.findViewById(R.id.clinicaltrials_cards_card_button_uri);
+				card = view.findViewById(R.id.clinicaltrials_cards_card);
+				title = view.findViewById(R.id.clinicaltrials_cards_card_title);
+				status = view.findViewById(R.id.clinicaltrials_cards_card_status);
+				conditions = view.findViewById(R.id.clinicaltrials_cards_card_conditions);
+				intervention = view.findViewById(R.id.clinicaltrials_cards_card_intervention);
+				uri = view.findViewById(R.id.clinicaltrials_cards_card_button_uri);
 			}
 		}
 
@@ -376,6 +382,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 
 				final String title = clinicalTrialsJsonObject.getString("study");
 				final String uri = clinicalTrialsJsonObject.getString("uri");
+
 				String status = clinicalTrialsJsonObject.getString("status");
 				String conditions = clinicalTrialsJsonObject.getString("conditions");
 				String intervention = clinicalTrialsJsonObject.getString("intervention");
@@ -397,7 +404,7 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 					}
 				});
 
-				viewHolder.button.setOnClickListener(new View.OnClickListener()
+				viewHolder.uri.setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View view)

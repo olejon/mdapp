@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/main_drawer_layout" style="@style/drawer_layout">
-	<RelativeLayout android:id="@+id/main_layout" style="@style/main_layout">
+	<RelativeLayout style="@style/layout_match_width_match_height">
 		<android.support.v7.widget.Toolbar android:id="@+id/main_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 		<LinearLayout android:id="@+id/main_search" android:layout_below="@+id/main_toolbar" style="@style/main_search">
 			<EditText android:id="@+id/main_search_edittext" android:hint="@string/main_search_hint" style="@style/main_search_edittext"/>
 		</LinearLayout>
-		<android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_search" style="@style/main_pager">
-			<android.support.design.widget.TabLayout android:id="@+id/main_tabs" style="@style/main_tabs"/>
+		<android.support.v4.view.ViewPager android:id="@+id/main_pager" android:layout_below="@+id/main_search" style="@style/layout_match_width_wrap_height_elevation">
+			<android.support.design.widget.TabLayout android:id="@+id/main_tabs" style="@style/layout_tabs"/>
 		</android.support.v4.view.ViewPager>
 		<android.support.design.widget.FloatingActionButton android:id="@+id/main_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 	</RelativeLayout>
 	<android.support.design.widget.NavigationView android:id="@+id/main_drawer" style="@style/drawer">
-		<ScrollView style="@style/drawer_inner">
-			<LinearLayout style="@style/drawer_inner_inner">
-				<ImageView android:id="@+id/drawer_banner" android:src="@drawable/drawer_banner" android:contentDescription="@string/drawer_banner_image_content_description" style="@style/drawer_banner"/>
+		<ScrollView style="@style/layout_match_width_match_height_vertical_scrollbar">
+			<LinearLayout style="@style/drawer_inner">
+				<ImageView android:src="@drawable/drawer_banner" android:contentDescription="@string/drawer_banner_image_content_description" style="@style/drawer_banner"/>
 				<TextView android:text="@string/drawer_subheader_encyclopedias" style="@style/drawer_subheader"/>
 				<TextView android:id="@+id/drawer_item_saved_articles" android:drawableStart="@drawable/ic_star_grey600_24dp" android:drawableLeft="@drawable/ic_star_grey600_24dp" android:text="@string/drawer_item_saved_articles" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
-				<TextView android:id="@+id/drawer_item_nlh" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_nlh" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 				<TextView android:id="@+id/drawer_item_felleskatalogen" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_felleskatalogen" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
+				<TextView android:id="@+id/drawer_item_nlh" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_nlh" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 				<TextView android:id="@+id/drawer_item_nel" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_nel" android:onClick="onDrawerItemClick" style="@style/drawer_item"/>
 				<TextView android:id="@+id/drawer_item_helsebiblioteket" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_helsebiblioteket" android:onClick="onDrawerItemClick" style="@style/drawer_item_gone"/>
 				<TextView android:id="@+id/drawer_item_tidsskriftet" android:drawableStart="@drawable/ic_local_library_grey600_24dp" android:drawableLeft="@drawable/ic_local_library_grey600_24dp" android:text="@string/drawer_item_tidsskriftet" android:onClick="onDrawerItemClick" style="@style/drawer_item_gone"/>

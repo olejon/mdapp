@@ -68,14 +68,14 @@ public class AtcCodesActivity extends AppCompatActivity
 		setContentView(R.layout.activity_atc_codes);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.atc_codes_toolbar);
+		Toolbar toolbar = findViewById(R.id.atc_codes_toolbar);
 		toolbar.setTitle(atcCodes);
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// List
-		ListView listView = (ListView) findViewById(R.id.atc_codes_list);
+		ListView listView = findViewById(R.id.atc_codes_list);
 
 		View listViewEmpty = findViewById(R.id.atc_codes_list_empty);
 		listView.setEmptyView(listViewEmpty);
@@ -219,10 +219,10 @@ public class AtcCodesActivity extends AppCompatActivity
 		{
 			View view = super.getView(position, convertView, parent);
 
-			LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.atc_codes_list_item_layout);
+			LinearLayout linearLayout = view.findViewById(R.id.atc_codes_list_item_layout);
 
-			TextView atcCodeTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_code);
-			TextView atcNameTextView = (TextView) view.findViewById(R.id.atc_codes_list_item_name);
+			TextView atcCodeTextView = view.findViewById(R.id.atc_codes_list_item_code);
+			TextView atcNameTextView = view.findViewById(R.id.atc_codes_list_item_name);
 
 			String atcCode = atcCodeTextView.getText().toString();
 

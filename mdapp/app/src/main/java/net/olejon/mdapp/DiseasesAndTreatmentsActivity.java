@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -42,7 +41,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -64,7 +62,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
 	private InputMethodManager mInputMethodManager;
 
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
@@ -84,14 +81,13 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		setContentView(R.layout.activity_diseases_and_treatments);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_toolbar);
+		Toolbar toolbar = findViewById(R.id.diseases_and_treatments_toolbar);
 		toolbar.setTitle(getString(R.string.diseases_and_treatments_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.diseases_and_treatments_toolbar_search);
+		mToolbarSearchEditText = findViewById(R.id.diseases_and_treatments_toolbar_search);
 
 		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -112,7 +108,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		});
 
 		// List
-		mListView = (ListView) findViewById(R.id.diseases_and_treatments_list);
+		mListView = findViewById(R.id.diseases_and_treatments_list);
 
 		View listViewEmpty = findViewById(R.id.diseases_and_treatments_list_empty);
 		mListView.setEmptyView(listViewEmpty);
@@ -121,16 +117,25 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		mListView.addHeaderView(listViewHeader, null, false);
 
 		// Floating action buttons
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.diseases_and_treatments_fab);
+		mFloatingActionButton = findViewById(R.id.diseases_and_treatments_fab);
 
 		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
-					search(mToolbarSearchEditText.getText().toString().trim());
+					String searchString = mToolbarSearchEditText.getText().toString().trim();
+
+					if(searchString.equals(""))
+					{
+						showSearchLanguageDialog();
+					}
+					else
+					{
+						search(searchString);
+					}
 				}
 				else
 				{
@@ -138,6 +143,17 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 				}
 			}
 		});
+
+		Handler handler = new Handler();
+
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				showSearchLanguageDialog();
+			}
+		}, 500);
 	}
 
 	// Activity result
@@ -165,6 +181,16 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		getRecentSearches();
 	}
 
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		mToolbarSearchEditText.setVisibility(View.GONE);
+		mToolbarSearchEditText.setText("");
+	}
+
 	// Destroy activity
 	@Override
 	protected void onDestroy()
@@ -179,9 +205,9 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 		}
 		else
@@ -254,8 +280,31 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 	// Search
 	private void getRecentSearches()
 	{
-		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-		getRecentSearchesTask.execute();
+		mSqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
+		mCursor = mSqLiteDatabase.query(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, null, null, null, null, DiseasesAndTreatmentsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+
+		String[] fromColumns = {DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING};
+		int[] toViews = {R.id.diseases_and_treatments_list_item_string};
+
+		mListView.setAdapter(new SimpleCursorAdapter(mContext, R.layout.activity_diseases_and_treatments_list_item, mCursor, fromColumns, toViews, 0));
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				int index = i - 1;
+
+				if(mCursor.moveToPosition(index))
+				{
+					search(mCursor.getString(mCursor.getColumnIndexOrThrow(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING)));
+				}
+			}
+		});
+
+		Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
+		mFloatingActionButton.startAnimation(animation);
+		mFloatingActionButton.setVisibility(View.VISIBLE);
 	}
 
 	private void clearRecentSearches()
@@ -294,7 +343,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
 	private void showSearch()
 	{
-		mToolbarSearchLayout.setVisibility(View.VISIBLE);
+		mToolbarSearchEditText.setVisibility(View.VISIBLE);
 		mToolbarSearchEditText.requestFocus();
 
 		Handler handler = new Handler();
@@ -317,58 +366,5 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		intent.putExtra("language", mSearchLanguage);
 		intent.putExtra("string", mTools.firstToUpper(searchString));
 		startActivity(intent);
-	}
-
-	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-		{
-			mListView.setAdapter(simpleCursorAdapter);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-				{
-					int index = i - 1;
-
-					if(mCursor.moveToPosition(index))
-					{
-						search(mCursor.getString(mCursor.getColumnIndexOrThrow(DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING)));
-					}
-				}
-			});
-
-			Animation fabAnimation = AnimationUtils.loadAnimation(mContext, R.anim.fab);
-			mFloatingActionButton.startAnimation(fabAnimation);
-			mFloatingActionButton.setVisibility(View.VISIBLE);
-
-			if(mCursor.getCount() > 0)
-			{
-				Handler handler = new Handler();
-
-				handler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						showSearchLanguageDialog();
-					}
-				}, 250);
-			}
-		}
-
-		@Override
-		protected SimpleCursorAdapter doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new DiseasesAndTreatmentsSQLiteHelper(mContext).getWritableDatabase();
-			mCursor = mSqLiteDatabase.query(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, null, null, null, null, DiseasesAndTreatmentsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
-
-			String[] fromColumns = {DiseasesAndTreatmentsSQLiteHelper.COLUMN_STRING};
-			int[] toViews = {R.id.diseases_and_treatments_list_item_string};
-
-			return new SimpleCursorAdapter(mContext, R.layout.activity_diseases_and_treatments_list_item, mCursor, fromColumns, toViews, 0);
-		}
 	}
 }

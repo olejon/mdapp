@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -71,6 +70,7 @@ public class NotesActivity extends AppCompatActivity
 
 	private boolean mIsAuthenticated = false;
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -86,13 +86,13 @@ public class NotesActivity extends AppCompatActivity
 		setContentView(R.layout.activity_notes);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.notes_toolbar);
+		Toolbar toolbar = findViewById(R.id.notes_toolbar);
 		toolbar.setTitle(getString(R.string.notes_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.notes_layout_appbar);
+		AppBarLayout appBarLayout = findViewById(R.id.notes_layout_appbar);
 
 		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
 		{
@@ -110,21 +110,20 @@ public class NotesActivity extends AppCompatActivity
 			}
 		});
 
-		CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.notes_toolbar_layout);
+		CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.notes_toolbar_layout);
 		collapsingToolbarLayout.setTitle(getString(R.string.notes_title));
 
 		// Empty
-		mEmptyTextView = (TextView) findViewById(R.id.notes_empty);
+		mEmptyTextView = findViewById(R.id.notes_empty);
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.notes_cards);
-
+		mRecyclerView = findViewById(R.id.notes_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new NotesAdapter());
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 		// Floating action button
-		FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.notes_fab);
+		FloatingActionButton floatingActionButton = findViewById(R.id.notes_fab);
 
 		floatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -260,13 +259,38 @@ public class NotesActivity extends AppCompatActivity
 		}
 	}
 
-	// Get notes
+	// Notes
+	private void showNotes()
+	{
+		mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
+		String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
+		mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
+
+		if(mCursor.getCount() == 0)
+		{
+			mRecyclerView.setVisibility(View.GONE);
+			mEmptyTextView.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			mEmptyTextView.setVisibility(View.GONE);
+			mRecyclerView.setVisibility(View.VISIBLE);
+
+			if(mTools.isTablet())
+			{
+				int spanCount = (mCursor.getCount() == 1) ? 1 : 2;
+				mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+			}
+
+			mRecyclerView.setAdapter(new NotesAdapter());
+		}
+	}
+
 	private void getNotes()
 	{
 		if(mIsAuthenticated)
 		{
-			GetNotesTask getNotesTask = new GetNotesTask();
-			getNotesTask.execute();
+			showNotes();
 		}
 		else
 		{
@@ -299,9 +323,7 @@ public class NotesActivity extends AppCompatActivity
 
 					if(pinCode.equals(mTools.getSharedPreferencesString("NOTES_PIN_CODE")))
 					{
-						GetNotesTask getNotesTask = new GetNotesTask();
-						getNotesTask.execute();
-
+						showNotes();
 						materialDialog.dismiss();
 					}
 					else
@@ -376,79 +398,41 @@ public class NotesActivity extends AppCompatActivity
 		}
 	}
 
-	private class GetNotesTask extends AsyncTask<Void,Void,Cursor>
-	{
-		@Override
-		protected void onPostExecute(Cursor cursor)
-		{
-			if(mCursor.getCount() == 0)
-			{
-				mRecyclerView.setVisibility(View.GONE);
-				mEmptyTextView.setVisibility(View.VISIBLE);
-			}
-			else
-			{
-				mEmptyTextView.setVisibility(View.GONE);
-				mRecyclerView.setVisibility(View.VISIBLE);
-
-				if(mTools.isTablet())
-				{
-					int spanCount = (mCursor.getCount() == 1) ? 1 : 2;
-
-					mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-				}
-
-				mRecyclerView.setAdapter(new NotesAdapter());
-			}
-		}
-
-		@Override
-		protected Cursor doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new NotesSQLiteHelper(mContext).getReadableDatabase();
-			String[] queryColumns = {NotesSQLiteHelper.COLUMN_ID, NotesSQLiteHelper.COLUMN_TITLE, NotesSQLiteHelper.COLUMN_TEXT};
-			mCursor = mSqLiteDatabase.query(NotesSQLiteHelper.TABLE, queryColumns, null, null, null, null, NotesSQLiteHelper.COLUMN_ID+" DESC");
-
-			return mCursor;
-		}
-	}
-
 	// Adapter
-	class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder>
+	class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder>
 	{
 		int mLastPosition = - 1;
 
-		NotesAdapter() { }
-
-		class NoteViewHolder extends RecyclerView.ViewHolder
+		class NotesViewHolder extends RecyclerView.ViewHolder
 		{
 			final CardView card;
 			final TextView title;
 			final TextView text;
 
-			NoteViewHolder(View view)
+			NotesViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.notes_card);
-				title = (TextView) view.findViewById(R.id.notes_card_title);
-				text = (TextView) view.findViewById(R.id.notes_card_text);
+				card = view.findViewById(R.id.notes_card);
+				title = view.findViewById(R.id.notes_card_title);
+				text = view.findViewById(R.id.notes_card_text);
 			}
 		}
 
 		@Override
-		public NoteViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public NotesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notes_card, viewGroup, false);
-			return new NoteViewHolder(view);
+			return new NotesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(NoteViewHolder viewHolder, int i)
+		public void onBindViewHolder(NotesViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{
 				final int id = mCursor.getInt(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_ID));
+
 				String title = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TITLE));
 				String text = mCursor.getString(mCursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_TEXT));
 

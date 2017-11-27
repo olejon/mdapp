@@ -69,13 +69,10 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
-	private Toolbar mToolbar;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
 	private LinearLayout mNoAntibioticsGuidesTextView;
-
-	private String mSearchString;
 
 	// Create activity
 	@Override
@@ -96,27 +93,27 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 		// Intent
 		Intent intent = getIntent();
 
-		mSearchString = intent.getStringExtra("search");
+		final String searchString = intent.getStringExtra("search");
 
 		// Layout
 		setContentView(R.layout.activity_antibiotics_guides_cards);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.antibiotics_guides_cards_toolbar);
-		mToolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, mSearchString));
+		final Toolbar toolbar = findViewById(R.id.antibiotics_guides_cards_toolbar);
+		toolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, searchString));
 
-		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+		TextView toolbarTextView = (TextView) toolbar.getChildAt(1);
+		toolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
-		setSupportActionBar(mToolbar);
+		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.antibiotics_guides_cards_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.antibiotics_guides_cards_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.antibiotics_guides_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.antibiotics_guides_cards_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -124,22 +121,21 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 			@Override
 			public void onRefresh()
 			{
-				search(mSearchString);
+				search(searchString);
 			}
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.antibiotics_guides_cards_cards);
-
+		mRecyclerView = findViewById(R.id.antibiotics_guides_cards_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new AntibioticsGuidesCardsAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 		// No antibiotics guides
-		mNoAntibioticsGuidesTextView = (LinearLayout) findViewById(R.id.antibiotics_guides_cards_no_antibiotics_guides);
+		mNoAntibioticsGuidesTextView = findViewById(R.id.antibiotics_guides_cards_no_antibiotics_guides);
 
-		Button noAntibioticsGuidesPrimaerhelsetjenestenButton = (Button) findViewById(R.id.antibiotics_guides_cards_search_on_primaerhelsetjenesten);
-		Button noAntibioticsGuidesHelsedirektoratetButton = (Button) findViewById(R.id.antibiotics_guides_cards_search_on_helsedirektoratet);
+		Button noAntibioticsGuidesPrimaerhelsetjenestenButton = findViewById(R.id.antibiotics_guides_cards_search_on_primaerhelsetjenesten);
+		Button noAntibioticsGuidesHelsedirektoratetButton = findViewById(R.id.antibiotics_guides_cards_search_on_helsedirektoratet);
 
 		noAntibioticsGuidesPrimaerhelsetjenestenButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -180,7 +176,7 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 		});
 
 		// Search
-		search(mSearchString);
+		search(searchString);
 
 		// Correct
 		try
@@ -189,7 +185,7 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 
 			requestQueue.start();
 
-			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
+			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
 			{
 				@Override
 				public void onResponse(JSONObject response)
@@ -202,6 +198,15 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 
 						if(!correctSearchString.equals(""))
 						{
+							mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+							{
+								@Override
+								public void onRefresh()
+								{
+									search(correctSearchString);
+								}
+							});
+
 							new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 							{
 								@Override
@@ -212,12 +217,12 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 
 									SQLiteDatabase sqLiteDatabase = new AntibioticsGuidesSQLiteHelper(mContext).getWritableDatabase();
 
-									sqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, AntibioticsGuidesSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(mSearchString)+" COLLATE NOCASE", null);
+									sqLiteDatabase.delete(AntibioticsGuidesSQLiteHelper.TABLE, AntibioticsGuidesSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
 									sqLiteDatabase.insert(AntibioticsGuidesSQLiteHelper.TABLE, null, contentValues);
 
 									sqLiteDatabase.close();
 
-									mToolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, correctSearchString));
+									toolbar.setTitle(getString(R.string.antibiotics_guides_cards_search, correctSearchString));
 
 									mProgressBar.setVisibility(View.VISIBLE);
 
@@ -302,7 +307,6 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 						if(mTools.isTablet())
 						{
 							int spanCount = (response.length() == 1) ? 1 : 2;
-
 							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 						}
 
@@ -364,16 +368,16 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 			final CardView card;
 			final TextView title;
 			final TextView text;
-			final TextView uri;
+			final Button uri;
 
 			AntibioticsGuidesViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.antibiotics_guides_cards_card);
-				title = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_title);
-				text = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_text);
-				uri = (TextView) view.findViewById(R.id.antibiotics_guides_cards_card_button_uri);
+				card = view.findViewById(R.id.antibiotics_guides_cards_card);
+				title = view.findViewById(R.id.antibiotics_guides_cards_card_title);
+				text = view.findViewById(R.id.antibiotics_guides_cards_card_text);
+				uri = view.findViewById(R.id.antibiotics_guides_cards_card_button_uri);
 			}
 		}
 
@@ -389,11 +393,12 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 		{
 			try
 			{
-				JSONObject interactionJsonObject = mAntibioticsGuides.getJSONObject(i);
+				JSONObject antibioticsGuideJsonObject = mAntibioticsGuides.getJSONObject(i);
 
-				final String title = interactionJsonObject.getString("title");
-				final String uri = interactionJsonObject.getString("uri");
-				String text = interactionJsonObject.getString("text");
+				final String title = antibioticsGuideJsonObject.getString("title");
+				final String uri = antibioticsGuideJsonObject.getString("uri");
+
+				String text = antibioticsGuideJsonObject.getString("text");
 
 				viewHolder.title.setText(title);
 				viewHolder.text.setText(text);

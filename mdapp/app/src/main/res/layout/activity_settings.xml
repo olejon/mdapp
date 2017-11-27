@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/settings_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
 	<android.support.v7.widget.Toolbar android:id="@+id/settings_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
-	<LinearLayout android:id="@+id/settings_container" android:layout_below="@+id/settings_toolbar" style="@style/settings_inner_layout"/>
+	<LinearLayout android:id="@+id/settings_container" android:layout_below="@+id/settings_toolbar" style="@style/layout_match_width_match_height_linear_vertical"/>
 </RelativeLayout>

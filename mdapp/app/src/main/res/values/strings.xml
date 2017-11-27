@@ -39,7 +39,6 @@
 	<string name="main_webview_find_in_text_information_dialog_title">Finn i tekst</string>
 	<string name="main_webview_find_in_text_information_dialog_message">Skriv inn det du ønsker å søke etter i teksten og trykk deretter på søkeknappen på tastaturet.\n\nHvis du får flere treff, trykk Neste for å gå til neste treff.</string>
 	<string name="main_webview_find_in_text_information_dialog_positive_button">OK</string>
-	<string name="main_webview_find_in_text_no_results">Ingen treff</string>
 	<string name="main_webview_menu_find_in_text">Tekstsøk</string>
 	<string name="main_webview_menu_find_in_text_next">Neste</string>
 	<string name="main_webview_menu_go_forward">Gå frem</string>
@@ -52,8 +51,8 @@
 	<string name="main_medications_favorites_list_empty">Ingen favoritter</string>
 
 	<!-- Medication -->
-	<string name="medication_nlh">Legemiddel…</string>
 	<string name="medication_felleskatalogen">Felleskata…</string>
+	<string name="medication_nlh">Legemiddel…</string>
 	<string name="medication_could_not_find_medication">Kunne ikke finne preparatet</string>
 	<string name="medication_prescription_group_a">Narkotisk preparat</string>
 	<string name="medication_prescription_group_b">Vanedannende preparat</string>
@@ -62,24 +61,25 @@
 	<string name="medication_favorite_saved">Preparat lagt til i favoritter</string>
 	<string name="medication_favorite_removed">Preparat fjernet fra favoritter</string>
 	<string name="medication_information_dialog_title">Tips</string>
-	<string name="medication_information_dialog_message">For å bla mellom preparatomtale i Legemiddelhåndboka og Felleskatalogen, trykk på henholdsvis Legemiddelhåndboka eller Felleskatalogen, eller dra mellom sidene.\n\nTrykk på ikonet oppe til høyre for flere alternativer.</string>
+	<string name="medication_information_dialog_message">For å bla mellom preparatomtale i Felleskatalogen og Legemiddelhåndboka, trykk på henholdsvis Felleskatalogen eller Legemiddelhåndboka, eller dra mellom sidene.\n\nTrykk på ikonet oppe til høyre for flere alternativer.</string>
 	<string name="medication_information_dialog_positive_button">OK</string>
 	<string name="medication_webview_find_in_text_information_dialog_title">Finn i tekst</string>
 	<string name="medication_webview_find_in_text_information_dialog_message">Skriv inn det du ønsker å søke etter i teksten og trykk deretter på søkeknappen på tastaturet.\n\nHvis du får flere treff, trykk på forstørrelsesglasset for å gå til neste treff.</string>
 	<string name="medication_webview_find_in_text_information_dialog_positive_button">OK</string>
 	<string name="medication_not_connected_dialog_title">Ikke tilkoblet Internett</string>
-	<string name="medication_not_connected_dialog_message">Du må være tilkoblet Internett for å laste Legemiddelhåndboka og Felleskatalogen.</string>
+	<string name="medication_not_connected_dialog_message">Du må være tilkoblet Internett for å laste Felleskatalogen og Legemiddelhåndboka.</string>
 	<string name="medication_not_connected_dialog_positive_button">Prøv på nytt</string>
 	<string name="medication_not_connected_dialog_negative_button">Lukk</string>
 	<string name="medication_note_dialog_title">Ingen PIN-kode</string>
 	<string name="medication_note_dialog_message">Før du kan opprette notater må du opprette en PIN-kode. Åpne sidemenyen, skroll ned og åpne Notater.</string>
 	<string name="medication_note_dialog_positive_button">OK</string>
-	<string name="medication_menu_find_in_text">Finn i tekst</string>
 	<string name="medication_menu_add_favorite">Legg til i favoritter</string>
+	<string name="medication_menu_find_in_text">Finn i tekst</string>
 	<string name="medication_menu_remove_favorite">Fjern fra favoritter</string>
 	<string name="medication_menu_interactions">Interaksjonsanalyse</string>
 	<string name="medication_menu_poisonings">Forgiftningsinformasjon</string>
 	<string name="medication_menu_atc">ATC-register (%1$s)</string>
+	<string name="medication_menu_substance">Substans</string>
 	<string name="medication_menu_manufacturer">Legemiddelfirma</string>
 	<string name="medication_menu_slv">Legemiddelverket</string>
 	<string name="medication_menu_note">Nytt notat</string>
@@ -87,7 +87,6 @@
 	<string name="medication_menu_open_uri">Åpne i nettleser</string>
 
 	<!-- Substance -->
-	<string name="substance_list_empty">Ingen preparater</string>
 	<string name="substance_atc_code">ATC-kode:\u0020</string>
 	<string name="substance_menu_interactions">Interaksjonsanalyse</string>
 	<string name="substance_menu_atc">ATC-register (%1$s)</string>
@@ -126,8 +125,6 @@
 	<string name="diseases_and_treatments_search_card_image_content_description">Kildelogo</string>
 
 	<!-- Diseases and treatments search web view -->
-	<string name="diseases_and_treatments_search_webview_this_can_take_some_time">Dette kan ta noe tid…</string>
-	<string name="diseases_and_treatments_search_webview_find_in_text_no_results">Ingen treff</string>
 	<string name="diseases_and_treatments_search_webview_menu_find_in_text">Tekstsøk</string>
 	<string name="diseases_and_treatments_search_webview_menu_find_in_text_next">Neste</string>
 	<string name="diseases_and_treatments_search_webview_menu_forward">Gå frem</string>
@@ -157,9 +154,9 @@
 	<string name="interactions_cards_relevance_red">Bør ikke kombineres</string>
 	<string name="interactions_cards_relevance_orange">Ta forholdsregler</string>
 	<string name="interactions_cards_relevance_green">Akademisk interesse</string>
-	<string name="interactions_cards_card_button_handling">HÅNDTERING</string>
-	<string name="interactions_card_button_read_more">LES MER</string>
-	<string name="interactions_card_button_search_pubmed">PUBMED</string>
+	<string name="interactions_cards_card_button_handling">Håndtering</string>
+	<string name="interactions_card_button_read_more">Les mer</string>
+	<string name="interactions_card_button_search_pubmed">PubMed</string>
 	<string name="interactions_cards_handling_dialog_title">Håndtering</string>
 	<string name="interactions_cards_handling_dialog_positive_button">Lukk</string>
 	<string name="interactions_cards_no_relevant_interactions_found">Ingen relevante interaksjoner ble funnet. Fjern eventuelt legemiddelfirmanavn fra søket.</string>
@@ -186,7 +183,7 @@
 	<string name="poisonings_cards_search">Søk: \"%1$s\"</string>
 	<string name="poisonings_cards_source_helsenorge">Kilde: Helsenorge.no</string>
 	<string name="poisonings_cards_source_helsebiblioteket">Kilde: Helsebiblioteket</string>
-	<string name="poisonings_cards_card_button_uri">LES MER</string>
+	<string name="poisonings_cards_card_button_uri">Les mer</string>
 	<string name="poisonings_cards_no_results">Fant ingen resultater</string>
 	<string name="poisonings_cards_search_on_helsenorge">Søk på Helsenorge.no</string>
 	<string name="poisonings_cards_search_on_helsebiblioteket">Søk i Helsebiblioteket</string>
@@ -198,13 +195,13 @@
 	<string name="antibiotics_guides_toolbar_search_hint">Søk på norsk…</string>
 	<string name="antibiotics_guides_no_recent_searches">Ingen nylige søk</string>
 	<string name="antibiotics_guides_information">Søk etter et antibiotikum eller en sykdom/tilstand.\n\nKildene som brukes er <i>Antibiotikabruk i primærhelsetjenesten</i> og <i>Helsedirektoratet</i>.</string>
-	<string name="antibiotics_guides_recent_searches">Søk på norsk…</string>
+	<string name="antibiotics_guides_recent_searches">Nylige søk</string>
 	<string name="antibiotics_guides_recent_searches_removed">Nylige søk fjernet</string>
 	<string name="antibiotics_guides_menu_clear_recent_searches">Fjern nylige søk</string>
 
 	<!-- Antibiotics guides cards -->
 	<string name="antibiotics_guides_cards_search">Søk: \"%1$s\"</string>
-	<string name="antibiotics_guides_cards_card_button_uri">LES MER</string>
+	<string name="antibiotics_guides_cards_card_button_uri">Les mer</string>
 	<string name="antibiotics_guides_cards_no_results">Fant ingen resultater</string>
 	<string name="antibiotics_guides_cards_search_on_primaerhelsetjenesten">Søk i Primærhelsetjenesten</string>
 	<string name="antibiotics_guides_cards_search_on_helsedirektoratet">Søk i Helsedirektoratet</string>
@@ -235,7 +232,7 @@
 	<string name="clinicaltrials_cards_card_status">Status:</string>
 	<string name="clinicaltrials_cards_card_conditions">Tilstander:</string>
 	<string name="clinicaltrials_cards_card_intervention">Intervensjoner:</string>
-	<string name="clinicaltrials_cards_card_button_uri">LES MER</string>
+	<string name="clinicaltrials_cards_card_button_uri">Les mer</string>
 	<string name="clinicaltrials_cards_no_results">Fant ingen resultater</string>
 	<string name="clinicaltrials_cards_no_results_button">Sjekk på nett</string>
 	<string name="clinicaltrials_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
@@ -254,16 +251,16 @@
 	<string name="icd10_toolbar_search_hint">Søk etter kode eller navn…</string>
 	<string name="icd10_menu_voice_search">Talesøk</string>
 
-	<!-- ICD-10 search -->
-	<string name="icd10_search_search">Søk: \"%1$s\"</string>
-	<string name="icd10_search_list_empty">Ingen resultater. Prøv et annet søk.</string>
-	<string name="icd10_search_could_not_find_code">Kunne ikke finne ICD-10-kode</string>
-
 	<!-- ICD-10 chapter -->
 	<string name="icd10_chapter_toolbar_search_hint">Søk etter kode eller navn…</string>
 	<string name="icd10_chapter_list_empty">Ingen resultater. Prøv et annet søk.</string>
 	<string name="icd10_chapter_could_not_find_code">Kunne ikke finne ICD-10-kode</string>
 	<string name="icd10_chapter_menu_voice_search">Talesøk</string>
+
+	<!-- ICD-10 search -->
+	<string name="icd10_search_search">Søk: \"%1$s\"</string>
+	<string name="icd10_search_list_empty">Ingen resultater. Prøv et annet søk.</string>
+	<string name="icd10_search_could_not_find_code">Kunne ikke finne ICD-10-kode</string>
 
 	<!-- Manufacturers -->
 	<string name="manufacturers_title">Legemiddelfirmaer</string>
@@ -283,10 +280,10 @@
 	<string name="pharmacies_menu_overview">Apotekoversikt</string>
 
 	<!-- Pharmacies location -->
-	<string name="pharmacies_location_toolbar_search_hint">Søk etter apotek…</string>
-	<string name="pharmacies_location_card_map">VIS PÅ KART</string>
-	<string name="pharmacies_location_card_contact">KONTAKT</string>
+	<string name="pharmacies_location_card_map">Vis på kart</string>
+	<string name="pharmacies_location_card_contact">Kontakt</string>
 	<string name="pharmacies_location_menu_contact_information_to_all">Kontaktinformasjon til alle</string>
+	<string name="pharmacies_location_card_image_content_description">Logo for apotek</string>
 
 	<!-- Pharmacies location map -->
 	<string name="pharmacies_location_map_locating">Finner apotek…</string>
@@ -294,9 +291,6 @@
 	<string name="pharmacies_location_map_information_dialog_message">Trykk på markør for å få opp to knapper nede til høyre med mulighet til å åpne navigasjon til apoteket eller vise apoteket i Google Maps, eller trykk på knappen oppe til høyre for å vise din posisjon.\n\n<b>NB:</b> GPS må være på.</string>
 	<string name="pharmacies_location_map_information_dialog_positive_button">OK</string>
 	<string name="pharmacies_location_map_location_not_found">Kan ikke finne postboksadresser</string>
-	<string name="pharmacies_location_map_pharmacy_not_found_dialog_title">Fant ikke apotek</string>
-	<string name="pharmacies_location_map_pharmacy_not_found_dialog_message">Noen adresser, som postboksadresser, kan ikke lokaliseres. Viser første apotek i samme kommune. Bruk fingrene for å zoome.</string>
-	<string name="pharmacies_location_map_pharmacy_not_found_dialog_positive_button">OK</string>
 	<string name="pharmacies_location_map_menu_information">Informasjon</string>
 
 	<!-- Scales -->
@@ -306,7 +300,7 @@
 	<string name="scales_vas">Visual Analog Scale</string>
 	<string name="scales_gcs">Glasgow Coma Scale</string>
 	<string name="scales_mews">Modified Early Warning System</string>
-	<string name="scales_card_button">FORSTØRR</string>
+	<string name="scales_card_button">Forstørr</string>
 	<string name="scales_vas_image_content_description">Visual Analog Scale</string>
 	<string name="scales_gcs_image_content_description">Glasgow Coma Scale</string>
 	<string name="scales_mews_image_content_description">Modified Early Warning System</string>
@@ -318,7 +312,7 @@
 	<!-- Notifications from SLV -->
 	<string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
 	<string name="notifications_from_slv_could_not_get_notifications">Kunne ikke hente varsler. Er du koblet til Internett?</string>
-	<string name="notifications_from_slv_card_button">LES MER</string>
+	<string name="notifications_from_slv_card_button">Les mer</string>
 
 	<!-- Calculators -->
 	<string name="calculators_title">Kalkulatorer</string>
@@ -326,7 +320,7 @@
 	<string name="calculators_information_dialog_message">Kroppsmasseindeks (KMI), ofte kalt body mass index (BMI), er en av tingene man ser på for å vurdere en persons helserisiko. I tillegg til ser man på midjemål, fysisk aktivitet, kosthold og andre ting som varierer fra person til person.\n\nMennesker med stor muskelmasse kan ha høy BMI, men har lav fettprosent og karakteriseres ikke som overvektige. For barn og ungdom opp til 18 år er det en egen alders- og kjønnsjustert skala.\n\n​Midjemål brukes sammen med BMI når man vurderer overvektrelatert helserisiko. Det brukes spesielt når man undersøker risiko for metabolsk syndrom og type 2-diabetes.​ Målingen tas med vanlig målebånd der hvor midjen er smalest. Det vil si midt mellom nederste ribben og øverste delen av hoftekammen.\n\nFor gravide kvinner er overvekt og vektøkning, utover det anbefalte, forbundet med risiko for svangerskapsdiabetes og komplikasjoner under fødselen. For kvinner med stor vektøkning i svangerskapet kan det være vanskeligere å redusere vekten etter graviditeten. Vanlig vektøkning i svangerskapet er mellom 11 og 16 kilo. Optimal vektøkning avhenger av blant annet mors BMI før svangerskapet. Kvinner som er undervektige før svangerskapet kan gjerne ha høyere vektøkning (opp til 18 kg), og kvinner med overvekt bør ha lavere vektøkning (mindre enn 11 kg).​\n\nKilde: Helsenorge.no</string>
 	<string name="calculators_information_dialog_positive_button">OK</string>
 	<string name="calculators_information_dialog_neutral_button">Les mer</string>
-	<string name="calculators_button">BEREGN</string>
+	<string name="calculators_button">Beregn</string>
 	<string name="calculators_bmi_title">BMI</string>
 	<string name="calculators_bmi_weight_hint">Vekt i kilogram</string>
 	<string name="calculators_bmi_height_hint">Høyde i centimeter</string>
@@ -439,16 +433,14 @@
 
 	<!-- Settings -->
 	<string name="settings_title">Innstillinger</string>
-	<string name="settings_category_notifications_from_slv">Varsler fra Legemiddelverket</string>
-	<string name="settings_checkbox_notifications_from_slv_notify_title">Varsle ved nytt varsel</string>
-	<string name="settings_checkbox_notifications_from_slv_notify_summary">Varsle meg når det kommer et nytt varsel fra Legemiddelverket</string>
-	<string name="settings_checkbox_notifications_from_slv_notify_sound_title">Lyd</string>
-	<string name="settings_checkbox_notifications_from_slv_notify_sound_summary">Spill av lyd</string>
-	<string name="settings_checkbox_notifications_from_slv_notify_led_title">LED-lys</string>
-	<string name="settings_checkbox_notifications_from_slv_notify_led_summary">Blink LED-lys</string>
+	<string name="settings_category_notifications">Varsler</string>
+	<string name="settings_checkbox_notifications_notify_title">Varsle ved nytt varsel</string>
+	<string name="settings_checkbox_notifications_notify_summary">Varsle audiovisuelt når det kommer nye varsler</string>
+	<string name="settings_checkbox_notifications_notify_channel_slv_title">Varsler fra Legemiddelverket</string>
+	<string name="settings_checkbox_notifications_notify_channel_slv_summary">Varsle når det kommer et nytt varsel fra Legemiddelverket</string>
 	<string name="settings_category_advanced">Avansert</string>
 	<string name="settings_checkbox_medication_multiple_documents">Åpne flere preparater samtidig</string>
-	<string name="settings_checkbox_medication_multiple_documents_summary">Åpne preparater som en egen skjerm. Du kan bla mellom skjermene med menyknappen for dine skjermer i Android</string>
+	<string name="settings_checkbox_medication_multiple_documents_summary">Åpne preparater som en egen skjerm. Du kan bla mellom skjermene med menyknappen for dine skjermer og apper i systemet</string>
 	<string name="settings_category_about">Om</string>
 	<string name="settings_intent_project_developer_website_title">Utviklet av</string>
 	<string name="settings_intent_project_developer_website_summary">Ole Jon Bjørkum</string>
@@ -476,12 +468,13 @@
 
 	<!-- Welcome -->
 	<string name="welcome_page_guide">Dra mot venstre for å gå til neste side</string>
+	<string name="welcome_page_guide_finish">Trykk på knappen for å gå til appen</string>
 	<string name="welcome_page_1_text">Velkommen til LegeAppen! LegeAppen er en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted.\n\nMed LegeAppen kan du erstatte drøssevis av apper og nettsider med bare én app.</string>
 	<string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er en oversikt over alle preparater og substanser, samt dine favoritter.\n\nDu kan raskt søke i preparater og substanser ved å bruke søkefeltet.\n\nI sidemenyen finner du alle de andre funksjonene. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
 	<string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell fri programvare med åpen kildekode. LegeAppen benytter seg av innhold fritt tilgjengelig på Internett.\n\n<i>\"Human knowledge belongs to the world\"</i></string>
-	<string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å ta deg til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
+	<string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å gå til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
 	<string name="welcome_page_4_back_button">Trykk på knappen for å gå til appen</string>
-	<string name="welcome_page_4_button">TA MEG TIL APPEN</string>
+	<string name="welcome_page_4_button">Gå til appen</string>
 	<string name="welcome_image_content_description">Sideindikator</string>
 
 	<!-- Drawer -->
@@ -492,8 +485,8 @@
 	<string name="drawer_subheader_tools">Verktøy</string>
 	<string name="drawer_subheader_other">Annet</string>
 	<string name="drawer_item_saved_articles">Lagrede artikler</string>
-	<string name="drawer_item_nlh">Legemiddelhåndboka</string>
 	<string name="drawer_item_felleskatalogen">Felleskatalogen</string>
+	<string name="drawer_item_nlh">Legemiddelhåndboka</string>
 	<string name="drawer_item_nel">Legehåndboka</string>
 	<string name="drawer_item_helsebiblioteket">Helsebiblioteket</string>
 	<string name="drawer_item_tidsskriftet">Tidsskriftet</string>
@@ -552,31 +545,28 @@
 	<string name="correct_dialog_negative_button">Nei</string>
 
 	<!-- Snackbars -->
-	<string name="snackbar_undo">ANGRE</string>
+	<string name="snackbar_undo">Angre</string>
 
 	<!-- My tools -->
 	<string name="mytools_downloading">Se i varslingssenteret…</string>
 	<string name="mytools_printing_not_supported">Kun tilgjengelig for Android 4.4 og nyere</string>
 
-	<!-- Widget -->
-	<string name="widget_title">LegeAppen - Favoritter</string>
-	<string name="widget_toolbar_title">LegeAppen</string>
-	<string name="widget_list_empty">Ingen favoritter</string>
-	<string name="widget_list_loading">Laster…</string>
-
 	<!-- Services -->
-	<string name="service_notifications_from_slv_settings">Innstillinger</string>
+	<string name="notification_channel_message_description">Varsler fra utvikler</string>
+	<string name="notification_channel_slv_description">Varsler fra SLV</string>
+	<string name="notification_action_settings">Innstillinger</string>
 
 	<!-- Various -->
-	<string name="device_something_went_wrong">Noe gikk galt</string>
+	<string name="device_this_can_take_some_time">Dette kan ta noe tid…</string>
 	<string name="device_not_connected">Du må være tilkoblet Internett</string>
 	<string name="device_permissions_not_granted">Uten aktuell tillatelse får du ikke full funksjonalitet</string>
+	<string name="device_something_went_wrong">Noe gikk galt</string>
 	<string name="device_not_supported">Ikke støttet</string>
 	<string name="device_not_supported_dialog_title">Ikke støttet</string>
 	<string name="device_not_supported_dialog_message">Ikke støttet på denne enheten.</string>
 	<string name="device_not_supported_dialog_positive_button">Lukk</string>
 	<string name="device_not_supported_dialog_neutral_button">Åpne i nettleser</string>
-	<string name="device_not_supported_dialog_ssl_error_message">Denne enheten er for gammel til å vise denne nettsiden på grunn av at SSL-sertifikatet nettsiden bruker er for nytt. Dette er en sikkerhetsrisiko.\n\nInstaller appen Google Chrome og velg Åpne i nettleser.</string>
+	<string name="device_not_supported_dialog_ssl_error_message">Denne enheten er for gammel til å vise denne nettsiden på grunn av at SSL-sertifikatet nettsiden bruker er for nytt. Dette er en sikkerhetsrisiko.\n\nInstaller appen Google Chrome og velg å åpne i nettleser.</string>
 	<string name="device_not_supported_button_ssl_error_message">Klikk her for informasjon</string>
 
 </resources>

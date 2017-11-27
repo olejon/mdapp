@@ -19,17 +19,13 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
-import android.app.assist.AssistContent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -53,15 +49,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
@@ -80,14 +73,12 @@ public class MedicationActivity extends AppCompatActivity
 	private Toolbar mToolbar;
 	private MenuItem mFavoriteMenuItem;
 	private MenuItem mAtcCodeMenuItem;
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
 	private ViewPager mViewPager;
 	private WebView mWebView;
-	private WebView mNlhWebView;
 	private WebView mFelleskatalogenWebView;
+	private WebView mNlhWebView;
 
-	private long medicationId;
 	private String medicationPrescriptionGroup;
 	private String medicationName;
 	private String medicationSubstance;
@@ -96,14 +87,13 @@ public class MedicationActivity extends AppCompatActivity
 
 	private int mViewPagerPosition = 0;
 
+	private long medicationId;
+
 	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
-		// Settings
-		PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
 		// Intent
 		Intent intent = getIntent();
@@ -126,20 +116,19 @@ public class MedicationActivity extends AppCompatActivity
 		setContentView(R.layout.activity_medication);
 
 		// View
-		mRelativeLayout = (RelativeLayout) findViewById(R.id.medication_inner_layout);
+		mRelativeLayout = findViewById(R.id.medication_inner_layout);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.medication_toolbar);
+		mToolbar = findViewById(R.id.medication_toolbar);
 		mToolbar.setTitle("");
 
 		setSupportActionBar(mToolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.medication_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.medication_toolbar_search);
+		mToolbarSearchEditText = findViewById(R.id.medication_toolbar_search);
 
 		// View pager
-		mViewPager = (ViewPager) findViewById(R.id.medication_pager);
+		mViewPager = findViewById(R.id.medication_pager);
 
 		// Find in text
 		mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
@@ -151,11 +140,11 @@ public class MedicationActivity extends AppCompatActivity
 
 				if(find.equals(""))
 				{
-					if(mWebView != null) mWebView.clearMatches();
+					mWebView.clearMatches();
 				}
 				else
 				{
-					if(mWebView != null) mWebView.findAllAsync(find);
+					mWebView.findAllAsync(find);
 				}
 			}
 
@@ -174,7 +163,6 @@ public class MedicationActivity extends AppCompatActivity
 				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
 				{
 					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					return true;
 				}
 
@@ -189,7 +177,7 @@ public class MedicationActivity extends AppCompatActivity
 	{
 		super.onPause();
 
-		mToolbarSearchLayout.setVisibility(View.GONE);
+		mToolbarSearchEditText.setVisibility(View.GONE);
 		mToolbarSearchEditText.setText("");
 
 		mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
@@ -209,9 +197,9 @@ public class MedicationActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 
 			mWebView.clearMatches();
@@ -220,9 +208,9 @@ public class MedicationActivity extends AppCompatActivity
 		{
 			if(mViewPagerPosition == 0)
 			{
-				if(mNlhWebView.canGoBack())
+				if(mFelleskatalogenWebView.canGoBack())
 				{
-					mNlhWebView.goBack();
+					mFelleskatalogenWebView.goBack();
 				}
 				else
 				{
@@ -232,9 +220,9 @@ public class MedicationActivity extends AppCompatActivity
 
 			if(mViewPagerPosition == 1)
 			{
-				if(mFelleskatalogenWebView.canGoBack())
+				if(mNlhWebView.canGoBack())
 				{
-					mFelleskatalogenWebView.goBack();
+					mNlhWebView.goBack();
 				}
 				else
 				{
@@ -268,9 +256,14 @@ public class MedicationActivity extends AppCompatActivity
 				mTools.navigateUp(this);
 				return true;
 			}
+			case R.id.medication_menu_favorite:
+			{
+				addRemoveFavorite();
+				return true;
+			}
 			case R.id.medication_menu_find_in_text:
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mWebView.findNext(true);
 
@@ -278,7 +271,7 @@ public class MedicationActivity extends AppCompatActivity
 				}
 				else
 				{
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -296,11 +289,6 @@ public class MedicationActivity extends AppCompatActivity
 					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
 				}
 
-				return true;
-			}
-			case R.id.medication_menu_favorite:
-			{
-				favorite();
 				return true;
 			}
 			case R.id.medication_menu_interactions:
@@ -339,9 +327,16 @@ public class MedicationActivity extends AppCompatActivity
 
 				return true;
 			}
+			case R.id.medication_menu_substance:
+			{
+				getSubstance();
+
+				return true;
+			}
 			case R.id.medication_menu_manufacturer:
 			{
 				getManufacturer();
+
 				return true;
 			}
 			case R.id.medication_menu_slv:
@@ -364,18 +359,18 @@ public class MedicationActivity extends AppCompatActivity
 			{
 				if(mViewPagerPosition == 0)
 				{
-					mTools.printDocument(mNlhWebView, medicationName);
+					mTools.printDocument(mFelleskatalogenWebView, medicationName);
 				}
 				else
 				{
-					mTools.printDocument(mFelleskatalogenWebView, medicationName);
+					mTools.printDocument(mNlhWebView, medicationName);
 				}
 
 				return true;
 			}
 			case R.id.medication_menu_open_uri:
 			{
-				mTools.openChromeCustomTabsUri(getUri(""));
+				mTools.openChromeCustomTabsUri(mWebView.getUrl());
 
 				return true;
 			}
@@ -383,27 +378,6 @@ public class MedicationActivity extends AppCompatActivity
 			{
 				return super.onOptionsItemSelected(item);
 			}
-		}
-	}
-
-	// Assistant
-	@Override
-	public void onProvideAssistContent(AssistContent assistContent)
-	{
-		super.onProvideAssistContent(assistContent);
-
-		try
-		{
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-			{
-				String structuredJson = new JSONObject().put("@type", "Drug").put("name", medicationName).put("activeIngredient", medicationSubstance).put("manufacturer", medicationManufacturer).toString();
-
-				assistContent.setStructuredData(structuredJson);
-			}
-		}
-		catch(Exception e)
-		{
-			Log.e("MedicationActivity", Log.getStackTraceString(e));
 		}
 	}
 
@@ -421,12 +395,7 @@ public class MedicationActivity extends AppCompatActivity
 			Log.e("MedicationActivity", Log.getStackTraceString(e));
 		}
 
-		if(uri.equals(""))
-		{
-			return (mViewPagerPosition == 0) ? "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString : "https://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString;
-		}
-
-		return (uri.equals("nlh")) ? "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString : "https://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString;
+		return (uri.equals("felleskatalogen")) ? "https://www.felleskatalogen.no/ir/medisin/sok?sokord="+searchString : "http://m.legemiddelhandboka.no/s%C3%B8keresultat/?q="+searchString;
 	}
 
 	// Favorite
@@ -444,7 +413,7 @@ public class MedicationActivity extends AppCompatActivity
 		return (count != 0);
 	}
 
-	private void favorite()
+	private void addRemoveFavorite()
 	{
 		SQLiteDatabase sqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getWritableDatabase();
 
@@ -478,39 +447,15 @@ public class MedicationActivity extends AppCompatActivity
 			@Override
 			public void onClick(View view)
 			{
-				favorite();
+				addRemoveFavorite();
 			}
-		}).setActionTextColor(ContextCompat.getColor(mContext, R.color.blue));
+		}).setActionTextColor(ContextCompat.getColor(mContext, R.color.light_teal));
 
-		View view = snackbar.getView();
-
-		TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+		TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
 		textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
 
 		snackbar.show();
 
-		mTools.updateWidget();
-
-		sqLiteDatabase.close();
-	}
-
-	// Manufacturer
-	private void getManufacturer()
-	{
-		SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-		String[] queryColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID};
-		Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, queryColumns, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
-
-		if(cursor.moveToFirst())
-		{
-			long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID));
-
-			Intent intent = new Intent(mContext, ManufacturerActivity.class);
-			intent.putExtra("id", id);
-			startActivity(intent);
-		}
-
-		cursor.close();
 		sqLiteDatabase.close();
 	}
 
@@ -527,17 +472,17 @@ public class MedicationActivity extends AppCompatActivity
 		@Override
 		public Fragment getItem(int position)
 		{
-			Fragment nlhFragment = new MedicationNlhFragment();
-			Bundle nlhBundle = new Bundle();
-			nlhBundle.putString("uri", getUri("nlh"));
-			nlhFragment.setArguments(nlhBundle);
-
 			Fragment felleskatalogenFragment = new MedicationFelleskatalogenFragment();
 			Bundle felleskatalogenBundle = new Bundle();
 			felleskatalogenBundle.putString("uri", getUri("felleskatalogen"));
 			felleskatalogenFragment.setArguments(felleskatalogenBundle);
 
-			return (position == 0) ? nlhFragment : felleskatalogenFragment;
+			Fragment nlhFragment = new MedicationNlhFragment();
+			Bundle nlhBundle = new Bundle();
+			nlhBundle.putString("uri", getUri("nlh"));
+			nlhFragment.setArguments(nlhBundle);
+
+			return (position == 0) ? felleskatalogenFragment : nlhFragment;
 		}
 
 		@Override
@@ -555,7 +500,7 @@ public class MedicationActivity extends AppCompatActivity
 
 	private class ViewPagerTransformer implements ViewPager.PageTransformer
 	{
-		public void transformPage(View view, float position)
+		public void transformPage(@NonNull View view, float position)
 		{
 			int pageWidth = view.getWidth();
 			int pageHeight = view.getHeight();
@@ -593,224 +538,250 @@ public class MedicationActivity extends AppCompatActivity
 
 				mTools.openChromeCustomTabsUri(uri);
 			}
-		}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+		}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
 	}
 
 	// Get medication
 	private void getMedication()
 	{
-		GetMedicationTask getMedicationTask = new GetMedicationTask();
-		getMedicationTask.execute();
-	}
+		mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+		String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+medicationId, null, null, null, null);
 
-	private class GetMedicationTask extends AsyncTask<Void,Void,Void>
-	{
-		@Override
-		protected void onPostExecute(Void success)
+		if(mCursor.moveToFirst())
 		{
-			if(mCursor.moveToFirst())
+			medicationPrescriptionGroup = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP));
+			medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
+			medicationSubstance = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE));
+			medicationManufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER));
+			medicationAtcCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE));
+
+			mToolbar.setTitle(medicationName);
+
+			if(isFavorite())
 			{
-				medicationPrescriptionGroup = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP));
-				medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
-				medicationSubstance = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE));
-				medicationManufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER));
-				medicationAtcCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE));
+				mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
+			}
 
-				mToolbar.setTitle(medicationName);
+			mAtcCodeMenuItem.setTitle(getString(R.string.medication_menu_atc, medicationAtcCode));
 
-				if(isFavorite())
+			Button prescriptionGroupButton = findViewById(R.id.medication_prescription_group);
+			prescriptionGroupButton.setText(medicationPrescriptionGroup);
+
+			switch(medicationPrescriptionGroup)
+			{
+				case "A":
 				{
-					mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
+					prescriptionGroupButton.setBackgroundResource(R.drawable.medication_prescription_group_red);
+					break;
 				}
-
-				mAtcCodeMenuItem.setTitle(getString(R.string.medication_menu_atc, medicationAtcCode));
-
-				Button prescriptionGroupButton = (Button) findViewById(R.id.medication_prescription_group);
-				prescriptionGroupButton.setText(medicationPrescriptionGroup);
-
-				switch(medicationPrescriptionGroup)
+				case "B":
 				{
-					case "A":
+					prescriptionGroupButton.setBackgroundResource(R.drawable.medication_prescription_group_orange);
+					break;
+				}
+			}
+
+			prescriptionGroupButton.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					switch(medicationPrescriptionGroup)
 					{
-						prescriptionGroupButton.setBackgroundResource(R.drawable.medication_prescription_group_red);
-						break;
-					}
-					case "B":
-					{
-						prescriptionGroupButton.setBackgroundResource(R.drawable.medication_prescription_group_orange);
-						break;
+						case "A":
+						{
+							mTools.showToast(getString(R.string.medication_prescription_group_a), 1);
+							break;
+						}
+						case "B":
+						{
+							mTools.showToast(getString(R.string.medication_prescription_group_b), 1);
+							break;
+						}
+						case "C":
+						{
+							mTools.showToast(getString(R.string.medication_prescription_group_c), 1);
+							break;
+						}
+						case "F":
+						{
+							mTools.showToast(getString(R.string.medication_prescription_group_f), 1);
+							break;
+						}
 					}
 				}
+			});
 
-				prescriptionGroupButton.setOnClickListener(new View.OnClickListener()
+			prescriptionGroupButton.setVisibility(View.VISIBLE);
+
+			TextView substanceTextView = findViewById(R.id.medication_substance);
+			substanceTextView.setText(medicationSubstance);
+
+			substanceTextView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					getSubstance();
+				}
+			});
+
+			TextView manufacturerTextView = findViewById(R.id.medication_manufacturer);
+			manufacturerTextView.setText(medicationManufacturer);
+
+			manufacturerTextView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					getManufacturer();
+				}
+			});
+
+			if(mTools.isDeviceConnected())
+			{
+				FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+				Bundle bundle = new Bundle();
+				bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(medicationId));
+				bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, medicationName);
+				bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "medication");
+
+				firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+				PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+				mViewPager.setAdapter(pagerAdapter);
+				mViewPager.setOffscreenPageLimit(2);
+				mViewPager.setPageTransformer(true, new ViewPagerTransformer());
+
+				mFelleskatalogenWebView = findViewById(R.id.medication_felleskatalogen_content);
+				mNlhWebView = findViewById(R.id.medication_nlh_content);
+
+				mWebView = mFelleskatalogenWebView;
+
+				Button felleskatalogenSslErrorButton = findViewById(R.id.medication_felleskatalogen_ssl_error_button);
+				Button nlhSslErrorButton = findViewById(R.id.medication_nlh_ssl_error_button);
+
+				felleskatalogenSslErrorButton.setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View view)
 					{
-						switch(medicationPrescriptionGroup)
-						{
-							case "A":
-							{
-								mTools.showToast(getString(R.string.medication_prescription_group_a), 1);
-								break;
-							}
-							case "B":
-							{
-								mTools.showToast(getString(R.string.medication_prescription_group_b), 1);
-								break;
-							}
-							case "C":
-							{
-								mTools.showToast(getString(R.string.medication_prescription_group_c), 1);
-								break;
-							}
-							case "F":
-							{
-								mTools.showToast(getString(R.string.medication_prescription_group_f), 1);
-								break;
-							}
-						}
+						showSslErrorDialog(getUri("felleskatalogen"));
 					}
 				});
 
-				prescriptionGroupButton.setVisibility(View.VISIBLE);
-
-				TextView substanceTextView = (TextView) findViewById(R.id.medication_substance);
-				substanceTextView.setText(medicationSubstance);
-
-				TextView manufacturerTextView = (TextView) findViewById(R.id.medication_manufacturer);
-				manufacturerTextView.setText(medicationManufacturer);
-
-				if(mTools.isDeviceConnected())
+				nlhSslErrorButton.setOnClickListener(new View.OnClickListener()
 				{
-					FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
-
-					Bundle bundle = new Bundle();
-					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(medicationId));
-					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, medicationName);
-					bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "medication");
-
-					firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-					PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-					mViewPager.setAdapter(pagerAdapter);
-					mViewPager.setOffscreenPageLimit(2);
-					mViewPager.setPageTransformer(true, new ViewPagerTransformer());
-
-					mNlhWebView = (WebView) findViewById(R.id.medication_nlh_content);
-					mFelleskatalogenWebView = (WebView) findViewById(R.id.medication_felleskatalogen_content);
-
-					mWebView = mNlhWebView;
-
-					mWebView.setFindListener(new WebView.FindListener()
+					@Override
+					public void onClick(View view)
 					{
-						@Override
-						public void onFindResultReceived(int i, int i2, boolean b)
-						{
-							if(i2 == 0)
-							{
-								mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
-							}
-						}
-					});
-
-					Button nlhSslErrorButton = (Button) findViewById(R.id.medication_nlh_ssl_error_button);
-					Button felleskatalogenSslErrorButton = (Button) findViewById(R.id.medication_felleskatalogen_ssl_error_button);
-
-					nlhSslErrorButton.setOnClickListener(new View.OnClickListener()
-					{
-						@Override
-						public void onClick(View view)
-						{
-							showSslErrorDialog(getUri("nlh"));
-						}
-					});
-
-					felleskatalogenSslErrorButton.setOnClickListener(new View.OnClickListener()
-					{
-						@Override
-						public void onClick(View view)
-						{
-							showSslErrorDialog(getUri("felleskatalogen"));
-						}
-					});
-
-					TabLayout tabLayout = (TabLayout) findViewById(R.id.medication_tabs);
-					tabLayout.setupWithViewPager(mViewPager);
-
-					tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-					{
-						@Override
-						public void onTabSelected(TabLayout.Tab tab)
-						{
-							mViewPagerPosition = tab.getPosition();
-
-							mToolbarSearchLayout.setVisibility(View.GONE);
-							mToolbarSearchEditText.setText("");
-
-							mWebView.clearMatches();
-
-							mWebView = (mViewPagerPosition == 0) ? mNlhWebView : mFelleskatalogenWebView;
-
-							mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-						}
-
-						@Override
-						public void onTabUnselected(TabLayout.Tab tab) { }
-
-						@Override
-						public void onTabReselected(TabLayout.Tab tab) { }
-					});
-
-					if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300"))
-					{
-						new MaterialDialog.Builder(mContext).title(R.string.medication_information_dialog_title).content(getString(R.string.medication_information_dialog_message)).positiveText(R.string.medication_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
-						{
-							@Override
-							public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-							{
-								mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300", true);
-							}
-						}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+						showSslErrorDialog(getUri("nlh"));
 					}
-				}
-				else
+				});
+
+				TabLayout tabLayout = findViewById(R.id.medication_tabs);
+				tabLayout.setupWithViewPager(mViewPager);
+
+				tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.medication_not_connected_dialog_title).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(R.string.medication_not_connected_dialog_positive_button).negativeText(R.string.medication_not_connected_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
+					@Override
+					public void onTabSelected(TabLayout.Tab tab)
+					{
+						mViewPagerPosition = tab.getPosition();
+
+						mToolbarSearchEditText.setVisibility(View.GONE);
+						mToolbarSearchEditText.setText("");
+
+						mWebView.clearMatches();
+
+						mWebView = (mViewPagerPosition == 0) ? mFelleskatalogenWebView : mNlhWebView;
+
+						mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+					}
+
+					@Override
+					public void onTabUnselected(TabLayout.Tab tab) { }
+
+					@Override
+					public void onTabReselected(TabLayout.Tab tab) { }
+				});
+
+				if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300"))
+				{
+					new MaterialDialog.Builder(mContext).title(R.string.medication_information_dialog_title).content(getString(R.string.medication_information_dialog_message)).positiveText(R.string.medication_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
 					{
 						@Override
 						public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
 						{
-							getMedication();
+							mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300", true);
 						}
-					}).onNegative(new MaterialDialog.SingleButtonCallback()
-					{
-						@Override
-						public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-						{
-							finish();
-						}
-					}).cancelListener(new DialogInterface.OnCancelListener()
-					{
-						@Override
-						public void onCancel(DialogInterface dialogInterface)
-						{
-							finish();
-						}
-					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
 				}
 			}
+			else
+			{
+				new MaterialDialog.Builder(mContext).title(R.string.medication_not_connected_dialog_title).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(R.string.medication_not_connected_dialog_positive_button).negativeText(R.string.medication_not_connected_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
+				{
+					@Override
+					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+					{
+						getMedication();
+					}
+				}).onNegative(new MaterialDialog.SingleButtonCallback()
+				{
+					@Override
+					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+					{
+						finish();
+					}
+				}).cancelListener(new DialogInterface.OnCancelListener()
+				{
+					@Override
+					public void onCancel(DialogInterface dialogInterface)
+					{
+						finish();
+					}
+				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+			}
 		}
+	}
 
-		@Override
-		protected Void doInBackground(Void... voids)
+	// Get substance
+	private void getSubstance()
+	{
+		String[] queryColumns = {SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID};
+		Cursor cursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_SUBSTANCES, queryColumns, SlDataSQLiteHelper.SUBSTANCES_COLUMN_NAME+" = "+mTools.sqe(medicationSubstance), null, null, null, null);
+
+		if(cursor.moveToFirst())
 		{
-			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-			String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE};
-			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+medicationId, null, null, null, null);
+			long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.SUBSTANCES_COLUMN_ID));
 
-			return null;
+			Intent intent = new Intent(mContext, SubstanceActivity.class);
+			intent.putExtra("id", id);
+			startActivity(intent);
 		}
+
+		cursor.close();
+	}
+
+	// Get manufacturer
+	private void getManufacturer()
+	{
+		String[] queryColumns = {SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID};
+		Cursor cursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MANUFACTURERS, queryColumns, SlDataSQLiteHelper.MANUFACTURERS_COLUMN_NAME+" = "+mTools.sqe(medicationManufacturer), null, null, null, null);
+
+		if(cursor.moveToFirst())
+		{
+			long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MANUFACTURERS_COLUMN_ID));
+
+			Intent intent = new Intent(mContext, ManufacturerActivity.class);
+			intent.putExtra("id", id);
+			startActivity(intent);
+		}
+
+		cursor.close();
 	}
 }

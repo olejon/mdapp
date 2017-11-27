@@ -87,18 +87,18 @@ public class LvhActivity extends AppCompatActivity
 		setContentView(R.layout.activity_lvh);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.lvh_toolbar);
+		Toolbar toolbar = findViewById(R.id.lvh_toolbar);
 		toolbar.setTitle(R.string.lvh_title);
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.lvh_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.lvh_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.lvh_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.lvh_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -111,8 +111,7 @@ public class LvhActivity extends AppCompatActivity
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.lvh_cards);
-
+		mRecyclerView = findViewById(R.id.lvh_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new LvhAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -158,7 +157,8 @@ public class LvhActivity extends AppCompatActivity
 
 				if(mTools.isTablet())
 				{
-					mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+					int spanCount = (response.length() == 1) ? 1 : 2;
+					mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 				}
 
 				mRecyclerView.setAdapter(new LvhAdapter(response));
@@ -180,11 +180,11 @@ public class LvhActivity extends AppCompatActivity
 	}
 
 	// Adapter
-	class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.CategoryViewHolder>
+	class LvhAdapter extends RecyclerView.Adapter<LvhAdapter.LvhCategoriesViewHolder>
 	{
 		final LayoutInflater mLayoutInflater;
 
-		final JSONArray mCategories;
+		final JSONArray mLvhCategories;
 
 		int mLastPosition = - 1;
 
@@ -192,43 +192,43 @@ public class LvhActivity extends AppCompatActivity
 		{
 			mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			mCategories = jsonArray;
+			mLvhCategories = jsonArray;
 		}
 
-		class CategoryViewHolder extends RecyclerView.ViewHolder
+		class LvhCategoriesViewHolder extends RecyclerView.ViewHolder
 		{
 			final CardView card;
 			final ImageView icon;
 			final TextView title;
 			final LinearLayout categories;
 
-			CategoryViewHolder(View view)
+			LvhCategoriesViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.lvh_card);
-				icon = (ImageView) view.findViewById(R.id.lvh_card_icon);
-				title = (TextView) view.findViewById(R.id.lvh_card_title);
-				categories = (LinearLayout) view.findViewById(R.id.lvh_card_categories);
+				card = view.findViewById(R.id.lvh_card);
+				icon = view.findViewById(R.id.lvh_card_icon);
+				title = view.findViewById(R.id.lvh_card_title);
+				categories = view.findViewById(R.id.lvh_card_categories);
 			}
 		}
 
 		@Override
-		public CategoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public LvhCategoriesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_card, viewGroup, false);
-			return new CategoryViewHolder(view);
+			return new LvhCategoriesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(CategoryViewHolder viewHolder, int i)
+		public void onBindViewHolder(LvhCategoriesViewHolder viewHolder, int i)
 		{
 			try
 			{
 				final String color;
 				final String icon;
 
-				JSONObject categoriesJsonObject = mCategories.getJSONObject(i);
+				JSONObject lvhCategoryJsonObject = mLvhCategories.getJSONObject(i);
 
 				switch(i)
 				{
@@ -282,18 +282,18 @@ public class LvhActivity extends AppCompatActivity
 					}
 				}
 
-				viewHolder.title.setText(categoriesJsonObject.getString("title"));
+				viewHolder.title.setText(lvhCategoryJsonObject.getString("title"));
 
 				viewHolder.categories.removeAllViews();
 
-				JSONArray categoriesJsonArray = categoriesJsonObject.getJSONArray("categories");
+				JSONArray categoryJsonArray = lvhCategoryJsonObject.getJSONArray("categories");
 
-				for(int f = 0; f < categoriesJsonArray.length(); f++)
+				for(int f = 0; f < categoryJsonArray.length(); f++)
 				{
-					JSONObject categoryJsonObject = categoriesJsonArray.getJSONObject(f);
+					JSONObject categoryJsonObject = categoryJsonArray.getJSONObject(f);
 
 					final String title = categoryJsonObject.getString("title");
-					final String subcategories = categoryJsonObject.getString("subcategories");
+					final String subCategories = categoryJsonObject.getString("subcategories");
 
 					TextView textView = (TextView) mLayoutInflater.inflate(R.layout.activity_lvh_card_categories_item, null);
 					textView.setText(categoryJsonObject.getString("title"));
@@ -307,7 +307,7 @@ public class LvhActivity extends AppCompatActivity
 							intent.putExtra("color", color);
 							intent.putExtra("icon", icon);
 							intent.putExtra("title", title);
-							intent.putExtra("subcategories", subcategories);
+							intent.putExtra("subcategories", subCategories);
 							mContext.startActivity(intent);
 						}
 					});
@@ -326,7 +326,7 @@ public class LvhActivity extends AppCompatActivity
 		@Override
 		public int getItemCount()
 		{
-			return mCategories.length();
+			return mLvhCategories.length();
 		}
 
 		private void animateCard(View view, int position)

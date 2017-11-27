@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/interactions_cards_card" style="@style/interactions_cards_card_layout">
-	<RelativeLayout style="@style/interactions_cards_card_inner_layout">
-		<ImageView android:id="@+id/interactions_cards_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/interactions_cards_card_image_content_description" style="@style/interactions_cards_card_icon"/>
-		<TextView android:id="@+id/interactions_cards_card_title" android:layout_alignParentTop="true" style="@style/interactions_cards_card_title"/>
-		<TextView android:id="@+id/interactions_cards_card_text" android:layout_below="@+id/interactions_cards_card_title" style="@style/interactions_cards_card_text"/>
-		<TextView android:id="@+id/interactions_cards_card_relevance" android:layout_below="@+id/interactions_cards_card_text" style="@style/interactions_cards_card_relevance"/>
-		<View android:id="@+id/interactions_cards_card_separator" android:layout_below="@+id/interactions_cards_card_relevance" style="@style/colored_card_separator"/>
-		<LinearLayout android:layout_below="@+id/interactions_cards_card_separator" style="@style/interactions_cards_card_buttons_layout">
-			<TextView android:id="@+id/interactions_cards_card_button_handling" android:text="@string/interactions_cards_card_button_handling" style="@style/colored_card_button"/>
-			<TextView android:id="@+id/interactions_cards_card_button_uri" android:text="@string/interactions_card_button_read_more" style="@style/colored_card_button"/>
-			<TextView android:id="@+id/interactions_cards_card_button_pubmed_search_uri" android:text="@string/interactions_card_button_search_pubmed" style="@style/colored_card_button"/>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/interactions_cards_card" style="@style/card_layout">
+	<RelativeLayout style="@style/layout_match_width_match_height">
+		<ImageView android:id="@+id/interactions_cards_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/interactions_cards_card_image_content_description" style="@style/card_title_icon"/>
+		<TextView android:id="@+id/interactions_cards_card_title" android:layout_alignParentTop="true" style="@style/card_title_icon_text"/>
+		<TextView android:id="@+id/interactions_cards_card_text" android:layout_below="@+id/interactions_cards_card_title" style="@style/card_white_text"/>
+		<TextView android:id="@+id/interactions_cards_card_relevance" android:layout_below="@+id/interactions_cards_card_text" style="@style/card_small_white_text"/>
+		<View android:id="@+id/interactions_cards_card_separator" android:layout_below="@+id/interactions_cards_card_relevance" style="@style/card_colored_separator"/>
+		<LinearLayout android:layout_below="@+id/interactions_cards_card_separator" style="@style/card_buttons_layout">
+			<Button android:id="@+id/interactions_cards_card_button_handling" android:text="@string/interactions_cards_card_button_handling" style="@style/card_button_colored"/>
+			<Button android:id="@+id/interactions_cards_card_button_uri" android:text="@string/interactions_card_button_read_more" style="@style/card_button_colored"/>
+			<Button android:id="@+id/interactions_cards_card_button_pubmed_search_uri" android:text="@string/interactions_card_button_search_pubmed" style="@style/card_button_colored"/>
 		</LinearLayout>
 	</RelativeLayout>
 </android.support.v7.widget.CardView>

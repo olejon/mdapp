@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -67,27 +68,27 @@ public class CalculatorsActivity extends AppCompatActivity
 		setContentView(R.layout.activity_calculators);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.calculators_toolbar);
+		Toolbar toolbar = findViewById(R.id.calculators_toolbar);
 		toolbar.setTitle(getString(R.string.calculators_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// BMI
-		mBmiWeightInputLayout = (TextInputLayout) findViewById(R.id.calculators_bmi_weight_layout);
-		mBmiHeightInputLayout = (TextInputLayout) findViewById(R.id.calculators_bmi_height_layout);
+		mBmiWeightInputLayout = findViewById(R.id.calculators_bmi_weight_layout);
+		mBmiHeightInputLayout = findViewById(R.id.calculators_bmi_height_layout);
 		mBmiWeightInputLayout.setHintAnimationEnabled(true);
 		mBmiHeightInputLayout.setHintAnimationEnabled(true);
 
-		final EditText bmiEditText = (EditText) findViewById(R.id.calculators_bmi_height);
-		TextView bmiButton = (TextView) findViewById(R.id.calculators_bmi_button);
+		final EditText bmiEditText = findViewById(R.id.calculators_bmi_height);
+		Button bmiButton = findViewById(R.id.calculators_bmi_button);
 
 		bmiButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
+				if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
 
 				calculateBmi();
 			}
@@ -100,7 +101,7 @@ public class CalculatorsActivity extends AppCompatActivity
 			{
 				if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
 				{
-					inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
+					if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
 
 					calculateBmi();
 
@@ -112,18 +113,18 @@ public class CalculatorsActivity extends AppCompatActivity
 		});
 
 		// Waist measurement
-		mWaistMeasurementInputLayout = (TextInputLayout) findViewById(R.id.calculators_waist_measurement_layout);
+		mWaistMeasurementInputLayout = findViewById(R.id.calculators_waist_measurement_layout);
 		mWaistMeasurementInputLayout.setHintAnimationEnabled(true);
 
-		final EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
-		TextView waistMeasurementButton = (TextView) findViewById(R.id.calculators_waist_measurement_button);
+		final EditText waistMeasurementEditText = findViewById(R.id.calculators_waist_measurement);
+		Button waistMeasurementButton = findViewById(R.id.calculators_waist_measurement_button);
 
 		waistMeasurementButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
+				if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
 
 				calculateWaistMeasurement();
 			}
@@ -136,7 +137,7 @@ public class CalculatorsActivity extends AppCompatActivity
 			{
 				if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
 				{
-					inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
+					if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
 
 					calculateWaistMeasurement();
 
@@ -148,20 +149,20 @@ public class CalculatorsActivity extends AppCompatActivity
 		});
 
 		// Corrected QT time
-		mQtIntervalEditTextLayout = (TextInputLayout) findViewById(R.id.calculators_corrected_qt_time_qt_interval_layout);
-		mRrIntervalEditTextLayout = (TextInputLayout) findViewById(R.id.calculators_corrected_qt_time_rr_interval_layout);
+		mQtIntervalEditTextLayout = findViewById(R.id.calculators_corrected_qt_time_qt_interval_layout);
+		mRrIntervalEditTextLayout = findViewById(R.id.calculators_corrected_qt_time_rr_interval_layout);
 		mQtIntervalEditTextLayout.setHintAnimationEnabled(true);
 		mRrIntervalEditTextLayout.setHintAnimationEnabled(true);
 
-		final EditText correctedQtTimeEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
-		TextView correctedQtTimeButton = (TextView) findViewById(R.id.calculators_corrected_qt_time_button);
+		final EditText correctedQtTimeEditText = findViewById(R.id.calculators_corrected_qt_time_rr_interval);
+		Button correctedQtTimeButton = findViewById(R.id.calculators_corrected_qt_time_button);
 
 		correctedQtTimeButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
+				if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
 
 				calculateCorrectedQtTime();
 			}
@@ -174,7 +175,7 @@ public class CalculatorsActivity extends AppCompatActivity
 			{
 				if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
 				{
-					inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
+					if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
 
 					calculateCorrectedQtTime();
 
@@ -228,14 +229,14 @@ public class CalculatorsActivity extends AppCompatActivity
 				intent.putExtra("uri", "https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
 				startActivity(intent);
 			}
-		}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+		}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
 	}
 
 	// Calculations
 	private void calculateBmi()
 	{
-		EditText weightEditText = (EditText) findViewById(R.id.calculators_bmi_weight);
-		EditText heightEditText = (EditText) findViewById(R.id.calculators_bmi_height);
+		EditText weightEditText = findViewById(R.id.calculators_bmi_weight);
+		EditText heightEditText = findViewById(R.id.calculators_bmi_height);
 
 		weightEditText.addTextChangedListener(new TextWatcher()
 		{
@@ -330,7 +331,7 @@ public class CalculatorsActivity extends AppCompatActivity
 
 	private void calculateWaistMeasurement()
 	{
-		EditText waistMeasurementEditText = (EditText) findViewById(R.id.calculators_waist_measurement);
+		EditText waistMeasurementEditText = findViewById(R.id.calculators_waist_measurement);
 
 		waistMeasurementEditText.addTextChangedListener(new TextWatcher()
 		{
@@ -398,8 +399,8 @@ public class CalculatorsActivity extends AppCompatActivity
 
 	private void calculateCorrectedQtTime()
 	{
-		EditText qtIntervalEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_qt_interval);
-		EditText rrIntervalEditText = (EditText) findViewById(R.id.calculators_corrected_qt_time_rr_interval);
+		EditText qtIntervalEditText = findViewById(R.id.calculators_corrected_qt_time_qt_interval);
+		EditText rrIntervalEditText = findViewById(R.id.calculators_corrected_qt_time_rr_interval);
 
 		qtIntervalEditText.addTextChangedListener(new TextWatcher()
 		{

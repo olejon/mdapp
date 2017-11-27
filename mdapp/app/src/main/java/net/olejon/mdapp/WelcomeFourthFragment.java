@@ -21,10 +21,13 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class WelcomeFourthFragment extends Fragment
@@ -33,9 +36,11 @@ public class WelcomeFourthFragment extends Fragment
 
 	private MyTools mTools;
 
+	private boolean mViewIsShown = false;
+
 	// Create fragment view
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		mActivity = getActivity();
 
@@ -43,9 +48,15 @@ public class WelcomeFourthFragment extends Fragment
 
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_fourth, container, false);
 
-		TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_4_button);
+		if(!mViewIsShown)
+		{
+			TextView textView = viewGroup.findViewById(R.id.welcome_page_4_guide);
+			animateTextView(textView);
+		}
 
-		textView.setOnClickListener(new View.OnClickListener()
+		Button button = viewGroup.findViewById(R.id.welcome_page_4_button);
+
+		button.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
@@ -58,5 +69,29 @@ public class WelcomeFourthFragment extends Fragment
 		});
 
 		return viewGroup;
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser)
+	{
+		super.setUserVisibleHint(isVisibleToUser);
+
+		if(getView() == null)
+		{
+			mViewIsShown = false;
+		}
+		else
+		{
+			mViewIsShown = true;
+
+			TextView textView = getView().getRootView().findViewById(R.id.welcome_page_4_guide);
+			animateTextView(textView);
+		}
+	}
+
+	private void animateTextView(TextView textView)
+	{
+		textView.setVisibility(View.VISIBLE);
+		textView.startAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.welcome_guide));
 	}
 }

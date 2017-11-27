@@ -2,55 +2,21 @@
 
 <resources>
 
-	<!-- Themes -->
+	<!-- Main -->
 	<style name="main_theme" parent="app_theme">
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 		<item name="android:statusBarColor">@android:color/transparent</item>
 	</style>
 
-	<!-- Main -->
-	<style name="main_updating_progressbar_base" parent="android:Widget.Material.Light.ProgressBar.Inverse"/>
-
 	<style name="main_search_base" parent="main_search_base_base">
 		<item name="android:elevation">2dp</item>
-	</style>
-
-	<style name="main_search_base_base">
-		<item name="android:paddingTop">4dp</item>
-		<item name="android:paddingRight">14dp</item>
-		<item name="android:paddingBottom">4dp</item>
-		<item name="android:paddingLeft">14dp</item>
-	</style>
-
-	<style name="main_tabs_base" parent="main_tabs_base_base">
-		<item name="android:elevation">2dp</item>
-	</style>
-
-	<style name="main_pager_base">
-		<item name="android:elevation">2dp</item>
-	</style>
-
-	<style name="main_medications_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
 	<style name="main_medications_list_item_name_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
-	<style name="main_substances_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<style name="main_substances_list_item_name_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="main_medications_favorites_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="main_medications_favorites_list_item_name_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
@@ -59,23 +25,7 @@
 		<item name="android:elevation">2dp</item>
 	</style>
 
-	<style name="medication_tabs_base" parent="medication_tabs_base_base">
-		<item name="android:elevation">2dp</item>
-	</style>
-
-	<style name="medication_pager_base">
-		<item name="android:elevation">2dp</item>
-	</style>
-
 	<!-- Substance -->
-	<style name="substance_atc_code_base">
-		<item name="android:elevation">2dp</item>
-	</style>
-
-	<style name="substance_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<style name="substance_list_item_name_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
@@ -86,89 +36,7 @@
 	</style>
 
 	<!-- Diseases and treatments -->
-	<style name="diseases_and_treatments_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<style name="diseases_and_treatments_search_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Legevakthåndboken -->
-	<style name="lvh_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="lvh_categories_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Interactions -->
-	<style name="interactions_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Interactions cards -->
-	<style name="interactions_cards_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="interactions_cards_card_button_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="interactions_cards_no_interactions_information_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Poisonings -->
-	<style name="poisonings_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Poisonings cards -->
-	<style name="poisonings_cards_no_poisonings_information_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="poisonings_cards_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Antibiotics guides -->
-	<style name="antibiotics_guides_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Antibiotics guides cards -->
-	<style name="antibiotics_guides_cards_no_antibiotics_guides_information_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="antibiotics_guides_cards_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Nasjonale retningslinjer -->
-	<style name="nasjonale_retningslinjer_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Clinical trials cards -->
-	<style name="clinicaltrials_cards_no_clinicaltrials_information_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="clinicaltrials_cards_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<style name="clinicaltrials_cards_card_detail_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- ATC codes -->
-	<style name="atc_codes_list_empty_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
@@ -177,68 +45,22 @@
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
-	<!-- ICD-10 search -->
-	<style name="icd10_search_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- ICD-10 chapter -->
-	<style name="icd10_chapter_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<!-- Manufacturers -->
-	<style name="manufacturers_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<style name="manufacturers_list_item_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
 	<!-- Manufacturer -->
-	<style name="manufacturer_medications_count_base">
-		<item name="android:elevation">2dp</item>
-	</style>
-
 	<style name="manufacturer_list_item_name_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
-	<!-- Pharmacies -->
-	<style name="pharmacies_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Scales -->
-	<style name="scales_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Notifications from SLV -->
-	<style name="notifications_from_slv_card_title_base" parent="notifications_from_slv_card_value">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Calculators -->
-	<style name="calculators_card_title_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<!-- Notes -->
-	<style name="notes_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<style name="notes_card_title_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
 	<!-- Notes edit medications -->
-	<style name="notes_edit_medications_list_empty_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<style name="notes_edit_medications_list_item_name_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
@@ -248,15 +70,18 @@
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
-	<style name="welcome_page_4_button_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
+	<!-- Layout -->
+	<style name="layout_match_width_wrap_height_elevation" parent="layout_match_width_wrap_height">
+		<item name="android:elevation">2dp</item>
 	</style>
+
+	<style name="layout_tabs_base" parent="layout_tabs_base_base">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<style name="layout_progressbar_base" parent="@android:style/Widget.Material.ProgressBar"/>
 
 	<!-- Drawer -->
-	<style name="main_drawer_base">
-		<item name="android:elevation">4dp</item>
-	</style>
-
 	<style name="drawer_item_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
@@ -266,7 +91,9 @@
 		<item name="android:elevation">2dp</item>
 	</style>
 
-	<style name="toolbar_progressbar_horizontal_base" parent="Widget.AppCompat.ProgressBar.Horizontal">
+	<style name="toolbar_progressbar_base" parent="@android:style/Widget.Material.ProgressBar"/>
+
+	<style name="toolbar_progressbar_horizontal_base" parent="@android:style/Widget.Material.ProgressBar.Horizontal">
 		<item name="android:elevation">2dp</item>
 	</style>
 
@@ -276,21 +103,35 @@
 	</style>
 
 	<!-- List view -->
-	<style name="listview_base" parent="android:Widget.Material.Light.ListView"/>
+	<style name="listview_base" parent="@android:style/Widget.Material.Light.ListView"/>
+
+	<style name="list_empty_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
 
 	<!-- Cards -->
-	<style name="card_button_base">
+	<style name="card_title_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_title_icon_text_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_bold_text_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_button_base_base" parent="@android:style/Widget.Material.Button.Borderless">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_information_empty_base">
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 
 	<!-- Subheaders -->
 	<style name="subheader_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
-	<!-- Widget -->
-	<style name="widget_toolbar_layout_base">
-		<item name="android:elevation">2dp</item>
 		<item name="android:fontFamily">sans-serif-medium</item>
 	</style>
 

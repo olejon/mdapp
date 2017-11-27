@@ -63,14 +63,14 @@ public class AtcActivity extends AppCompatActivity
 		setContentView(R.layout.activity_atc);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.atc_toolbar);
+		mToolbar = findViewById(R.id.atc_toolbar);
 		mToolbar.setTitle(getString(R.string.atc_title));
 
 		setSupportActionBar(mToolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// List
-		mListView = (ListView) findViewById(R.id.atc_list);
+		mListView = findViewById(R.id.atc_list);
 
 		// Get ATC
 		getAnatomicalGroups();

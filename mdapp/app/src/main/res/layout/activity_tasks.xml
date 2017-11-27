@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/recyclerview_layout" style="@style/recyclerview_layout">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/recyclerview_layout">
 	<android.support.design.widget.AppBarLayout android:id="@+id/tasks_layout_appbar" style="@style/appbar">
 		<android.support.design.widget.CollapsingToolbarLayout android:id="@+id/tasks_toolbar_layout" style="@style/collapsing_toolbar">
 			<ImageView android:src="@drawable/tasks" android:contentDescription="@string/tasks_image_content_description" style="@style/collapsing_toolbar_image"/>

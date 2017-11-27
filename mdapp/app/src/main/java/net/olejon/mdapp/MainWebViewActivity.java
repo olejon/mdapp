@@ -47,7 +47,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,17 +63,14 @@ public class MainWebViewActivity extends AppCompatActivity
 
 	private MenuItem findInTextMenuItem;
 	private MenuItem goForwardMenuItem;
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
-	private TextView mToolbarSearchCountTextView;
-	private ProgressBar mProgressBar;
 	private WebView mWebView;
 
 	private String pageTitle;
-	private String pageUri;
 
 	private boolean mWebViewHasBeenLoaded = false;
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -103,18 +99,17 @@ public class MainWebViewActivity extends AppCompatActivity
 		Intent intent = getIntent();
 
 		pageTitle = intent.getStringExtra("title");
-		pageUri = intent.getStringExtra("uri");
+
+		final String pageUri = intent.getStringExtra("uri");
 
 		// Toolbar
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.main_webview_toolbar);
+		final Toolbar toolbar = findViewById(R.id.main_webview_toolbar);
 		toolbar.setTitle(pageTitle);
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.main_webview_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.main_webview_toolbar_search);
-		mToolbarSearchCountTextView = (TextView) findViewById(R.id.main_webview_toolbar_search_count_textview);
+		mToolbarSearchEditText = findViewById(R.id.main_webview_toolbar_search);
 
 		mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
 		{
@@ -125,8 +120,6 @@ public class MainWebViewActivity extends AppCompatActivity
 
 				if(find.equals(""))
 				{
-					mToolbarSearchCountTextView.setVisibility(View.GONE);
-
 					mWebView.clearMatches();
 				}
 				else
@@ -158,47 +151,32 @@ public class MainWebViewActivity extends AppCompatActivity
 		});
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.main_webview_toolbar_progressbar_horizontal);
+		final ProgressBar progressBar = findViewById(R.id.main_webview_toolbar_progressbar_horizontal);
 
 		// Web view
-		mWebView = (WebView) findViewById(R.id.main_webview_content);
+		mWebView = findViewById(R.id.main_webview_content);
 
 		WebSettings webSettings = mWebView.getSettings();
 
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setBuiltInZoomControls(true);
-		webSettings.setDisplayZoomControls(false);
 		webSettings.setAppCacheEnabled(true);
 		webSettings.setDomStorageEnabled(true);
 		webSettings.setAppCachePath(getCacheDir().getAbsolutePath());
 		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-		//noinspection deprecation
+		webSettings.setBuiltInZoomControls(true);
+		webSettings.setDisplayZoomControls(false);
 		webSettings.setSavePassword(false);
 
-		if(pageUri.contains("clinicaltrials.gov"))
+		if(pageUri.contains("felleskatalogen.no"))
 		{
-			webSettings.setLoadWithOverviewMode(true);
-			webSettings.setUseWideViewPort(true);
-		}
-		else if(pageUri.contains("felleskatalogen.no"))
-		{
-			webSettings.setLoadWithOverviewMode(true);
-			webSettings.setUseWideViewPort(true);
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
 		}
 		else if(pageUri.contains("interaksjoner.azurewebsites.net"))
 		{
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
 			webSettings.setDefaultTextEncodingName("iso-8859-15");
-		}
-		else if(pageUri.contains("legemiddelhandboka.no"))
-		{
-			webSettings.setLoadWithOverviewMode(true);
-			webSettings.setUseWideViewPort(true);
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0");
 		}
 		else if(pageUri.contains("legemiddelsok.no"))
 		{
@@ -210,24 +188,25 @@ public class MainWebViewActivity extends AppCompatActivity
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
 		}
-		else if(pageUri.contains("tidsskriftet.no"))
-		{
-			webSettings.setLoadWithOverviewMode(true);
-			webSettings.setUseWideViewPort(true);
-		}
 		else if(pageUri.contains("webofknowledge.com"))
 		{
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
+
+			mTools.showToast(getString(R.string.device_this_can_take_some_time), 1);
 		}
 
 		mWebView.setWebViewClient(new WebViewClient()
 		{
-			@SuppressWarnings("deprecation")
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url)
 			{
-				if(url.matches(".*/[^#]+#[^/]+$"))
+				if(!mTools.isDeviceConnected())
+				{
+					mTools.showToast(getString(R.string.device_not_connected), 0);
+					return true;
+				}
+				else if(url.matches(".*/[^#]+#[^/]+$"))
 				{
 					mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
 					return true;
@@ -274,9 +253,9 @@ public class MainWebViewActivity extends AppCompatActivity
 					findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text));
 				}
 
-				mProgressBar.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
 
-				mToolbarSearchLayout.setVisibility(View.GONE);
+				mToolbarSearchEditText.setVisibility(View.GONE);
 				mToolbarSearchEditText.setText("");
 
 				mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
@@ -289,7 +268,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
 				toolbar.setTitle(toolbarTitle);
 
-				mProgressBar.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.INVISIBLE);
 
 				if(mWebView.canGoForward())
 				{
@@ -304,17 +283,9 @@ public class MainWebViewActivity extends AppCompatActivity
 				{
 					mWebViewHasBeenLoaded = true;
 
-					if(pageUri.contains("bestpractice.bmj.com"))
-					{
-						mWebView.loadUrl("javascript:$('div#snackbar-container').hide();");
-					}
-					else if(pageUri.contains("helsenorge.no"))
+					if(pageUri.contains("helsenorge.no"))
 					{
 						mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top - 8);");
-					}
-					else if(pageUri.contains("icd10data.com"))
-					{
-						mWebView.loadUrl("javascript:var element = $('div.contentBlurb:contains(\"Clinical Information\")'); if(element.length) { var offset = element.offset(); window.scrollTo(0, offset.top - 8); } else { alert('no_clinical_information'); }");
 					}
 					else if(pageUri.contains("lvh.no"))
 					{
@@ -343,7 +314,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
 				mWebView.stopLoading();
 
-				mProgressBar.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.INVISIBLE);
 
 				new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).neutralText(R.string.device_not_supported_dialog_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
 				{
@@ -379,13 +350,7 @@ public class MainWebViewActivity extends AppCompatActivity
 			@Override
 			public boolean onJsAlert(WebView view, String url, String message, JsResult result)
 			{
-				if(pageUri.contains("icd10data.com") && message.equals("no_clinical_information"))
-				{
-					mTools.showToast("Ingen klinisk informasjon", 1);
-					result.confirm();
-					return true;
-				}
-				else if(pageUri.contains("webofknowledge.com"))
+				if(pageUri.contains("webofknowledge.com"))
 				{
 					result.confirm();
 					return true;
@@ -397,36 +362,14 @@ public class MainWebViewActivity extends AppCompatActivity
 			@Override
 			public void onProgressChanged(WebView view, int newProgress)
 			{
-				mProgressBar.setProgress(newProgress);
-			}
-		});
-
-		mWebView.setFindListener(new WebView.FindListener()
-		{
-			@Override
-			public void onFindResultReceived(int i, int i2, boolean b)
-			{
-				if(i2 == 0)
-				{
-					mToolbarSearchCountTextView.setVisibility(View.GONE);
-
-					mTools.showToast(getString(R.string.main_webview_find_in_text_no_results), 1);
-				}
-				else
-				{
-					int active = i + 1;
-
-					mToolbarSearchCountTextView.setText(active+"/"+i2);
-					mToolbarSearchCountTextView.setVisibility(View.VISIBLE);
-				}
+				progressBar.setProgress(newProgress);
 			}
 		});
 
 		CookieManager cookieManager = CookieManager.getInstance();
 
-		cookieManager.setCookie("http://bestpractice.bmj.com/best-practice/", "BMJ-cookie-policy=close");
+		cookieManager.setCookie("http://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
 		cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
-		cookieManager.setCookie("https://nhi.no/", "user-category=professional");
 		cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");
 
 		if(savedInstanceState == null)
@@ -456,7 +399,7 @@ public class MainWebViewActivity extends AppCompatActivity
 
 		findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text));
 
-		mToolbarSearchLayout.setVisibility(View.GONE);
+		mToolbarSearchEditText.setVisibility(View.GONE);
 		mToolbarSearchEditText.setText("");
 
 		mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
@@ -483,11 +426,11 @@ public class MainWebViewActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
 			findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text));
 
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 
 			mWebView.clearMatches();
@@ -534,7 +477,7 @@ public class MainWebViewActivity extends AppCompatActivity
 			}
 			case R.id.main_webview_menu_find_in_text:
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mWebView.findNext(true);
 
@@ -544,7 +487,7 @@ public class MainWebViewActivity extends AppCompatActivity
 				{
 					findInTextMenuItem.setTitle(getString(R.string.main_webview_menu_find_in_text_next));
 
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);

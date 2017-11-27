@@ -29,9 +29,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -39,59 +41,78 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MedicationFelleskatalogenFragment extends Fragment
 {
+	private Context mContext;
+
+	private EditText mToolbarSearchEditText;
+	private ViewPager mViewPager;
 	private WebView mWebView;
 
+	private String mPageUri;
+
+	// Create fragment view
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medication_felleskatalogen, container, false);
 
 		// Activity
-		Activity activity = getActivity();
+		final Activity activity = getActivity();
 
 		// Context
-		final Context context = activity.getApplicationContext();
+		if(activity != null) mContext = activity.getApplicationContext();
 
 		// Tools
-		final MyTools mTools = new MyTools(context);
+		final MyTools mTools = new MyTools(mContext);
 
 		// Arguments
-		String pageUri = getArguments().getString("uri");
+		if(getArguments() != null) mPageUri = getArguments().getString("uri");
 
 		// Progress bar
-		final ProgressBar progressBar = (ProgressBar) viewGroup.findViewById(R.id.medication_felleskatalogen_progressbar);
+		final ProgressBar progressBar = viewGroup.findViewById(R.id.medication_felleskatalogen_progressbar);
 
 		// Toolbar
-		final LinearLayout toolbarSearchLayout = (LinearLayout) activity.findViewById(R.id.medication_toolbar_search_layout);
-		final EditText toolbarSearchEditText = (EditText) activity.findViewById(R.id.medication_toolbar_search);
+		if(activity != null) mToolbarSearchEditText = activity.findViewById(R.id.medication_toolbar_search);
+
+		// View pager
+		if(activity != null) mViewPager = activity.findViewById(R.id.medication_pager);
 
 		// SSL error button
-		final Button sslErrorButton = (Button) viewGroup.findViewById(R.id.medication_felleskatalogen_ssl_error_button);
+		final Button sslErrorButton = viewGroup.findViewById(R.id.medication_felleskatalogen_ssl_error_button);
 
 		// Web view
-		mWebView = (WebView) viewGroup.findViewById(R.id.medication_felleskatalogen_content);
+		mWebView = viewGroup.findViewById(R.id.medication_felleskatalogen_content);
 
 		WebSettings webSettings = mWebView.getSettings();
 
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0");
+		webSettings.setAppCacheEnabled(true);
+		webSettings.setDomStorageEnabled(true);
+		webSettings.setAppCachePath(mContext.getCacheDir().getAbsolutePath());
+		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+		webSettings.setBuiltInZoomControls(false);
+		webSettings.setDisplayZoomControls(false);
+		webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+		webSettings.setSavePassword(false);
 
 		mWebView.setWebViewClient(new WebViewClient()
 		{
-			@SuppressWarnings("deprecation")
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url)
 			{
 				if(!mTools.isDeviceConnected())
 				{
 					mTools.showToast(getString(R.string.device_not_connected), 0);
+					return true;
+				}
+				else if(url.matches(".*/[^#]+#[^/]+$"))
+				{
+					mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
 					return true;
 				}
 				else if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
@@ -119,7 +140,7 @@ public class MedicationFelleskatalogenFragment extends Fragment
 					}
 					catch(Exception e)
 					{
-						new MaterialDialog.Builder(context).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+						new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
 					}
 
 					return true;
@@ -133,8 +154,8 @@ public class MedicationFelleskatalogenFragment extends Fragment
 			{
 				progressBar.setVisibility(View.VISIBLE);
 
-				toolbarSearchLayout.setVisibility(View.GONE);
-				toolbarSearchEditText.setText("");
+				mToolbarSearchEditText.setVisibility(View.GONE);
+				mToolbarSearchEditText.setText("");
 			}
 
 			@Override
@@ -160,12 +181,20 @@ public class MedicationFelleskatalogenFragment extends Fragment
 				progressBar.setVisibility(View.GONE);
 
 				sslErrorButton.setVisibility(View.VISIBLE);
+
+				mViewPager.setCurrentItem(1);
 			}
 		});
 
+		CookieManager cookieManager = CookieManager.getInstance();
+
+		cookieManager.setCookie("http://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
+		cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
+		cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");
+
 		if(savedInstanceState == null)
 		{
-			mWebView.loadUrl(pageUri);
+			mWebView.loadUrl(mPageUri);
 		}
 		else
 		{
@@ -201,7 +230,7 @@ public class MedicationFelleskatalogenFragment extends Fragment
 
 	// Save fragment
 	@Override
-	public void onSaveInstanceState(Bundle outState)
+	public void onSaveInstanceState(@NonNull Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
 

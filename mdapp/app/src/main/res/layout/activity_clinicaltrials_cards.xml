@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/clinicaltrials_cards_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
 	<android.support.v7.widget.Toolbar android:id="@+id/clinicaltrials_cards_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
 		<ProgressBar android:id="@+id/clinicaltrials_cards_toolbar_progressbar" style="@style/toolbar_progressbar"/>
 	</android.support.v7.widget.Toolbar>
-	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/clinicaltrials_cards_swipe_refresh_layout" android:layout_below="@+id/clinicaltrials_cards_toolbar" style="@style/swipe_refresh_layout">
-		<android.support.v7.widget.RecyclerView android:id="@+id/clinicaltrials_cards_cards" style="@style/clinicaltrials_cards_cards"/>
+	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/clinicaltrials_cards_swipe_refresh_layout" android:layout_below="@+id/clinicaltrials_cards_toolbar" style="@style/layout_match_width_match_height">
+		<android.support.v7.widget.RecyclerView android:id="@+id/clinicaltrials_cards_cards" style="@style/cards_layout"/>
 	</android.support.v4.widget.SwipeRefreshLayout>
-	<LinearLayout android:id="@+id/clinicaltrials_cards_no_clinicaltrials" android:layout_below="@+id/clinicaltrials_cards_toolbar" style="@style/clinicaltrials_cards_no_clinicaltrials_layout">
-		<TextView android:text="@string/clinicaltrials_cards_no_results" style="@style/clinicaltrials_cards_no_clinicaltrials_information"/>
-		<Button android:id="@+id/clinicaltrials_cards_no_results_button" android:text="@string/clinicaltrials_cards_no_results_button" style="@style/clinicaltrials_cards_no_clinicaltrials_button"/>
+	<LinearLayout android:id="@+id/clinicaltrials_cards_no_clinicaltrials" android:layout_below="@+id/clinicaltrials_cards_toolbar" style="@style/cards_no_results_layout">
+		<TextView android:text="@string/clinicaltrials_cards_no_results" style="@style/card_information_empty"/>
+		<Button android:id="@+id/clinicaltrials_cards_no_results_button" android:text="@string/clinicaltrials_cards_no_results_button" style="@style/button"/>
 	</LinearLayout>
 </RelativeLayout>

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/diseases_and_treatments_layout">
-	<android.support.v7.widget.Toolbar android:id="@+id/diseases_and_treatments_toolbar" style="@style/toolbar">
-		<LinearLayout android:id="@+id/diseases_and_treatments_toolbar_search_layout" style="@style/toolbar_search_layout">
-			<EditText android:id="@+id/diseases_and_treatments_toolbar_search" android:hint="@string/diseases_and_treatments_toolbar_search_english_hint" style="@style/diseases_and_treatments_toolbar_search_edittext"/>
-		</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
+	<android.support.v7.widget.Toolbar android:id="@+id/diseases_and_treatments_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+		<EditText android:id="@+id/diseases_and_treatments_toolbar_search" android:hint="@string/diseases_and_treatments_toolbar_search_english_hint" style="@style/diseases_and_treatments_toolbar_search_edittext"/>
 	</android.support.v7.widget.Toolbar>
-	<ListView android:id="@+id/diseases_and_treatments_list" android:layout_below="@+id/diseases_and_treatments_toolbar" style="@style/diseases_and_treatments_list_layout"/>
-	<ScrollView android:id="@+id/diseases_and_treatments_list_empty" android:layout_below="@+id/diseases_and_treatments_toolbar" style="@style/diseases_and_treatments_list_empty_layout">
-		<LinearLayout style="@style/diseases_and_treatments_list_empty_inner_layout">
-			<TextView android:text="@string/diseases_and_treatments_no_recent_searches" style="@style/diseases_and_treatments_list_empty"/>
-			<TextView android:text="@string/diseases_and_treatments_information" style="@style/diseases_and_treatments_list_information"/>
+	<ListView android:id="@+id/diseases_and_treatments_list" android:layout_below="@+id/diseases_and_treatments_toolbar" style="@style/layout_match_width_match_height"/>
+	<ScrollView android:id="@+id/diseases_and_treatments_list_empty" android:layout_below="@+id/diseases_and_treatments_toolbar" style="@style/layout_match_width_match_height_vertical_scrollbar">
+		<LinearLayout style="@style/list_empty_layout">
+			<TextView android:text="@string/diseases_and_treatments_no_recent_searches" style="@style/list_title_empty"/>
+			<TextView android:text="@string/diseases_and_treatments_information" style="@style/list_information_empty"/>
 		</LinearLayout>
 	</ScrollView>
 	<android.support.design.widget.FloatingActionButton android:id="@+id/diseases_and_treatments_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>

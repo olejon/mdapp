@@ -11,8 +11,8 @@
 
 	<!-- Medication -->
 	<string-array name="medication_pages">
-		<item>@string/medication_nlh</item>
 		<item>@string/medication_felleskatalogen</item>
+		<item>@string/medication_nlh</item>
 	</string-array>
 
 	<!-- Diseases and treatments -->

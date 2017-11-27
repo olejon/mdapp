@@ -30,6 +30,7 @@ public class ChromeCustomTabsActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

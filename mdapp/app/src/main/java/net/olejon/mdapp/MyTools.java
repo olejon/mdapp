@@ -21,8 +21,6 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +60,7 @@ class MyTools
 	}
 
 	// Default shared preferences
+	@SuppressWarnings("SameParameterValue")
 	boolean getDefaultSharedPreferencesBoolean(String preference)
 	{
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -69,12 +68,14 @@ class MyTools
 	}
 
 	// Shared preferences
+	@SuppressWarnings("SameParameterValue")
 	String getSharedPreferencesString(String preference)
 	{
 		SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
 		return sharedPreferences.getString(preference, "");
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	void setSharedPreferencesString(String preference, String string)
 	{
 		SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
@@ -83,12 +84,14 @@ class MyTools
 		sharedPreferencesEditor.apply();
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	boolean getSharedPreferencesBoolean(String preference)
 	{
 		SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
 		return sharedPreferences.getBoolean(preference, false);
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	void setSharedPreferencesBoolean(String preference, boolean bool)
 	{
 		SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
@@ -97,12 +100,14 @@ class MyTools
 		sharedPreferencesEditor.apply();
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	long getSharedPreferencesLong(String preference)
 	{
 		SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
 		return sharedPreferences.getLong(preference, 0);
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	void setSharedPreferencesLong(String preference, long l)
 	{
 		SharedPreferences sharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
@@ -161,6 +166,9 @@ class MyTools
 	boolean isDeviceConnected()
 	{
 		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		if(connectivityManager == null) return false;
+
 		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
 		return (networkInfo != null && networkInfo.isConnected());
@@ -177,7 +185,7 @@ class MyTools
 		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		request.setTitle(title);
 
-		downloadManager.enqueue(request);
+		if(downloadManager != null) downloadManager.enqueue(request);
 
 		showToast(mContext.getString(R.string.mytools_downloading), 1);
 	}
@@ -229,16 +237,18 @@ class MyTools
 			//noinspection deprecation
 			PrintDocumentAdapter printDocumentAdapter = webView.createPrintDocumentAdapter();
 
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) printDocumentAdapter = webView.createPrintDocumentAdapter(title);
+
+			if(printManager != null)
 			{
-				printDocumentAdapter = webView.createPrintDocumentAdapter(title);
+				PrintAttributes printAttributes = new PrintAttributes.Builder().build();
+
+				PrintJob printJob = printManager.print(title, printDocumentAdapter, printAttributes);
+
+				List<PrintJob> printJobs = printManager.getPrintJobs();
+
+				printJobs.add(printJob);
 			}
-
-			PrintJob printJob = printManager.print(title, printDocumentAdapter, new PrintAttributes.Builder().build());
-
-			List<PrintJob> printJobs = printManager.getPrintJobs();
-
-			printJobs.add(printJob);
 		}
 		else
 		{
@@ -285,13 +295,16 @@ class MyTools
 	{
 		Intent navigateUpIntent = NavUtils.getParentActivityIntent(activity);
 
-		if(NavUtils.shouldUpRecreateTask(activity, navigateUpIntent) || activity.isTaskRoot())
+		if(navigateUpIntent != null)
 		{
-			TaskStackBuilder.create(mContext).addNextIntentWithParentStack(navigateUpIntent).startActivities();
-		}
-		else
-		{
-			NavUtils.navigateUpFromSameTask(activity);
+			if(NavUtils.shouldUpRecreateTask(activity, navigateUpIntent) || activity.isTaskRoot())
+			{
+				TaskStackBuilder.create(mContext).addNextIntentWithParentStack(navigateUpIntent).startActivities();
+			}
+			else
+			{
+				NavUtils.navigateUpFromSameTask(activity);
+			}
 		}
 	}
 
@@ -300,38 +313,18 @@ class MyTools
 	{
 		String domain = uri.replaceAll("https?://", "").replaceAll("[w]{3}\\.", "").replaceAll("/.*", "");
 
-		ContentValues savedArticlesContentValues = new ContentValues();
-		savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_TITLE, title);
-		savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_DOMAIN, domain);
-		savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_URI, uri);
-		savedArticlesContentValues.put(SavedArticlesSQLiteHelper.COLUMN_WEBVIEW, webview);
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(SavedArticlesSQLiteHelper.COLUMN_TITLE, title);
+		contentValues.put(SavedArticlesSQLiteHelper.COLUMN_DOMAIN, domain);
+		contentValues.put(SavedArticlesSQLiteHelper.COLUMN_URI, uri);
+		contentValues.put(SavedArticlesSQLiteHelper.COLUMN_WEBVIEW, webview);
 
-		SQLiteDatabase savedArticlesSqLiteDatabase = new SavedArticlesSQLiteHelper(mContext).getWritableDatabase();
+		SQLiteDatabase sqLiteDatabase = new SavedArticlesSQLiteHelper(mContext).getWritableDatabase();
 
-		savedArticlesSqLiteDatabase.insert(SavedArticlesSQLiteHelper.TABLE, null, savedArticlesContentValues);
+		sqLiteDatabase.insert(SavedArticlesSQLiteHelper.TABLE, null, contentValues);
 
-		savedArticlesSqLiteDatabase.close();
+		sqLiteDatabase.close();
 
 		showToast(mContext.getString(R.string.saved_articles_article_saved), 0);
-	}
-
-	// Pharmacies
-	boolean pharmacyAddressIsPostBox(String pharmacyAddress)
-	{
-		return (pharmacyAddress.startsWith("Boks") || pharmacyAddress.startsWith("Pb.") || pharmacyAddress.startsWith("Postboks") || pharmacyAddress.startsWith("Serviceboks"));
-	}
-
-	// Widget
-	void updateWidget()
-	{
-		ComponentName componentName = new ComponentName(mContext, Widget.class);
-
-		int[] appWidgetIds = AppWidgetManager.getInstance(mContext).getAppWidgetIds(componentName);
-
-		Intent intent = new Intent(mContext, Widget.class);
-		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-
-		mContext.sendBroadcast(intent);
 	}
 }

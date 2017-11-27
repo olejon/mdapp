@@ -23,9 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -41,7 +39,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -63,12 +60,9 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 
 	private InputMethodManager mInputMethodManager;
 
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
-
-	private boolean mActivityPaused = false;
 
 	// Create activity
 	@Override
@@ -83,14 +77,13 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 		setContentView(R.layout.activity_clinicaltrials);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.clinicaltrials_toolbar);
+		Toolbar toolbar = findViewById(R.id.clinicaltrials_toolbar);
 		toolbar.setTitle(getString(R.string.clinicaltrials_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.clinicaltrials_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.clinicaltrials_toolbar_search);
+		mToolbarSearchEditText = findViewById(R.id.clinicaltrials_toolbar_search);
 
 		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -111,7 +104,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 		});
 
 		// List
-		mListView = (ListView) findViewById(R.id.clinicaltrials_list);
+		mListView = findViewById(R.id.clinicaltrials_list);
 
 		View listViewEmpty = findViewById(R.id.clinicaltrials_list_empty);
 		mListView.setEmptyView(listViewEmpty);
@@ -120,14 +113,14 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 		mListView.addHeaderView(listViewHeader, null, false);
 
 		// Floating action button
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.clinicaltrials_fab);
+		mFloatingActionButton = findViewById(R.id.clinicaltrials_fab);
 
 		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
@@ -135,7 +128,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 				}
 				else
 				{
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -175,7 +168,8 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 	{
 		super.onPause();
 
-		mActivityPaused = true;
+		mToolbarSearchEditText.setVisibility(View.GONE);
+		mToolbarSearchEditText.setText("");
 	}
 
 	// Destroy activity
@@ -192,9 +186,9 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 		}
 		else
@@ -209,7 +203,7 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 	{
 		if(keyCode == KeyEvent.KEYCODE_SEARCH)
 		{
-			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.setVisibility(View.VISIBLE);
 			mToolbarSearchEditText.requestFocus();
 
 			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -278,8 +272,30 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 
 	private void getRecentSearches()
 	{
-		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-		getRecentSearchesTask.execute();
+		mSqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
+		mCursor = mSqLiteDatabase.query(ClinicalTrialsSQLiteHelper.TABLE, null, null, null, null, null, ClinicalTrialsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+
+		String[] fromColumns = {ClinicalTrialsSQLiteHelper.COLUMN_STRING};
+		int[] toViews = {R.id.clinicaltrials_list_item_string};
+
+		mListView.setAdapter(new SimpleCursorAdapter(mContext, R.layout.activity_clinicaltrials_list_item, mCursor, fromColumns, toViews, 0));
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				int index = i - 1;
+
+				if(mCursor.moveToPosition(index))
+				{
+					search(mCursor.getString(mCursor.getColumnIndexOrThrow(ClinicalTrialsSQLiteHelper.COLUMN_STRING)).trim());
+				}
+			}
+		});
+
+		mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+		mFloatingActionButton.setVisibility(View.VISIBLE);
 	}
 
 	private void clearRecentSearches()
@@ -289,60 +305,5 @@ public class ClinicalTrialsActivity extends AppCompatActivity
 		mTools.showToast(getString(R.string.clinicaltrials_recent_searches_removed), 0);
 
 		getRecentSearches();
-	}
-
-	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-		{
-			mListView.setAdapter(simpleCursorAdapter);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-				{
-					int index = i - 1;
-
-					if(mCursor.moveToPosition(index))
-					{
-						search(mCursor.getString(mCursor.getColumnIndexOrThrow(ClinicalTrialsSQLiteHelper.COLUMN_STRING)).trim());
-					}
-				}
-			});
-
-			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-			mFloatingActionButton.setVisibility(View.VISIBLE);
-
-			if(!mActivityPaused && mCursor.getCount() > 0)
-			{
-				Handler handler = new Handler();
-
-				handler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						mToolbarSearchLayout.setVisibility(View.VISIBLE);
-						mToolbarSearchEditText.requestFocus();
-
-						mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-					}
-				}, 500);
-			}
-		}
-
-		@Override
-		protected SimpleCursorAdapter doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new ClinicalTrialsSQLiteHelper(mContext).getWritableDatabase();
-			mCursor = mSqLiteDatabase.query(ClinicalTrialsSQLiteHelper.TABLE, null, null, null, null, null, ClinicalTrialsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
-
-			String[] fromColumns = {ClinicalTrialsSQLiteHelper.COLUMN_STRING};
-			int[] toViews = {R.id.clinicaltrials_list_item_string};
-
-			return new SimpleCursorAdapter(mContext, R.layout.activity_clinicaltrials_list_item, mCursor, fromColumns, toViews, 0);
-		}
 	}
 }

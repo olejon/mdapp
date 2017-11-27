@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -61,6 +62,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -80,18 +82,18 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 		setContentView(R.layout.activity_notifications_from_slv);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.notifications_from_slv_toolbar);
+		Toolbar toolbar = findViewById(R.id.notifications_from_slv_toolbar);
 		toolbar.setTitle(getString(R.string.notifications_from_slv_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.notifications_from_slv_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.notifications_from_slv_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.notifications_from_slv_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.notifications_from_slv_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -104,8 +106,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.notifications_from_slv_cards);
-
+		mRecyclerView = findViewById(R.id.notifications_from_slv_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new NotificationsFromSlvAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -171,7 +172,8 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 
 					if(mTools.isTablet())
 					{
-						mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+						int spanCount = (response.length() == 1) ? 1 : 2;
+						mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 					}
 
 					mRecyclerView.setAdapter(new NotificationsFromSlvAdapter(response));
@@ -201,111 +203,86 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 	}
 
 	// Adapter
-	class NotificationsFromSlvAdapter extends RecyclerView.Adapter<NotificationsFromSlvAdapter.NotificationViewHolder>
+	class NotificationsFromSlvAdapter extends RecyclerView.Adapter<NotificationsFromSlvAdapter.NotificationsFromSlvViewHolder>
 	{
-		final JSONArray mNotifications;
+		final JSONArray mNotificationsFromSlv;
 
 		int mLastPosition = - 1;
 
 		NotificationsFromSlvAdapter(JSONArray jsonArray)
 		{
-			mNotifications = jsonArray;
+			mNotificationsFromSlv = jsonArray;
 		}
 
-		class NotificationViewHolder extends RecyclerView.ViewHolder
+		class NotificationsFromSlvViewHolder extends RecyclerView.ViewHolder
 		{
 			final CardView card;
 			final TextView title;
-			final TextView date;
 			final TextView type;
+			final TextView date;
 			final TextView message;
-			final View uriSeparator;
-			final TextView uri;
+			final Button uri;
 
-			NotificationViewHolder(View view)
+			NotificationsFromSlvViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.notifications_from_slv_card);
-				title = (TextView) view.findViewById(R.id.notifications_from_slv_card_title);
-				date = (TextView) view.findViewById(R.id.notifications_from_slv_card_date);
-				type = (TextView) view.findViewById(R.id.notifications_from_slv_card_type);
-				message = (TextView) view.findViewById(R.id.notifications_from_slv_card_message);
-				uriSeparator = view.findViewById(R.id.notifications_from_slv_card_uri_separator);
-				uri = (TextView) view.findViewById(R.id.notifications_from_slv_card_button);
+				card = view.findViewById(R.id.notifications_from_slv_card);
+				title = view.findViewById(R.id.notifications_from_slv_card_title);
+				type = view.findViewById(R.id.notifications_from_slv_card_type);
+				date = view.findViewById(R.id.notifications_from_slv_card_date);
+				message = view.findViewById(R.id.notifications_from_slv_card_message);
+				uri = view.findViewById(R.id.notifications_from_slv_card_button);
 			}
 		}
 
 		@Override
-		public NotificationViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public NotificationsFromSlvViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notifications_from_slv_card, viewGroup, false);
-			return new NotificationViewHolder(view);
+			return new NotificationsFromSlvViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(NotificationViewHolder viewHolder, int i)
+		public void onBindViewHolder(NotificationsFromSlvViewHolder viewHolder, int i)
 		{
 			try
 			{
-				JSONObject notificationsJsonObject = mNotifications.getJSONObject(i);
+				JSONObject notificationsFromSlvJsonObject = mNotificationsFromSlv.getJSONObject(i);
 
-				viewHolder.title.setText(notificationsJsonObject.getString("title"));
-				viewHolder.date.setText(notificationsJsonObject.getString("date"));
-				viewHolder.type.setText(notificationsJsonObject.getString("type"));
-				viewHolder.message.setText(notificationsJsonObject.getString("message"));
+				viewHolder.title.setText(notificationsFromSlvJsonObject.getString("title"));
+				viewHolder.type.setText(notificationsFromSlvJsonObject.getString("type"));
+				viewHolder.date.setText(notificationsFromSlvJsonObject.getString("date"));
+				viewHolder.message.setText(notificationsFromSlvJsonObject.getString("message"));
 
-				final String title = notificationsJsonObject.getString("title");
-				final String uri = notificationsJsonObject.getString("uri");
+				final String title = notificationsFromSlvJsonObject.getString("title");
+				final String uri = notificationsFromSlvJsonObject.getString("uri");
 
-				if(uri.equals(""))
+				viewHolder.uri.setVisibility(View.VISIBLE);
+
+				viewHolder.title.setOnClickListener(new View.OnClickListener()
 				{
-					viewHolder.uriSeparator.setVisibility(View.GONE);
-					viewHolder.uri.setVisibility(View.GONE);
-				}
-				else
+					@Override
+					public void onClick(View view)
+					{
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
+
+				viewHolder.uri.setOnClickListener(new View.OnClickListener()
 				{
-					viewHolder.uriSeparator.setVisibility(View.VISIBLE);
-					viewHolder.uri.setVisibility(View.VISIBLE);
-
-					viewHolder.title.setOnClickListener(new View.OnClickListener()
+					@Override
+					public void onClick(View view)
 					{
-						@Override
-						public void onClick(View view)
-						{
-							if(uri.matches("^https?://.*?\\.pdf$"))
-							{
-								mTools.downloadFile(title, uri);
-							}
-							else
-							{
-								Intent intent = new Intent(mContext, MainWebViewActivity.class);
-								intent.putExtra("title", title);
-								intent.putExtra("uri", uri);
-								mContext.startActivity(intent);
-							}
-						}
-					});
-
-					viewHolder.uri.setOnClickListener(new View.OnClickListener()
-					{
-						@Override
-						public void onClick(View view)
-						{
-							if(uri.matches("^https?://.*?\\.pdf$"))
-							{
-								mTools.downloadFile(title, uri);
-							}
-							else
-							{
-								Intent intent = new Intent(mContext, MainWebViewActivity.class);
-								intent.putExtra("title", title);
-								intent.putExtra("uri", uri);
-								mContext.startActivity(intent);
-							}
-						}
-					});
-				}
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", title);
+						intent.putExtra("uri", uri);
+						mContext.startActivity(intent);
+					}
+				});
 
 				animateCard(viewHolder.card, i);
 			}
@@ -318,7 +295,7 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 		@Override
 		public int getItemCount()
 		{
-			return mNotifications.length();
+			return mNotificationsFromSlv.length();
 		}
 
 		private void animateCard(View view, int position)

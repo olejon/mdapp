@@ -34,6 +34,7 @@ public class ScaleActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -51,8 +52,7 @@ public class ScaleActivity extends AppCompatActivity
 		setContentView(R.layout.activity_scale);
 
 		// Picture
-		ImageViewTouch imageViewTouch = (ImageViewTouch) findViewById(R.id.scale_image);
-
+		ImageViewTouch imageViewTouch = findViewById(R.id.scale_image);
 		imageViewTouch.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 		imageViewTouch.setImageResource(image);
 

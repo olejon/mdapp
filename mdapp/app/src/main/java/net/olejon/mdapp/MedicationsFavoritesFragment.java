@@ -23,9 +23,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,7 +53,7 @@ public class MedicationsFavoritesFragment extends Fragment
 
 	// Create fragment view
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_medications_favorites, container, false);
 
@@ -64,10 +64,10 @@ public class MedicationsFavoritesFragment extends Fragment
 		mTools = new MyTools(mContext);
 
 		// Search
-		mSearchEditText = (EditText) getActivity().findViewById(R.id.main_search_edittext);
+		if(getActivity() != null) mSearchEditText = getActivity().findViewById(R.id.main_search_edittext);
 
 		// List
-		mListView = (ListView) viewGroup.findViewById(R.id.main_medications_favorites_list);
+		mListView = viewGroup.findViewById(R.id.main_medications_favorites_list);
 		mListViewEmpty = viewGroup.findViewById(R.id.main_medications_favorites_list_empty);
 
 		return viewGroup;
@@ -94,100 +94,85 @@ public class MedicationsFavoritesFragment extends Fragment
 	// Favorites
 	private void getFavorites()
 	{
-		GetMedicationsFavoritesTask getMedicationsFavoritesTask = new GetMedicationsFavoritesTask();
-		getMedicationsFavoritesTask.execute();
-	}
+		mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
+		String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+		mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" COLLATE NOCASE");
 
-	// Get medications
-	private class GetMedicationsFavoritesTask extends AsyncTask<Void,Void,MedicationsSimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(final MedicationsSimpleCursorAdapter medicationsSimpleCursorAdapter)
+		String[] fromColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+		int[] toViews = {R.id.main_medications_list_item_prescription_group, R.id.main_medications_list_item_name, R.id.main_medications_list_item_substance, R.id.main_medications_list_item_manufacturer};
+
+		final MedicationsSimpleCursorAdapter medicationsSimpleCursorAdapter = new MedicationsSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
+
+		mListView.setAdapter(medicationsSimpleCursorAdapter);
+		mListView.setEmptyView(mListViewEmpty);
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
-			mListView.setAdapter(medicationsSimpleCursorAdapter);
-			mListView.setEmptyView(mListViewEmpty);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
 			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+				TextView medicationNameTextView = view.findViewById(R.id.main_medications_list_item_name);
+
+				String medicationName = medicationNameTextView.getText().toString();
+
+				SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+				String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+				Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
+
+				if(cursor.moveToFirst())
 				{
-					TextView medicationNameTextView = (TextView) view.findViewById(R.id.main_medications_list_item_name);
+					long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
 
-					String medicationName = medicationNameTextView.getText().toString();
+					Intent intent = new Intent(mContext, MedicationActivity.class);
 
-					SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-					String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-					Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
-
-					if(cursor.moveToFirst())
+					if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
 					{
-						long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
-
-						Intent intent = new Intent(mContext, MedicationActivity.class);
-
-						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
-						{
-							intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-						}
-
-						intent.putExtra("id", id);
-						startActivity(intent);
+						intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 					}
 
-					cursor.close();
-					sqLiteDatabase.close();
-				}
-			});
-
-			mSearchEditText.addTextChangedListener(new TextWatcher()
-			{
-				@Override
-				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
-				{
-					if(MainActivity.VIEW_PAGER_POSITION == 2)
-					{
-						medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
-					}
+					intent.putExtra("id", id);
+					startActivity(intent);
 				}
 
-				@Override
-				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+				cursor.close();
+				sqLiteDatabase.close();
+			}
+		});
 
-				@Override
-				public void afterTextChanged(Editable editable) { }
-			});
-
-			medicationsSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
-			{
-				@Override
-				public Cursor runQuery(CharSequence charSequence)
-				{
-					String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
-
-					if(charSequence.length() == 0)
-					{
-						return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" COLLATE NOCASE");
-					}
-
-					String query = charSequence.toString().trim();
-
-					return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" COLLATE NOCASE");
-				}
-			});
-		}
-
-		@Override
-		protected MedicationsSimpleCursorAdapter doInBackground(Void... voids)
+		mSearchEditText.addTextChangedListener(new TextWatcher()
 		{
-			mSqLiteDatabase = new MedicationsFavoritesSQLiteHelper(mContext).getReadableDatabase();
-			String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
-			mCursor = mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" COLLATE NOCASE");
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+			{
+				if(MainActivity.VIEW_PAGER_POSITION == 2)
+				{
+					medicationsSimpleCursorAdapter.getFilter().filter(charSequence);
+				}
+			}
 
-			String[] fromColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
-			int[] toViews = {R.id.main_medications_list_item_prescription_group, R.id.main_medications_list_item_name, R.id.main_medications_list_item_substance, R.id.main_medications_list_item_manufacturer};
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
 
-			return new MedicationsSimpleCursorAdapter(mContext, mCursor, fromColumns, toViews);
-		}
+			@Override
+			public void afterTextChanged(Editable editable) { }
+		});
+
+		medicationsSimpleCursorAdapter.setFilterQueryProvider(new FilterQueryProvider()
+		{
+			@Override
+			public Cursor runQuery(CharSequence charSequence)
+			{
+				String[] queryColumns = {MedicationsFavoritesSQLiteHelper.COLUMN_ID, MedicationsFavoritesSQLiteHelper.COLUMN_PRESCRIPTION_GROUP, MedicationsFavoritesSQLiteHelper.COLUMN_NAME, MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE, MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER};
+
+				if(charSequence.length() == 0)
+				{
+					return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, null, null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" COLLATE NOCASE");
+				}
+
+				String query = charSequence.toString().trim();
+
+				return mSqLiteDatabase.query(MedicationsFavoritesSQLiteHelper.TABLE, queryColumns, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+MedicationsFavoritesSQLiteHelper.COLUMN_SUBSTANCE+" LIKE "+mTools.sqe("%"+query+"%")+" OR "+MedicationsFavoritesSQLiteHelper.COLUMN_MANUFACTURER+" LIKE "+mTools.sqe("%"+query+"%"), null, null, null, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" COLLATE NOCASE");
+			}
+		});
 	}
 }

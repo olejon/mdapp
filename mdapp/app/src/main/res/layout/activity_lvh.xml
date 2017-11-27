@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/lvh_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
 	<android.support.v7.widget.Toolbar android:id="@+id/lvh_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
 		<ProgressBar android:id="@+id/lvh_toolbar_progressbar" style="@style/toolbar_progressbar"/>
 	</android.support.v7.widget.Toolbar>
-	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/lvh_swipe_refresh_layout" android:layout_below="@+id/lvh_toolbar" style="@style/swipe_refresh_layout">
-		<android.support.v7.widget.RecyclerView android:id="@+id/lvh_cards" style="@style/lvh_cards"/>
+	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/lvh_swipe_refresh_layout" android:layout_below="@+id/lvh_toolbar" style="@style/layout_match_width_match_height">
+		<android.support.v7.widget.RecyclerView android:id="@+id/lvh_cards" style="@style/cards_layout"/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

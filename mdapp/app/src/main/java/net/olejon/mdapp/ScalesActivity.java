@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ public class ScalesActivity extends AppCompatActivity
 {
 	private final Context mContext = this;
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -43,14 +45,14 @@ public class ScalesActivity extends AppCompatActivity
 		setContentView(R.layout.activity_scales);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.scales_toolbar);
+		Toolbar toolbar = findViewById(R.id.scales_toolbar);
 		toolbar.setTitle(getString(R.string.scales_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Scales
-		TextView scalesMedscape = (TextView) findViewById(R.id.scales_medscape);
+		TextView scalesMedscape = findViewById(R.id.scales_medscape);
 
 		scalesMedscape.setOnClickListener(new View.OnClickListener()
 		{
@@ -64,9 +66,9 @@ public class ScalesActivity extends AppCompatActivity
 			}
 		});
 
-		TextView scalesVasTitle = (TextView) findViewById(R.id.scales_vas_title);
-		ImageView scalesVasImage = (ImageView) findViewById(R.id.scales_vas_image);
-		TextView scalesVasButton = (TextView) findViewById(R.id.scales_vas_button);
+		TextView scalesVasTitle = findViewById(R.id.scales_vas_title);
+		ImageView scalesVasImage = findViewById(R.id.scales_vas_image);
+		Button scalesVasButton = findViewById(R.id.scales_vas_button);
 
 		scalesVasTitle.setOnClickListener(new View.OnClickListener()
 		{
@@ -95,9 +97,9 @@ public class ScalesActivity extends AppCompatActivity
 			}
 		});
 
-		TextView scalesGcsTitle = (TextView) findViewById(R.id.scales_gcs_title);
-		ImageView scalesGcsImage = (ImageView) findViewById(R.id.scales_gcs_image);
-		TextView scalesGcsButton = (TextView) findViewById(R.id.scales_gcs_button);
+		TextView scalesGcsTitle = findViewById(R.id.scales_gcs_title);
+		ImageView scalesGcsImage = findViewById(R.id.scales_gcs_image);
+		Button scalesGcsButton = findViewById(R.id.scales_gcs_button);
 
 		scalesGcsTitle.setOnClickListener(new View.OnClickListener()
 		{
@@ -126,9 +128,9 @@ public class ScalesActivity extends AppCompatActivity
 			}
 		});
 
-		TextView scalesMewsTitle = (TextView) findViewById(R.id.scales_mews_title);
-		ImageView scalesMewsImage = (ImageView) findViewById(R.id.scales_mews_image);
-		TextView scalesMewsButton = (TextView) findViewById(R.id.scales_mews_button);
+		TextView scalesMewsTitle = findViewById(R.id.scales_mews_title);
+		ImageView scalesMewsImage = findViewById(R.id.scales_mews_image);
+		Button scalesMewsButton = findViewById(R.id.scales_mews_button);
 
 		scalesMewsTitle.setOnClickListener(new View.OnClickListener()
 		{

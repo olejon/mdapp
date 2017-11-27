@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -40,7 +39,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -59,12 +57,11 @@ public class InteractionsActivity extends AppCompatActivity
 
 	private InputMethodManager mInputMethodManager;
 
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
 
-	private boolean mActivityPaused = false;
+	private String mSearchString;
 
 	// Create activity
 	@Override
@@ -75,7 +72,7 @@ public class InteractionsActivity extends AppCompatActivity
 		// Intent
 		Intent intent = getIntent();
 
-		String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
+		mSearchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
 
 		// Input manager
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -84,14 +81,13 @@ public class InteractionsActivity extends AppCompatActivity
 		setContentView(R.layout.activity_interactions);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.interactions_toolbar);
+		Toolbar toolbar = findViewById(R.id.interactions_toolbar);
 		toolbar.setTitle(getString(R.string.interactions_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.interactions_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.interactions_toolbar_search);
+		mToolbarSearchEditText = findViewById(R.id.interactions_toolbar_search);
 
 		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -111,17 +107,17 @@ public class InteractionsActivity extends AppCompatActivity
 			}
 		});
 
-		if(!searchString.equals(""))
+		if(!mSearchString.equals(""))
 		{
-			mToolbarSearchLayout.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.setText(searchString+" ");
+			mToolbarSearchEditText.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.setText(mSearchString+" ");
 			mToolbarSearchEditText.setSelection(mToolbarSearchEditText.getText().length());
 
 			mTools.showToast(getString(R.string.interactions_search_other_medications_or_substances), 1);
 		}
 
 		// List
-		mListView = (ListView) findViewById(R.id.interactions_list);
+		mListView = findViewById(R.id.interactions_list);
 
 		View listViewEmpty = findViewById(R.id.interactions_list_empty);
 		mListView.setEmptyView(listViewEmpty);
@@ -130,14 +126,14 @@ public class InteractionsActivity extends AppCompatActivity
 		mListView.addHeaderView(listViewHeader, null, false);
 
 		// Floating action button
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.interactions_fab);
+		mFloatingActionButton = findViewById(R.id.interactions_fab);
 
 		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
@@ -145,7 +141,7 @@ public class InteractionsActivity extends AppCompatActivity
 				}
 				else
 				{
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -163,15 +159,6 @@ public class InteractionsActivity extends AppCompatActivity
 		getRecentSearches();
 	}
 
-	// Pause activity
-	@Override
-	protected void onPause()
-	{
-		super.onPause();
-
-		mActivityPaused = true;
-	}
-
 	// Destroy activity
 	@Override
 	protected void onDestroy()
@@ -186,9 +173,9 @@ public class InteractionsActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 		}
 		else
@@ -203,7 +190,7 @@ public class InteractionsActivity extends AppCompatActivity
 	{
 		if(keyCode == KeyEvent.KEYCODE_SEARCH)
 		{
-			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.setVisibility(View.VISIBLE);
 			mToolbarSearchEditText.requestFocus();
 
 			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -268,8 +255,47 @@ public class InteractionsActivity extends AppCompatActivity
 
 	private void getRecentSearches()
 	{
-		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-		getRecentSearchesTask.execute();
+		mSqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
+		mCursor = mSqLiteDatabase.query(InteractionsSQLiteHelper.TABLE, null, null, null, null, null, InteractionsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+
+		String[] fromColumns = {InteractionsSQLiteHelper.COLUMN_STRING};
+		int[] toViews = {R.id.interactions_list_item_string};
+
+		mListView.setAdapter(new SimpleCursorAdapter(mContext, R.layout.activity_interactions_list_item, mCursor, fromColumns, toViews, 0));
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				int index = i - 1;
+
+				if(mCursor.moveToPosition(index))
+				{
+					search(mCursor.getString(mCursor.getColumnIndexOrThrow(InteractionsSQLiteHelper.COLUMN_STRING)));
+				}
+			}
+		});
+
+		mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+		mFloatingActionButton.setVisibility(View.VISIBLE);
+
+		if(!mSearchString.equals(""))
+		{
+			Handler handler = new Handler();
+
+			handler.postDelayed(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.requestFocus();
+
+					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				}
+			}, 500);
+		}
 	}
 
 	private void clearRecentSearches()
@@ -278,66 +304,11 @@ public class InteractionsActivity extends AppCompatActivity
 
 		mSqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, null, null);
 
-		mToolbarSearchLayout.setVisibility(View.GONE);
+		mToolbarSearchEditText.setVisibility(View.GONE);
 		mToolbarSearchEditText.setText("");
 
 		mTools.showToast(getString(R.string.interactions_recent_searches_removed), 0);
 
 		getRecentSearches();
-	}
-
-	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-		{
-			mListView.setAdapter(simpleCursorAdapter);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-				{
-					int index = i - 1;
-
-					if(mCursor.moveToPosition(index))
-					{
-						search(mCursor.getString(mCursor.getColumnIndexOrThrow(InteractionsSQLiteHelper.COLUMN_STRING)));
-					}
-				}
-			});
-
-			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-			mFloatingActionButton.setVisibility(View.VISIBLE);
-
-			if(!mActivityPaused && mCursor.getCount() > 0)
-			{
-				Handler handler = new Handler();
-
-				handler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						mToolbarSearchLayout.setVisibility(View.VISIBLE);
-						mToolbarSearchEditText.requestFocus();
-
-						mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-					}
-				}, 500);
-			}
-		}
-
-		@Override
-		protected SimpleCursorAdapter doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new InteractionsSQLiteHelper(mContext).getWritableDatabase();
-			mCursor = mSqLiteDatabase.query(InteractionsSQLiteHelper.TABLE, null, null, null, null, null, InteractionsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
-
-			String[] fromColumns = {InteractionsSQLiteHelper.COLUMN_STRING};
-			int[] toViews = {R.id.interactions_list_item_string};
-
-			return new SimpleCursorAdapter(mContext, R.layout.activity_interactions_list_item, mCursor, fromColumns, toViews, 0);
-		}
 	}
 }

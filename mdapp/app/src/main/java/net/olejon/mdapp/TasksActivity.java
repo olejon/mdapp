@@ -26,8 +26,8 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -85,12 +85,12 @@ public class TasksActivity extends AppCompatActivity
 		setContentView(R.layout.activity_tasks);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.tasks_toolbar);
+		Toolbar toolbar = findViewById(R.id.tasks_toolbar);
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.tasks_layout_appbar);
+		AppBarLayout appBarLayout = findViewById(R.id.tasks_layout_appbar);
 
 		appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
 		{
@@ -108,11 +108,20 @@ public class TasksActivity extends AppCompatActivity
 			}
 		});
 
-		CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.tasks_toolbar_layout);
+		CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.tasks_toolbar_layout);
 		collapsingToolbarLayout.setTitle(getString(R.string.tasks_title));
 
+		// Empty
+		mEmptyTextView = findViewById(R.id.tasks_list_empty);
+
+		// Recycler view
+		mRecyclerView = findViewById(R.id.tasks_list);
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setAdapter(new TasksAdapter(mCursor));
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
 		// Floating action button
-		FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.tasks_fab);
+		FloatingActionButton floatingActionButton = findViewById(R.id.tasks_fab);
 
 		floatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -177,7 +186,7 @@ public class TasksActivity extends AppCompatActivity
 					@Override
 					public void onShow(DialogInterface dialogInterface)
 					{
-						inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+						if(inputMethodManager != null) inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 					}
 				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).autoDismiss(false).show();
 			}
@@ -185,16 +194,6 @@ public class TasksActivity extends AppCompatActivity
 
 		floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
 		floatingActionButton.setVisibility(View.VISIBLE);
-
-		// Empty
-		mEmptyTextView = (TextView) findViewById(R.id.tasks_list_empty);
-
-		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.tasks_list);
-
-		mRecyclerView.setHasFixedSize(true);
-		mRecyclerView.setAdapter(new TasksAdapter(mCursor));
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 		// Get tasks
 		getTasks();
@@ -263,40 +262,31 @@ public class TasksActivity extends AppCompatActivity
 	// Get tasks
 	private void getTasks()
 	{
-		GetTasksTask getTasksTask = new GetTasksTask();
-		getTasksTask.execute();
-	}
+		Handler handler = new Handler();
 
-	private class GetTasksTask extends AsyncTask<Void,Void,Cursor>
-	{
-		@Override
-		protected void onPostExecute(Cursor cursor)
-		{
-			if(mCursor.getCount() == 0)
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run()
 			{
-				mRecyclerView.setVisibility(View.GONE);
-				mEmptyTextView.setVisibility(View.VISIBLE);
+				mSqLiteDatabase = new TasksSQLiteHelper(mContext).getWritableDatabase();
+				String[] queryColumns = {TasksSQLiteHelper.COLUMN_ID, TasksSQLiteHelper.COLUMN_TASK, TasksSQLiteHelper.COLUMN_COMPLETED};
+				mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, queryColumns, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK);
+
+				if(mCursor.getCount() == 0)
+				{
+					mRecyclerView.setVisibility(View.GONE);
+					mEmptyTextView.setVisibility(View.VISIBLE);
+				}
+				else
+				{
+					mEmptyTextView.setVisibility(View.GONE);
+					mRecyclerView.setVisibility(View.VISIBLE);
+					mRecyclerView.setAdapter(new TasksAdapter(mCursor));
+				}
+
+				showInformationDialog(false);
 			}
-			else
-			{
-				mEmptyTextView.setVisibility(View.GONE);
-				mRecyclerView.setVisibility(View.VISIBLE);
-
-				mRecyclerView.setAdapter(new TasksAdapter(cursor));
-			}
-
-			showInformationDialog(false);
-		}
-
-		@Override
-		protected Cursor doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new TasksSQLiteHelper(mContext).getWritableDatabase();
-			String[] queryColumns = {TasksSQLiteHelper.COLUMN_ID, TasksSQLiteHelper.COLUMN_TASK, TasksSQLiteHelper.COLUMN_COMPLETED};
-			mCursor = mSqLiteDatabase.query(TasksSQLiteHelper.TABLE, queryColumns, null, null, null, null, TasksSQLiteHelper.COLUMN_COMPLETED+", "+TasksSQLiteHelper.COLUMN_TASK);
-
-			return mCursor;
-		}
+		}, 250);
 	}
 
 	// Remove tasks
@@ -312,7 +302,7 @@ public class TasksActivity extends AppCompatActivity
 	}
 
 	// Adapter
-	class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksAdapterViewHolder>
+	class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHolder>
 	{
 		final Cursor mCursor;
 
@@ -321,34 +311,36 @@ public class TasksActivity extends AppCompatActivity
 			mCursor = cursor;
 		}
 
-		class TasksAdapterViewHolder extends RecyclerView.ViewHolder
+		class TasksViewHolder extends RecyclerView.ViewHolder
 		{
 			final LinearLayout listItem;
 			final TextView task;
 
-			TasksAdapterViewHolder(View view)
+			TasksViewHolder(View view)
 			{
 				super(view);
 
-				listItem = (LinearLayout) view.findViewById(R.id.tasks_list_item_layout);
-				task = (TextView) view.findViewById(R.id.tasks_list_item_task);
+				listItem = view.findViewById(R.id.tasks_list_item_layout);
+				task = view.findViewById(R.id.tasks_list_item_task);
 			}
 		}
 
 		@Override
-		public TasksAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public TasksViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_tasks_list_item, viewGroup, false);
-			return new TasksAdapterViewHolder(view);
+			return new TasksViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(TasksAdapterViewHolder viewHolder, int i)
+		public void onBindViewHolder(TasksViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{
 				final int taskId = mCursor.getInt(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_ID));
+
 				final String taskCompleted = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_COMPLETED));
+
 				String task = mCursor.getString(mCursor.getColumnIndexOrThrow(TasksSQLiteHelper.COLUMN_TASK));
 
 				viewHolder.task.setText(task);

@@ -71,13 +71,10 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
-	private Toolbar mToolbar;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
 	private LinearLayout mNoInteractionsLayout;
-
-	private String searchString;
 
 	// Create activity
 	@Override
@@ -98,27 +95,27 @@ public class InteractionsCardsActivity extends AppCompatActivity
 		// Intent
 		Intent intent = getIntent();
 
-		searchString = intent.getStringExtra("search");
+		final String searchString = intent.getStringExtra("search");
 
 		// Layout
 		setContentView(R.layout.activity_interactions_cards);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.interactions_cards_toolbar);
-		mToolbar.setTitle(getString(R.string.interactions_cards_search, searchString));
+		final Toolbar toolbar = findViewById(R.id.interactions_cards_toolbar);
+		toolbar.setTitle(getString(R.string.interactions_cards_search, searchString));
 
-		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+		TextView toolbarTextView = (TextView) toolbar.getChildAt(1);
+		toolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
-		setSupportActionBar(mToolbar);
+		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.interactions_cards_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.interactions_cards_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.interactions_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.interactions_cards_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -131,16 +128,15 @@ public class InteractionsCardsActivity extends AppCompatActivity
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.interactions_cards_cards);
-
+		mRecyclerView = findViewById(R.id.interactions_cards_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new InteractionsCardsAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 		// No interactions
-		mNoInteractionsLayout = (LinearLayout) findViewById(R.id.interactions_cards_no_interactions);
+		mNoInteractionsLayout = findViewById(R.id.interactions_cards_no_interactions);
 
-		Button noInteractionsButton = (Button) findViewById(R.id.interactions_cards_no_interactions_button);
+		Button noInteractionsButton = findViewById(R.id.interactions_cards_no_interactions_button);
 
 		noInteractionsButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -186,6 +182,15 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
 							if(!correctSearchString.equals(""))
 							{
+								mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+								{
+									@Override
+									public void onRefresh()
+									{
+										search(correctSearchString);
+									}
+								});
+
 								new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 								{
 									@Override
@@ -201,7 +206,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
 										sqLiteDatabase.close();
 
-										mToolbar.setTitle(getString(R.string.interactions_cards_search, correctSearchString));
+										toolbar.setTitle(getString(R.string.interactions_cards_search, correctSearchString));
 
 										mProgressBar.setVisibility(View.VISIBLE);
 
@@ -287,7 +292,6 @@ public class InteractionsCardsActivity extends AppCompatActivity
 						if(mTools.isTablet())
 						{
 							int spanCount = (response.length() == 1) ? 1 : 2;
-
 							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 						}
 
@@ -349,22 +353,22 @@ public class InteractionsCardsActivity extends AppCompatActivity
 			final TextView title;
 			final TextView text;
 			final TextView relevance;
-			final TextView handlingUri;
-			final TextView pubmedSearchUri;
-			final TextView uri;
+			final Button handlingUri;
+			final Button uri;
+			final Button pubmedSearchUri;
 
 			InteractionsViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.interactions_cards_card);
-				icon = (ImageView) view.findViewById(R.id.interactions_cards_card_icon);
-				title = (TextView) view.findViewById(R.id.interactions_cards_card_title);
-				text = (TextView) view.findViewById(R.id.interactions_cards_card_text);
-				relevance = (TextView) view.findViewById(R.id.interactions_cards_card_relevance);
-				uri = (TextView) view.findViewById(R.id.interactions_cards_card_button_uri);
-				handlingUri = (TextView) view.findViewById(R.id.interactions_cards_card_button_handling);
-				pubmedSearchUri = (TextView) view.findViewById(R.id.interactions_cards_card_button_pubmed_search_uri);
+				card = view.findViewById(R.id.interactions_cards_card);
+				icon = view.findViewById(R.id.interactions_cards_card_icon);
+				title = view.findViewById(R.id.interactions_cards_card_title);
+				text = view.findViewById(R.id.interactions_cards_card_text);
+				relevance = view.findViewById(R.id.interactions_cards_card_relevance);
+				handlingUri = view.findViewById(R.id.interactions_cards_card_button_handling);
+				uri = view.findViewById(R.id.interactions_cards_card_button_uri);
+				pubmedSearchUri = view.findViewById(R.id.interactions_cards_card_button_pubmed_search_uri);
 			}
 		}
 
@@ -385,6 +389,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 				final String title = interactionJsonObject.getString("title");
 				final String uri = interactionJsonObject.getString("uri");
 				final String pubmedSearchUri = interactionJsonObject.getString("pubmed_search_uri");
+
 				String color = interactionJsonObject.getString("color");
 				String text = interactionJsonObject.getString("text");
 

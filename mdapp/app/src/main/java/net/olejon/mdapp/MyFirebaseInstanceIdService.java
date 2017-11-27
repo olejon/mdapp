@@ -19,14 +19,25 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
-import android.content.Intent;
-import android.widget.RemoteViewsService;
+import android.content.Context;
+import android.util.Log;
 
-public class WidgetService extends RemoteViewsService
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+
+public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService
 {
+	private final Context mContext = this;
+
+	private final MyTools mTools = new MyTools(mContext);
+
 	@Override
-	public RemoteViewsFactory onGetViewFactory(Intent intent)
+	public void onTokenRefresh()
 	{
-		return new WidgetListFactory(getApplicationContext());
+		String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+
+		mTools.setSharedPreferencesString("FIREBASE_TOKEN", firebaseToken);
+
+		Log.w("NewFirebaseToken", firebaseToken);
 	}
 }

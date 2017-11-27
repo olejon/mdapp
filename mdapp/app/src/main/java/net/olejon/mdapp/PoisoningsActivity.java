@@ -24,9 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -42,7 +40,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -65,12 +62,9 @@ public class PoisoningsActivity extends AppCompatActivity
 
 	private InputMethodManager mInputMethodManager;
 
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
-
-	private boolean mActivityPaused = false;
 
 	// Create activity
 	@Override
@@ -90,14 +84,13 @@ public class PoisoningsActivity extends AppCompatActivity
 		setContentView(R.layout.activity_poisonings);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.poisonings_toolbar);
+		Toolbar toolbar = findViewById(R.id.poisonings_toolbar);
 		toolbar.setTitle(getString(R.string.poisonings_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.poisonings_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.poisonings_toolbar_search);
+		mToolbarSearchEditText = findViewById(R.id.poisonings_toolbar_search);
 
 		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -118,14 +111,14 @@ public class PoisoningsActivity extends AppCompatActivity
 		});
 
 		// Floating action button
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.poisonings_fab);
+		mFloatingActionButton = findViewById(R.id.poisonings_fab);
 
 		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
@@ -133,7 +126,7 @@ public class PoisoningsActivity extends AppCompatActivity
 				}
 				else
 				{
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -142,7 +135,7 @@ public class PoisoningsActivity extends AppCompatActivity
 		});
 
 		// List
-		mListView = (ListView) findViewById(R.id.poisonings_list);
+		mListView = findViewById(R.id.poisonings_list);
 
 		View listViewEmpty = findViewById(R.id.poisonings_list_empty);
 		mListView.setEmptyView(listViewEmpty);
@@ -185,7 +178,8 @@ public class PoisoningsActivity extends AppCompatActivity
 	{
 		super.onPause();
 
-		mActivityPaused = true;
+		mToolbarSearchEditText.setVisibility(View.GONE);
+		mToolbarSearchEditText.setText("");
 	}
 
 	// Destroy activity
@@ -202,9 +196,9 @@ public class PoisoningsActivity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 		}
 		else
@@ -219,7 +213,7 @@ public class PoisoningsActivity extends AppCompatActivity
 	{
 		if(keyCode == KeyEvent.KEYCODE_SEARCH)
 		{
-			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.setVisibility(View.VISIBLE);
 			mToolbarSearchEditText.requestFocus();
 
 			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -302,8 +296,42 @@ public class PoisoningsActivity extends AppCompatActivity
 
 	private void getRecentSearches()
 	{
-		GetRecentSearchesTask getRecentSearchesTask = new GetRecentSearchesTask();
-		getRecentSearchesTask.execute();
+		mSqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
+		mCursor = mSqLiteDatabase.query(PoisoningsSQLiteHelper.TABLE, null, null, null, null, null, PoisoningsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
+
+		String[] fromColumns = {PoisoningsSQLiteHelper.COLUMN_STRING};
+		int[] toViews = {R.id.poisonings_list_item_string};
+
+		mListView.setAdapter(new SimpleCursorAdapter(mContext, R.layout.activity_poisonings_list_item, mCursor, fromColumns, toViews, 0));
+
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				int index = i - 1;
+
+				if(mCursor.moveToPosition(index))
+				{
+					search(mCursor.getString(mCursor.getColumnIndexOrThrow(PoisoningsSQLiteHelper.COLUMN_STRING)));
+				}
+			}
+		});
+
+		mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+		mFloatingActionButton.setVisibility(View.VISIBLE);
+
+		if(!mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG"))
+		{
+			new MaterialDialog.Builder(mContext).title(R.string.poisonings_information_dialog_title).content(getString(R.string.poisonings_information_dialog_message)).positiveText(R.string.poisonings_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
+			{
+				@Override
+				public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
+				{
+					mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG", true);
+				}
+			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+		}
 	}
 
 	private void clearRecentSearches()
@@ -313,74 +341,5 @@ public class PoisoningsActivity extends AppCompatActivity
 		mTools.showToast(getString(R.string.poisonings_recent_searches_removed), 0);
 
 		getRecentSearches();
-	}
-
-	private class GetRecentSearchesTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-		{
-			mListView.setAdapter(simpleCursorAdapter);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-				{
-					int index = i - 1;
-
-					if(mCursor.moveToPosition(index))
-					{
-						search(mCursor.getString(mCursor.getColumnIndexOrThrow(PoisoningsSQLiteHelper.COLUMN_STRING)));
-					}
-				}
-			});
-
-			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-			mFloatingActionButton.setVisibility(View.VISIBLE);
-
-			if(mTools.getSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG"))
-			{
-				if(!mActivityPaused && mCursor.getCount() > 0)
-				{
-					Handler handler = new Handler();
-
-					handler.postDelayed(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							mToolbarSearchLayout.setVisibility(View.VISIBLE);
-							mToolbarSearchEditText.requestFocus();
-
-							mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-						}
-					}, 500);
-				}
-			}
-			else
-			{
-				new MaterialDialog.Builder(mContext).title(R.string.poisonings_information_dialog_title).content(getString(R.string.poisonings_information_dialog_message)).positiveText(R.string.poisonings_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
-				{
-					@Override
-					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-					{
-						mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG", true);
-					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
-			}
-		}
-
-		@Override
-		protected SimpleCursorAdapter doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
-			mCursor = mSqLiteDatabase.query(PoisoningsSQLiteHelper.TABLE, null, null, null, null, null, PoisoningsSQLiteHelper.COLUMN_ID+" DESC LIMIT 10");
-
-			String[] fromColumns = {PoisoningsSQLiteHelper.COLUMN_STRING};
-			int[] toViews = {R.id.poisonings_list_item_string};
-
-			return new SimpleCursorAdapter(mContext, R.layout.activity_poisonings_list_item, mCursor, fromColumns, toViews, 0);
-		}
 	}
 }

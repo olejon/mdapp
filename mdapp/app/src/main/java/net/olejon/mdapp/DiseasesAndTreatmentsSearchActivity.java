@@ -19,12 +19,10 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
-import android.app.assist.AssistContent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
@@ -69,7 +67,6 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
-	private Toolbar mToolbar;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
@@ -97,28 +94,27 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 		Intent intent = getIntent();
 
 		mSearchLanguage = intent.getStringExtra("language");
-
 		mSearchString = intent.getStringExtra("string");
 
 		// Layout
 		setContentView(R.layout.activity_diseases_and_treatments_search);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_toolbar);
-		mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, mSearchString));
+		final Toolbar toolbar = findViewById(R.id.diseases_and_treatments_search_toolbar);
+		toolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, mSearchString));
 
-		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+		TextView toolbarTextView = (TextView) toolbar.getChildAt(1);
+		toolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
-		setSupportActionBar(mToolbar);
+		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.diseases_and_treatments_search_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.diseases_and_treatments_search_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.diseases_and_treatments_search_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.diseases_and_treatments_search_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -131,8 +127,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.diseases_and_treatments_search_cards);
-
+		mRecyclerView = findViewById(R.id.diseases_and_treatments_search_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -160,6 +155,15 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
 						if(!correctSearchString.equals(""))
 						{
+							mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+							{
+								@Override
+								public void onRefresh()
+								{
+									search(correctSearchString);
+								}
+							});
+
 							new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 							{
 								@Override
@@ -175,7 +179,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
 									sqLiteDatabase.close();
 
-									mToolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, correctSearchString));
+									toolbar.setTitle(getString(R.string.diseases_and_treatments_search_search, correctSearchString));
 
 									mProgressBar.setVisibility(View.VISIBLE);
 
@@ -228,37 +232,20 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 		}
 	}
 
-	// Assistant
-	@Override
-	public void onProvideAssistContent(AssistContent assistContent)
-	{
-		super.onProvideAssistContent(assistContent);
-
-		try
-		{
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-			{
-				String structuredJson = new JSONObject().put("@type", "MedicalCondition").put("name", mSearchString).toString();
-
-				assistContent.setStructuredData(structuredJson);
-			}
-		}
-		catch(Exception e)
-		{
-			Log.e("DiseasesAndTreatments", Log.getStackTraceString(e));
-		}
-	}
-
 	// Search
 	private void search(final String searchString)
 	{
 		try
 		{
+			final boolean isTablet = mTools.isTablet();
+
+			String deviceType = (isTablet) ? "tablet" : "mobile";
+
 			final RequestQueue requestQueue = new RequestQueue(new DiskBasedCache(getCacheDir(), 0), new BasicNetwork(new HurlStack()));
 
 			requestQueue.start();
 
-			JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/diseases-and-treatments/"+mSearchLanguage+"/?search="+URLEncoder.encode(searchString, "utf-8"), new Response.Listener<JSONArray>()
+			JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(mTools.getApiUri()+"api/1/diseases-and-treatments/"+mSearchLanguage+"/?search="+URLEncoder.encode(searchString, "utf-8")+"&device_type="+deviceType, new Response.Listener<JSONArray>()
 			{
 				@Override
 				public void onResponse(JSONArray response)
@@ -268,9 +255,10 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 					mProgressBar.setVisibility(View.GONE);
 					mSwipeRefreshLayout.setRefreshing(false);
 
-					if(mTools.isTablet())
+					if(isTablet)
 					{
-						mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+						int spanCount = (response.length() == 1) ? 1 : 2;
+						mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 					}
 
 					mRecyclerView.setAdapter(new DiseasesAndTreatmentsSearchAdapter(response));
@@ -316,11 +304,11 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 	// Adapter
 	class DiseasesAndTreatmentsSearchAdapter extends RecyclerView.Adapter<DiseasesAndTreatmentsSearchAdapter.DiseasesAndTreatmentsSearchViewHolder>
 	{
-		final JSONArray mResults;
+		final JSONArray DiseasesAndTreatments;
 
 		DiseasesAndTreatmentsSearchAdapter(JSONArray results)
 		{
-			mResults = results;
+			DiseasesAndTreatments = results;
 		}
 
 		class DiseasesAndTreatmentsSearchViewHolder extends RecyclerView.ViewHolder
@@ -334,10 +322,10 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.diseases_and_treatments_search_card);
-				icon = (ImageView) view.findViewById(R.id.diseases_and_treatments_search_card_icon);
-				title = (TextView) view.findViewById(R.id.diseases_and_treatments_search_card_title);
-				text = (TextView) view.findViewById(R.id.diseases_and_treatments_search_card_text);
+				card = view.findViewById(R.id.diseases_and_treatments_search_card);
+				icon = view.findViewById(R.id.diseases_and_treatments_search_card_icon);
+				title = view.findViewById(R.id.diseases_and_treatments_search_card_title);
+				text = view.findViewById(R.id.diseases_and_treatments_search_card_text);
 			}
 		}
 
@@ -353,12 +341,13 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 		{
 			try
 			{
-				JSONObject result = mResults.getJSONObject(i);
+				JSONObject diseaseAndTreatmentjsonObject = DiseasesAndTreatments.getJSONObject(i);
 
-				final String title = result.getString("title");
-				final String uri = result.getString("uri");
-				String type = result.getString("type");
-				String text = result.getString("text");
+				final String title = diseaseAndTreatmentjsonObject.getString("title");
+				final String uri = diseaseAndTreatmentjsonObject.getString("uri");
+
+				String type = diseaseAndTreatmentjsonObject.getString("type");
+				String text = diseaseAndTreatmentjsonObject.getString("text");
 
 				viewHolder.title.setText(title);
 
@@ -496,7 +485,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 		@Override
 		public int getItemCount()
 		{
-			return mResults.length();
+			return DiseasesAndTreatments.length();
 		}
 	}
 }

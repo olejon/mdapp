@@ -21,6 +21,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -55,13 +56,13 @@ public class WelcomeActivity extends AppCompatActivity
 		// View pager
 		PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-		final ViewPager viewPager = (ViewPager) findViewById(R.id.welcome_pager);
+		final ViewPager viewPager = findViewById(R.id.welcome_pager);
 
 		viewPager.setAdapter(pagerAdapter);
 		viewPager.setOffscreenPageLimit(4);
 		viewPager.setPageTransformer(true, new ViewPagerTransformer());
 
-		ImageView imageView = (ImageView) findViewById(R.id.welcome_pager_indicator_page_1);
+		ImageView imageView = findViewById(R.id.welcome_pager_indicator_page_1);
 		imageView.setImageResource(R.drawable.welcome_indicator_active);
 
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
@@ -75,7 +76,7 @@ public class WelcomeActivity extends AppCompatActivity
 			{
 				mViewPagerPosition = position;
 
-				linearLayout = (LinearLayout) findViewById(R.id.welcome_pager_indicator_layout);
+				linearLayout = findViewById(R.id.welcome_pager_indicator_layout);
 
 				for(int i = 0; i < linearLayout.getChildCount(); i++)
 				{
@@ -90,13 +91,16 @@ public class WelcomeActivity extends AppCompatActivity
 			@Override
 			public void onPageScrollStateChanged(int state)
 			{
-				textView = (TextView) viewPager.findViewById(R.id.welcome_page_1_guide);
+				textView = viewPager.findViewById(R.id.welcome_page_1_guide);
 				textView.setVisibility(View.INVISIBLE);
 
-				textView = (TextView) viewPager.findViewById(R.id.welcome_page_2_guide);
+				textView = viewPager.findViewById(R.id.welcome_page_2_guide);
 				textView.setVisibility(View.INVISIBLE);
 
-				textView = (TextView) viewPager.findViewById(R.id.welcome_page_3_guide);
+				textView = viewPager.findViewById(R.id.welcome_page_3_guide);
+				textView.setVisibility(View.INVISIBLE);
+
+				textView = viewPager.findViewById(R.id.welcome_page_4_guide);
 				textView.setVisibility(View.INVISIBLE);
 			}
 
@@ -165,7 +169,7 @@ public class WelcomeActivity extends AppCompatActivity
 	{
 		final float minimumScale = 0.75f;
 
-		public void transformPage(View view, float position)
+		public void transformPage(@NonNull View view, float position)
 		{
 			int pageWidth = view.getWidth();
 

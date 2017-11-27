@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -36,7 +35,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -56,6 +54,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
@@ -65,7 +64,7 @@ import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity
 {
-	public static SQLiteDatabase SQLITE_DATABASE;
+	public static SQLiteDatabase SL_DATA_SQLITE_DATABASE;
 
 	public static int VIEW_PAGER_POSITION = 0;
 
@@ -81,6 +80,7 @@ public class MainActivity extends AppCompatActivity
 	private DrawerLayout mDrawerLayout;
 	private EditText mSearchEditText;
 	private ViewPager mViewPager;
+	private TabLayout mTabLayout;
 	private FloatingActionButton mFloatingActionButton;
 
 	private TextView mHelsebiblioteketTextView;
@@ -110,21 +110,13 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		// Firebase
-		FirebaseAnalytics.getInstance(mContext);
-		FirebaseMessaging.getInstance().subscribeToTopic("message");
-		FirebaseMessaging.getInstance().subscribeToTopic("notifications_from_slv");
-
 		// Settings
 		PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
 		// Installed
-		long installed = mTools.getSharedPreferencesLong("INSTALLED_3400");
+		long installed = mTools.getSharedPreferencesLong("INSTALLED_3600");
 
-		if(installed == 0)
-		{
-			mTools.setSharedPreferencesLong("INSTALLED_3400", mTools.getCurrentTime());
-		}
+		if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_3600", mTools.getCurrentTime());
 
 		// Input manager
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -133,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+		Toolbar toolbar = findViewById(R.id.main_toolbar);
 		toolbar.setTitle(getString(R.string.main_title));
 
 		setSupportActionBar(toolbar);
@@ -143,38 +135,40 @@ public class MainActivity extends AppCompatActivity
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
 		// Search
-		mSearchEditText = (EditText) findViewById(R.id.main_search_edittext);
+		mSearchEditText = findViewById(R.id.main_search_edittext);
 
 		// Drawer
-		mDrawer = (NavigationView) findViewById(R.id.main_drawer);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+		mDrawer = findViewById(R.id.main_drawer);
+		mDrawerLayout = findViewById(R.id.main_drawer_layout);
 
-		mHelsebiblioteketTextView = (TextView) findViewById(R.id.drawer_item_helsebiblioteket);
-		mTidsskriftetTextView = (TextView) findViewById(R.id.drawer_item_tidsskriftet);
-		mOncolexTextView = (TextView) findViewById(R.id.drawer_item_oncolex);
-		mBrukerhandbokenTextView = (TextView) findViewById(R.id.drawer_item_brukerhandboken);
-		mAnalyseoversiktenTextView = (TextView) findViewById(R.id.drawer_item_analyseoversikten);
-		mNhiTextView = (TextView) findViewById(R.id.drawer_item_nhi);
-		mSmlTextView = (TextView) findViewById(R.id.drawer_item_sml);
-		mWikipediaNorwegianTextView = (TextView) findViewById(R.id.drawer_item_wikipedia_norwegian);
-		mForskningTextView = (TextView) findViewById(R.id.drawer_item_forskning);
-		mHelsenorgeTextView = (TextView) findViewById(R.id.drawer_item_helsenorge);
-		mUpToDateTextView = (TextView) findViewById(R.id.drawer_item_uptodate);
-		mBmjTextView = (TextView) findViewById(R.id.drawer_item_bmj);
-		mPubmedTextView = (TextView) findViewById(R.id.drawer_item_pubmed);
-		mWebofscienceTextView = (TextView) findViewById(R.id.drawer_item_webofscience);
-		mMedlineplusTextView = (TextView) findViewById(R.id.drawer_item_medlineplus);
-		mAoSurgeryTextView = (TextView) findViewById(R.id.drawer_item_ao_surgery);
-		mWikipediaEnglishTextView = (TextView) findViewById(R.id.drawer_item_wikipedia_english);
-		mEncyclopediasTextView = (TextView) findViewById(R.id.drawer_item_encyclopedias);
+		mHelsebiblioteketTextView = findViewById(R.id.drawer_item_helsebiblioteket);
+		mTidsskriftetTextView = findViewById(R.id.drawer_item_tidsskriftet);
+		mOncolexTextView = findViewById(R.id.drawer_item_oncolex);
+		mBrukerhandbokenTextView = findViewById(R.id.drawer_item_brukerhandboken);
+		mAnalyseoversiktenTextView = findViewById(R.id.drawer_item_analyseoversikten);
+		mNhiTextView = findViewById(R.id.drawer_item_nhi);
+		mSmlTextView = findViewById(R.id.drawer_item_sml);
+		mWikipediaNorwegianTextView = findViewById(R.id.drawer_item_wikipedia_norwegian);
+		mForskningTextView = findViewById(R.id.drawer_item_forskning);
+		mHelsenorgeTextView = findViewById(R.id.drawer_item_helsenorge);
+		mUpToDateTextView = findViewById(R.id.drawer_item_uptodate);
+		mBmjTextView = findViewById(R.id.drawer_item_bmj);
+		mPubmedTextView = findViewById(R.id.drawer_item_pubmed);
+		mWebofscienceTextView = findViewById(R.id.drawer_item_webofscience);
+		mMedlineplusTextView = findViewById(R.id.drawer_item_medlineplus);
+		mAoSurgeryTextView = findViewById(R.id.drawer_item_ao_surgery);
+		mWikipediaEnglishTextView = findViewById(R.id.drawer_item_wikipedia_english);
+		mEncyclopediasTextView = findViewById(R.id.drawer_item_encyclopedias);
 
-		TextView drawerVersionNameTextView = (TextView) findViewById(R.id.drawer_version_name);
-		TextView drawerVersionCodeTextView = (TextView) findViewById(R.id.drawer_version_code);
+		TextView drawerVersionNameTextView = findViewById(R.id.drawer_version_name);
+		TextView drawerVersionCodeTextView = findViewById(R.id.drawer_version_code);
 
 		drawerVersionNameTextView.setText(getString(R.string.drawer_version_name, mTools.getProjectVersionName()));
 		drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code, mTools.getProjectVersionCode()));
 
-		mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(mActivity, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
+		int drawerContentDescription = R.string.drawer_content_description;
+
+		mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(mActivity, mDrawerLayout, toolbar, drawerContentDescription, drawerContentDescription)
 		{
 			@Override
 			public void onDrawerOpened(View drawerView)
@@ -213,22 +207,22 @@ public class MainActivity extends AppCompatActivity
 						startActivity(intent);
 						break;
 					}
-					case R.id.drawer_item_nlh:
-					{
-						String uri = (mTools.isTablet()) ? "http://legemiddelhandboka.no/" : "http://m.legemiddelhandboka.no/";
-
-						Intent intent = new Intent(mContext, MainWebViewActivity.class);
-						intent.putExtra("title", getString(R.string.drawer_item_nlh));
-						intent.putExtra("uri", uri);
-						startActivity(intent);
-						break;
-					}
 					case R.id.drawer_item_felleskatalogen:
 					{
 						String uri = (mTools.isTablet()) ? "https://www.felleskatalogen.no/medisin/" : "https://www.felleskatalogen.no/m/medisin/";
 
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.drawer_item_felleskatalogen));
+						intent.putExtra("uri", uri);
+						startActivity(intent);
+						break;
+					}
+					case R.id.drawer_item_nlh:
+					{
+						String uri = (mTools.isTablet()) ? "http://legemiddelhandboka.no/" : "http://m.legemiddelhandboka.no/";
+
+						Intent intent = new Intent(mContext, MainWebViewActivity.class);
+						intent.putExtra("title", getString(R.string.drawer_item_nlh));
 						intent.putExtra("uri", uri);
 						startActivity(intent);
 						break;
@@ -277,7 +271,7 @@ public class MainActivity extends AppCompatActivity
 					{
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.drawer_item_analyseoversikten));
-						intent.putExtra("uri", "http://www.analyseoversikten.no/");
+						intent.putExtra("uri", "http://analyseoversikten.no/");
 						startActivity(intent);
 						break;
 					}
@@ -301,7 +295,7 @@ public class MainActivity extends AppCompatActivity
 					{
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.drawer_item_wikipedia_norwegian));
-						intent.putExtra("uri", "https://no.m.wikipedia.org/");
+						intent.putExtra("uri", "https://no.wikipedia.org/");
 						startActivity(intent);
 						break;
 					}
@@ -339,9 +333,11 @@ public class MainActivity extends AppCompatActivity
 					}
 					case R.id.drawer_item_pubmed:
 					{
+						String uri = (mTools.isTablet()) ? "https://www.ncbi.nlm.nih.gov/pubmed/" : "https://www.ncbi.nlm.nih.gov/m/pubmed/";
+
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.drawer_item_pubmed));
-						intent.putExtra("uri", "https://www.ncbi.nlm.nih.gov/m/pubmed/");
+						intent.putExtra("uri", uri);
 						startActivity(intent);
 						break;
 					}
@@ -363,9 +359,11 @@ public class MainActivity extends AppCompatActivity
 					}
 					case R.id.drawer_item_ao_surgery:
 					{
+						String uri = (mTools.isTablet()) ? "https://www2.aofoundation.org/wps/portal/surgery" : "https://www2.aofoundation.org/wps/portal/surgerymobile/";
+
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.drawer_item_ao_surgery));
-						intent.putExtra("uri", "https://www2.aofoundation.org/wps/portal/surgerymobile/");
+						intent.putExtra("uri", uri);
 						startActivity(intent);
 						break;
 					}
@@ -373,7 +371,7 @@ public class MainActivity extends AppCompatActivity
 					{
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.drawer_item_wikipedia_english));
-						intent.putExtra("uri", "https://en.m.wikipedia.org/");
+						intent.putExtra("uri", "https://en.wikipedia.org/");
 						startActivity(intent);
 						break;
 					}
@@ -501,10 +499,13 @@ public class MainActivity extends AppCompatActivity
 		});
 
 		// View pager
-		mViewPager = (ViewPager) findViewById(R.id.main_pager);
+		mViewPager = findViewById(R.id.main_pager);
+
+		// Tab layout
+		mTabLayout = findViewById(R.id.main_tabs);
 
 		// Floating action button
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.main_fab);
+		mFloatingActionButton = findViewById(R.id.main_fab);
 
 		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -517,9 +518,82 @@ public class MainActivity extends AppCompatActivity
 			}
 		});
 
+		// Welcome
+		if(!mTools.getSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN"))
+		{
+			Handler welcomeActivityHandler = new Handler();
+
+			welcomeActivityHandler.postDelayed(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Intent intent = new Intent(mContext, WelcomeActivity.class);
+					startActivity(intent);
+				}
+			}, 500);
+		}
+
 		// Get data
-		GetDataTask getDataTask = new GetDataTask();
-		getDataTask.execute();
+		if(mTools.getSharedPreferencesBoolean(SlDataSQLiteHelper.DB_CREATED))
+		{
+			getSlData();
+		}
+		else
+		{
+			Thread getSlDataThread = new Thread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					SQLiteDatabase slDataSqLiteDatabase = new SlDataSQLiteHelper(mContext).getWritableDatabase();
+
+					try
+					{
+						Log.w("LOG", getString(R.string.main_decompressing_new_database));
+
+						String dbName = SlDataSQLiteHelper.DB_NAME;
+						int dbVersion = SlDataSQLiteHelper.DB_VERSION;
+
+						File file = getDatabasePath(SlDataSQLiteHelper.DB_NAME);
+
+						InputStream inputStream = mContext.getAssets().open(SlDataSQLiteHelper.DB_NAME);
+						OutputStream outputStream = new FileOutputStream(file);
+
+						byte[] buffer = new byte[1024];
+						int length;
+
+						while((length = inputStream.read(buffer)) > 0)
+						{
+							outputStream.write(buffer, 0, length);
+						}
+
+						outputStream.flush();
+						outputStream.close();
+						inputStream.close();
+
+						Log.w("LOG", getString(R.string.main_new_database_decompressed, dbName, dbVersion));
+					}
+					catch(Exception e)
+					{
+						Log.e("MainActivity", Log.getStackTraceString(e));
+					}
+
+					slDataSqLiteDatabase.close();
+
+					runOnUiThread(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							getSlData();
+						}
+					});
+				}
+			});
+
+			getSlDataThread.start();
+		}
 	}
 
 	// Resume activity
@@ -530,31 +604,19 @@ public class MainActivity extends AppCompatActivity
 
 		NotificationManagerCompat.from(mContext).cancel(MyFirebaseMessagingService.NOTIFICATION_MESSAGE_ID);
 
-		// Input manager
-		Handler handler = new Handler();
-
-		handler.postDelayed(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mInputMethodManager.hideSoftInputFromWindow(mDrawerLayout.getWindowToken(), 0);
-			}
-		}, 250);
-
 		// Floating action button
 		mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
 		mFloatingActionButton.setVisibility(View.VISIBLE);
 
 		// Rate
-		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3400"))
+		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3600"))
 		{
 			long currentTime = mTools.getCurrentTime();
-			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3400");
+			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3600");
 
 			if(currentTime - installedTime > 1000 * 3600 * 48)
 			{
-				mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3400", true);
+				mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3600", true);
 
 				new MaterialDialog.Builder(mContext).title(R.string.main_rate_dialog_title).content(getString(R.string.main_rate_dialog_message)).positiveText(R.string.main_rate_dialog_positive_button).negativeText(R.string.main_rate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 				{
@@ -569,14 +631,14 @@ public class MainActivity extends AppCompatActivity
 		}
 
 		// Donate
-		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3400"))
+		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3600"))
 		{
 			long currentTime = mTools.getCurrentTime();
-			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3400");
+			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3600");
 
 			if(currentTime - installedTime > 1000 * 3600 * 96)
 			{
-				mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3400", true);
+				mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3600", true);
 
 				new MaterialDialog.Builder(mContext).title(R.string.main_donate_dialog_title).content(getString(R.string.main_donate_dialog_message)).positiveText(R.string.main_donate_dialog_positive_button).negativeText(R.string.main_donate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 				{
@@ -596,7 +658,7 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onDestroy();
 
-		if(SQLITE_DATABASE != null && SQLITE_DATABASE.isOpen()) SQLITE_DATABASE.close();
+		if(SL_DATA_SQLITE_DATABASE != null && SL_DATA_SQLITE_DATABASE.isOpen()) SL_DATA_SQLITE_DATABASE.close();
 	}
 
 	// Back button
@@ -767,7 +829,7 @@ public class MainActivity extends AppCompatActivity
 
 	private class ViewPagerTransformer implements ViewPager.PageTransformer
 	{
-		public void transformPage(View view, float position)
+		public void transformPage(@NonNull View view, float position)
 		{
 			int pageWidth = view.getWidth();
 			int pageHeight = view.getHeight();
@@ -793,96 +855,50 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
-	// Get data
-	private class GetDataTask extends AsyncTask<Void,Void,Void>
+	// Get SL data
+	private void getSlData()
 	{
-		@Override
-		protected void onPostExecute(Void success)
+		// Database
+		SL_DATA_SQLITE_DATABASE = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+
+		// Layout
+		mViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+		mViewPager.setOffscreenPageLimit(3);
+		mViewPager.setPageTransformer(true, new ViewPagerTransformer());
+
+		mTabLayout.setupWithViewPager(mViewPager);
+
+		mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
 		{
-			PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-			mViewPager.setAdapter(pagerAdapter);
-			mViewPager.setOffscreenPageLimit(3);
-			mViewPager.setPageTransformer(true, new ViewPagerTransformer());
-
-			TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
-			tabLayout.setupWithViewPager(mViewPager);
-
-			tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+			@Override
+			public void onTabSelected(TabLayout.Tab tab)
 			{
-				@Override
-				public void onTabSelected(TabLayout.Tab tab)
-				{
-					VIEW_PAGER_POSITION = tab.getPosition();
+				VIEW_PAGER_POSITION = tab.getPosition();
 
-					mSearchEditText.setText("");
-				}
+				mSearchEditText.setText("");
 
-				@Override
-				public void onTabUnselected(TabLayout.Tab tab) { }
-
-				@Override
-				public void onTabReselected(TabLayout.Tab tab) { }
-			});
-
-			if(!mTools.getSharedPreferencesBoolean("WELCOME_ACTIVITY_HAS_BEEN_SHOWN"))
-			{
-				Handler handler = new Handler();
-
-				handler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						Intent intent = new Intent(mContext, WelcomeActivity.class);
-						startActivity(intent);
-					}
-				}, 500);
-			}
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids)
-		{
-			if(!mTools.getSharedPreferencesBoolean(SlDataSQLiteHelper.DB_CREATED))
-			{
-				new SlDataSQLiteHelper(mContext).getWritableDatabase();
-
-				try
-				{
-					Log.w("LOG", getString(R.string.main_decompressing_new_database));
-
-					String dbName = SlDataSQLiteHelper.DB_NAME;
-					int dbVersion = SlDataSQLiteHelper.DB_VERSION;
-
-					File file = getDatabasePath(SlDataSQLiteHelper.DB_NAME);
-
-					InputStream inputStream = mContext.getAssets().open(SlDataSQLiteHelper.DB_NAME);
-					OutputStream outputStream = new FileOutputStream(file);
-
-					byte[] buffer = new byte[1024];
-					int length;
-
-					while((length = inputStream.read(buffer)) > 0)
-					{
-						outputStream.write(buffer, 0, length);
-					}
-
-					outputStream.flush();
-					outputStream.close();
-					inputStream.close();
-
-					Log.w("LOG", getString(R.string.main_new_database_decompressed, dbName, dbVersion));
-				}
-				catch(Exception e)
-				{
-					Log.e("MainActivity", Log.getStackTraceString(e));
-				}
+				mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
 			}
 
-			SQLITE_DATABASE = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) { }
 
-			return null;
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) { }
+		});
+
+		// Firebase
+		FirebaseAnalytics.getInstance(mContext);
+		FirebaseMessaging.getInstance().subscribeToTopic("message");
+		FirebaseMessaging.getInstance().subscribeToTopic("notifications_from_slv");
+
+		if(FirebaseInstanceId.getInstance().getToken() != null)
+		{
+			String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+
+			mTools.setSharedPreferencesString("FIREBASE_TOKEN", firebaseToken);
+
+			Log.w("FirstFirebaseToken", firebaseToken);
 		}
 	}
 }

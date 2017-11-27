@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -40,7 +39,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -60,10 +58,7 @@ public class Icd10Activity extends AppCompatActivity
 
 	private InputMethodManager mInputMethodManager;
 
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
-	private FloatingActionButton mFloatingActionButton;
-	private ListView mListView;
 
 	// Create activity
 	@Override
@@ -78,14 +73,13 @@ public class Icd10Activity extends AppCompatActivity
 		setContentView(R.layout.activity_icd10);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.icd10_toolbar);
+		Toolbar toolbar = findViewById(R.id.icd10_toolbar);
 		toolbar.setTitle(getString(R.string.icd10_title));
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.icd10_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.icd10_toolbar_search);
+		mToolbarSearchEditText = findViewById(R.id.icd10_toolbar_search);
 
 		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -106,17 +100,17 @@ public class Icd10Activity extends AppCompatActivity
 		});
 
 		// List
-		mListView = (ListView) findViewById(R.id.icd10_list);
+		ListView listView = findViewById(R.id.icd10_list);
 
 		// Floating action button
-		mFloatingActionButton = (FloatingActionButton) findViewById(R.id.icd10_fab);
+		FloatingActionButton floatingActionButton = findViewById(R.id.icd10_fab);
 
-		mFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		floatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
@@ -124,7 +118,7 @@ public class Icd10Activity extends AppCompatActivity
 				}
 				else
 				{
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -133,8 +127,34 @@ public class Icd10Activity extends AppCompatActivity
 		});
 
 		// Get chapters
-		GetChaptersTask getChaptersTask = new GetChaptersTask();
-		getChaptersTask.execute();
+		mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+		String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_ID, SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
+		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
+
+		String[] fromColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
+		int[] toViews = {R.id.icd10_list_item_chapter, R.id.icd10_list_item_codes, R.id.icd10_list_item_name};
+
+		listView.setAdapter(new SimpleCursorAdapter(mContext, R.layout.activity_icd10_list_item, mCursor, fromColumns, toViews, 0));
+
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+			{
+				mToolbarSearchEditText.setVisibility(View.GONE);
+				mToolbarSearchEditText.setText("");
+
+				if(mCursor.moveToPosition(i))
+				{
+					Intent intent = new Intent(mContext, Icd10ChapterActivity.class);
+					intent.putExtra("chapter", id);
+					startActivity(intent);
+				}
+			}
+		});
+
+		floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
+		floatingActionButton.setVisibility(View.VISIBLE);
 	}
 
 	// Activity result
@@ -153,6 +173,16 @@ public class Icd10Activity extends AppCompatActivity
 		}
 	}
 
+	// Pause activity
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		mToolbarSearchEditText.setVisibility(View.GONE);
+		mToolbarSearchEditText.setText("");
+	}
+
 	// Destroy activity
 	@Override
 	protected void onDestroy()
@@ -167,9 +197,9 @@ public class Icd10Activity extends AppCompatActivity
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 		}
 		else
@@ -184,7 +214,7 @@ public class Icd10Activity extends AppCompatActivity
 	{
 		if(keyCode == KeyEvent.KEYCODE_SEARCH)
 		{
-			mToolbarSearchLayout.setVisibility(View.VISIBLE);
+			mToolbarSearchEditText.setVisibility(View.VISIBLE);
 			mToolbarSearchEditText.requestFocus();
 
 			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
@@ -244,48 +274,5 @@ public class Icd10Activity extends AppCompatActivity
 		Intent intent = new Intent(mContext, Icd10SearchActivity.class);
 		intent.putExtra("search", searchString);
 		startActivity(intent);
-	}
-
-	// Get chapters
-	private class GetChaptersTask extends AsyncTask<Void,Void,SimpleCursorAdapter>
-	{
-		@Override
-		protected void onPostExecute(SimpleCursorAdapter simpleCursorAdapter)
-		{
-			mListView.setAdapter(simpleCursorAdapter);
-
-			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-			{
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
-				{
-					mToolbarSearchLayout.setVisibility(View.GONE);
-					mToolbarSearchEditText.setText("");
-
-					if(mCursor.moveToPosition(i))
-					{
-						Intent intent = new Intent(mContext, Icd10ChapterActivity.class);
-						intent.putExtra("chapter", id);
-						startActivity(intent);
-					}
-				}
-			});
-
-			mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
-			mFloatingActionButton.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		protected SimpleCursorAdapter doInBackground(Void... voids)
-		{
-			mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-			String[] queryColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_ID, SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
-			mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_ICD_10, queryColumns, null, null, null, null, null);
-
-			String[] fromColumns = {SlDataSQLiteHelper.ICD_10_COLUMN_CHAPTER, SlDataSQLiteHelper.ICD_10_COLUMN_CODES, SlDataSQLiteHelper.ICD_10_COLUMN_NAME};
-			int[] toViews = {R.id.icd10_list_item_chapter, R.id.icd10_list_item_codes, R.id.icd10_list_item_name};
-
-			return new SimpleCursorAdapter(mContext, R.layout.activity_icd10_list_item, mCursor, fromColumns, toViews, 0);
-		}
 	}
 }

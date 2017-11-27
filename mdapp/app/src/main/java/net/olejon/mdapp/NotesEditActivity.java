@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -57,6 +58,7 @@ public class NotesEditActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
+	private ScrollView mScrollView;
 	private TextInputLayout mTitleInputLayout;
 	private TextInputLayout mTextInputLayout;
 	private EditText mTitleEditText;
@@ -73,6 +75,7 @@ public class NotesEditActivity extends AppCompatActivity
 
 	private boolean mNoteHasBeenChanged;
 
+	// Create activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -97,7 +100,7 @@ public class NotesEditActivity extends AppCompatActivity
 				@Override
 				public void run()
 				{
-					inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+					if(inputMethodManager != null) inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 				}
 			}, 250);
 		}
@@ -106,7 +109,7 @@ public class NotesEditActivity extends AppCompatActivity
 		setContentView(R.layout.activity_notes_edit);
 
 		// Toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.notes_edit_toolbar);
+		Toolbar toolbar = findViewById(R.id.notes_edit_toolbar);
 
 		String title = (mNoteId == 0) ? getString(R.string.notes_edit_title_new) : getString(R.string.notes_edit_title_edit);
 
@@ -116,29 +119,34 @@ public class NotesEditActivity extends AppCompatActivity
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Elements
+		mScrollView = findViewById(R.id.notes_edit_inner_layout);
+
 		TextInputLayout patientIdInputLayout;
 		TextInputLayout patientNameInputLayout;
 		TextInputLayout patientDoctorInputLayout;
 		TextInputLayout patientDepartmentInputLayout;
 		TextInputLayout patientRoomInputLayout;
 
-		mTitleInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_title_layout);
-		mTextInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_text_layout);
-		patientIdInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_id_layout);
-		patientNameInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_name_layout);
-		patientDoctorInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_doctor_layout);
-		patientDepartmentInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_department_layout);
-		patientRoomInputLayout = (TextInputLayout) findViewById(R.id.notes_edit_patient_room_layout);
-		mTitleEditText = (EditText) findViewById(R.id.notes_edit_title);
-		mTextEditText = (EditText) findViewById(R.id.notes_edit_text);
-		mPatientIdEditText = (EditText) findViewById(R.id.notes_edit_patient_id);
-		mPatientNameEditText = (EditText) findViewById(R.id.notes_edit_patient_name);
-		mPatientDoctorEditText = (EditText) findViewById(R.id.notes_edit_patient_doctor);
-		mPatientDepartmentEditText = (EditText) findViewById(R.id.notes_edit_patient_department);
-		mPatientRoomEditText = (EditText) findViewById(R.id.notes_edit_patient_room);
+		mTitleInputLayout = findViewById(R.id.notes_edit_title_layout);
+		mTextInputLayout = findViewById(R.id.notes_edit_text_layout);
+
+		patientIdInputLayout = findViewById(R.id.notes_edit_patient_id_layout);
+		patientNameInputLayout = findViewById(R.id.notes_edit_patient_name_layout);
+		patientDoctorInputLayout = findViewById(R.id.notes_edit_patient_doctor_layout);
+		patientDepartmentInputLayout = findViewById(R.id.notes_edit_patient_department_layout);
+		patientRoomInputLayout = findViewById(R.id.notes_edit_patient_room_layout);
+
+		mTitleEditText = findViewById(R.id.notes_edit_title);
+		mTextEditText = findViewById(R.id.notes_edit_text);
+		mPatientIdEditText = findViewById(R.id.notes_edit_patient_id);
+		mPatientNameEditText = findViewById(R.id.notes_edit_patient_name);
+		mPatientDoctorEditText = findViewById(R.id.notes_edit_patient_doctor);
+		mPatientDepartmentEditText = findViewById(R.id.notes_edit_patient_department);
+		mPatientRoomEditText = findViewById(R.id.notes_edit_patient_room);
 
 		mTitleInputLayout.setHintAnimationEnabled(true);
 		mTextInputLayout.setHintAnimationEnabled(true);
+
 		patientIdInputLayout.setHintAnimationEnabled(true);
 		patientNameInputLayout.setHintAnimationEnabled(true);
 		patientDoctorInputLayout.setHintAnimationEnabled(true);
@@ -147,7 +155,7 @@ public class NotesEditActivity extends AppCompatActivity
 
 		if(noteTitle != null && !noteTitle.equals("")) mTitleEditText.setText(noteTitle);
 
-		Button patientAddMedicationButton = (Button) findViewById(R.id.notes_edit_patient_add_medication);
+		Button patientAddMedicationButton = findViewById(R.id.notes_edit_patient_add_medication);
 
 		patientAddMedicationButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -179,13 +187,22 @@ public class NotesEditActivity extends AppCompatActivity
 
 				try
 				{
-					JSONObject patientMedicationJsonObject = new JSONObject();
+					JSONObject jsonObject = new JSONObject();
 
-					patientMedicationJsonObject.put("name", name);
+					jsonObject.put("name", name);
 
-					mPatientMedicationsJsonArray.put(patientMedicationJsonObject);
+					mPatientMedicationsJsonArray.put(jsonObject);
 
 					getMedications();
+
+					mScrollView.post(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+						}
+					});
 				}
 				catch(Exception e)
 				{
@@ -525,70 +542,70 @@ public class NotesEditActivity extends AppCompatActivity
 	{
 		try
 		{
-			int medicationsJsonArrayLength = mPatientMedicationsJsonArray.length();
+			int jsonArrayLength = mPatientMedicationsJsonArray.length();
 
-			final ArrayList<String> medicationsNamesArrayList = new ArrayList<>();
+			final ArrayList<String> arrayList = new ArrayList<>();
 
-			final CharSequence[] medicationsNamesStringArrayList = new String[medicationsJsonArrayLength + 2];
+			final CharSequence[] stringArrayList = new String[jsonArrayLength + 2];
 
-			medicationsNamesStringArrayList[0] = getString(R.string.notes_edit_medications_dialog_interactions);
-			medicationsNamesStringArrayList[1] = getString(R.string.notes_edit_medications_dialog_remove_all);
+			stringArrayList[0] = getString(R.string.notes_edit_medications_dialog_interactions);
+			stringArrayList[1] = getString(R.string.notes_edit_medications_dialog_remove_all);
 
-			for(int i = 0; i < medicationsJsonArrayLength; i++)
+			for(int i = 0; i < jsonArrayLength; i++)
 			{
-				JSONObject medicationJsonObject = mPatientMedicationsJsonArray.getJSONObject(i);
+				JSONObject jsonObject = mPatientMedicationsJsonArray.getJSONObject(i);
 
-				String name = medicationJsonObject.getString("name");
+				String name = jsonObject.getString("name");
 
-				medicationsNamesArrayList.add(name);
+				arrayList.add(name);
 
-				medicationsNamesStringArrayList[i + 2] = name;
+				stringArrayList[i + 2] = name;
 			}
 
-			String medicationsNames = "";
+			StringBuilder names = new StringBuilder();
 
-			for(int n = 0; n < medicationsNamesArrayList.size(); n++)
+			for(int n = 0; n < arrayList.size(); n++)
 			{
-				medicationsNames += medicationsNamesArrayList.get(n)+", ";
+				names.append(arrayList.get(n)).append(", ");
 			}
 
-			medicationsNames = medicationsNames.replaceAll(", $", "");
+			names = new StringBuilder(names.toString().replaceAll(", $", ""));
 
-			Button patientMedicationsButton = (Button) findViewById(R.id.notes_edit_patient_medications);
+			Button button = findViewById(R.id.notes_edit_patient_medications);
 
-			if(medicationsJsonArrayLength == 0)
+			if(jsonArrayLength == 0)
 			{
-				patientMedicationsButton.setVisibility(View.GONE);
+				button.setVisibility(View.GONE);
 			}
 			else
 			{
-				patientMedicationsButton.setText(medicationsNames);
-				patientMedicationsButton.setVisibility(View.VISIBLE);
+				button.setText(names.toString());
+				button.setVisibility(View.VISIBLE);
 			}
 
-			patientMedicationsButton.setOnClickListener(new View.OnClickListener()
+			button.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View view)
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.notes_edit_medications_dialog_title).items(medicationsNamesStringArrayList).itemsCallback(new MaterialDialog.ListCallback()
+					new MaterialDialog.Builder(mContext).title(R.string.notes_edit_medications_dialog_title).items(stringArrayList).itemsCallback(new MaterialDialog.ListCallback()
 					{
 						@Override
 						public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
 						{
 							if(i == 0)
 							{
-								String medicationsInteractions = "";
+								StringBuilder interactions = new StringBuilder();
 
-								for(int n = 0; n < medicationsNamesArrayList.size(); n++)
+								for(int n = 0; n < arrayList.size(); n++)
 								{
-									medicationsInteractions += medicationsNamesArrayList.get(n).replace(" ", "_")+" ";
+									interactions.append(arrayList.get(n).replace(" ", "_")).append(" ");
 								}
 
-								medicationsInteractions = medicationsInteractions.trim();
+								interactions = new StringBuilder(interactions.toString().trim());
 
 								Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
-								intent.putExtra("search", medicationsInteractions);
+								intent.putExtra("search", interactions.toString());
 								startActivity(intent);
 							}
 							else if(i == 1)
@@ -610,11 +627,11 @@ public class NotesEditActivity extends AppCompatActivity
 							{
 								int position = i - 2;
 
-								String medicationName = medicationsNamesArrayList.get(position);
+								String name = arrayList.get(position);
 
 								SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 								String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-								Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(medicationName), null, null, null, null);
+								Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
 
 								if(cursor.moveToFirst())
 								{

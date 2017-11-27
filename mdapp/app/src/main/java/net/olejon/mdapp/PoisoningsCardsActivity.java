@@ -71,13 +71,10 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
 	private final MyTools mTools = new MyTools(mContext);
 
-	private Toolbar mToolbar;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
 	private LinearLayout mNoPoisoningsLayout;
-
-	private String mSearchString;
 
 	// Create activity
 	@Override
@@ -98,27 +95,27 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 		// Intent
 		Intent intent = getIntent();
 
-		mSearchString = intent.getStringExtra("search");
+		final String searchString = intent.getStringExtra("search");
 
 		// Layout
 		setContentView(R.layout.activity_poisonings_cards);
 
 		// Toolbar
-		mToolbar = (Toolbar) findViewById(R.id.poisonings_cards_toolbar);
-		mToolbar.setTitle(getString(R.string.poisonings_cards_search, mSearchString));
+		final Toolbar toolbar = findViewById(R.id.poisonings_cards_toolbar);
+		toolbar.setTitle(getString(R.string.poisonings_cards_search, searchString));
 
-		TextView mToolbarTextView = (TextView) mToolbar.getChildAt(1);
-		mToolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+		TextView toolbarTextView = (TextView) toolbar.getChildAt(1);
+		toolbarTextView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
-		setSupportActionBar(mToolbar);
+		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.poisonings_cards_toolbar_progressbar);
+		mProgressBar = findViewById(R.id.poisonings_cards_toolbar_progressbar);
 		mProgressBar.setVisibility(View.VISIBLE);
 
 		// Refresh
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.poisonings_cards_swipe_refresh_layout);
+		mSwipeRefreshLayout = findViewById(R.id.poisonings_cards_swipe_refresh_layout);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent_blue, R.color.accent_purple, R.color.accent_teal);
 
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -126,22 +123,21 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 			@Override
 			public void onRefresh()
 			{
-				search(mSearchString);
+				search(searchString);
 			}
 		});
 
 		// Recycler view
-		mRecyclerView = (RecyclerView) findViewById(R.id.poisonings_cards_cards);
-
+		mRecyclerView = findViewById(R.id.poisonings_cards_cards);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new PoisoningsCardsAdapter(new JSONArray()));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 		// No poisonings
-		mNoPoisoningsLayout = (LinearLayout) findViewById(R.id.poisonings_cards_no_poisonings);
+		mNoPoisoningsLayout = findViewById(R.id.poisonings_cards_no_poisonings);
 
-		Button noPoisoningsHelsenorgeButton = (Button) findViewById(R.id.poisonings_cards_search_on_helsenorge);
-		Button noPoisoningsHelsebiblioteketButton = (Button) findViewById(R.id.poisonings_cards_search_on_helsebiblioteket);
+		Button noPoisoningsHelsenorgeButton = findViewById(R.id.poisonings_cards_search_on_helsenorge);
+		Button noPoisoningsHelsebiblioteketButton = findViewById(R.id.poisonings_cards_search_on_helsebiblioteket);
 
 		noPoisoningsHelsenorgeButton.setOnClickListener(new View.OnClickListener()
 		{
@@ -168,7 +164,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 		});
 
 		// Search
-		search(mSearchString);
+		search(searchString);
 
 		// Correct
 		try
@@ -177,7 +173,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
 			requestQueue.start();
 
-			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(mSearchString, "utf-8"), null, new Response.Listener<JSONObject>()
+			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mTools.getApiUri()+"api/1/correct/?search="+URLEncoder.encode(searchString, "utf-8"), null, new Response.Listener<JSONObject>()
 			{
 				@Override
 				public void onResponse(JSONObject response)
@@ -190,6 +186,15 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
 						if(!correctSearchString.equals(""))
 						{
+							mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+							{
+								@Override
+								public void onRefresh()
+								{
+									search(correctSearchString);
+								}
+							});
+
 							new MaterialDialog.Builder(mContext).title(R.string.correct_dialog_title).content(getString(R.string.correct_dialog_message, correctSearchString)).positiveText(R.string.correct_dialog_positive_button).negativeText(R.string.correct_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 							{
 								@Override
@@ -200,12 +205,12 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
 									SQLiteDatabase sqLiteDatabase = new PoisoningsSQLiteHelper(mContext).getWritableDatabase();
 
-									sqLiteDatabase.delete(PoisoningsSQLiteHelper.TABLE, PoisoningsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(mSearchString)+" COLLATE NOCASE", null);
+									sqLiteDatabase.delete(PoisoningsSQLiteHelper.TABLE, PoisoningsSQLiteHelper.COLUMN_STRING+" = "+mTools.sqe(searchString)+" COLLATE NOCASE", null);
 									sqLiteDatabase.insert(PoisoningsSQLiteHelper.TABLE, null, contentValues);
 
 									sqLiteDatabase.close();
 
-									mToolbar.setTitle(getString(R.string.poisonings_cards_search, correctSearchString));
+									toolbar.setTitle(getString(R.string.poisonings_cards_search, correctSearchString));
 
 									mProgressBar.setVisibility(View.VISIBLE);
 
@@ -311,7 +316,6 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 						if(mTools.isTablet())
 						{
 							int spanCount = (response.length() == 1) ? 1 : 2;
-
 							mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 						}
 
@@ -374,17 +378,17 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 			final TextView type;
 			final TextView title;
 			final TextView text;
-			final TextView uri;
+			final Button uri;
 
 			PoisoningsViewHolder(View view)
 			{
 				super(view);
 
-				card = (CardView) view.findViewById(R.id.poisonings_cards_card);
-				type = (TextView) view.findViewById(R.id.poisonings_cards_card_type);
-				title = (TextView) view.findViewById(R.id.poisonings_cards_card_title);
-				text = (TextView) view.findViewById(R.id.poisonings_cards_card_text);
-				uri = (TextView) view.findViewById(R.id.poisonings_cards_card_button_uri);
+				card = view.findViewById(R.id.poisonings_cards_card);
+				type = view.findViewById(R.id.poisonings_cards_card_type);
+				title = view.findViewById(R.id.poisonings_cards_card_title);
+				text = view.findViewById(R.id.poisonings_cards_card_text);
+				uri = view.findViewById(R.id.poisonings_cards_card_button_uri);
 			}
 		}
 
@@ -400,12 +404,12 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 		{
 			try
 			{
-				JSONObject interactionJsonObject = mPoisonings.getJSONObject(i);
+				JSONObject poisoningJsonObject = mPoisonings.getJSONObject(i);
 
-				final String title = interactionJsonObject.getString("title");
-				final String uri = interactionJsonObject.getString("uri");
-				String type = interactionJsonObject.getString("type");
-				String text = interactionJsonObject.getString("text");
+				final String title = poisoningJsonObject.getString("title");
+				final String uri = poisoningJsonObject.getString("uri");
+				String type = poisoningJsonObject.getString("type");
+				String text = poisoningJsonObject.getString("text");
 
 				viewHolder.title.setText(title);
 				viewHolder.text.setText(text);

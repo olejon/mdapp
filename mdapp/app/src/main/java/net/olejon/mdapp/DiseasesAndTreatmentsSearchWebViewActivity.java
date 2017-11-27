@@ -47,7 +47,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,15 +63,10 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
 	private MenuItem findInTextMenuItem;
 	private MenuItem goForwardMenuItem;
-	private LinearLayout mToolbarSearchLayout;
 	private EditText mToolbarSearchEditText;
-	private TextView mToolbarSearchCountTextView;
-	private ProgressBar mProgressBar;
 	private WebView mWebView;
 
 	private String pageTitle;
-	private String pageUri;
-	private String mSearch;
 
 	private boolean mWebViewHasBeenLoaded = false;
 
@@ -99,8 +93,9 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 		Intent intent = getIntent();
 
 		pageTitle = intent.getStringExtra("title");
-		pageUri = intent.getStringExtra("uri");
-		mSearch = intent.getStringExtra("search");
+
+		final String pageUri = intent.getStringExtra("uri");
+		final String pageSearch = intent.getStringExtra("search");
 
 		// Input manager
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -109,15 +104,13 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 		setContentView(R.layout.activity_diseases_and_treatments_search_webview);
 
 		// Toolbar
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.diseases_and_treatments_search_webview_toolbar);
+		final Toolbar toolbar = findViewById(R.id.diseases_and_treatments_search_webview_toolbar);
 		toolbar.setTitle(pageTitle);
 
 		setSupportActionBar(toolbar);
 		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mToolbarSearchLayout = (LinearLayout) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search_layout);
-		mToolbarSearchEditText = (EditText) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search);
-		mToolbarSearchCountTextView = (TextView) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search_count_textview);
+		mToolbarSearchEditText = findViewById(R.id.diseases_and_treatments_search_webview_toolbar_search);
 
 		mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
 		{
@@ -128,8 +121,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
 				if(find.equals(""))
 				{
-					mToolbarSearchCountTextView.setVisibility(View.GONE);
-
 					mWebView.clearMatches();
 				}
 				else
@@ -161,30 +152,39 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 		});
 
 		// Progress bar
-		mProgressBar = (ProgressBar) findViewById(R.id.diseases_and_treatments_search_webview_toolbar_progressbar_horizontal);
+		final ProgressBar progressBar = findViewById(R.id.diseases_and_treatments_search_webview_toolbar_progressbar_horizontal);
 
 		// Web view
-		mWebView = (WebView) findViewById(R.id.diseases_and_treatments_search_webview_content);
+		mWebView = findViewById(R.id.diseases_and_treatments_search_webview_content);
 
 		WebSettings webSettings = mWebView.getSettings();
 
 		webSettings.setJavaScriptEnabled(true);
-		webSettings.setBuiltInZoomControls(true);
-		webSettings.setDisplayZoomControls(false);
 		webSettings.setAppCacheEnabled(true);
 		webSettings.setDomStorageEnabled(true);
 		webSettings.setAppCachePath(getCacheDir().getAbsolutePath());
 		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-		//noinspection deprecation
+		webSettings.setBuiltInZoomControls(true);
+		webSettings.setDisplayZoomControls(false);
 		webSettings.setSavePassword(false);
 
-		if(pageUri.contains("oncolex.no"))
+		if(pageUri.contains("felleskatalogen.no"))
+		{
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+		}
+		else if(pageUri.contains("interaksjoner.azurewebsites.net"))
+		{
+			webSettings.setLoadWithOverviewMode(true);
+			webSettings.setUseWideViewPort(true);
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+			webSettings.setDefaultTextEncodingName("iso-8859-15");
+		}
+		else if(pageUri.contains("legemiddelsok.no"))
 		{
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
 		}
-		else if(pageUri.contains("tidsskriftet.no"))
+		else if(pageUri.contains("oncolex.no"))
 		{
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
@@ -194,23 +194,32 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
 
-			mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_this_can_take_some_time), 1);
+			mTools.showToast(getString(R.string.device_this_can_take_some_time), 1);
 		}
 
 		mWebView.setWebViewClient(new WebViewClient()
 		{
-			@SuppressWarnings("deprecation")
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url)
 			{
-				if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
+				if(!mTools.isDeviceConnected())
+				{
+					mTools.showToast(getString(R.string.device_not_connected), 0);
+					return true;
+				}
+				else if(url.matches(".*/[^#]+#[^/]+$"))
+				{
+					mWebView.loadUrl(url.replaceAll("#[^/]+$", ""));
+					return true;
+				}
+				else if(url.matches("^https?://play\\.google\\.com/.*") || url.matches("^https?://itunes\\.apple\\.com/.*"))
 				{
 					mTools.showToast(getString(R.string.device_not_supported), 1);
 					return true;
 				}
 				else if(url.matches("^https?://.*?\\.pdf$") || url.matches("^https?://.*?\\.docx?$") || url.matches("^https?://.*?\\.xlsx?$") || url.matches("^https?://.*?\\.pptx?$"))
 				{
-					mTools.downloadFile(pageTitle, url);
+					mTools.downloadFile(view.getTitle(), url);
 					return true;
 				}
 				else if(url.startsWith("mailto:"))
@@ -245,9 +254,9 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 					findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text));
 				}
 
-				mProgressBar.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
 
-				mToolbarSearchLayout.setVisibility(View.GONE);
+				mToolbarSearchEditText.setVisibility(View.GONE);
 				mToolbarSearchEditText.setText("");
 
 				mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
@@ -256,11 +265,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 			@Override
 			public void onPageFinished(WebView view, String url)
 			{
-				String toolbarTitle = (pageUri.contains("brukerhandboken.no")) ? pageTitle : mWebView.getTitle();
+				String toolbarTitle = (pageUri.contains("antibiotikaiallmennpraksis.no") || pageUri.contains("brukerhandboken.no")) ? pageTitle : mWebView.getTitle();
 
 				toolbar.setTitle(toolbarTitle);
 
-				mProgressBar.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.INVISIBLE);
 
 				if(mWebView.canGoForward())
 				{
@@ -275,23 +284,27 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 				{
 					mWebViewHasBeenLoaded = true;
 
-					if(pageUri.contains("bestpractice.bmj.com"))
-					{
-						mWebView.loadUrl("javascript:$('div#snackbar-container').hide();");
-					}
-					else if(pageUri.contains("helsenorge.no"))
+					if(pageUri.contains("helsenorge.no"))
 					{
 						mWebView.loadUrl("javascript:var offset = $('h1#sidetittel').offset(); window.scrollTo(0, offset.top - 8);");
 					}
+					else if(pageUri.contains("lvh.no"))
+					{
+						mWebView.loadUrl("javascript:var offset = $('div#article').offset(); window.scrollTo(0, offset.top);");
+					}
 				}
 
-				if(pageUri.contains("brukerhandboken.no"))
+				if(pageUri.contains("antibiotikaiallmennpraksis.no"))
+				{
+					mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
+				}
+				else if(pageUri.contains("brukerhandboken.no"))
 				{
 					mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
 				}
 				else if(pageUri.contains("webofknowledge.com"))
 				{
-					mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+mSearch+"'); $('form#WOS_GeneralSearch_input_form').submit(); }");
+					mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+pageSearch+"'); $('form#WOS_GeneralSearch_input_form').submit(); }");
 				}
 			}
 
@@ -302,7 +315,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
 				mWebView.stopLoading();
 
-				mProgressBar.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.INVISIBLE);
 
 				new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_ssl_error_message)).positiveText(R.string.device_not_supported_dialog_positive_button).neutralText(R.string.device_not_supported_dialog_neutral_button).onPositive(new MaterialDialog.SingleButtonCallback()
 				{
@@ -350,36 +363,14 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 			@Override
 			public void onProgressChanged(WebView view, int newProgress)
 			{
-				mProgressBar.setProgress(newProgress);
-			}
-		});
-
-		mWebView.setFindListener(new WebView.FindListener()
-		{
-			@Override
-			public void onFindResultReceived(int i, int i2, boolean b)
-			{
-				if(i2 == 0)
-				{
-					mToolbarSearchCountTextView.setVisibility(View.GONE);
-
-					mTools.showToast(getString(R.string.diseases_and_treatments_search_webview_find_in_text_no_results), 1);
-				}
-				else
-				{
-					int active = i + 1;
-
-					mToolbarSearchCountTextView.setText(active+"/"+i2);
-					mToolbarSearchCountTextView.setVisibility(View.VISIBLE);
-				}
+				progressBar.setProgress(newProgress);
 			}
 		});
 
 		CookieManager cookieManager = CookieManager.getInstance();
 
-		cookieManager.setCookie("http://bestpractice.bmj.com/best-practice/", "BMJ-cookie-policy=close");
+		cookieManager.setCookie("http://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
 		cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
-		cookieManager.setCookie("https://nhi.no/", "user-category=professional");
 		cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");
 
 		if(savedInstanceState == null)
@@ -409,7 +400,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
 		findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text));
 
-		mToolbarSearchLayout.setVisibility(View.GONE);
+		mToolbarSearchEditText.setVisibility(View.GONE);
 		mToolbarSearchEditText.setText("");
 
 		mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
@@ -436,11 +427,11 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 	@Override
 	public void onBackPressed()
 	{
-		if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+		if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 		{
 			findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text));
 
-			mToolbarSearchLayout.setVisibility(View.GONE);
+			mToolbarSearchEditText.setVisibility(View.GONE);
 			mToolbarSearchEditText.setText("");
 
 			mWebView.clearMatches();
@@ -482,7 +473,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 			}
 			case R.id.diseases_and_treatments_search_webview_menu_find_in_text:
 			{
-				if(mToolbarSearchLayout.getVisibility() == View.VISIBLE)
+				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
 					mWebView.findNext(true);
 
@@ -492,7 +483,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 				{
 					findInTextMenuItem.setTitle(getString(R.string.diseases_and_treatments_search_webview_menu_find_in_text_next));
 
-					mToolbarSearchLayout.setVisibility(View.VISIBLE);
+					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
 					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);

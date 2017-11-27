@@ -20,6 +20,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,13 +34,13 @@ public class WelcomeSecondFragment extends Fragment
 
 	// Create fragment view
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_second, container, false);
 
 		if(!mViewIsShown)
 		{
-			TextView textView = (TextView) viewGroup.findViewById(R.id.welcome_page_2_guide);
+			TextView textView = viewGroup.findViewById(R.id.welcome_page_2_guide);
 			animateTextView(textView);
 		}
 
@@ -59,7 +60,7 @@ public class WelcomeSecondFragment extends Fragment
 		{
 			mViewIsShown = true;
 
-			TextView textView = (TextView) getView().getRootView().findViewById(R.id.welcome_page_2_guide);
+			TextView textView = getView().getRootView().findViewById(R.id.welcome_page_2_guide);
 			animateTextView(textView);
 		}
 	}

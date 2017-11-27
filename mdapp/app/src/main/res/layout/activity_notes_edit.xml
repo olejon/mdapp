@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/notes_edit_layout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
 	<android.support.v7.widget.Toolbar android:id="@+id/notes_edit_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
-	<ScrollView android:id="@+id/notes_edit_inner_layout" android:layout_below="@+id/notes_edit_toolbar" style="@style/notes_edit_inner_layout">
-		<LinearLayout style="@style/notes_edit_inner_inner_layout">
+	<ScrollView android:id="@+id/notes_edit_inner_layout" android:layout_below="@+id/notes_edit_toolbar" style="@style/layout_match_width_match_height_vertical_scrollbar">
+		<LinearLayout style="@style/layout_match_width_match_height_linear_vertical">
 			<android.support.design.widget.TextInputLayout android:id="@+id/notes_edit_title_layout" style="@style/notes_edit_text_input">
 				<EditText android:id="@+id/notes_edit_title" android:hint="@string/notes_edit_title_hint" style="@style/notes_edit_title_edittext"/>
 			</android.support.design.widget.TextInputLayout>
@@ -25,8 +25,8 @@
 			<android.support.design.widget.TextInputLayout android:id="@+id/notes_edit_patient_room_layout" style="@style/notes_edit_text_input">
 				<EditText android:id="@+id/notes_edit_patient_room" android:hint="@string/notes_edit_patient_room_hint" style="@style/notes_edit_edittext"/>
 			</android.support.design.widget.TextInputLayout>
-			<Button android:id="@+id/notes_edit_patient_medications" style="@style/notes_edit_medications_button"/>
-			<Button android:id="@+id/notes_edit_patient_add_medication" android:text="@string/notes_edit_patient_add_medication" style="@style/notes_edit_add_medication_button"/>
+			<Button android:id="@+id/notes_edit_patient_medications" android:visibility="gone" style="@style/button_full_width"/>
+			<Button android:id="@+id/notes_edit_patient_add_medication" android:text="@string/notes_edit_patient_add_medication" style="@style/button_full_width"/>
 		</LinearLayout>
 	</ScrollView>
 </RelativeLayout>

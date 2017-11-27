@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/lvh_card" style="@style/lvh_card_layout">
-	<RelativeLayout style="@style/lvh_card_inner_layout">
-		<ImageView android:id="@+id/lvh_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/lvh_card_image_content_description" style="@style/lvh_card_icon"/>
-		<TextView android:id="@+id/lvh_card_title" android:layout_alignParentTop="true" style="@style/lvh_card_title"/>
-		<LinearLayout android:id="@+id/lvh_card_categories" android:layout_below="@+id/lvh_card_title" style="@style/lvh_card_categories_layout"/>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/lvh_card" style="@style/card_layout">
+	<RelativeLayout style="@style/layout_match_width_match_height">
+		<ImageView android:id="@+id/lvh_card_icon" android:layout_alignParentTop="true" android:contentDescription="@string/lvh_card_image_content_description" style="@style/card_title_icon"/>
+		<TextView android:id="@+id/lvh_card_title" android:layout_alignParentTop="true" style="@style/card_title_icon_text"/>
+		<LinearLayout android:id="@+id/lvh_card_categories" android:layout_below="@+id/lvh_card_title" style="@style/layout_match_width_wrap_height_linear_vertical"/>
 	</RelativeLayout>
 </android.support.v7.widget.CardView>
