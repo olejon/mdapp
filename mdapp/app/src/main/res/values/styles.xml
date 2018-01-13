@@ -1137,12 +1137,7 @@
 		<item name="cardBackgroundColor">@color/white</item>
 	</style>
 
-	<style name="card_white_tablet_layout" parent="card_white_layout">
-		<item name="android:layout_marginTop">16dp</item>
-		<item name="android:layout_marginRight">64dp</item>
-		<item name="android:layout_marginBottom">16dp</item>
-		<item name="android:layout_marginLeft">64dp</item>
-	</style>
+	<style name="card_white_tablet_layout" parent="card_white_layout"/>
 
 	<style name="card_inner_clickable_layout" parent="layout_match_width_match_height_linear_vertical">
 		<item name="android:padding">16dp</item>

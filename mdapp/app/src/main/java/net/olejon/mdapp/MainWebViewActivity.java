@@ -167,7 +167,11 @@ public class MainWebViewActivity extends AppCompatActivity
 		webSettings.setDisplayZoomControls(false);
 		webSettings.setSavePassword(false);
 
-		if(pageUri.contains("felleskatalogen.no"))
+		if(pageUri.contains("aofoundation.org"))
+		{
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+		}
+		else if(pageUri.contains("felleskatalogen.no"))
 		{
 			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
 		}

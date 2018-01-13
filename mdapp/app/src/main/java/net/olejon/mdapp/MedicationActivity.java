@@ -129,46 +129,6 @@ public class MedicationActivity extends AppCompatActivity
 
 		// View pager
 		mViewPager = findViewById(R.id.medication_pager);
-
-		// Find in text
-		mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
-		{
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
-			{
-				String find = mToolbarSearchEditText.getText().toString().trim();
-
-				if(find.equals(""))
-				{
-					mWebView.clearMatches();
-				}
-				else
-				{
-					mWebView.findAllAsync(find);
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
-
-			@Override
-			public void afterTextChanged(Editable editable) { }
-		});
-
-		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-		{
-			@Override
-			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-			{
-				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-					return true;
-				}
-
-				return false;
-			}
-		});
 	}
 
 	// Pause activity
@@ -544,27 +504,30 @@ public class MedicationActivity extends AppCompatActivity
 	// Get medication
 	private void getMedication()
 	{
+		// Database
 		mSqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
 		String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME, SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE, SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE};
 		mCursor = mSqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID+" = "+medicationId, null, null, null, null);
 
 		if(mCursor.moveToFirst())
 		{
+			// Information
 			medicationPrescriptionGroup = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_PRESCRIPTION_GROUP));
 			medicationName = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
 			medicationSubstance = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_SUBSTANCE));
 			medicationManufacturer = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_MANUFACTURER));
 			medicationAtcCode = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ATC_CODE));
 
+			// Toolbar
 			mToolbar.setTitle(medicationName);
 
-			if(isFavorite())
-			{
-				mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
-			}
+			// Favorite?
+			if(isFavorite()) mFavoriteMenuItem.setIcon(R.drawable.ic_star_white_24dp).setTitle(getString(R.string.medication_menu_remove_favorite));
 
+			// ATC
 			mAtcCodeMenuItem.setTitle(getString(R.string.medication_menu_atc, medicationAtcCode));
 
+			// Prescription group
 			Button prescriptionGroupButton = findViewById(R.id.medication_prescription_group);
 			prescriptionGroupButton.setText(medicationPrescriptionGroup);
 
@@ -582,65 +545,20 @@ public class MedicationActivity extends AppCompatActivity
 				}
 			}
 
-			prescriptionGroupButton.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View view)
-				{
-					switch(medicationPrescriptionGroup)
-					{
-						case "A":
-						{
-							mTools.showToast(getString(R.string.medication_prescription_group_a), 1);
-							break;
-						}
-						case "B":
-						{
-							mTools.showToast(getString(R.string.medication_prescription_group_b), 1);
-							break;
-						}
-						case "C":
-						{
-							mTools.showToast(getString(R.string.medication_prescription_group_c), 1);
-							break;
-						}
-						case "F":
-						{
-							mTools.showToast(getString(R.string.medication_prescription_group_f), 1);
-							break;
-						}
-					}
-				}
-			});
-
 			prescriptionGroupButton.setVisibility(View.VISIBLE);
 
+			// Substance
 			TextView substanceTextView = findViewById(R.id.medication_substance);
 			substanceTextView.setText(medicationSubstance);
 
-			substanceTextView.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View view)
-				{
-					getSubstance();
-				}
-			});
-
+			// Manufacturer
 			TextView manufacturerTextView = findViewById(R.id.medication_manufacturer);
 			manufacturerTextView.setText(medicationManufacturer);
 
-			manufacturerTextView.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View view)
-				{
-					getManufacturer();
-				}
-			});
-
+			// Connected?
 			if(mTools.isDeviceConnected())
 			{
+				// Firebase
 				FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
 
 				Bundle bundle = new Bundle();
@@ -650,6 +568,47 @@ public class MedicationActivity extends AppCompatActivity
 
 				firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
+				// Toolbar
+				mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+				{
+					@Override
+					public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+					{
+						if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+						{
+							mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+							return true;
+						}
+
+						return false;
+					}
+				});
+
+				mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
+				{
+					@Override
+					public void onTextChanged(CharSequence charSequence, int i, int i2, int i3)
+					{
+						String find = mToolbarSearchEditText.getText().toString().trim();
+
+						if(find.equals(""))
+						{
+							mWebView.clearMatches();
+						}
+						else
+						{
+							mWebView.findAllAsync(find);
+						}
+					}
+
+					@Override
+					public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) { }
+
+					@Override
+					public void afterTextChanged(Editable editable) { }
+				});
+
+				// View pager
 				PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
 				mViewPager.setAdapter(pagerAdapter);
@@ -661,27 +620,7 @@ public class MedicationActivity extends AppCompatActivity
 
 				mWebView = mFelleskatalogenWebView;
 
-				Button felleskatalogenSslErrorButton = findViewById(R.id.medication_felleskatalogen_ssl_error_button);
-				Button nlhSslErrorButton = findViewById(R.id.medication_nlh_ssl_error_button);
-
-				felleskatalogenSslErrorButton.setOnClickListener(new View.OnClickListener()
-				{
-					@Override
-					public void onClick(View view)
-					{
-						showSslErrorDialog(getUri("felleskatalogen"));
-					}
-				});
-
-				nlhSslErrorButton.setOnClickListener(new View.OnClickListener()
-				{
-					@Override
-					public void onClick(View view)
-					{
-						showSslErrorDialog(getUri("nlh"));
-					}
-				});
-
+				// Tabs
 				TabLayout tabLayout = findViewById(R.id.medication_tabs);
 				tabLayout.setupWithViewPager(mViewPager);
 
@@ -709,20 +648,96 @@ public class MedicationActivity extends AppCompatActivity
 					public void onTabReselected(TabLayout.Tab tab) { }
 				});
 
-				if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300"))
+				// Prescription group
+				prescriptionGroupButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						switch(medicationPrescriptionGroup)
+						{
+							case "A":
+							{
+								mTools.showToast(getString(R.string.medication_prescription_group_a), 1);
+								break;
+							}
+							case "B":
+							{
+								mTools.showToast(getString(R.string.medication_prescription_group_b), 1);
+								break;
+							}
+							case "C":
+							{
+								mTools.showToast(getString(R.string.medication_prescription_group_c), 1);
+								break;
+							}
+							case "F":
+							{
+								mTools.showToast(getString(R.string.medication_prescription_group_f), 1);
+								break;
+							}
+						}
+					}
+				});
+
+				// Substance
+				substanceTextView.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						getSubstance();
+					}
+				});
+
+				// Manufacturer
+				manufacturerTextView.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						getManufacturer();
+					}
+				});
+
+				// SSL error
+				Button felleskatalogenSslErrorButton = findViewById(R.id.medication_felleskatalogen_ssl_error_button);
+				Button nlhSslErrorButton = findViewById(R.id.medication_nlh_ssl_error_button);
+
+				felleskatalogenSslErrorButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						showSslErrorDialog(getUri("felleskatalogen"));
+					}
+				});
+
+				nlhSslErrorButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						showSslErrorDialog(getUri("nlh"));
+					}
+				});
+
+				// Information dialog
+				if(!mTools.getSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG"))
 				{
 					new MaterialDialog.Builder(mContext).title(R.string.medication_information_dialog_title).content(getString(R.string.medication_information_dialog_message)).positiveText(R.string.medication_information_dialog_positive_button).onPositive(new MaterialDialog.SingleButtonCallback()
 					{
 						@Override
 						public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
 						{
-							mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG_300", true);
+							mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG", true);
 						}
 					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
 				}
 			}
 			else
 			{
+				// Information dialog
 				new MaterialDialog.Builder(mContext).title(R.string.medication_not_connected_dialog_title).content(getString(R.string.medication_not_connected_dialog_message)).positiveText(R.string.medication_not_connected_dialog_positive_button).negativeText(R.string.medication_not_connected_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 				{
 					@Override
@@ -744,7 +759,7 @@ public class MedicationActivity extends AppCompatActivity
 					{
 						finish();
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.dark_blue).show();
 			}
 		}
 	}

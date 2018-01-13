@@ -29,7 +29,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,6 @@ public class MedicationFelleskatalogenFragment extends Fragment
 	private Context mContext;
 
 	private EditText mToolbarSearchEditText;
-	private ViewPager mViewPager;
 	private WebView mWebView;
 
 	private String mPageUri;
@@ -78,9 +76,6 @@ public class MedicationFelleskatalogenFragment extends Fragment
 
 		// Toolbar
 		if(activity != null) mToolbarSearchEditText = activity.findViewById(R.id.medication_toolbar_search);
-
-		// View pager
-		if(activity != null) mViewPager = activity.findViewById(R.id.medication_pager);
 
 		// SSL error button
 		final Button sslErrorButton = viewGroup.findViewById(R.id.medication_felleskatalogen_ssl_error_button);
@@ -181,8 +176,6 @@ public class MedicationFelleskatalogenFragment extends Fragment
 				progressBar.setVisibility(View.GONE);
 
 				sslErrorButton.setVisibility(View.VISIBLE);
-
-				mViewPager.setCurrentItem(1);
 			}
 		});
 
