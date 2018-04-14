@@ -392,15 +392,16 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public PoisoningsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public PoisoningsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_poisonings_card, viewGroup, false);
 			return new PoisoningsViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(PoisoningsViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull PoisoningsViewHolder viewHolder, int i)
 		{
 			try
 			{

@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -170,15 +171,16 @@ public class LvhCategoriesActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public LvhSubCategoriesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public LvhSubCategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_categories_card, viewGroup, false);
 			return new LvhSubCategoriesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(LvhSubCategoriesViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull LvhSubCategoriesViewHolder viewHolder, int i)
 		{
 			try
 			{

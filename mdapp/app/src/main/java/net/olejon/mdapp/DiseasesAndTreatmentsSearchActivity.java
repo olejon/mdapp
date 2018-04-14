@@ -329,15 +329,16 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public DiseasesAndTreatmentsSearchViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public DiseasesAndTreatmentsSearchViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_diseases_and_treatments_search_card, viewGroup, false);
 			return new DiseasesAndTreatmentsSearchViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(DiseasesAndTreatmentsSearchViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull DiseasesAndTreatmentsSearchViewHolder viewHolder, int i)
 		{
 			try
 			{

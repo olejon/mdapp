@@ -226,15 +226,16 @@ public class SavedArticlesActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public SavedArticlesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public SavedArticlesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_saved_articles_list_item, viewGroup, false);
 			return new SavedArticlesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(SavedArticlesViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull SavedArticlesViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{

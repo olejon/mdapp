@@ -372,15 +372,16 @@ public class InteractionsCardsActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public InteractionsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public InteractionsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_interactions_card, viewGroup, false);
 			return new InteractionsViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(InteractionsViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull InteractionsViewHolder viewHolder, int i)
 		{
 			try
 			{

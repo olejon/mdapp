@@ -419,15 +419,16 @@ public class NotesActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public NotesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notes_card, viewGroup, false);
 			return new NotesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(NotesViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull NotesViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{

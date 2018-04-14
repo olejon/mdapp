@@ -325,15 +325,16 @@ public class TasksActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public TasksViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public TasksViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_tasks_list_item, viewGroup, false);
 			return new TasksViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(TasksViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull TasksViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{

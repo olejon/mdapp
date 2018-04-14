@@ -593,63 +593,72 @@ public class NotesEditActivity extends AppCompatActivity
 						@Override
 						public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence)
 						{
-							if(i == 0)
+							switch(i)
 							{
-								StringBuilder interactions = new StringBuilder();
-
-								for(int n = 0; n < arrayList.size(); n++)
+								case 0:
 								{
-									interactions.append(arrayList.get(n).replace(" ", "_")).append(" ");
-								}
+									StringBuilder interactions = new StringBuilder();
 
-								interactions = new StringBuilder(interactions.toString().trim());
-
-								Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
-								intent.putExtra("search", interactions.toString());
-								startActivity(intent);
-							}
-							else if(i == 1)
-							{
-								try
-								{
-									mPatientMedicationsJsonArray = new JSONArray("[]");
-
-									mNoteHasBeenChanged = true;
-
-									getMedications();
-								}
-								catch(Exception e)
-								{
-									Log.e("NotesEditActivity", Log.getStackTraceString(e));
-								}
-							}
-							else
-							{
-								int position = i - 2;
-
-								String name = arrayList.get(position);
-
-								SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
-								String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
-								Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
-
-								if(cursor.moveToFirst())
-								{
-									long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
-
-									Intent intent = new Intent(mContext, MedicationActivity.class);
-
-									if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
+									for(int n = 0; n < arrayList.size(); n++)
 									{
-										intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+										interactions.append(arrayList.get(n).replace(" ", "_")).append(" ");
 									}
 
-									intent.putExtra("id", id);
-									startActivity(intent);
-								}
+									interactions = new StringBuilder(interactions.toString().trim());
 
-								cursor.close();
-								sqLiteDatabase.close();
+									Intent intent = new Intent(mContext, InteractionsCardsActivity.class);
+									intent.putExtra("search", interactions.toString());
+									startActivity(intent);
+
+									break;
+								}
+								case 1:
+								{
+									try
+									{
+										mPatientMedicationsJsonArray = new JSONArray("[]");
+
+										mNoteHasBeenChanged = true;
+
+										getMedications();
+									}
+									catch(Exception e)
+									{
+										Log.e("NotesEditActivity", Log.getStackTraceString(e));
+									}
+
+									break;
+								}
+								default:
+								{
+									int position = i - 2;
+
+									String name = arrayList.get(position);
+
+									SQLiteDatabase sqLiteDatabase = new SlDataSQLiteHelper(mContext).getReadableDatabase();
+									String[] queryColumns = {SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID};
+									Cursor cursor = sqLiteDatabase.query(SlDataSQLiteHelper.TABLE_MEDICATIONS, queryColumns, SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME+" = "+mTools.sqe(name), null, null, null, null);
+
+									if(cursor.moveToFirst())
+									{
+										long id = cursor.getLong(cursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_ID));
+
+										Intent intent = new Intent(mContext, MedicationActivity.class);
+
+										if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
+										{
+											intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+										}
+
+										intent.putExtra("id", id);
+										startActivity(intent);
+									}
+
+									cursor.close();
+									sqLiteDatabase.close();
+
+									break;
+								}
 							}
 						}
 					}).itemsColorRes(R.color.dark_blue).show();

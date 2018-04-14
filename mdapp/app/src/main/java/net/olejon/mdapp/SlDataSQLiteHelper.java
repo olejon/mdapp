@@ -28,7 +28,7 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
 {
 	static final String DB_NAME = "data.db";
 
-	static final int DB_VERSION = 3800;
+	static final int DB_VERSION = 3900;
 
 	static final String DB_CREATED = "SQLITE_DATABASE_CREATED"+DB_VERSION;
 

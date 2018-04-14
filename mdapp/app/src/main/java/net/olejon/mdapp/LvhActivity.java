@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -213,15 +214,16 @@ public class LvhActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public LvhCategoriesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public LvhCategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_lvh_card, viewGroup, false);
 			return new LvhCategoriesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(LvhCategoriesViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull LvhCategoriesViewHolder viewHolder, int i)
 		{
 			try
 			{

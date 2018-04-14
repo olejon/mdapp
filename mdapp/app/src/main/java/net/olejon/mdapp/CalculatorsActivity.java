@@ -290,7 +290,7 @@ public class CalculatorsActivity extends AppCompatActivity
 
 				String interpretation = getString(R.string.calculators_bmi_normal_weight);
 
-				if(result < 18)
+				if(result < 18.5)
 				{
 					interpretation = getString(R.string.calculators_bmi_under_weight);
 				}

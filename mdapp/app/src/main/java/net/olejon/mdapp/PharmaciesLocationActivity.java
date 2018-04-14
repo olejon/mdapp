@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -204,15 +205,16 @@ public class PharmaciesLocationActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public PharmaciesLocationViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public PharmaciesLocationViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_pharmacies_location_card, viewGroup, false);
 			return new PharmaciesLocationViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(PharmaciesLocationViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull PharmaciesLocationViewHolder viewHolder, int i)
 		{
 			if(mCursor.moveToPosition(i))
 			{

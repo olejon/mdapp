@@ -381,15 +381,16 @@ public class AntibioticsGuidesCardsActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public AntibioticsGuidesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public AntibioticsGuidesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_antibiotics_guides_card, viewGroup, false);
 			return new AntibioticsGuidesViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(AntibioticsGuidesViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull AntibioticsGuidesViewHolder viewHolder, int i)
 		{
 			try
 			{

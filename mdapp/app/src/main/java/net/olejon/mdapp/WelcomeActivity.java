@@ -136,20 +136,25 @@ public class WelcomeActivity extends AppCompatActivity
 		@Override
 		public Fragment getItem(int position)
 		{
-			if(position == 1)
+			switch(position)
 			{
-				return new WelcomeSecondFragment();
+				case 1:
+				{
+					return new WelcomeSecondFragment();
+				}
+				case 2:
+				{
+					return new WelcomeThirdFragment();
+				}
+				case 3:
+				{
+					return new WelcomeFourthFragment();
+				}
+				default:
+				{
+					return new WelcomeFirstFragment();
+				}
 			}
-			else if(position == 2)
-			{
-				return new WelcomeThirdFragment();
-			}
-			else if(position == 3)
-			{
-				return new WelcomeFourthFragment();
-			}
-
-			return new WelcomeFirstFragment();
 		}
 
 		@Override

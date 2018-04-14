@@ -22,6 +22,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -236,15 +237,16 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public NotificationsFromSlvViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public NotificationsFromSlvViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_notifications_from_slv_card, viewGroup, false);
 			return new NotificationsFromSlvViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(NotificationsFromSlvViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull NotificationsFromSlvViewHolder viewHolder, int i)
 		{
 			try
 			{

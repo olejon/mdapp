@@ -366,15 +366,16 @@ public class ClinicalTrialsCardsActivity extends AppCompatActivity
 			}
 		}
 
+		@NonNull
 		@Override
-		public ClinicalTrialsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+		public ClinicalTrialsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
 		{
 			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_clinicaltrials_card, viewGroup, false);
 			return new ClinicalTrialsViewHolder(view);
 		}
 
 		@Override
-		public void onBindViewHolder(ClinicalTrialsViewHolder viewHolder, int i)
+		public void onBindViewHolder(@NonNull ClinicalTrialsViewHolder viewHolder, int i)
 		{
 			try
 			{
