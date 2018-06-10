@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -645,10 +645,7 @@ public class NotesEditActivity extends AppCompatActivity
 
 										Intent intent = new Intent(mContext, MedicationActivity.class);
 
-										if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS"))
-										{
-											intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-										}
+										if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mTools.getDefaultSharedPreferencesBoolean("MEDICATION_MULTIPLE_DOCUMENTS")) intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 
 										intent.putExtra("id", id);
 										startActivity(intent);

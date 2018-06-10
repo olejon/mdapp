@@ -14,7 +14,7 @@
 	<application
 		android:label="@string/project_name"
 		android:icon="@mipmap/ic_launcher"
-		android:roundIcon="@mipmap/ic_launcher_round"
+		android:roundIcon="@mipmap/ic_launcher"
 		android:theme="@style/app_theme"
 		android:allowBackup="true"
 		android:fullBackupContent="true"

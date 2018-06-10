@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -169,17 +169,17 @@ public class MainWebViewActivity extends AppCompatActivity
 
 		if(pageUri.contains("aofoundation.org"))
 		{
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
 		}
 		else if(pageUri.contains("felleskatalogen.no"))
 		{
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
 		}
 		else if(pageUri.contains("interaksjoner.azurewebsites.net"))
 		{
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
 			webSettings.setDefaultTextEncodingName("iso-8859-15");
 		}
 		else if(pageUri.contains("legemiddelsok.no"))
@@ -299,11 +299,11 @@ public class MainWebViewActivity extends AppCompatActivity
 
 				if(pageUri.contains("antibiotikaiallmennpraksis.no"))
 				{
-					mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
+					mWebView.loadUrl("javascript:var element = $('div.footer'); element.hide();");
 				}
 				else if(pageUri.contains("brukerhandboken.no"))
 				{
-					mWebView.loadUrl("javascript:var element = $('div.phone_news_header'); element.hide(); element.next().hide();");
+					mWebView.loadUrl("javascript:var element = $('div.footer'); element.hide();");
 				}
 				else if(pageUri.contains("webofknowledge.com"))
 				{
@@ -345,7 +345,7 @@ public class MainWebViewActivity extends AppCompatActivity
 					{
 						finish();
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
 			}
 		});
 
@@ -372,9 +372,10 @@ public class MainWebViewActivity extends AppCompatActivity
 
 		CookieManager cookieManager = CookieManager.getInstance();
 
-		cookieManager.setCookie("http://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
+		cookieManager.setCookie("https://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
 		cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
-		cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");
+		cookieManager.setCookie("https://nhi.no/", "user-category=professional");
+		cookieManager.setCookie("https://www.uptodate.com/", "cookie-accept=t");
 
 		if(savedInstanceState == null)
 		{

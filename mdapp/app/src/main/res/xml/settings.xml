@@ -3,7 +3,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@string/settings_category_notifications">
 		<CheckBoxPreference android:key="NOTIFICATIONS_NOTIFY" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_notify_title" android:summary="@string/settings_checkbox_notifications_notify_summary"/>
-		<CheckBoxPreference android:key="NOTIFICATIONS_NOTIFY_CHANNEL_SLV" android:defaultValue="true" android:title="@string/settings_checkbox_notifications_notify_channel_slv_title" android:summary="@string/settings_checkbox_notifications_notify_channel_slv_summary"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_about">
 		<Preference android:title="@string/settings_intent_project_developer_website_title" android:summary="@string/settings_intent_project_developer_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_website_uri"/></Preference>

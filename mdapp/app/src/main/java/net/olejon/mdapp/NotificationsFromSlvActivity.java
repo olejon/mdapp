@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -33,6 +32,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,16 +116,14 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 		getNotifications();
 	}
 
-	// Resume activity
+	// Menu
 	@Override
-	protected void onResume()
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		super.onResume();
-
-		NotificationManagerCompat.from(mContext).cancel(MyFirebaseMessagingService.NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
+		getMenuInflater().inflate(R.menu.menu_notifications_from_slv, menu);
+		return true;
 	}
 
-	// Menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -134,6 +132,14 @@ public class NotificationsFromSlvActivity extends AppCompatActivity
 			case android.R.id.home:
 			{
 				mTools.navigateUp(this);
+				return true;
+			}
+			case R.id.notifications_from_slv_menu_all:
+			{
+				Intent intent = new Intent(mContext, MainWebViewActivity.class);
+				intent.putExtra("title", getString(R.string.notifications_from_slv_menu_all));
+				intent.putExtra("uri", "https://legemiddelverket.no/nyheter/");
+				startActivity(intent);
 				return true;
 			}
 			default:

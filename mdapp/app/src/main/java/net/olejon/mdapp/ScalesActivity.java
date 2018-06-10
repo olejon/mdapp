@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ public class ScalesActivity extends AppCompatActivity
 			{
 				Intent intent = new Intent(mContext, MainWebViewActivity.class);
 				intent.putExtra("title", mContext.getString(R.string.scales_medscape_title));
-				intent.putExtra("uri", "http://search.medscape.com/search/?q=Scale");
+				intent.putExtra("uri", "https://search.medscape.com/search/?q=Scale");
 				mContext.startActivity(intent);
 			}
 		});

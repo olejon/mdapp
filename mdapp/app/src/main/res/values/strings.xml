@@ -114,7 +114,7 @@
 	<string name="diseases_and_treatments_norwegian">Norsk</string>
 	<string name="diseases_and_treatments_recent_searches">Nylige søk</string>
 	<string name="diseases_and_treatments_no_recent_searches">Ingen nylige søk</string>
-	<string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>PubMed</i>, <i>Web of Science</i>, <i>MedlinePlus</i>, <i>Wikipedia</i>, <i>UpToDate</i> og <i>BMJ Best Practice</i>.\n\nDe norske kildene som benyttes er <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Wikipedia</i>, <i>Forskning.no</i>, <i>Legehåndboka</i>, <i>Helsebiblioteket</i>, <i>Tidsskriftet</i>, <i>Oncolex</i>, <i>Brukerhåndboken</i>, <i>Analyseoversikten</i> og <i>Helsenorge.no</i>.</string>
+	<string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>PubMed</i>, <i>Web of Science</i>, <i>MedlinePlus</i>, <i>Wikipedia</i>, <i>UpToDate</i>, <i>BMJ Best Practice</i> og <i>AO Surgery Reference</i>.\n\nDe norske kildene som benyttes er <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Helsenorge.no</i>, <i>Forskning.no</i>, <i>Wikipedia</i>, <i>Legehåndboka</i>, <i>Helsebiblioteket</i>, <i>Tidsskriftet</i>, <i>Oncolex</i> og <i>Brukerhåndboken</i>.\n\n<b>Merk:</b> Om en kilde ikke gir resultater som forventet, kontakt utvikler, så dette kan fikses på serversiden.</string>
 	<string name="diseases_and_treatments_recent_searches_removed">Nylige søk fjernet</string>
 	<string name="diseases_and_treatments_menu_voice_search">Talesøk</string>
 	<string name="diseases_and_treatments_menu_clear_recent_searches">Fjern nylige søk</string>
@@ -211,7 +211,7 @@
 	<string name="nasjonale_retningslinjer_title">Nasjonale retningslinjer</string>
 	<string name="nasjonale_retningslinjer_toolbar_search_hint">Søk på norsk…</string>
 	<string name="nasjonale_retningslinjer_no_recent_searches">Ingen nylige søk</string>
-	<string name="nasjonale_retningslinjer_information">Kilden som brukes er <i>Nasjonale faglige retningslinjer</i> fra Helsedirektoratet</string>
+	<string name="nasjonale_retningslinjer_information">Kilden som brukes er <i>Nasjonale faglige retningslinjer</i> fra Helsedirektoratet.</string>
 	<string name="nasjonale_retningslinjer_recent_searches">Nylige søk</string>
 	<string name="nasjonale_retningslinjer_recent_searches_removed">Nylige søk fjernet</string>
 	<string name="nasjonale_retningslinjer_menu_voice_search">Talesøk</string>
@@ -313,6 +313,7 @@
 	<string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
 	<string name="notifications_from_slv_could_not_get_notifications">Kunne ikke hente varsler. Er du koblet til Internett?</string>
 	<string name="notifications_from_slv_card_button">Les mer</string>
+	<string name="notifications_from_slv_menu_all">Se alle hos Legemiddelverket</string>
 
 	<!-- Calculators -->
 	<string name="calculators_title">Kalkulatorer</string>
@@ -434,10 +435,10 @@
 	<!-- Settings -->
 	<string name="settings_title">Innstillinger</string>
 	<string name="settings_category_notifications">Varsler</string>
+	<string name="settings_notification_channels_title">Velg</string>
+	<string name="settings_notification_channels_summary">Individuelle innstillinger for varsler</string>
 	<string name="settings_checkbox_notifications_notify_title">Varsle ved nytt varsel</string>
 	<string name="settings_checkbox_notifications_notify_summary">Varsle audiovisuelt når det kommer nye varsler</string>
-	<string name="settings_checkbox_notifications_notify_channel_slv_title">Varsler fra Legemiddelverket</string>
-	<string name="settings_checkbox_notifications_notify_channel_slv_summary">Varsle når det kommer et nytt varsel fra Legemiddelverket</string>
 	<string name="settings_category_advanced">Avansert</string>
 	<string name="settings_checkbox_medication_multiple_documents">Åpne flere preparater samtidig</string>
 	<string name="settings_checkbox_medication_multiple_documents_summary">Åpne preparater som en egen skjerm. Du kan bla mellom skjermene med menyknappen for dine skjermer og apper i systemet</string>
@@ -552,9 +553,12 @@
 	<string name="mytools_printing_not_supported">Kun tilgjengelig for Android 4.4 og nyere</string>
 
 	<!-- Services -->
-	<string name="notification_channel_message_description">Varsler fra utvikler</string>
-	<string name="notification_channel_slv_description">Varsler fra SLV</string>
-	<string name="notification_action_settings">Innstillinger</string>
+	<string name="notification_channel_message_name">Kritiske varsler</string>
+	<string name="notification_channel_message_description">Sjeldne kritiske varsler fra utvikler</string>
+	<string name="notification_channel_slv_name">Varsler fra Legemiddelverket</string>
+	<string name="notification_channel_slv_description">Legemiddelmangel, sikkerhetsinformasjon osv</string>
+	<string name="notification_second_action">Se nyeste</string>
+	<string name="notification_third_action">Innstillinger</string>
 
 	<!-- Various -->
 	<string name="device_this_can_take_some_time">Dette kan ta noe tid…</string>

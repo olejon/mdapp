@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity
 		getFragmentManager().beginTransaction().replace(R.id.settings_container, new SettingsFragment()).commit();
 	}
 
+	// Menu
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{

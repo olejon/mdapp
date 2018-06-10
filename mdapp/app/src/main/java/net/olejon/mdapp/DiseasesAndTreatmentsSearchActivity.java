@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -408,6 +408,12 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 						viewHolder.text.setText(text);
 						break;
 					}
+					case "helsenorge":
+					{
+						viewHolder.icon.setImageResource(R.drawable.helsenorge);
+						viewHolder.text.setText(text);
+						break;
+					}
 					case "forskning":
 					{
 						viewHolder.icon.setImageResource(R.drawable.forskning);
@@ -444,21 +450,9 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 						viewHolder.text.setText(text);
 						break;
 					}
-					case "analyseoversikten":
-					{
-						viewHolder.icon.setImageResource(R.drawable.analyseoversikten);
-						viewHolder.text.setText(text);
-						break;
-					}
-					case "helsenorge":
-					{
-						viewHolder.icon.setImageResource(R.drawable.helsenorge);
-						viewHolder.text.setText(text);
-						break;
-					}
 					default:
 					{
-						viewHolder.icon.setImageResource(R.mipmap.ic_launcher);
+						viewHolder.icon.setImageResource(R.drawable.app_icon);
 						viewHolder.text.setText(text);
 						break;
 					}

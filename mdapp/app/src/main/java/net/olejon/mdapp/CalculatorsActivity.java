@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -459,7 +459,7 @@ public class CalculatorsActivity extends AppCompatActivity
 					{
 						Intent intent = new Intent(mContext, MainWebViewActivity.class);
 						intent.putExtra("title", getString(R.string.calculators_corrected_qt_time_dialog_title));
-						intent.putExtra("uri", "http://tidsskriftet.no/2000/11/merkesteiner-i-norsk-medisin/lang-qt-tid-som-bivirkning-risiko-fatale-arytmier");
+						intent.putExtra("uri", "https://tidsskriftet.no/2000/11/merkesteiner-i-norsk-medisin/lang-qt-tid-som-bivirkning-risiko-fatale-arytmier");
 						startActivity(intent);
 					}
 				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();

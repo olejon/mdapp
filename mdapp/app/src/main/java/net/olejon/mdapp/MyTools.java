@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -311,7 +311,7 @@ class MyTools
 	// Saved articles
 	void saveArticle(String title, String uri, String webview)
 	{
-		String domain = uri.replaceAll("https?://", "").replaceAll("[w]{3}\\.", "").replaceAll("/.*", "");
+		String domain = uri.replaceAll("https?://", "").replaceAll("[w]{3}\\w*?\\.", "").replaceAll("/.*", "");
 
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(SavedArticlesSQLiteHelper.COLUMN_TITLE, title);

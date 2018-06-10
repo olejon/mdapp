@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class SlDataSQLiteHelper extends SQLiteOpenHelper
 {
 	static final String DB_NAME = "data.db";
 
-	static final int DB_VERSION = 3900;
+	static final int DB_VERSION = 4000;
 
 	static final String DB_CREATED = "SQLITE_DATABASE_CREATED"+DB_VERSION;
 

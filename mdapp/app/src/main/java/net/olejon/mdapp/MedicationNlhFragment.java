@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ public class MedicationNlhFragment extends Fragment
 		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 		webSettings.setBuiltInZoomControls(false);
 		webSettings.setDisplayZoomControls(false);
-		webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0");
+		webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
 		webSettings.setSavePassword(false);
 
 		mWebView.setWebViewClient(new WebViewClient()
@@ -178,9 +178,10 @@ public class MedicationNlhFragment extends Fragment
 
 		CookieManager cookieManager = CookieManager.getInstance();
 
-		cookieManager.setCookie("http://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
+		cookieManager.setCookie("https://bestpractice.bmj.com/", "cookieconsent_status=dismiss");
 		cookieManager.setCookie("http://legemiddelhandboka.no/", "osevencookiepromptclosed=1");
-		cookieManager.setCookie("https://www.gulesider.no/", "cookiesAccepted=true");
+		cookieManager.setCookie("https://nhi.no/", "user-category=professional");
+		cookieManager.setCookie("https://www.uptodate.com/", "cookie-accept=t");
 
 		if(savedInstanceState == null)
 		{

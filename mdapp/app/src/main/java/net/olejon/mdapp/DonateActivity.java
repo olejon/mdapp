@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -69,8 +70,25 @@ public class DonateActivity extends AppCompatActivity
 			return;
 		}
 
+		// Layout
+		setContentView(R.layout.activity_donate);
+
+		// Toolbar
+		Toolbar toolbar = findViewById(R.id.donate_toolbar);
+		toolbar.setTitle(getString(R.string.donate_title));
+
+		setSupportActionBar(toolbar);
+		if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Buttons
+		mMakeSmallDonationButton = findViewById(R.id.donate_make_small_donation);
+		mMakeMediumDonationButton = findViewById(R.id.donate_make_medium_donation);
+		mMakeBigDonationButton = findViewById(R.id.donate_make_big_donation);
+
 		// In-app billing
-		Thread getDonationsThread = new Thread(new Runnable()
+		Handler handler = new Handler();
+
+		handler.postDelayed(new Runnable()
 		{
 			@Override
 			public void run()
@@ -175,58 +193,34 @@ public class DonateActivity extends AppCompatActivity
 
 				bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-				runOnUiThread(new Runnable()
+				mMakeSmallDonationButton.setOnClickListener(new View.OnClickListener()
 				{
 					@Override
-					public void run()
+					public void onClick(View view)
 					{
-						// Layout
-						setContentView(R.layout.activity_donate);
+						makeDonation("small_donation");
+					}
+				});
 
-						// Toolbar
-						Toolbar toolbar = findViewById(R.id.donate_toolbar);
-						toolbar.setTitle(getString(R.string.donate_title));
+				mMakeMediumDonationButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						makeDonation("medium_donation");
+					}
+				});
 
-						setSupportActionBar(toolbar);
-						if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-						// Buttons
-						mMakeSmallDonationButton = findViewById(R.id.donate_make_small_donation);
-						mMakeMediumDonationButton = findViewById(R.id.donate_make_medium_donation);
-						mMakeBigDonationButton = findViewById(R.id.donate_make_big_donation);
-
-						mMakeSmallDonationButton.setOnClickListener(new View.OnClickListener()
-						{
-							@Override
-							public void onClick(View view)
-							{
-								makeDonation("small_donation");
-							}
-						});
-
-						mMakeMediumDonationButton.setOnClickListener(new View.OnClickListener()
-						{
-							@Override
-							public void onClick(View view)
-							{
-								makeDonation("medium_donation");
-							}
-						});
-
-						mMakeBigDonationButton.setOnClickListener(new View.OnClickListener()
-						{
-							@Override
-							public void onClick(View view)
-							{
-								makeDonation("big_donation");
-							}
-						});
+				mMakeBigDonationButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View view)
+					{
+						makeDonation("big_donation");
 					}
 				});
 			}
-		});
-
-		getDonationsThread.start();
+		}, 1000);
 	}
 
 	// Activity result

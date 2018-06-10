@@ -2,7 +2,7 @@ package net.olejon.mdapp;
 
 /*
 
-Copyright 2017 Ole Jon Bjørkum
+Copyright 2018 Ole Jon Bjørkum
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,15 +19,14 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 */
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -36,9 +35,6 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
-	public static final int NOTIFICATION_MESSAGE_ID = 1;
-	public static final int NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID = 2;
-
 	private final Context mContext = this;
 
 	private final MyTools mTools = new MyTools(mContext);
@@ -46,12 +42,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage)
 	{
-		if(remoteMessage.getData().size() > 0 && remoteMessage.getData().containsKey("type") && remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("text") && remoteMessage.getData().containsKey("big_text") && remoteMessage.getData().containsKey("uri_text") && remoteMessage.getData().containsKey("uri"))
+		if(remoteMessage.getData().size() > 0 && remoteMessage.getData().containsKey("id") && remoteMessage.getData().containsKey("type") && remoteMessage.getData().containsKey("title") && remoteMessage.getData().containsKey("text") && remoteMessage.getData().containsKey("big_text") && remoteMessage.getData().containsKey("uri_text") && remoteMessage.getData().containsKey("uri"))
 		{
 			long sentTime = remoteMessage.getSentTime();
 
 			Map<String,String> data = remoteMessage.getData();
 
+			String id = data.get("id");
 			String type = data.get("type");
 			String title = data.get("title");
 			String text = data.get("text");
@@ -59,101 +56,71 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 			String uri_text = data.get("uri_text");
 			String uri = data.get("uri");
 
-			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			NotificationManagerCompat notificationChannelManager = NotificationManagerCompat.from(mContext);
 
-			if(notificationManager != null)
+			NotificationCompat.Builder notificationChannelMessageBuilder = new NotificationCompat.Builder(mContext, MainActivity.notificationChannelMessageId);
+			NotificationCompat.Builder notificationChannelSlvBuilder = new NotificationCompat.Builder(mContext, MainActivity.notificationChannelSlvId);
+
+			Intent firstActionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+			PendingIntent firstActionPendingIntent = PendingIntent.getActivity(mContext, 0, firstActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+			Intent secondActionIntent = new Intent(mContext, NotificationsFromSlvActivity.class);
+			secondActionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			PendingIntent secondActionPendingIntent = PendingIntent.getActivity(mContext, 0, secondActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+			Intent thirdActionIntent = new Intent(mContext, SettingsActivity.class);
+			thirdActionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			PendingIntent thirdActionPendingIntent = PendingIntent.getActivity(mContext, 0, thirdActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+			notificationChannelMessageBuilder.setWhen(sentTime)
+					.setAutoCancel(true)
+					.setContentTitle(title)
+					.setContentText(text)
+					.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
+					.setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
+					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon))
+					.setColor(getResources().getColor(R.color.light_blue))
+					.setContentIntent(firstActionPendingIntent)
+					.addAction(R.drawable.ic_notifications_white_24dp, uri_text, firstActionPendingIntent)
+					.addAction(R.drawable.ic_settings_white_24dp, getString(R.string.notification_third_action), thirdActionPendingIntent);
+
+			notificationChannelSlvBuilder.setWhen(sentTime)
+					.setAutoCancel(true)
+					.setContentTitle(title)
+					.setContentText(text)
+					.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
+					.setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
+					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon))
+					.setColor(getResources().getColor(R.color.light_blue))
+					.setContentIntent(firstActionPendingIntent)
+					.addAction(R.drawable.ic_notifications_white_24dp, uri_text, firstActionPendingIntent)
+					.addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.notification_second_action), secondActionPendingIntent)
+					.addAction(R.drawable.ic_settings_white_24dp, getString(R.string.notification_third_action), thirdActionPendingIntent);
+
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			{
-				Notification.Builder notificationBuilder = new Notification.Builder(mContext);
+				notificationChannelMessageBuilder.setChannelId(MainActivity.notificationChannelMessageId);
+				notificationChannelSlvBuilder.setChannelId(MainActivity.notificationChannelSlvId);
+			}
+			else if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_NOTIFY"))
+			{
+				notificationChannelMessageBuilder.setDefaults(NotificationCompat.DEFAULT_SOUND|NotificationCompat.DEFAULT_VIBRATE|NotificationCompat.DEFAULT_LIGHTS).setPriority(NotificationCompat.PRIORITY_HIGH);
+				notificationChannelSlvBuilder.setDefaults(NotificationCompat.DEFAULT_SOUND|NotificationCompat.DEFAULT_VIBRATE|NotificationCompat.DEFAULT_LIGHTS).setPriority(NotificationCompat.PRIORITY_HIGH);
+			}
 
-				notificationBuilder.setWhen(sentTime)
-						.setAutoCancel(true)
-						.setContentTitle(title)
-						.setContentText(text)
-						.setStyle(new Notification.BigTextStyle().bigText(bigText))
-						.setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
-						.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon));
-
-				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) notificationBuilder.setColor(getResources().getColor(R.color.light_blue));
-
-				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			switch(type)
+			{
+				case "notifications_from_slv":
 				{
-					String notificationChannelId;
-					String notificationChannelDescription;
-
-					int notificationImportance = (mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_NOTIFY")) ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW;
-
-					if(type.equals("notifications_from_slv"))
-					{
-						notificationChannelId = "net.olejon.mdapp.NOTIFICATION_CHANNEL_SLV";
-						notificationChannelDescription = getString(R.string.notification_channel_slv_description);
-					}
-					else
-					{
-						notificationChannelId = "net.olejon.mdapp.NOTIFICATION_CHANNEL_MESSAGE";
-						notificationChannelDescription = getString(R.string.notification_channel_message_description);
-					}
-
-					NotificationChannel notificationChannel = new NotificationChannel(notificationChannelId, notificationChannelDescription, notificationImportance);
-					notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-					notificationChannel.setShowBadge(true);
-					notificationChannel.setDescription(text);
-					notificationManager.createNotificationChannel(notificationChannel);
-					notificationBuilder.setChannelId(notificationChannelId);
+					notificationChannelManager.notify(Integer.valueOf(id), notificationChannelSlvBuilder.build());
+					break;
 				}
-				else if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_NOTIFY"))
+				default:
 				{
-					notificationBuilder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE|Notification.DEFAULT_LIGHTS).setPriority(Notification.PRIORITY_HIGH);
-				}
-
-				Intent actionIntent;
-
-				if(uri.equals(""))
-				{
-					actionIntent = new Intent(mContext, MainActivity.class);
-					actionIntent.setAction("android.intent.action.MAIN");
-					actionIntent.addCategory("android.intent.category.LAUNCHER");
-				}
-				else
-				{
-					actionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-				}
-
-				PendingIntent actionPendingIntent = PendingIntent.getActivity(mContext, 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-				if(type.equals("notifications_from_slv"))
-				{
-					String notificationActionSettings = getString(R.string.notification_action_settings);
-
-					Intent settingsActionIntent = new Intent(mContext, SettingsActivity.class);
-					settingsActionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					PendingIntent settingsActionPendingIntent = PendingIntent.getActivity(mContext, 0, settingsActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-					notificationBuilder.setContentIntent(actionPendingIntent).addAction(R.drawable.ic_notifications_white_24dp, uri_text, actionPendingIntent).addAction(R.drawable.ic_settings_white_24dp, notificationActionSettings, settingsActionPendingIntent);
-
-					if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_NOTIFY_CHANNEL_SLV"))
-					{
-						notificationManager.notify(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID, notificationBuilder.build());
-					}
-				}
-				else
-				{
-					notificationBuilder.setContentIntent(actionPendingIntent).addAction(R.drawable.ic_local_hospital_white_24dp, uri_text, actionPendingIntent);
-
-					notificationManager.notify(NOTIFICATION_MESSAGE_ID, notificationBuilder.build());
+					notificationChannelManager.notify(Integer.valueOf(id), notificationChannelMessageBuilder.build());
+					break;
 				}
 			}
-		}
-	}
-
-	@Override
-	public void onDeletedMessages()
-	{
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-		if(notificationManager != null)
-		{
-			notificationManager.cancel(NOTIFICATION_MESSAGE_ID);
-			notificationManager.cancel(NOTIFICATION_NOTIFICATIONS_FROM_SLV_ID);
 		}
 	}
 }
