@@ -197,7 +197,7 @@ public class LvhCategoriesActivity extends AppCompatActivity
 					}
 					case "lvh_symptoms":
 					{
-						viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
+						viewHolder.icon.setImageResource(R.drawable.stethoscope);
 						break;
 					}
 					case "lvh_injuries":
@@ -207,7 +207,7 @@ public class LvhCategoriesActivity extends AppCompatActivity
 					}
 					case "lvh_administrative":
 					{
-						viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
+						viewHolder.icon.setImageResource(R.drawable.ic_library_books_white_24dp);
 						break;
 					}
 				}

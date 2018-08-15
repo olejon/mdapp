@@ -215,7 +215,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 
 										search(correctSearchString);
 									}
-								}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+								}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 							}
 						}
 						catch(Exception e)
@@ -473,7 +473,7 @@ public class InteractionsCardsActivity extends AppCompatActivity
 										{
 											String handling = response.getString("handling");
 
-											new MaterialDialog.Builder(mContext).title(R.string.interactions_cards_handling_dialog_title).content(handling).positiveText(R.string.interactions_cards_handling_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+											new MaterialDialog.Builder(mContext).title(R.string.interactions_cards_handling_dialog_title).content(handling).positiveText(R.string.interactions_cards_handling_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 										}
 										catch(Exception e)
 										{

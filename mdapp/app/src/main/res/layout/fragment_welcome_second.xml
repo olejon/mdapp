@@ -2,8 +2,8 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" style="@style/welcome_page_layout">
 	<LinearLayout style="@style/welcome_page_inner_layout">
-		<TextView android:id="@+id/welcome_page_2_guide" android:text="@string/welcome_page_guide" style="@style/welcome_page_guide"/>
-		<TextView android:text="@string/welcome_page_2" style="@style/welcome_page_title"/>
+		<TextView android:id="@+id/welcome_page_2_guide" android:text="@string/welcome_guide_unfinished" style="@style/welcome_guide_unfinished"/>
+		<TextView android:text="@string/welcome_page_2_title" style="@style/welcome_page_title"/>
 		<TextView android:text="@string/welcome_page_2_text" style="@style/welcome_page_text"/>
 	</LinearLayout>
 </ScrollView>

@@ -24,14 +24,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +50,6 @@ public class ManufacturersActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private InputMethodManager mInputMethodManager;
-
 	private EditText mToolbarSearchEditText;
 
 	// Create activity
@@ -63,7 +59,7 @@ public class ManufacturersActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_manufacturers);
@@ -88,7 +84,7 @@ public class ManufacturersActivity extends AppCompatActivity
 				mToolbarSearchEditText.setVisibility(View.VISIBLE);
 				mToolbarSearchEditText.requestFocus();
 
-				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 			}
 		});
 
@@ -192,23 +188,6 @@ public class ManufacturersActivity extends AppCompatActivity
 		{
 			super.onBackPressed();
 		}
-	}
-
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
 	}
 
 	// Menu

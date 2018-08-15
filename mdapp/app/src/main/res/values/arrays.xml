@@ -23,10 +23,10 @@
 
 	<!-- Welcome -->
 	<string-array name="welcome_pages">
-		<item>@string/welcome_page_1</item>
-		<item>@string/welcome_page_2</item>
-		<item>@string/welcome_page_3</item>
-		<item>@string/welcome_page_4</item>
+		<item>@string/welcome_page_1_title</item>
+		<item>@string/welcome_page_2_title</item>
+		<item>@string/welcome_page_3_title</item>
+		<item>@string/welcome_page_4_title</item>
 	</string-array>
 
 </resources>

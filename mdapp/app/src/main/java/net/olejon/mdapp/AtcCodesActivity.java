@@ -116,7 +116,7 @@ public class AtcCodesActivity extends AppCompatActivity
 							{
 								getSubstance(substancesNamesStringArray[i].toString());
 							}
-						}).itemsColorRes(R.color.dark_blue).show();
+						}).titleColorRes(R.color.teal).itemsColorRes(R.color.purple).show();
 					}
 					else
 					{

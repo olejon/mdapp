@@ -35,7 +35,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,9 +60,6 @@ public class CalculatorsActivity extends AppCompatActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		// Input manager
-		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
 		// Layout
 		setContentView(R.layout.activity_calculators);
 
@@ -88,8 +84,6 @@ public class CalculatorsActivity extends AppCompatActivity
 			@Override
 			public void onClick(View view)
 			{
-				if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
-
 				calculateBmi();
 			}
 		});
@@ -99,10 +93,8 @@ public class CalculatorsActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_GO)
 				{
-					if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(bmiEditText.getWindowToken(), 0);
-
 					calculateBmi();
 
 					return true;
@@ -124,8 +116,6 @@ public class CalculatorsActivity extends AppCompatActivity
 			@Override
 			public void onClick(View view)
 			{
-				if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
-
 				calculateWaistMeasurement();
 			}
 		});
@@ -135,10 +125,8 @@ public class CalculatorsActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_GO)
 				{
-					if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(waistMeasurementEditText.getWindowToken(), 0);
-
 					calculateWaistMeasurement();
 
 					return true;
@@ -162,8 +150,6 @@ public class CalculatorsActivity extends AppCompatActivity
 			@Override
 			public void onClick(View view)
 			{
-				if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
-
 				calculateCorrectedQtTime();
 			}
 		});
@@ -173,10 +159,8 @@ public class CalculatorsActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_GO || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_GO)
 				{
-					if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(correctedQtTimeEditText.getWindowToken(), 0);
-
 					calculateCorrectedQtTime();
 
 					return true;
@@ -229,7 +213,7 @@ public class CalculatorsActivity extends AppCompatActivity
 				intent.putExtra("uri", "https://helsenorge.no/kosthold-og-ernaring/overvekt/vekt-bmi-og-maling-av-midjen");
 				startActivity(intent);
 			}
-		}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+		}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 	}
 
 	// Calculations
@@ -318,7 +302,7 @@ public class CalculatorsActivity extends AppCompatActivity
 					{
 						showInformationDialog();
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 			}
 			catch(Exception e)
 			{
@@ -386,7 +370,7 @@ public class CalculatorsActivity extends AppCompatActivity
 					{
 						showInformationDialog();
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 			}
 			catch(Exception e)
 			{
@@ -462,7 +446,7 @@ public class CalculatorsActivity extends AppCompatActivity
 						intent.putExtra("uri", "https://tidsskriftet.no/2000/11/merkesteiner-i-norsk-medisin/lang-qt-tid-som-bivirkning-risiko-fatale-arytmier");
 						startActivity(intent);
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 			}
 			catch(Exception e)
 			{

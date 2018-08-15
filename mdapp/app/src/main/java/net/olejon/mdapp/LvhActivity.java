@@ -250,7 +250,7 @@ public class LvhActivity extends AppCompatActivity
 						icon = "lvh_symptoms";
 
 						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.purple));
-						viewHolder.icon.setImageResource(R.drawable.ic_stethoscope);
+						viewHolder.icon.setImageResource(R.drawable.stethoscope);
 
 						break;
 					}
@@ -270,7 +270,7 @@ public class LvhActivity extends AppCompatActivity
 						icon = "lvh_administrative";
 
 						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.teal));
-						viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
+						viewHolder.icon.setImageResource(R.drawable.ic_library_books_white_24dp);
 
 						break;
 					}
@@ -280,7 +280,7 @@ public class LvhActivity extends AppCompatActivity
 						icon = "lvh_administrative";
 
 						viewHolder.card.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.teal));
-						viewHolder.icon.setImageResource(R.drawable.ic_my_library_books_white_24dp);
+						viewHolder.icon.setImageResource(R.drawable.ic_library_books_white_24dp);
 					}
 				}
 

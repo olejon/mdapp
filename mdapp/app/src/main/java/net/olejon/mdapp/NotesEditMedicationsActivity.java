@@ -24,14 +24,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -51,8 +48,6 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private InputMethodManager mInputMethodManager;
-
 	private EditText mToolbarSearchEditText;
 
 	// Create activity
@@ -62,7 +57,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_notes_edit_medications);
@@ -87,7 +82,7 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 				mToolbarSearchEditText.setVisibility(View.VISIBLE);
 				mToolbarSearchEditText.requestFocus();
 
-				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 			}
 		});
 
@@ -119,13 +114,13 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 
 				if(mCursor.moveToFirst())
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					String name = mCursor.getString(mCursor.getColumnIndexOrThrow(SlDataSQLiteHelper.MEDICATIONS_COLUMN_NAME));
 
 					Intent intent = new Intent();
 					intent.putExtra("name", name);
+
 					setResult(RESULT_OK, intent);
+
 					finish();
 				}
 			}
@@ -171,20 +166,6 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 
 		floatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
 		floatingActionButton.setVisibility(View.VISIBLE);
-
-		Handler handler = new Handler();
-
-		handler.postDelayed(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mToolbarSearchEditText.setVisibility(View.VISIBLE);
-				mToolbarSearchEditText.requestFocus();
-
-				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-			}
-		}, 500);
 	}
 
 	// Destroy activity
@@ -210,23 +191,6 @@ public class NotesEditMedicationsActivity extends AppCompatActivity
 		{
 			super.onBackPressed();
 		}
-	}
-
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
 	}
 
 	// Menu

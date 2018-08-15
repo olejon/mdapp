@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -42,16 +42,20 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
+import java.util.ArrayList;
+
 public class AntibioticsGuidesActivity extends AppCompatActivity
 {
+	private static final int VOICE_SEARCH_REQUEST_CODE = 1;
+
 	private final Context mContext = this;
 
 	private final MyTools mTools = new MyTools(mContext);
 
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
-
-	private InputMethodManager mInputMethodManager;
 
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
@@ -64,7 +68,7 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_antibiotics_guides);
@@ -83,10 +87,8 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_SEARCH)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString().trim());
 
 					return true;
@@ -106,8 +108,6 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 			{
 				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString().trim());
 				}
 				else
@@ -115,7 +115,7 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
-					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 				}
 			}
 		});
@@ -128,6 +128,22 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 
 		View listViewHeader = getLayoutInflater().inflate(R.layout.activity_antibiotics_guides_list_subheader, mListView, false);
 		mListView.addHeaderView(listViewHeader, null, false);
+	}
+
+	// Activity result
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if(requestCode == VOICE_SEARCH_REQUEST_CODE && data != null)
+		{
+			ArrayList<String> voiceSearchArrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+			String voiceSearchString = voiceSearchArrayList.get(0);
+
+			search(voiceSearchString);
+		}
 	}
 
 	// Resume activity
@@ -174,23 +190,6 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 		}
 	}
 
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
-	}
-
 	// Menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -207,6 +206,22 @@ public class AntibioticsGuidesActivity extends AppCompatActivity
 			case android.R.id.home:
 			{
 				NavUtils.navigateUpFromSameTask(this);
+				return true;
+			}
+			case R.id.antibiotics_guides_menu_voice_search:
+			{
+				try
+				{
+					Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nb-NO");
+					intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+					startActivityForResult(intent, VOICE_SEARCH_REQUEST_CODE);
+				}
+				catch(Exception e)
+				{
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
+				}
+
 				return true;
 			}
 			case R.id.antibiotics_guides_menu_clear_recent_searches:

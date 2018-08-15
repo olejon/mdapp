@@ -219,7 +219,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 
 									search(correctSearchString);
 								}
-							}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+							}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 						}
 					}
 					catch(Exception e)
@@ -275,7 +275,7 @@ public class PoisoningsCardsActivity extends AppCompatActivity
 				}
 				catch(Exception e)
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(R.string.device_not_supported_dialog_message).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(R.string.device_not_supported_dialog_message).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;

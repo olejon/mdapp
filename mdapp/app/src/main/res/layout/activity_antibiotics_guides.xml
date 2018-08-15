@@ -11,5 +11,5 @@
 			<TextView android:text="@string/antibiotics_guides_information" style="@style/list_information_empty"/>
 		</LinearLayout>
 	</ScrollView>
-	<android.support.design.widget.FloatingActionButton android:id="@+id/antibiotics_guides_fab" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
+	<android.support.design.widget.FloatingActionButton android:id="@+id/antibiotics_guides_fab" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
 </RelativeLayout>

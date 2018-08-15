@@ -116,39 +116,6 @@ class MyTools
 		sharedPreferencesEditor.apply();
 	}
 
-	// Project version
-	int getProjectVersionCode()
-	{
-		int code = 0;
-
-		try
-		{
-			code = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
-		}
-		catch(Exception e)
-		{
-			Log.e("MyTools", Log.getStackTraceString(e));
-		}
-
-		return code;
-	}
-
-	String getProjectVersionName()
-	{
-		String name = "0.0";
-
-		try
-		{
-			name = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
-		}
-		catch(Exception e)
-		{
-			Log.e("MyTools", Log.getStackTraceString(e));
-		}
-
-		return name;
-	}
-
 	// Time
 	long getCurrentTime()
 	{
@@ -187,7 +154,7 @@ class MyTools
 
 		if(downloadManager != null) downloadManager.enqueue(request);
 
-		showToast(mContext.getString(R.string.mytools_downloading), 1);
+		showToast(mContext.getString(R.string.mytools_download_file), 1);
 	}
 
 	// Check if tablet

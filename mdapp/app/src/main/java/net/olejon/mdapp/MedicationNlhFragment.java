@@ -92,7 +92,7 @@ public class MedicationNlhFragment extends Fragment
 		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 		webSettings.setBuiltInZoomControls(false);
 		webSettings.setDisplayZoomControls(false);
-		webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
+		webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0");
 		webSettings.setSavePassword(false);
 
 		mWebView.setWebViewClient(new WebViewClient()
@@ -135,7 +135,7 @@ public class MedicationNlhFragment extends Fragment
 					}
 					catch(Exception e)
 					{
-						new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+						new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 					}
 
 					return true;

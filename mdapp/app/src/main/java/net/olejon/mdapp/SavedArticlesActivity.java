@@ -89,7 +89,7 @@ public class SavedArticlesActivity extends AppCompatActivity
 				}
 				else
 				{
-					mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+					mTools.setStatusbarColor(mActivity, R.color.statusbar);
 				}
 			}
 		});
@@ -167,7 +167,7 @@ public class SavedArticlesActivity extends AppCompatActivity
 				{
 					mTools.setSharedPreferencesBoolean("SAVED_ARTICLES_HIDE_INFORMATION_DIALOG", true);
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 	}
 
@@ -274,7 +274,7 @@ public class SavedArticlesActivity extends AppCompatActivity
 							{
 								removeSavedArticle(id);
 							}
-						}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+						}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 
 						return true;
 					}

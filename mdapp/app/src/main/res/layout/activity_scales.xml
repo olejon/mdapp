@@ -4,10 +4,10 @@
 	<android.support.v7.widget.Toolbar android:id="@+id/scales_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
 	<ScrollView android:layout_below="@+id/scales_toolbar" style="@style/layout_match_width_match_height_vertical_scrollbar">
 		<LinearLayout style="@style/layout_match_width_match_height_linear_vertical">
-			<android.support.v7.widget.CardView style="@style/card_white_tablet_layout">
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
 				<TextView android:id="@+id/scales_medscape" android:text="@string/scales_medscape" style="@style/scales_medscape"/>
 			</android.support.v7.widget.CardView>
-			<android.support.v7.widget.CardView style="@style/card_white_tablet_layout">
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
 				<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
 					<TextView android:id="@+id/scales_vas_title" android:text="@string/scales_vas" style="@style/card_title"/>
 					<ImageView android:id="@+id/scales_vas_image" android:src="@drawable/vas" android:contentDescription="@string/scales_vas_image_content_description" style="@style/scales_card_image"/>
@@ -17,7 +17,7 @@
 					</LinearLayout>
 				</LinearLayout>
 			</android.support.v7.widget.CardView>
-			<android.support.v7.widget.CardView style="@style/card_white_tablet_layout">
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
 				<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
 					<TextView android:id="@+id/scales_gcs_title" android:text="@string/scales_gcs" style="@style/card_title"/>
 					<ImageView android:id="@+id/scales_gcs_image" android:src="@drawable/gcs" android:contentDescription="@string/scales_gcs_image_content_description" style="@style/scales_card_image"/>
@@ -27,7 +27,7 @@
 					</LinearLayout>
 				</LinearLayout>
 			</android.support.v7.widget.CardView>
-			<android.support.v7.widget.CardView style="@style/card_white_tablet_layout">
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
 				<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
 					<TextView android:id="@+id/scales_mews_title" android:text="@string/scales_mews" style="@style/card_title"/>
 					<ImageView android:id="@+id/scales_mews_image" android:src="@drawable/mews" android:contentDescription="@string/scales_mews_image_content_description" style="@style/scales_card_image"/>

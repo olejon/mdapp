@@ -32,11 +32,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -48,7 +46,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -136,21 +133,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 			public void afterTextChanged(Editable editable) { }
 		});
 
-		mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-		{
-			@Override
-			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-			{
-				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-					return true;
-				}
-
-				return false;
-			}
-		});
-
 		// Progress bar
 		final ProgressBar progressBar = findViewById(R.id.diseases_and_treatments_search_webview_toolbar_progressbar_horizontal);
 
@@ -170,17 +152,17 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
 		if(pageUri.contains("aofoundation.org"))
 		{
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0");
 		}
 		else if(pageUri.contains("felleskatalogen.no"))
 		{
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0");
 		}
 		else if(pageUri.contains("interaksjoner.azurewebsites.net"))
 		{
 			webSettings.setLoadWithOverviewMode(true);
 			webSettings.setUseWideViewPort(true);
-			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0) Gecko/20100101 Firefox/60.0");
+			webSettings.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0");
 			webSettings.setDefaultTextEncodingName("iso-8859-15");
 		}
 		else if(pageUri.contains("legemiddelsok.no"))
@@ -241,7 +223,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 					}
 					catch(Exception e)
 					{
-						new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+						new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 					}
 
 					return true;
@@ -263,7 +245,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 				mToolbarSearchEditText.setVisibility(View.GONE);
 				mToolbarSearchEditText.setText("");
 
-				mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+				if(mInputMethodManager != null) mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 			}
 
 			@Override
@@ -308,7 +290,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 				}
 				else if(pageUri.contains("webofknowledge.com"))
 				{
-					mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val('!cDr4ft23WJq0hIfmEnsJH3vaEGddEAT'); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+pageSearch+"'); $('form#WOS_GeneralSearch_input_form').submit(); }");
+					mWebView.loadUrl("javascript:if($('input:text.NEWun-pw').length) { $('input:text.NEWun-pw').val('legeappen@olejon.net'); $('input:password.NEWun-pw').val(''); $('input:checkbox.NEWun-pw').prop('checked', true); $('form[name=\"roaming\"]').submit(); } else if($('td.NEWwokErrorContainer > p a').length) { window.location.replace($('td.NEWwokErrorContainer > p a').first().attr('href')); } else if($('div.search-criteria input:text.search-criteria-input').length) { $('div.search-criteria input:text.search-criteria-input').val('"+pageSearch+"'); $('form#WOS_GeneralSearch_input_form').submit(); }");
 				}
 			}
 
@@ -346,7 +328,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 					{
 						finish();
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 			}
 		});
 
@@ -368,6 +350,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 			public void onProgressChanged(WebView view, int newProgress)
 			{
 				progressBar.setProgress(newProgress);
+				progressBar.setSecondaryProgress(newProgress + 10);
 			}
 		});
 
@@ -407,8 +390,6 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 
 		mToolbarSearchEditText.setVisibility(View.GONE);
 		mToolbarSearchEditText.setText("");
-
-		mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
 		mWebView.pauseTimers();
 
@@ -482,7 +463,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 				{
 					mWebView.findNext(true);
 
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+					if(mInputMethodManager != null) mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 				}
 				else
 				{
@@ -491,7 +472,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
-					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					if(mInputMethodManager != null) mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 				}
 
 				if(!mTools.getSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG"))
@@ -503,7 +484,7 @@ public class DiseasesAndTreatmentsSearchWebViewActivity extends AppCompatActivit
 						{
 							mTools.setSharedPreferencesBoolean("WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG", true);
 						}
-					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;

@@ -25,7 +25,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +32,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,8 +71,6 @@ public class Icd10ChapterActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private InputMethodManager mInputMethodManager;
-
 	private EditText mToolbarSearchEditText;
 	private ListView mListView;
 
@@ -97,7 +93,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
 		long chapterId = intent.getLongExtra("chapter", 0);
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_icd10_chapter);
@@ -124,7 +120,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
 				mToolbarSearchEditText.setVisibility(View.VISIBLE);
 				mToolbarSearchEditText.requestFocus();
 
-				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+				if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 			}
 		});
 
@@ -218,7 +214,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
 
 								progressBar.setVisibility(View.GONE);
 
-								mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
+								if(inputMethodManager != null) inputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
 
 								mTools.showToast(getString(R.string.icd10_chapter_could_not_find_code), 1);
 
@@ -299,23 +295,6 @@ public class Icd10ChapterActivity extends AppCompatActivity
 		}
 	}
 
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
-	}
-
 	// Menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -345,7 +324,7 @@ public class Icd10ChapterActivity extends AppCompatActivity
 				}
 				catch(Exception e)
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item android:id="@+id/main_menu_scan_barcode" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_line_weight_white_24dp" android:title="@string/main_menu_scan_barcode"/>
+	<item android:id="@+id/main_menu_scan_barcode" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_center_focus_weak_white_24dp" android:title="@string/main_menu_scan_barcode"/>
 	<item android:id="@+id/main_menu_donate" android:orderInCategory="2" app:showAsAction="never" android:title="@string/main_menu_donate"/>
 	<item android:id="@+id/main_menu_settings" android:orderInCategory="3" app:showAsAction="never" android:title="@string/main_menu_settings"/>
 </menu>

@@ -5,7 +5,7 @@
 		<EditText android:id="@+id/medication_toolbar_search" android:hint="@string/main_webview_toolbar_search_hint" style="@style/main_webview_toolbar_search_edittext"/>
 	</android.support.v7.widget.Toolbar>
 	<RelativeLayout android:id="@+id/medication_extended_toolbar" android:layout_below="@+id/medication_toolbar" style="@style/medication_extended_toolbar_layout">
-		<Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" android:layout_alignParentRight="true" style="@style/medication_prescription_group_button"/>
+		<Button android:id="@+id/medication_prescription_group" android:layout_alignParentTop="true" android:layout_alignParentEnd="true" style="@style/medication_prescription_group_button"/>
 		<LinearLayout android:layout_alignParentTop="true" style="@style/layout_match_width_wrap_height_linear_vertical">
 			<TextView android:id="@+id/medication_substance" style="@style/medication_detail_substance"/>
 			<TextView android:id="@+id/medication_manufacturer" style="@style/medication_detail"/>

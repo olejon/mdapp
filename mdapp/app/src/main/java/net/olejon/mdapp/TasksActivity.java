@@ -103,7 +103,7 @@ public class TasksActivity extends AppCompatActivity
 				}
 				else
 				{
-					mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+					mTools.setStatusbarColor(mActivity, R.color.statusbar);
 				}
 			}
 		});
@@ -188,7 +188,7 @@ public class TasksActivity extends AppCompatActivity
 					{
 						if(inputMethodManager != null) inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).autoDismiss(false).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).autoDismiss(false).show();
 			}
 		});
 
@@ -255,7 +255,7 @@ public class TasksActivity extends AppCompatActivity
 				{
 					mTools.setSharedPreferencesBoolean("TASKS_HIDE_INFORMATION_DIALOG", true);
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 	}
 

@@ -26,7 +26,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +36,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -87,23 +85,6 @@ public class NotesEditActivity extends AppCompatActivity
 		String noteTitle = intent.getStringExtra("title");
 
 		mNoteId = intent.getIntExtra("id", 0);
-
-		// Input manager
-		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-		if(mNoteId == 0)
-		{
-			Handler handler = new Handler();
-
-			handler.postDelayed(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					if(inputMethodManager != null) inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-				}
-			}, 250);
-		}
 
 		// Layout
 		setContentView(R.layout.activity_notes_edit);
@@ -507,7 +488,7 @@ public class NotesEditActivity extends AppCompatActivity
 				{
 					finish();
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 	}
 
@@ -533,7 +514,7 @@ public class NotesEditActivity extends AppCompatActivity
 				{
 					deleteNote(true);
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 	}
 
@@ -658,7 +639,7 @@ public class NotesEditActivity extends AppCompatActivity
 								}
 							}
 						}
-					}).itemsColorRes(R.color.dark_blue).show();
+					}).titleColorRes(R.color.teal).itemsColorRes(R.color.purple).show();
 				}
 			});
 		}

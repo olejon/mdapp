@@ -26,7 +26,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -60,8 +59,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private InputMethodManager mInputMethodManager;
-
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
@@ -75,7 +72,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_diseases_and_treatments);
@@ -94,10 +91,8 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_SEARCH)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString().trim());
 
 					return true;
@@ -130,7 +125,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 
 					if(searchString.equals(""))
 					{
-						showSearchLanguageDialog();
+						showSearchLanguageDialog(inputMethodManager);
 					}
 					else
 					{
@@ -139,7 +134,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 				}
 				else
 				{
-					showSearchLanguageDialog();
+					showSearchLanguageDialog(inputMethodManager);
 				}
 			}
 		});
@@ -151,7 +146,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 			@Override
 			public void run()
 			{
-				showSearchLanguageDialog();
+				showSearchLanguageDialog(inputMethodManager);
 			}
 		}, 500);
 	}
@@ -216,19 +211,6 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		}
 	}
 
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			showSearchLanguageDialog();
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
-	}
-
 	// Menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -260,7 +242,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 				}
 				catch(Exception e)
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;
@@ -307,16 +289,7 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		mFloatingActionButton.setVisibility(View.VISIBLE);
 	}
 
-	private void clearRecentSearches()
-	{
-		mSqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, null);
-
-		mTools.showToast(getString(R.string.diseases_and_treatments_recent_searches_removed), 0);
-
-		getRecentSearches();
-	}
-
-	private void showSearchLanguageDialog()
+	private void showSearchLanguageDialog(final InputMethodManager inputMethodManager)
 	{
 		new MaterialDialog.Builder(mContext).title(R.string.diseases_and_treatments_language_dialog_title).items(R.array.diseases_and_treatments_language_dialog_choices).itemsCallback(new MaterialDialog.ListCallback()
 		{
@@ -336,26 +309,21 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 					mToolbarSearchEditText.setHint(getString(R.string.diseases_and_treatments_toolbar_search_norwegian_hint));
 				}
 
-				showSearch();
+				Handler handler = new Handler();
+
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						mToolbarSearchEditText.setVisibility(View.VISIBLE);
+						mToolbarSearchEditText.requestFocus();
+
+						if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					}
+				}, 500);
 			}
-		}).itemsColorRes(R.color.dark_blue).show();
-	}
-
-	private void showSearch()
-	{
-		mToolbarSearchEditText.setVisibility(View.VISIBLE);
-		mToolbarSearchEditText.requestFocus();
-
-		Handler handler = new Handler();
-
-		handler.postDelayed(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-			}
-		}, 125);
+		}).titleColorRes(R.color.teal).itemsColorRes(R.color.purple).show();
 	}
 
 	private void search(String searchString)
@@ -366,5 +334,14 @@ public class DiseasesAndTreatmentsActivity extends AppCompatActivity
 		intent.putExtra("language", mSearchLanguage);
 		intent.putExtra("string", mTools.firstToUpper(searchString));
 		startActivity(intent);
+	}
+
+	private void clearRecentSearches()
+	{
+		mSqLiteDatabase.delete(DiseasesAndTreatmentsSQLiteHelper.TABLE, null, null);
+
+		mTools.showToast(getString(R.string.diseases_and_treatments_recent_searches_removed), 0);
+
+		getRecentSearches();
 	}
 }

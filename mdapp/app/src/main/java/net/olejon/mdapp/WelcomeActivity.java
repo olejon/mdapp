@@ -29,9 +29,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class WelcomeActivity extends AppCompatActivity
 {
@@ -69,7 +69,6 @@ public class WelcomeActivity extends AppCompatActivity
 		{
 			private LinearLayout linearLayout;
 			private ImageView imageView;
-			private TextView textView;
 
 			@Override
 			public void onPageSelected(int position)
@@ -86,23 +85,11 @@ public class WelcomeActivity extends AppCompatActivity
 
 				imageView = (ImageView) linearLayout.getChildAt(position);
 				imageView.setImageResource(R.drawable.welcome_indicator_active);
+				imageView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.welcome_indicator));
 			}
 
 			@Override
-			public void onPageScrollStateChanged(int state)
-			{
-				textView = viewPager.findViewById(R.id.welcome_page_1_guide);
-				textView.setVisibility(View.INVISIBLE);
-
-				textView = viewPager.findViewById(R.id.welcome_page_2_guide);
-				textView.setVisibility(View.INVISIBLE);
-
-				textView = viewPager.findViewById(R.id.welcome_page_3_guide);
-				textView.setVisibility(View.INVISIBLE);
-
-				textView = viewPager.findViewById(R.id.welcome_page_4_guide);
-				textView.setVisibility(View.INVISIBLE);
-			}
+			public void onPageScrollStateChanged(int state) { }
 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
@@ -115,11 +102,11 @@ public class WelcomeActivity extends AppCompatActivity
 	{
 		if(mViewPagerPosition == 3)
 		{
-			mTools.showToast(getString(R.string.welcome_page_4_back_button), 1);
+			mTools.showToast(getString(R.string.welcome_guide_finished), 1);
 		}
 		else
 		{
-			mTools.showToast(getString(R.string.welcome_page_guide), 1);
+			mTools.showToast(getString(R.string.welcome_guide_unfinished), 1);
 		}
 	}
 

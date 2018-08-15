@@ -167,7 +167,7 @@ public class PharmaciesLocationMapActivity extends AppCompatActivity implements 
 				{
 					mTools.setSharedPreferencesBoolean("PHARMACIES_LOCATION_MAP_HIDE_INFORMATION_DIALOG", true);
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 	}
 

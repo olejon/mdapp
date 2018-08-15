@@ -105,7 +105,7 @@ public class NotesActivity extends AppCompatActivity
 				}
 				else
 				{
-					mTools.setStatusbarColor(mActivity, R.color.statusbar_transparent);
+					mTools.setStatusbarColor(mActivity, R.color.statusbar);
 				}
 			}
 		});
@@ -212,7 +212,7 @@ public class NotesActivity extends AppCompatActivity
 				@Override
 				public void onShow(DialogInterface dialogInterface)
 				{
-					mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+					if(mInputMethodManager != null) mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 				}
 			}).cancelListener(new DialogInterface.OnCancelListener()
 			{
@@ -223,7 +223,7 @@ public class NotesActivity extends AppCompatActivity
 
 					finish();
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).autoDismiss(false).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 		else
 		{
@@ -324,6 +324,7 @@ public class NotesActivity extends AppCompatActivity
 					if(pinCode.equals(mTools.getSharedPreferencesString("NOTES_PIN_CODE")))
 					{
 						showNotes();
+
 						materialDialog.dismiss();
 					}
 					else
@@ -376,14 +377,14 @@ public class NotesActivity extends AppCompatActivity
 						{
 							finish();
 						}
-					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.black).show();
+					}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 			}).showListener(new DialogInterface.OnShowListener()
 			{
 				@Override
 				public void onShow(DialogInterface dialogInterface)
 				{
-					mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+					if(mInputMethodManager != null) mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 				}
 			}).cancelListener(new DialogInterface.OnCancelListener()
 			{
@@ -394,7 +395,7 @@ public class NotesActivity extends AppCompatActivity
 
 					finish();
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).neutralColorRes(R.color.dark_blue).autoDismiss(false).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).autoDismiss(false).show();
 		}
 	}
 

@@ -25,49 +25,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 public class WelcomeSecondFragment extends Fragment
 {
-	private boolean mViewIsShown = false;
-
-	// Create fragment view
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_welcome_second, container, false);
-
-		if(!mViewIsShown)
-		{
-			TextView textView = viewGroup.findViewById(R.id.welcome_page_2_guide);
-			animateTextView(textView);
-		}
-
-		return viewGroup;
-	}
-
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser)
-	{
-		super.setUserVisibleHint(isVisibleToUser);
-
-		if(getView() == null)
-		{
-			mViewIsShown = false;
-		}
-		else
-		{
-			mViewIsShown = true;
-
-			TextView textView = getView().getRootView().findViewById(R.id.welcome_page_2_guide);
-			animateTextView(textView);
-		}
-	}
-
-	private void animateTextView(TextView textView)
-	{
-		textView.setVisibility(View.VISIBLE);
-		textView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.welcome_guide));
+		return inflater.inflate(R.layout.fragment_welcome_second, container, false);
 	}
 }

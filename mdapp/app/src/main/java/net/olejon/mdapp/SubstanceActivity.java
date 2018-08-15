@@ -28,6 +28,8 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,8 +86,21 @@ public class SubstanceActivity extends AppCompatActivity
 			if(getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 			// ATC code
-			TextView textView = findViewById(R.id.substance_atc_code);
-			textView.setText(substanceAtcCode);
+			TextView atcCodeTextView = findViewById(R.id.substance_atc_code);
+			SpannableString atcCodeSpannableString = new SpannableString(substanceAtcCode);
+			atcCodeSpannableString.setSpan(new UnderlineSpan(), 0, substanceAtcCode.length(), 0);
+			atcCodeTextView.setText(atcCodeSpannableString);
+
+			atcCodeTextView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					Intent intent = new Intent(mContext, AtcCodesActivity.class);
+					intent.putExtra("code", substanceAtcCode.replace(getString(R.string.substance_atc_code), ""));
+					startActivity(intent);
+				}
+			});
 
 			// List
 			mListView = findViewById(R.id.substance_list);

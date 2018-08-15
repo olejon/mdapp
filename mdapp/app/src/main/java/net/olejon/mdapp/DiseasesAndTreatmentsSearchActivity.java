@@ -185,7 +185,7 @@ public class DiseasesAndTreatmentsSearchActivity extends AppCompatActivity
 
 									search(correctSearchString);
 								}
-							}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+							}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 						}
 					}
 					catch(Exception e)

@@ -38,13 +38,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -246,7 +246,7 @@ public class MedicationActivity extends AppCompatActivity
 						{
 							mTools.setSharedPreferencesBoolean("MEDICATION_WEBVIEW_FIND_IN_TEXT_HIDE_INFORMATION_DIALOG", true);
 						}
-					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;
@@ -276,7 +276,7 @@ public class MedicationActivity extends AppCompatActivity
 			{
 				if(mTools.getSharedPreferencesString("NOTES_PIN_CODE").equals(""))
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.medication_note_dialog_title).content(getString(R.string.medication_note_dialog_message)).positiveText(R.string.medication_note_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+					new MaterialDialog.Builder(mContext).title(R.string.medication_note_dialog_title).content(getString(R.string.medication_note_dialog_message)).positiveText(R.string.medication_note_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 				else
 				{
@@ -383,7 +383,7 @@ public class MedicationActivity extends AppCompatActivity
 		{
 			sqLiteDatabase.delete(MedicationsFavoritesSQLiteHelper.TABLE, MedicationsFavoritesSQLiteHelper.COLUMN_NAME+" = "+mTools.sqe(medicationName), null);
 
-			mFavoriteMenuItem.setIcon(R.drawable.ic_star_outline_white_24dp).setTitle(getString(R.string.medication_menu_add_favorite));
+			mFavoriteMenuItem.setIcon(R.drawable.ic_star_border_white_24dp).setTitle(getString(R.string.medication_menu_add_favorite));
 
 			snackbarString = getString(R.string.medication_favorite_removed);
 		}
@@ -409,7 +409,7 @@ public class MedicationActivity extends AppCompatActivity
 			{
 				addRemoveFavorite();
 			}
-		}).setActionTextColor(ContextCompat.getColor(mContext, R.color.light_teal));
+		}).setActionTextColor(ContextCompat.getColor(mContext, R.color.orange));
 
 		TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
 		textView.setTextColor(ContextCompat.getColor(mContext, R.color.white));
@@ -498,7 +498,7 @@ public class MedicationActivity extends AppCompatActivity
 
 				mTools.openChromeCustomTabsUri(uri);
 			}
-		}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).neutralColorRes(R.color.dark_blue).show();
+		}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 	}
 
 	// Get medication
@@ -549,11 +549,15 @@ public class MedicationActivity extends AppCompatActivity
 
 			// Substance
 			TextView substanceTextView = findViewById(R.id.medication_substance);
-			substanceTextView.setText(medicationSubstance);
+			SpannableString substanceSpannableString = new SpannableString(medicationSubstance);
+			substanceSpannableString.setSpan(new UnderlineSpan(), 0, medicationSubstance.length(), 0);
+			substanceTextView.setText(substanceSpannableString);
 
 			// Manufacturer
 			TextView manufacturerTextView = findViewById(R.id.medication_manufacturer);
-			manufacturerTextView.setText(medicationManufacturer);
+			SpannableString manufacturerSpannableString = new SpannableString(medicationManufacturer);
+			manufacturerSpannableString.setSpan(new UnderlineSpan(), 0, medicationManufacturer.length(), 0);
+			manufacturerTextView.setText(manufacturerSpannableString);
 
 			// Connected?
 			if(mTools.isDeviceConnected())
@@ -569,21 +573,6 @@ public class MedicationActivity extends AppCompatActivity
 				firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 				// Toolbar
-				mToolbarSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
-				{
-					@Override
-					public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
-					{
-						if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-						{
-							mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-							return true;
-						}
-
-						return false;
-					}
-				});
-
 				mToolbarSearchEditText.addTextChangedListener(new TextWatcher()
 				{
 					@Override
@@ -732,7 +721,7 @@ public class MedicationActivity extends AppCompatActivity
 						{
 							mTools.setSharedPreferencesBoolean("MEDICATION_HIDE_INFORMATION_DIALOG", true);
 						}
-					}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 			}
 			else
@@ -759,7 +748,7 @@ public class MedicationActivity extends AppCompatActivity
 					{
 						finish();
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.dark_blue).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 			}
 		}
 	}

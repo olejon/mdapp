@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+	<!-- Main -->
+	<dimen name="main_search_padding_right_left">28dp</dimen>
+
+	<!-- Welcome -->
+	<dimen name="welcome_padding">64dp</dimen>
+	<dimen name="welcome_button_margin">64dp</dimen>
+
+	<!-- Drawer -->
+	<dimen name="drawer_width">320dp</dimen>
+
+	<!-- Lists -->
+	<dimen name="list_item_padding">24dp</dimen>
+	<dimen name="list_item_circle_margin_left">64dp</dimen>
+
+	<!-- Cards -->
+	<dimen name="card_margin_top_bottom">16dp</dimen>
+	<dimen name="card_margin_right_left">64dp</dimen>
+	<dimen name="card_item_padding_top_bottom">16dp</dimen>
+	<dimen name="card_item_padding_right_left">24dp</dimen>
+
+</resources>

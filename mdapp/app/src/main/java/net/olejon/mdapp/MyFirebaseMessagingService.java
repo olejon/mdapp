@@ -22,11 +22,12 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -38,6 +39,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 	private final Context mContext = this;
 
 	private final MyTools mTools = new MyTools(mContext);
+
+	@Override
+	public void onNewToken(String firebaseToken)
+	{
+		mTools.setSharedPreferencesString("FIREBASE_TOKEN", firebaseToken);
+
+		Log.w("NewFirebaseToken", firebaseToken);
+	}
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage)
@@ -58,8 +67,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
 			NotificationManagerCompat notificationChannelManager = NotificationManagerCompat.from(mContext);
 
-			NotificationCompat.Builder notificationChannelMessageBuilder = new NotificationCompat.Builder(mContext, MainActivity.notificationChannelMessageId);
-			NotificationCompat.Builder notificationChannelSlvBuilder = new NotificationCompat.Builder(mContext, MainActivity.notificationChannelSlvId);
+			NotificationCompat.Builder notificationChannelMessageBuilder = new NotificationCompat.Builder(mContext, MainActivity.NOTIFICATION_CHANNEL_MESSAGE_ID);
+			NotificationCompat.Builder notificationChannelSlvBuilder = new NotificationCompat.Builder(mContext, MainActivity.NOTIFICATION_CHANNEL_SLV_ID);
 
 			Intent firstActionIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
 			PendingIntent firstActionPendingIntent = PendingIntent.getActivity(mContext, 0, firstActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -78,8 +87,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 					.setContentText(text)
 					.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
 					.setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
-					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon))
-					.setColor(getResources().getColor(R.color.light_blue))
+					.setColor(ContextCompat.getColor(mContext, R.color.light_blue))
 					.setContentIntent(firstActionPendingIntent)
 					.addAction(R.drawable.ic_notifications_white_24dp, uri_text, firstActionPendingIntent)
 					.addAction(R.drawable.ic_settings_white_24dp, getString(R.string.notification_third_action), thirdActionPendingIntent);
@@ -90,8 +98,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 					.setContentText(text)
 					.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
 					.setSmallIcon(R.drawable.ic_local_hospital_white_24dp)
-					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon))
-					.setColor(getResources().getColor(R.color.light_blue))
+					.setColor(ContextCompat.getColor(mContext, R.color.light_blue))
 					.setContentIntent(firstActionPendingIntent)
 					.addAction(R.drawable.ic_notifications_white_24dp, uri_text, firstActionPendingIntent)
 					.addAction(R.drawable.ic_notifications_white_24dp, getString(R.string.notification_second_action), secondActionPendingIntent)
@@ -99,8 +106,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			{
-				notificationChannelMessageBuilder.setChannelId(MainActivity.notificationChannelMessageId);
-				notificationChannelSlvBuilder.setChannelId(MainActivity.notificationChannelSlvId);
+				notificationChannelMessageBuilder.setChannelId(MainActivity.NOTIFICATION_CHANNEL_MESSAGE_ID);
+				notificationChannelSlvBuilder.setChannelId(MainActivity.NOTIFICATION_CHANNEL_SLV_ID);
 			}
 			else if(mTools.getDefaultSharedPreferencesBoolean("NOTIFICATIONS_NOTIFY"))
 			{

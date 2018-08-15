@@ -47,16 +47,19 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
@@ -66,8 +69,8 @@ import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity
 {
-	public static final String notificationChannelSlvId = "net.olejon.mdapp.NOTIFICATION_CHANNEL_SLV";
-	public static final String notificationChannelMessageId = "net.olejon.mdapp.NOTIFICATION_CHANNEL_MESSAGE";
+	public static final String NOTIFICATION_CHANNEL_MESSAGE_ID = "net.olejon.mdapp.NOTIFICATION_CHANNEL_MESSAGE";
+	public static final String NOTIFICATION_CHANNEL_SLV_ID = "net.olejon.mdapp.NOTIFICATION_CHANNEL_SLV";
 
 	public static SQLiteDatabase SL_DATA_SQLITE_DATABASE;
 
@@ -81,32 +84,16 @@ public class MainActivity extends AppCompatActivity
 
 	private InputMethodManager mInputMethodManager;
 
-	private NavigationView mDrawer;
 	private DrawerLayout mDrawerLayout;
+	private NavigationView mDrawer;
 	private EditText mSearchEditText;
 	private ViewPager mViewPager;
 	private TabLayout mTabLayout;
 	private FloatingActionButton mFloatingActionButton;
 
-	private TextView mNhiTextView;
-	private TextView mSmlTextView;
-	private TextView mHelsenorgeTextView;
-	private TextView mForskningTextView;
-	private TextView mWikipediaNorwegianTextView;
-	private TextView mHelsebiblioteketTextView;
-	private TextView mTidsskriftetTextView;
-	private TextView mOncolexTextView;
-	private TextView mBrukerhandbokenTextView;
-	private TextView mUpToDateTextView;
-	private TextView mBmjTextView;
-	private TextView mPubmedTextView;
-	private TextView mWebofscienceTextView;
-	private TextView mMedlineplusTextView;
-	private TextView mAoSurgeryTextView;
-	private TextView mWikipediaEnglishTextView;
-	private TextView mEncyclopediasTextView;
-
 	private int mDrawerClosed;
+
+	private boolean mDrawerEncyclopediasGroupVisible = false;
 
 	// Create activity
 	@Override
@@ -118,21 +105,21 @@ public class MainActivity extends AppCompatActivity
 		PreferenceManager.setDefaultValues(mContext, R.xml.settings, false);
 
 		// Installed
-		long installed = mTools.getSharedPreferencesLong("INSTALLED_3600");
+		long installed = mTools.getSharedPreferencesLong("INSTALLED_4100");
 
-		if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_3600", mTools.getCurrentTime());
+		if(installed == 0) mTools.setSharedPreferencesLong("INSTALLED_4100", mTools.getCurrentTime());
 
 		// Notification manager
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager != null)
 		{
-			NotificationChannel notificationMessageChannel = new NotificationChannel(notificationChannelMessageId, getString(R.string.notification_channel_message_name), NotificationManager.IMPORTANCE_HIGH);
+			NotificationChannel notificationMessageChannel = new NotificationChannel(NOTIFICATION_CHANNEL_MESSAGE_ID, getString(R.string.notification_channel_message_name), NotificationManager.IMPORTANCE_HIGH);
 			notificationMessageChannel.setShowBadge(true);
 			notificationMessageChannel.setDescription(getString(R.string.notification_channel_message_description));
 			notificationManager.createNotificationChannel(notificationMessageChannel);
 
-			NotificationChannel notificationSlvChannel = new NotificationChannel(notificationChannelSlvId, getString(R.string.notification_channel_slv_name), NotificationManager.IMPORTANCE_HIGH);
+			NotificationChannel notificationSlvChannel = new NotificationChannel(NOTIFICATION_CHANNEL_SLV_ID, getString(R.string.notification_channel_slv_name), NotificationManager.IMPORTANCE_HIGH);
 			notificationSlvChannel.setShowBadge(true);
 			notificationSlvChannel.setDescription(getString(R.string.notification_channel_slv_description));
 			notificationManager.createNotificationChannel(notificationSlvChannel);
@@ -154,40 +141,13 @@ public class MainActivity extends AppCompatActivity
 
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
-		// Search
-		mSearchEditText = findViewById(R.id.main_search_edittext);
-
 		// Drawer
-		mDrawer = findViewById(R.id.main_drawer);
 		mDrawerLayout = findViewById(R.id.main_drawer_layout);
+		mDrawer = findViewById(R.id.main_drawer);
 
-		mNhiTextView = findViewById(R.id.drawer_item_nhi);
-		mSmlTextView = findViewById(R.id.drawer_item_sml);
-		mHelsenorgeTextView = findViewById(R.id.drawer_item_helsenorge);
-		mForskningTextView = findViewById(R.id.drawer_item_forskning);
-		mWikipediaNorwegianTextView = findViewById(R.id.drawer_item_wikipedia_norwegian);
-		mHelsebiblioteketTextView = findViewById(R.id.drawer_item_helsebiblioteket);
-		mTidsskriftetTextView = findViewById(R.id.drawer_item_tidsskriftet);
-		mOncolexTextView = findViewById(R.id.drawer_item_oncolex);
-		mBrukerhandbokenTextView = findViewById(R.id.drawer_item_brukerhandboken);
-		mPubmedTextView = findViewById(R.id.drawer_item_pubmed);
-		mWebofscienceTextView = findViewById(R.id.drawer_item_webofscience);
-		mMedlineplusTextView = findViewById(R.id.drawer_item_medlineplus);
-		mWikipediaEnglishTextView = findViewById(R.id.drawer_item_wikipedia_english);
-		mUpToDateTextView = findViewById(R.id.drawer_item_uptodate);
-		mBmjTextView = findViewById(R.id.drawer_item_bmj);
-		mAoSurgeryTextView = findViewById(R.id.drawer_item_ao_surgery);
-		mEncyclopediasTextView = findViewById(R.id.drawer_item_encyclopedias);
+		final Menu drawerMenu = mDrawer.getMenu();
 
-		TextView drawerVersionNameTextView = findViewById(R.id.drawer_version_name);
-		TextView drawerVersionCodeTextView = findViewById(R.id.drawer_version_code);
-
-		drawerVersionNameTextView.setText(getString(R.string.drawer_version_name, mTools.getProjectVersionName()));
-		drawerVersionCodeTextView.setText(getString(R.string.drawer_version_code, mTools.getProjectVersionCode()));
-
-		int drawerContentDescription = R.string.drawer_content_description;
-
-		mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(mActivity, mDrawerLayout, toolbar, drawerContentDescription, drawerContentDescription)
+		mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(mActivity, mDrawerLayout, toolbar, R.string.drawer_content_description, R.string.drawer_content_description)
 		{
 			@Override
 			public void onDrawerOpened(View drawerView)
@@ -198,23 +158,10 @@ public class MainActivity extends AppCompatActivity
 			@Override
 			public void onDrawerClosed(View drawerView)
 			{
-				mNhiTextView.setVisibility(View.GONE);
-				mSmlTextView.setVisibility(View.GONE);
-				mHelsenorgeTextView.setVisibility(View.GONE);
-				mForskningTextView.setVisibility(View.GONE);
-				mWikipediaNorwegianTextView.setVisibility(View.GONE);
-				mHelsebiblioteketTextView.setVisibility(View.GONE);
-				mTidsskriftetTextView.setVisibility(View.GONE);
-				mOncolexTextView.setVisibility(View.GONE);
-				mBrukerhandbokenTextView.setVisibility(View.GONE);
-				mPubmedTextView.setVisibility(View.GONE);
-				mWebofscienceTextView.setVisibility(View.GONE);
-				mMedlineplusTextView.setVisibility(View.GONE);
-				mWikipediaEnglishTextView.setVisibility(View.GONE);
-				mUpToDateTextView.setVisibility(View.GONE);
-				mBmjTextView.setVisibility(View.GONE);
-				mAoSurgeryTextView.setVisibility(View.GONE);
-				mEncyclopediasTextView.setVisibility(View.VISIBLE);
+				mDrawerEncyclopediasGroupVisible = false;
+
+				drawerMenu.setGroupVisible(R.id.drawer_group_encyclopedias, false);
+				drawerMenu.findItem(R.id.drawer_item_encyclopedias).setIcon(R.drawable.ic_unfold_more_black_24dp).setTitle(R.string.drawer_item_encyclopedias_show_more);
 
 				switch(mDrawerClosed)
 				{
@@ -515,6 +462,58 @@ public class MainActivity extends AppCompatActivity
 			}
 		});
 
+		mDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+		{
+			@Override
+			public boolean onNavigationItemSelected(@NonNull MenuItem item)
+			{
+				mDrawerClosed = item.getItemId();
+
+				if(mDrawerClosed == R.id.drawer_item_encyclopedias)
+				{
+					if(mDrawerEncyclopediasGroupVisible)
+					{
+						mDrawerEncyclopediasGroupVisible = false;
+
+						drawerMenu.setGroupVisible(R.id.drawer_group_encyclopedias, false);
+						drawerMenu.findItem(R.id.drawer_item_encyclopedias).setIcon(R.drawable.ic_unfold_more_black_24dp).setTitle(R.string.drawer_item_encyclopedias_show_more);
+					}
+					else
+					{
+						mDrawerEncyclopediasGroupVisible = true;
+
+						drawerMenu.setGroupVisible(R.id.drawer_group_encyclopedias, true);
+						drawerMenu.findItem(R.id.drawer_item_encyclopedias).setIcon(R.drawable.ic_unfold_less_black_24dp).setTitle(R.string.drawer_item_encyclopedias_hide_more);
+					}
+				}
+				else
+				{
+					mDrawerLayout.closeDrawers();
+				}
+
+				return true;
+			}
+		});
+
+		// Search
+		mSearchEditText = findViewById(R.id.main_search_edittext);
+
+		mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			@Override
+			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
+			{
+				if(i == EditorInfo.IME_ACTION_SEARCH)
+				{
+					if(mInputMethodManager != null) mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
+
+					return true;
+				}
+
+				return false;
+			}
+		});
+
 		// View pager
 		mViewPager = findViewById(R.id.main_pager);
 
@@ -531,7 +530,7 @@ public class MainActivity extends AppCompatActivity
 			{
 				mSearchEditText.requestFocus();
 
-				mInputMethodManager.showSoftInput(mSearchEditText, 0);
+				if(mInputMethodManager != null) mInputMethodManager.showSoftInput(mSearchEditText, 0);
 			}
 		});
 
@@ -624,14 +623,14 @@ public class MainActivity extends AppCompatActivity
 		mFloatingActionButton.setVisibility(View.VISIBLE);
 
 		// Rate
-		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3600"))
+		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_4100"))
 		{
 			long currentTime = mTools.getCurrentTime();
-			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3600");
+			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_4100");
 
-			if(currentTime - installedTime > 1000 * 3600 * 48)
+			if(currentTime - installedTime > 1000 * 3600 * 96)
 			{
-				mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_3600", true);
+				mTools.setSharedPreferencesBoolean("MAIN_HIDE_RATE_DIALOG_4100", true);
 
 				new MaterialDialog.Builder(mContext).title(R.string.main_rate_dialog_title).content(getString(R.string.main_rate_dialog_message)).positiveText(R.string.main_rate_dialog_positive_button).negativeText(R.string.main_rate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
 				{
@@ -641,29 +640,7 @@ public class MainActivity extends AppCompatActivity
 						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=net.olejon.mdapp"));
 						startActivity(intent);
 					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
-			}
-		}
-
-		// Donate
-		if(!mTools.getSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3600"))
-		{
-			long currentTime = mTools.getCurrentTime();
-			long installedTime = mTools.getSharedPreferencesLong("INSTALLED_3600");
-
-			if(currentTime - installedTime > 1000 * 3600 * 96)
-			{
-				mTools.setSharedPreferencesBoolean("MAIN_HIDE_DONATE_DIALOG_3600", true);
-
-				new MaterialDialog.Builder(mContext).title(R.string.main_donate_dialog_title).content(getString(R.string.main_donate_dialog_message)).positiveText(R.string.main_donate_dialog_positive_button).negativeText(R.string.main_donate_dialog_negative_button).onPositive(new MaterialDialog.SingleButtonCallback()
-				{
-					@Override
-					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction)
-					{
-						Intent intent = new Intent(mContext, DonateActivity.class);
-						startActivity(intent);
-					}
-				}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).negativeColorRes(R.color.black).show();
+				}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 			}
 		}
 	}
@@ -696,22 +673,6 @@ public class MainActivity extends AppCompatActivity
 		{
 			super.onBackPressed();
 		}
-	}
-
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
 	}
 
 	// Menu
@@ -748,57 +709,6 @@ public class MainActivity extends AppCompatActivity
 			{
 				return super.onOptionsItemSelected(item);
 			}
-		}
-	}
-
-	// Drawer
-	public void onDrawerItemClick(View view)
-	{
-		mDrawerClosed = view.getId();
-
-		if(mDrawerClosed == R.id.drawer_item_encyclopedias)
-		{
-			mEncyclopediasTextView.setVisibility(View.GONE);
-
-			Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.drawer_item);
-
-			mNhiTextView.startAnimation(animation);
-			mSmlTextView.startAnimation(animation);
-			mHelsenorgeTextView.startAnimation(animation);
-			mForskningTextView.startAnimation(animation);
-			mWikipediaNorwegianTextView.startAnimation(animation);
-			mHelsebiblioteketTextView.startAnimation(animation);
-			mTidsskriftetTextView.startAnimation(animation);
-			mOncolexTextView.startAnimation(animation);
-			mBrukerhandbokenTextView.startAnimation(animation);
-			mPubmedTextView.startAnimation(animation);
-			mWebofscienceTextView.startAnimation(animation);
-			mMedlineplusTextView.startAnimation(animation);
-			mWikipediaEnglishTextView.startAnimation(animation);
-			mUpToDateTextView.startAnimation(animation);
-			mBmjTextView.startAnimation(animation);
-			mAoSurgeryTextView.startAnimation(animation);
-
-			mNhiTextView.setVisibility(View.VISIBLE);
-			mSmlTextView.setVisibility(View.VISIBLE);
-			mHelsenorgeTextView.setVisibility(View.VISIBLE);
-			mForskningTextView.setVisibility(View.VISIBLE);
-			mWikipediaNorwegianTextView.setVisibility(View.VISIBLE);
-			mHelsebiblioteketTextView.setVisibility(View.VISIBLE);
-			mTidsskriftetTextView.setVisibility(View.VISIBLE);
-			mOncolexTextView.setVisibility(View.VISIBLE);
-			mBrukerhandbokenTextView.setVisibility(View.VISIBLE);
-			mPubmedTextView.setVisibility(View.VISIBLE);
-			mWebofscienceTextView.setVisibility(View.VISIBLE);
-			mMedlineplusTextView.setVisibility(View.VISIBLE);
-			mWikipediaEnglishTextView.setVisibility(View.VISIBLE);
-			mUpToDateTextView.setVisibility(View.VISIBLE);
-			mBmjTextView.setVisibility(View.VISIBLE);
-			mAoSurgeryTextView.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			mDrawerLayout.closeDrawers();
 		}
 	}
 
@@ -890,7 +800,7 @@ public class MainActivity extends AppCompatActivity
 
 				mSearchEditText.setText("");
 
-				mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
+				if(mInputMethodManager != null) mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
 			}
 
 			@Override
@@ -902,16 +812,24 @@ public class MainActivity extends AppCompatActivity
 
 		// Firebase
 		FirebaseAnalytics.getInstance(mContext);
+
 		FirebaseMessaging.getInstance().subscribeToTopic("message");
 		FirebaseMessaging.getInstance().subscribeToTopic("notifications_from_slv");
 
-		if(FirebaseInstanceId.getInstance().getToken() != null)
+		FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>()
 		{
-			String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+			@Override
+			public void onComplete(@NonNull Task<InstanceIdResult> task)
+			{
+				if(task.isSuccessful())
+				{
+					String firebaseToken = task.getResult().getToken();
 
-			mTools.setSharedPreferencesString("FIREBASE_TOKEN", firebaseToken);
+					mTools.setSharedPreferencesString("FIREBASE_TOKEN", firebaseToken);
 
-			Log.w("FirstFirebaseToken", firebaseToken);
-		}
+					Log.w("InitialFirebaseToken", firebaseToken);
+				}
+			}
+		});
 	}
 }

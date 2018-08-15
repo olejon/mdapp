@@ -24,8 +24,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -55,13 +53,9 @@ public class InteractionsActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private InputMethodManager mInputMethodManager;
-
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
-
-	private String mSearchString;
 
 	// Create activity
 	@Override
@@ -72,10 +66,10 @@ public class InteractionsActivity extends AppCompatActivity
 		// Intent
 		Intent intent = getIntent();
 
-		mSearchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
+		String searchString = (intent.getStringExtra("search") == null) ? "" : intent.getStringExtra("search").replace(" ", "_");
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_interactions);
@@ -94,10 +88,8 @@ public class InteractionsActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_SEARCH)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString());
 
 					return true;
@@ -107,10 +99,10 @@ public class InteractionsActivity extends AppCompatActivity
 			}
 		});
 
-		if(!mSearchString.equals(""))
+		if(!searchString.equals(""))
 		{
 			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.setText(mSearchString+" ");
+			mToolbarSearchEditText.setText(searchString+" ");
 			mToolbarSearchEditText.setSelection(mToolbarSearchEditText.getText().length());
 
 			mTools.showToast(getString(R.string.interactions_search_other_medications_or_substances), 1);
@@ -135,8 +127,6 @@ public class InteractionsActivity extends AppCompatActivity
 			{
 				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString());
 				}
 				else
@@ -144,7 +134,7 @@ public class InteractionsActivity extends AppCompatActivity
 					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
-					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 				}
 			}
 		});
@@ -182,23 +172,6 @@ public class InteractionsActivity extends AppCompatActivity
 		{
 			super.onBackPressed();
 		}
-	}
-
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
 	}
 
 	// Menu
@@ -279,29 +252,10 @@ public class InteractionsActivity extends AppCompatActivity
 
 		mFloatingActionButton.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fab));
 		mFloatingActionButton.setVisibility(View.VISIBLE);
-
-		if(!mSearchString.equals(""))
-		{
-			Handler handler = new Handler();
-
-			handler.postDelayed(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					mToolbarSearchEditText.setVisibility(View.VISIBLE);
-					mToolbarSearchEditText.requestFocus();
-
-					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-				}
-			}, 500);
-		}
 	}
 
 	private void clearRecentSearches()
 	{
-		mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 		mSqLiteDatabase.delete(InteractionsSQLiteHelper.TABLE, null, null);
 
 		mToolbarSearchEditText.setVisibility(View.GONE);

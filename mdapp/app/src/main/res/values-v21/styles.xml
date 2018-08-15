@@ -81,11 +81,6 @@
 
 	<style name="layout_progressbar_base" parent="@android:style/Widget.Material.ProgressBar"/>
 
-	<!-- Drawer -->
-	<style name="drawer_item_base">
-		<item name="android:fontFamily">sans-serif-medium</item>
-	</style>
-
 	<!-- Toolbar -->
 	<style name="toolbar_base">
 		<item name="android:elevation">2dp</item>
@@ -102,7 +97,7 @@
 		<item name="android:elevation">2dp</item>
 	</style>
 
-	<!-- List view -->
+	<!-- Lists -->
 	<style name="listview_base" parent="@android:style/Widget.Material.Light.ListView"/>
 
 	<style name="list_empty_base">

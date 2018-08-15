@@ -60,8 +60,6 @@ public class PoisoningsActivity extends AppCompatActivity
 	private SQLiteDatabase mSqLiteDatabase;
 	private Cursor mCursor;
 
-	private InputMethodManager mInputMethodManager;
-
 	private EditText mToolbarSearchEditText;
 	private FloatingActionButton mFloatingActionButton;
 	private ListView mListView;
@@ -78,7 +76,7 @@ public class PoisoningsActivity extends AppCompatActivity
 		String searchString = intent.getStringExtra("search");
 
 		// Input manager
-		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		// Layout
 		setContentView(R.layout.activity_poisonings);
@@ -97,10 +95,8 @@ public class PoisoningsActivity extends AppCompatActivity
 			@Override
 			public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent)
 			{
-				if(i == EditorInfo.IME_ACTION_SEARCH || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+				if(i == EditorInfo.IME_ACTION_SEARCH)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString().trim());
 
 					return true;
@@ -120,8 +116,6 @@ public class PoisoningsActivity extends AppCompatActivity
 			{
 				if(mToolbarSearchEditText.getVisibility() == View.VISIBLE)
 				{
-					mInputMethodManager.hideSoftInputFromWindow(mToolbarSearchEditText.getWindowToken(), 0);
-
 					search(mToolbarSearchEditText.getText().toString().trim());
 				}
 				else
@@ -129,7 +123,7 @@ public class PoisoningsActivity extends AppCompatActivity
 					mToolbarSearchEditText.setVisibility(View.VISIBLE);
 					mToolbarSearchEditText.requestFocus();
 
-					mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
+					if(inputMethodManager != null) inputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
 				}
 			}
 		});
@@ -207,23 +201,6 @@ public class PoisoningsActivity extends AppCompatActivity
 		}
 	}
 
-	// Search button
-	@Override
-	public boolean onKeyUp(int keyCode, @NonNull KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			mToolbarSearchEditText.setVisibility(View.VISIBLE);
-			mToolbarSearchEditText.requestFocus();
-
-			mInputMethodManager.showSoftInput(mToolbarSearchEditText, 0);
-
-			return true;
-		}
-
-		return super.onKeyUp(keyCode, event);
-	}
-
 	// Menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -251,7 +228,7 @@ public class PoisoningsActivity extends AppCompatActivity
 				}
 				catch(Exception e)
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;
@@ -267,7 +244,7 @@ public class PoisoningsActivity extends AppCompatActivity
 				}
 				catch(Exception e)
 				{
-					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+					new MaterialDialog.Builder(mContext).title(R.string.device_not_supported_dialog_title).content(getString(R.string.device_not_supported_dialog_message)).positiveText(R.string.device_not_supported_dialog_positive_button).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 				}
 
 				return true;
@@ -330,7 +307,7 @@ public class PoisoningsActivity extends AppCompatActivity
 				{
 					mTools.setSharedPreferencesBoolean("POISONINGS_HIDE_INFORMATION_DIALOG", true);
 				}
-			}).contentColorRes(R.color.black).positiveColorRes(R.color.dark_blue).show();
+			}).titleColorRes(R.color.teal).contentColorRes(R.color.dark).positiveColorRes(R.color.teal).negativeColorRes(R.color.dark).neutralColorRes(R.color.teal).buttonRippleColorRes(R.color.light_grey).show();
 		}
 	}
 
