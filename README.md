@@ -1,6 +1,6 @@
 ## LegeAppen
 
-This app is in Norwegian. Useful and intuitive app for doctors and other health care workers in Norway. Replace lots of apps and websites with just one app!
+This app is in Norwegian. Useful and intuitive app for doctors and other health care workers in Norway. Replace lots of apps and websites with just one app!.
 
 #### Links
 * [Project website](https://www.olejon.net/code/mdapp/)
