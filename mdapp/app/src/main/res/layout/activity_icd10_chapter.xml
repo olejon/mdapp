@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
+	<android.support.v7.widget.Toolbar android:id="@+id/icd10_chapter_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
+		<EditText android:id="@+id/icd10_chapter_toolbar_search" android:hint="@string/icd10_chapter_toolbar_search_hint" style="@style/icd10_chapter_toolbar_search_edittext"/>
+		<ProgressBar android:id="@+id/icd10_chapter_toolbar_progressbar" style="@style/toolbar_progressbar"/>
+	</android.support.v7.widget.Toolbar>
+	<ListView android:id="@+id/icd10_chapter_list" android:layout_below="@+id/icd10_chapter_toolbar" style="@style/layout_match_width_match_height"/>
+	<TextView android:id="@+id/icd10_chapter_list_empty" android:layout_below="@+id/icd10_chapter_toolbar" android:text="@string/icd10_chapter_list_empty" style="@style/list_simple_empty"/>
+	<android.support.design.widget.FloatingActionButton android:id="@+id/icd10_chapter_fab" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
+</RelativeLayout>

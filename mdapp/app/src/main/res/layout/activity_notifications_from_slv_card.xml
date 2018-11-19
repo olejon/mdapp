@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/notifications_from_slv_card" style="@style/card_white_layout">
+	<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
+		<LinearLayout style="@style/card_top_detail_layout">
+			<TextView android:id="@+id/notifications_from_slv_card_type" style="@style/card_top_detail_text_left"/>
+			<TextView android:id="@+id/notifications_from_slv_card_date" style="@style/card_top_detail_text_right"/>
+		</LinearLayout>
+		<TextView android:id="@+id/notifications_from_slv_card_title" style="@style/card_title"/>
+		<TextView android:id="@+id/notifications_from_slv_card_message" style="@style/card_text"/>
+		<View style="@style/card_separator"/>
+		<LinearLayout style="@style/card_buttons_layout">
+			<Button android:id="@+id/notifications_from_slv_card_button" android:text="@string/notifications_from_slv_card_button" style="@style/card_button"/>
+		</LinearLayout>
+	</LinearLayout>
+</android.support.v7.widget.CardView>

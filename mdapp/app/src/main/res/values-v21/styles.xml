@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+	<!-- Main -->
+	<style name="main_theme" parent="app_theme">
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:statusBarColor">@android:color/transparent</item>
+	</style>
+
+	<style name="main_search_base" parent="main_search_base_base">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<style name="main_medications_list_item_name_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="main_substances_list_item_name_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Medication -->
+	<style name="medication_extended_toolbar_layout_base">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<!-- Substance -->
+	<style name="substance_list_item_name_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Saved articles -->
+	<style name="saved_articles_list_item_title_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Diseases and treatments -->
+	<style name="diseases_and_treatments_search_card_title_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- ICD-10 -->
+	<style name="icd10_list_item_chapter_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Manufacturers -->
+	<style name="manufacturers_list_item_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Manufacturer -->
+	<style name="manufacturer_list_item_name_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Notes -->
+	<style name="notes_card_title_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Notes edit medications -->
+	<style name="notes_edit_medications_list_item_name_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Welcome -->
+	<style name="welcome_page_title_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Layout -->
+	<style name="layout_match_width_wrap_height_elevation" parent="layout_match_width_wrap_height">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<style name="layout_tabs_base" parent="layout_tabs_base_base">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<style name="layout_progressbar_base" parent="@android:style/Widget.Material.ProgressBar"/>
+
+	<!-- Toolbar -->
+	<style name="toolbar_base">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<style name="toolbar_progressbar_base" parent="@android:style/Widget.Material.ProgressBar"/>
+
+	<style name="toolbar_progressbar_horizontal_base" parent="@android:style/Widget.Material.ProgressBar.Horizontal">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<!-- Collapsing toolbar -->
+	<style name="collapsing_toolbar_base">
+		<item name="android:elevation">2dp</item>
+	</style>
+
+	<!-- Lists -->
+	<style name="listview_base" parent="@android:style/Widget.Material.Light.ListView"/>
+
+	<style name="list_empty_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Cards -->
+	<style name="card_title_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_title_icon_text_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_bold_text_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_button_base_base" parent="@android:style/Widget.Material.Button.Borderless">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<style name="card_information_empty_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+	<!-- Subheaders -->
+	<style name="subheader_base">
+		<item name="android:fontFamily">sans-serif-medium</item>
+	</style>
+
+</resources>

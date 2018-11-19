@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<color name="blue">#03A9F4</color>
+	<color name="light_blue">#4FC3F7</color>
+	<color name="dark_blue">#0288D1</color>
+	<color name="accent_blue">#40C4FF</color>
+	<color name="teal">#009688</color>
+	<color name="light_teal">#4DB6AC</color>
+	<color name="lighter_teal">#B2DFDB</color>
+	<color name="accent_teal">#64FFDA</color>
+	<color name="purple">#9C27B0</color>
+	<color name="accent_purple">#E040FB</color>
+	<color name="green">#4CAF50</color>
+	<color name="accent_green">#69F0AE</color>
+	<color name="orange">#FF9800</color>
+	<color name="accent_orange">#FFAB40</color>
+	<color name="red">#F44336</color>
+	<color name="accent_red">#FF5252</color>
+	<color name="light_grey">#E0E0E0</color>
+	<color name="grey">#9E9E9E</color>
+	<color name="dark_grey">#616161</color>
+	<color name="dark">#212121</color>
+	<color name="white">#FFFFFF</color>
+	<color name="black">#000000</color>
+	<color name="card_separator">#E0E0E0</color>
+	<color name="colored_card_separator">#80FFFFFF</color>
+	<color name="highlight">#40FFFFFF</color>
+	<color name="hint">#BFFFFFFF</color>
+	<color name="statusbar">#80000000</color>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" style="@style/welcome_page_layout">
+	<LinearLayout style="@style/welcome_page_inner_layout">
+		<TextView android:id="@+id/welcome_page_4_guide" android:text="@string/welcome_guide_finished" style="@style/welcome_guide_finished"/>
+		<TextView android:text="@string/welcome_page_4_title" style="@style/welcome_page_title"/>
+		<TextView android:text="@string/welcome_page_4_text" style="@style/welcome_page_text"/>
+		<Button android:id="@+id/welcome_page_4_button" android:text="@string/welcome_page_4_button" style="@style/welcome_page_4_button"/>
+	</LinearLayout>
+</ScrollView>

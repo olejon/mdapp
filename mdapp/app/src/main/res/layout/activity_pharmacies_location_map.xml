@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
+	<android.support.v7.widget.Toolbar android:id="@+id/pharmacies_location_map_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+	<fragment android:name="com.google.android.gms.maps.MapFragment" android:id="@+id/pharmacies_location_map_map" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_below="@+id/pharmacies_location_map_toolbar"/>
+</RelativeLayout>
