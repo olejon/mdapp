@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item android:id="@+id/pharmacies_location_map_menu_information" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_info_outline_white_24dp" android:title="@string/pharmacies_location_map_menu_information"/>
-</menu>

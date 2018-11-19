@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item android:id="@+id/antibiotics_guides_menu_voice_search" android:orderInCategory="1" app:showAsAction="ifRoom" android:icon="@drawable/ic_keyboard_voice_white_24dp" android:title="@string/antibiotics_guides_menu_voice_search"/>
-	<item android:id="@+id/antibiotics_guides_menu_clear_recent_searches" android:orderInCategory="2" app:showAsAction="ifRoom" android:icon="@drawable/ic_delete_white_24dp" android:title="@string/antibiotics_guides_menu_clear_recent_searches"/>
-</menu>
