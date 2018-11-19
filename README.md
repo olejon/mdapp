@@ -6,7 +6,7 @@ This app is in Norwegian. Useful and intuitive app for doctors and other health 
 * [Project website](https://www.olejon.net/code/mdapp/)
 * [Download from Google Play Store](https://www.olejon.net/code/mdapp/?page=android_app)
 
-*"Human knowledge belongs to the world"*
+*"Human knowledge belongs to the world"**
 
 [![Image](https://www.olejon.net/code/mdapp/img/google-play.png)](https://www.olejon.net/code/mdapp/?page=android_app)
 
