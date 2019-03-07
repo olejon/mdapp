@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/settings_category_notifications">
+		<Preference android:key="NOTIFICATION_CHANNELS" android:title="@string/settings_notification_channels_title" android:summary="@string/settings_notification_channels_summary"/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_category_advanced">
+		<CheckBoxPreference android:key="MEDICATION_MULTIPLE_DOCUMENTS" android:defaultValue="false" android:title="@string/settings_checkbox_medication_multiple_documents" android:summary="@string/settings_checkbox_medication_multiple_documents_summary"/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_category_about">
+		<Preference android:title="@string/settings_intent_project_developer_website_title" android:summary="@string/settings_intent_project_developer_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_website_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_website_title" android:summary="@string/settings_intent_project_website_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_website_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_privacy_title" android:summary="@string/settings_intent_project_privacy_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_privacy_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_license_title" android:summary="@string/settings_intent_project_license_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_license_uri"/></Preference>
+		<Preference android:title="@string/settings_intent_project_licenses_title" android:summary="@string/settings_intent_project_licenses_summary"><intent android:targetPackage="net.olejon.mdapp" android:targetClass="net.olejon.mdapp.ChromeCustomTabsActivity" android:data="@string/project_developer_licenses_uri"/></Preference>
+	</PreferenceCategory>
+</PreferenceScreen>

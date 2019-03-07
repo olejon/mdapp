@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/recyclerview_layout">
+	<android.support.design.widget.AppBarLayout style="@style/appbar">
+		<android.support.design.widget.CollapsingToolbarLayout android:id="@+id/tasks_toolbar_layout" style="@style/collapsing_toolbar">
+			<ImageView android:src="@drawable/tasks" android:contentDescription="@string/tasks_title" style="@style/collapsing_toolbar_image"/>
+			<ImageView android:src="@drawable/ic_today_white_48dp" android:contentDescription="@string/saved_articles_title" style="@style/collapsing_toolbar_logo"/>
+			<android.support.v7.widget.Toolbar android:id="@+id/tasks_toolbar" style="@style/collapsing_toolbar_toolbar"/>
+		</android.support.design.widget.CollapsingToolbarLayout>
+	</android.support.design.widget.AppBarLayout>
+	<android.support.v7.widget.RecyclerView android:id="@+id/tasks_list" style="@style/recyclerview_list_layout"/>
+	<TextView android:id="@+id/tasks_list_empty" android:text="@string/tasks_list_empty" style="@style/recyclerview_list_empty"/>
+	<android.support.design.widget.FloatingActionButton android:id="@+id/tasks_fab" android:src="@drawable/ic_add_white_24dp" app:layout_anchor="@id/tasks_list" app:layout_anchorGravity="bottom|right|end" style="@style/fab_layout"/>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:title="@string/drawer_subheader_encyclopedias">
+		<menu>
+			<item android:id="@+id/drawer_item_saved_articles" android:icon="@drawable/ic_stars_black_24dp" android:title="@string/drawer_item_saved_articles"/>
+			<item android:id="@+id/drawer_item_felleskatalogen" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_felleskatalogen"/>
+			<item android:id="@+id/drawer_item_nlh" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_nlh"/>
+			<item android:id="@+id/drawer_item_nel" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_nel"/>
+			<item android:id="@+id/drawer_item_analyseoversikten" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_analyseoversikten"/>
+			<item android:id="@+id/drawer_item_encyclopedias" android:icon="@drawable/ic_unfold_more_black_24dp" android:title="@string/drawer_item_encyclopedias_show_more"/>
+		</menu>
+	</item>
+	<group android:id="@+id/drawer_group_encyclopedias">
+		<item android:id="@+id/drawer_item_nhi" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_nhi" android:visible="false"/>
+		<item android:id="@+id/drawer_item_sml" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_sml" android:visible="false"/>
+		<item android:id="@+id/drawer_item_helsenorge" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_helsenorge" android:visible="false"/>
+		<item android:id="@+id/drawer_item_forskning" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_forskning" android:visible="false"/>
+		<item android:id="@+id/drawer_item_wikipedia_norwegian" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_wikipedia_norwegian" android:visible="false"/>
+		<item android:id="@+id/drawer_item_helsebiblioteket" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_helsebiblioteket" android:visible="false"/>
+		<item android:id="@+id/drawer_item_tidsskriftet" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_tidsskriftet" android:visible="false"/>
+		<item android:id="@+id/drawer_item_oncolex" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_oncolex" android:visible="false"/>
+		<item android:id="@+id/drawer_item_brukerhandboken" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_brukerhandboken" android:visible="false"/>
+		<item android:id="@+id/drawer_item_pubmed" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_pubmed" android:visible="false"/>
+		<item android:id="@+id/drawer_item_webofscience" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_webofscience" android:visible="false"/>
+		<item android:id="@+id/drawer_item_medlineplus" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_medlineplus" android:visible="false"/>
+		<item android:id="@+id/drawer_item_wikipedia_english" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_wikipedia_english" android:visible="false"/>
+		<item android:id="@+id/drawer_item_uptodate" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_uptodate" android:visible="false"/>
+		<item android:id="@+id/drawer_item_bmj" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_bmj" android:visible="false"/>
+		<item android:id="@+id/drawer_item_ao_surgery" android:icon="@drawable/ic_local_library_black_24dp" android:title="@string/drawer_item_ao_surgery" android:visible="false"/>
+	</group>
+	<item android:title="@string/drawer_subheader_resources">
+		<menu>
+			<item android:id="@+id/drawer_item_diseases_and_treatments" android:icon="@drawable/ic_local_hospital_black_24dp" android:title="@string/drawer_item_diseases_and_treatments"/>
+			<item android:id="@+id/drawer_item_lvh" android:icon="@drawable/ic_healing_black_24dp" android:title="@string/drawer_item_lvh"/>
+			<item android:id="@+id/drawer_item_interactions" android:icon="@drawable/ic_warning_black_24dp" android:title="@string/drawer_item_interactions"/>
+			<item android:id="@+id/drawer_item_poisonings" android:icon="@drawable/ic_error_black_24dp" android:title="@string/drawer_item_poisonings"/>
+			<item android:id="@+id/drawer_item_antibiotics_guides" android:icon="@drawable/ic_colorize_black_24dp" android:title="@string/drawer_item_antibiotics_guides"/>
+			<item android:id="@+id/drawer_item_nasjonale_retningslinjer" android:icon="@drawable/ic_list_black_24dp" android:title="@string/drawer_item_nasjonale_retningslinjer"/>
+			<item android:id="@+id/drawer_item_clinicaltrials" android:icon="@drawable/ic_content_paste_black_24dp" android:title="@string/drawer_item_clinicaltrials"/>
+			<item android:id="@+id/drawer_item_atc" android:icon="@drawable/ic_library_books_black_24dp" android:title="@string/drawer_item_atc"/>
+			<item android:id="@+id/drawer_item_icd10" android:icon="@drawable/ic_view_list_black_24dp" android:title="@string/drawer_item_icd10"/>
+			<item android:id="@+id/drawer_item_manufacturers" android:icon="@drawable/ic_business_black_24dp" android:title="@string/drawer_item_manufacturers"/>
+			<item android:id="@+id/drawer_item_pharmacies" android:icon="@drawable/ic_local_pharmacy_black_24dp" android:title="@string/drawer_item_pharmacies"/>
+			<item android:id="@+id/drawer_item_scales" android:icon="@drawable/ic_assessment_black_24dp" android:title="@string/drawer_item_scales"/>
+			<item android:id="@+id/drawer_item_notifications_from_slv" android:icon="@drawable/ic_notifications_black_24dp" android:title="@string/drawer_item_notifications_from_slv"/>
+		</menu>
+	</item>
+	<item android:title="@string/drawer_subheader_tools">
+		<menu>
+			<item android:id="@+id/drawer_item_calculators" android:icon="@drawable/ic_functions_black_24dp" android:title="@string/drawer_item_calculators"/>
+			<item android:id="@+id/drawer_item_notes" android:icon="@drawable/ic_event_note_black_24dp" android:title="@string/drawer_item_notes"/>
+			<item android:id="@+id/drawer_item_tasks" android:icon="@drawable/ic_today_black_24dp" android:title="@string/drawer_item_tasks"/>
+		</menu>
+	</item>
+	<item android:title="@string/drawer_subheader_other">
+		<menu>
+			<item android:id="@+id/drawer_item_settings" android:icon="@drawable/ic_settings_black_24dp" android:title="@string/drawer_item_settings"/>
+			<item android:id="@+id/drawer_item_donate" android:icon="@drawable/ic_attach_money_black_24dp" android:title="@string/drawer_item_donate"/>
+			<item android:id="@+id/drawer_item_feedback" android:icon="@drawable/ic_send_black_24dp" android:title="@string/drawer_item_feedback"/>
+			<item android:id="@+id/drawer_item_report_issue" android:icon="@drawable/ic_bug_report_black_24dp" android:title="@string/drawer_item_report_issue"/>
+		</menu>
+	</item>
+</menu>

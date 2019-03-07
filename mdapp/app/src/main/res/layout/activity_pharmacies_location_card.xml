@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/pharmacies_location_card" app:cardBackgroundColor="@color/light_teal" style="@style/card_layout">
+	<RelativeLayout style="@style/layout_match_width_match_height">
+		<ImageView android:id="@+id/pharmacies_location_card_icon" android:layout_alignParentTop="true" android:src="@drawable/ic_local_pharmacy_white_24dp" android:contentDescription="@string/pharmacies_location_card_image_content_description" style="@style/card_title_icon"/>
+		<TextView android:id="@+id/pharmacies_location_card_name" android:layout_alignParentTop="true" style="@style/card_title_icon_text"/>
+		<TextView android:id="@+id/pharmacies_location_card_address" android:layout_below="@+id/pharmacies_location_card_name" style="@style/card_white_text"/>
+		<View android:id="@+id/pharmacies_location_card_separator" android:layout_below="@+id/pharmacies_location_card_address" style="@style/card_colored_separator"/>
+		<LinearLayout android:layout_below="@+id/pharmacies_location_card_separator" style="@style/card_buttons_layout">
+			<Button android:id="@+id/pharmacies_location_card_map_button" android:drawableStart="@drawable/ic_map_white_24dp" android:drawablePadding="8dp" android:text="@string/pharmacies_location_card_map" style="@style/card_button_colored"/>
+			<Button android:id="@+id/pharmacies_location_card_contact_button" android:drawableStart="@drawable/ic_local_phone_white_24dp" android:drawablePadding="8dp" android:text="@string/pharmacies_location_card_contact" style="@style/card_button_colored"/>
+		</LinearLayout>
+	</RelativeLayout>
+</android.support.v7.widget.CardView>

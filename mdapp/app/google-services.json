@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "961760983141",
+    "firebase_url": "https://legeappen.firebaseio.com",
+    "project_id": "legeappen",
+    "storage_bucket": "legeappen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961760983141:android:66929fafb0febd3a",
+        "android_client_info": {
+          "package_name": "net.olejon.mdapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961760983141-djbfo0bas6m29ff8m19schk8r7rp1cak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.olejon.mdapp",
+            "certificate_hash": "6444068fd0cb8d6ca162ac6426934112b7c536e3"
+          }
+        },
+        {
+          "client_id": "961760983141-onnqo42mnbkvkb4g99lqdhbq9jdua8u5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFpZOL1HfFd5AWPtol06XgRfaw3cZ1E7Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961760983141-onnqo42mnbkvkb4g99lqdhbq9jdua8u5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

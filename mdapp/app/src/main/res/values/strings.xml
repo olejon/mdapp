@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+	<!-- Project -->
+	<string name="project_name">LegeAppen</string>
+	<string name="project_api_uri">https://www.olejon.net/code/mdapp/</string>
+	<string name="project_website_uri">https://olejon.github.io/mdapp/</string>
+	<string name="project_developer_website_uri">https://www.olejon.net/</string>
+	<string name="project_developer_privacy_uri">https://github.com/olejon/mdapp/wiki/Personvern</string>
+	<string name="project_developer_license_uri">https://www.gnu.org/licenses/gpl.html</string>
+	<string name="project_developer_licenses_uri">https://github.com/olejon/mdapp/wiki/Lisenser</string>
+	<string name="project_report_issue_uri">https://github.com/olejon/mdapp/issues</string>
+	<string name="project_feedback_text">Send tilbakemelding</string>
+	<string name="project_feedback_uri">mailto:mail@olejon.net?subject=%1$s</string>
+
+	<!-- Main -->
+	<string name="main_title">LegeAppen</string>
+	<string name="main_search_hint">Søk…</string>
+	<string name="main_page_medications">Preparater</string>
+	<string name="main_page_substances">Substanser</string>
+	<string name="main_page_favorites">Favoritter</string>
+	<string name="main_medications_list_empty">Ingen resultater</string>
+	<string name="main_substances_list_empty">Ingen resultater</string>
+	<string name="main_rate_dialog_title">Liker du LegeAppen?</string>
+	<string name="main_rate_dialog_message">Trykk på Gi vurdering for å åpne LegeAppen i Google Play Butikk/Store, skroll ned til stjernene, velg antall stjerner du mener appen fortjener og skriv gjerne en kort kommentar.\n\nDersom du gir en lav vurdering, vennligst skriv en konstruktiv tilbakemelding. Husk at bare slik kan forbedringer eller feilrettinger ordnes!</string>
+	<string name="main_rate_dialog_positive_button">Gi vurdering</string>
+	<string name="main_rate_dialog_negative_button">Nei takk</string>
+	<string name="main_menu_scan_barcode">Skann strekkode</string>
+	<string name="main_menu_donate">Doner</string>
+	<string name="main_menu_settings">Innstillinger</string>
+	<string name="main_decompressing_new_database">Dekomprimerer ny database…</string>
+	<string name="main_new_database_decompressed">Ny database dekomprimert. Navn: \"%1$s\". Versjon: \"%2$d\".</string>
+
+	<!-- Main webview -->
+	<string name="main_webview_toolbar_search_hint">Finn i tekst…</string>
+	<string name="main_webview_find_in_text_information_dialog_title">Finn i tekst</string>
+	<string name="main_webview_find_in_text_information_dialog_message">Skriv inn det du ønsker å søke etter i teksten og trykk deretter på søkeknappen på tastaturet.\n\nHvis du får flere treff, trykk Neste for å gå til neste treff.</string>
+	<string name="main_webview_find_in_text_information_dialog_positive_button">OK</string>
+	<string name="main_webview_menu_find_in_text">Tekstsøk</string>
+	<string name="main_webview_menu_find_in_text_next">Neste</string>
+	<string name="main_webview_menu_go_forward">Gå frem</string>
+	<string name="main_webview_menu_print">Skriv ut</string>
+	<string name="main_webview_menu_save_article">Lagre artikkel</string>
+	<string name="main_webview_menu_reload">Oppdater</string>
+	<string name="main_webview_menu_open_uri">Åpne i nettleser</string>
+
+	<!-- Medications favorites -->
+	<string name="main_medications_favorites_list_empty">Ingen favoritter</string>
+
+	<!-- Medication -->
+	<string name="medication_felleskatalogen">Felleskata…</string>
+	<string name="medication_nlh">Legemiddel…</string>
+	<string name="medication_could_not_find_medication">Kunne ikke finne preparatet</string>
+	<string name="medication_prescription_group_a">Narkotisk preparat</string>
+	<string name="medication_prescription_group_b">Vanedannende preparat</string>
+	<string name="medication_prescription_group_c">Reseptbelagt preparat. Reseptfrie pakninger kan være tilgjengelige.</string>
+	<string name="medication_prescription_group_f">Selges uten resept. Reseptbelagte pakninger kan være tilgjengelige.</string>
+	<string name="medication_favorite_saved">Preparat lagt til i favoritter</string>
+	<string name="medication_favorite_removed">Preparat fjernet fra favoritter</string>
+	<string name="medication_information_dialog_title">Tips</string>
+	<string name="medication_information_dialog_message">For å bla mellom preparatomtale i Felleskatalogen og Legemiddelhåndboka, trykk på henholdsvis Felleskatalogen eller Legemiddelhåndboka.\n\nDu kan også dra mellom fanene.\n\nTrykk på ikonet oppe til høyre for flere alternativer.</string>
+	<string name="medication_information_dialog_positive_button">OK</string>
+	<string name="medication_webview_find_in_text_information_dialog_title">Finn i tekst</string>
+	<string name="medication_webview_find_in_text_information_dialog_message">Skriv inn det du ønsker å søke etter i teksten og trykk deretter på søkeknappen på tastaturet.\n\nHvis du får flere treff, trykk på forstørrelsesglasset for å gå til neste treff.</string>
+	<string name="medication_webview_find_in_text_information_dialog_positive_button">OK</string>
+	<string name="medication_not_connected_dialog_title">Ikke tilkoblet Internett</string>
+	<string name="medication_not_connected_dialog_message">Du må være tilkoblet Internett for å laste Felleskatalogen og Legemiddelhåndboka.</string>
+	<string name="medication_not_connected_dialog_positive_button">Prøv på nytt</string>
+	<string name="medication_not_connected_dialog_negative_button">Lukk</string>
+	<string name="medication_note_dialog_title">Ingen PIN-kode</string>
+	<string name="medication_note_dialog_message">Før du kan opprette notater må du opprette en PIN-kode. Åpne sidemenyen, skroll ned og åpne Notater.</string>
+	<string name="medication_note_dialog_positive_button">OK</string>
+	<string name="medication_menu_add_favorite">Legg til i favoritter</string>
+	<string name="medication_menu_remove_favorite">Fjern fra favoritter</string>
+	<string name="medication_menu_find_in_text">Finn i tekst</string>
+	<string name="medication_menu_interactions">Interaksjonsanalyse</string>
+	<string name="medication_menu_poisonings">Forgiftningsinformasjon</string>
+	<string name="medication_menu_atc">ATC-register</string>
+	<string name="medication_menu_note">Nytt notat</string>
+	<string name="medication_menu_print">Skriv ut</string>
+	<string name="medication_menu_open_uri">Åpne i nettleser</string>
+
+	<!-- Substance -->
+	<string name="substance_atc_code">ATC-kode:\u0020</string>
+	<string name="substance_menu_interactions">Interaksjonsanalyse</string>
+
+	<!-- Saved articles -->
+	<string name="saved_articles_title">Lagrede artikler</string>
+	<string name="saved_articles_list_empty">Ingen lagrede artikler</string>
+	<string name="saved_articles_article_saved">Artikkel lagret</string>
+	<string name="saved_articles_information_dialog_title">Lagre artikler</string>
+	<string name="saved_articles_information_dialog_message">Når du er inne på en nettside i LegeAppen kan du lagre den her ved å trykke på knappen oppe til høyre og deretter Lagre artikkel.\n\nFor å fjerne en artikkel her, trykk og hold inne på artikkelen.</string>
+	<string name="saved_articles_information_dialog_positive_button">OK</string>
+	<string name="saved_articles_remove_article_dialog_title">Fjern artikkel</string>
+	<string name="saved_articles_remove_article_dialog_message">Vil du fjerne denne artikkelen?</string>
+	<string name="saved_articles_remove_article_dialog_positive_button">Ja</string>
+	<string name="saved_articles_remove_article_dialog_neutral_button">Nei</string>
+	<string name="saved_articles_menu_information">Informasjon</string>
+
+	<!-- Diseases and treatments -->
+	<string name="diseases_and_treatments_title">Sykdommer og behandlinger</string>
+	<string name="diseases_and_treatments_language_dialog_title">Velg søkespråk</string>
+	<string name="diseases_and_treatments_toolbar_search_english_hint">Søk på engelsk…</string>
+	<string name="diseases_and_treatments_toolbar_search_norwegian_hint">Søk på norsk…</string>
+	<string name="diseases_and_treatments_english">Engelsk (anbefalt)</string>
+	<string name="diseases_and_treatments_norwegian">Norsk</string>
+	<string name="diseases_and_treatments_recent_searches">Nylige søk</string>
+	<string name="diseases_and_treatments_no_recent_searches">Ingen nylige søk</string>
+	<string name="diseases_and_treatments_information">De engelske kildene som benyttes er <i>PubMed</i>, <i>Web of Science</i>, <i>MedlinePlus</i>, <i>Wikipedia</i>, <i>UpToDate</i>, <i>BMJ Best Practice</i> og <i>AO Surgery Reference</i>.\n\nDe norske kildene som benyttes er <i>Norsk Helseinformatikk</i>, <i>Store medisinske leksikon</i>, <i>Helsenorge.no</i>, <i>Forskning.no</i>, <i>Wikipedia</i>, <i>Legehåndboka</i>, <i>Helsebiblioteket</i>, <i>Tidsskriftet</i>, <i>Oncolex</i> og <i>Brukerhåndboken</i>.\n\n<b>Merk:</b> Om en kilde ikke gir resultater som forventet, kontakt utvikler, så dette kan fikses på serversiden.</string>
+	<string name="diseases_and_treatments_recent_searches_removed">Nylige søk fjernet</string>
+	<string name="diseases_and_treatments_menu_voice_search">Talesøk</string>
+	<string name="diseases_and_treatments_menu_clear_recent_searches">Fjern nylige søk</string>
+
+	<!-- Diseases and treatments search -->
+	<string name="diseases_and_treatments_search_search">Søk: \"%1$s\"</string>
+	<string name="diseases_and_treatments_search_could_not_search">Kunne ikke søke. Er du koblet til Internett?</string>
+	<string name="diseases_and_treatments_search_card_image_content_description">Kildelogo</string>
+
+	<!-- Diseases and treatments search webview -->
+	<string name="diseases_and_treatments_search_webview_menu_find_in_text">Tekstsøk</string>
+	<string name="diseases_and_treatments_search_webview_menu_find_in_text_next">Neste</string>
+	<string name="diseases_and_treatments_search_webview_menu_forward">Gå frem</string>
+	<string name="diseases_and_treatments_search_webview_menu_print">Skriv ut</string>
+	<string name="diseases_and_treatments_search_webview_menu_save_article">Lagre artikkel</string>
+	<string name="diseases_and_treatments_search_webview_menu_reload">Oppdater</string>
+	<string name="diseases_and_treatments_search_webview_menu_open_uri">Åpne i nettleser</string>
+
+	<!-- Legevakthåndboken -->
+	<string name="lvh_title">Legevakthåndboken</string>
+	<string name="lvh_card_image_content_description">Logo for kategori</string>
+	<string name="lvh_categories_card_image_content_description">Logo for kategori</string>
+
+	<!-- Interactions -->
+	<string name="interactions_title">Interaksjonsanalyse</string>
+	<string name="interactions_toolbar_search_hint">Søk…</string>
+	<string name="interactions_no_recent_searches">Ingen nylige søk</string>
+	<string name="interactions_information">Søk etter preparater, substanser og ATC-koder, <b>skilt med mellomrom</b>. Bruk <b>understrek</b> dersom preparatnavnet består av to ord, og <b>ikke inkluder styrke.</b>\n\nEksempler: \"Lamictal Orfiril\" og \"Paralgin_Forte Seroxat\".\n\nKilden som brukes er <i>Interaksjoner.no</i> fra Legemiddelverket.</string>
+	<string name="interactions_recent_searches">Nylige søk</string>
+	<string name="interactions_search_other_medications_or_substances">Skriv eventuelt inn andre preparater å sjekke opp mot</string>
+	<string name="interactions_recent_searches_removed">Nylige søk fjernet</string>
+	<string name="interactions_menu_clear_recent_searches">Fjern nylige søk</string>
+
+	<!-- Interactions cards -->
+	<string name="interactions_cards_search">Søk: \"%1$s\"</string>
+	<string name="interactions_cards_relevance">Relevans: %1$s</string>
+	<string name="interactions_cards_relevance_red">Bør ikke kombineres</string>
+	<string name="interactions_cards_relevance_orange">Ta forholdsregler</string>
+	<string name="interactions_cards_relevance_green">Akademisk interesse</string>
+	<string name="interactions_cards_card_button_handling">Håndtering</string>
+	<string name="interactions_card_button_read_more">Les mer</string>
+	<string name="interactions_card_button_search_pubmed">PubMed</string>
+	<string name="interactions_cards_handling_dialog_title">Håndtering</string>
+	<string name="interactions_cards_handling_dialog_positive_button">Lukk</string>
+	<string name="interactions_cards_no_relevant_interactions_found">Ingen relevante interaksjoner ble funnet. Fjern eventuelt legemiddelfirmanavn fra søket.</string>
+	<string name="interactions_cards_check_on_the_web">Sjekk på nett</string>
+	<string name="interactions_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
+	<string name="interactions_cards_no_handling_information_available">Ingen håndteringsinformasjon tilgjengelig</string>
+	<string name="interactions_cards_card_image_content_description">Logo for interaksjoner</string>
+
+	<!-- Poisonings -->
+	<string name="poisonings_title">Giftinformasjonen</string>
+	<string name="poisonings_toolbar_search_hint">Søk på norsk…</string>
+	<string name="poisonings_no_recent_searches">Ingen nylige søk</string>
+	<string name="poisonings_information">Søk etter mulige årsaker til forgiftning. Eksempler: \"Maling\" eller \"Cipralex\".\n\nKildene som brukes er <i>Helsenorge.no</i> og <i>Helsebiblioteket</i>.</string>
+	<string name="poisonings_recent_searches">Nylige søk</string>
+	<string name="poisonings_recent_searches_removed">Nylige søk fjernet</string>
+	<string name="poisonings_information_dialog_title">Akutt hjelp</string>
+	<string name="poisonings_information_dialog_message">Dersom du trenger akutt hjelp, trykk på telefonikonet oppe til høyre for å ringe Giftinformasjonen.</string>
+	<string name="poisonings_information_dialog_positive_button">OK</string>
+	<string name="poisonings_menu_call">Ring Giftinformasjonen</string>
+	<string name="poisonings_menu_voice_search">Talesøk</string>
+	<string name="poisonings_menu_clear_recent_searches">Fjern nylige søk</string>
+
+	<!-- Poisonings cards -->
+	<string name="poisonings_cards_search">Søk: \"%1$s\"</string>
+	<string name="poisonings_cards_source_helsenorge">Kilde: Helsenorge.no</string>
+	<string name="poisonings_cards_source_helsebiblioteket">Kilde: Helsebiblioteket</string>
+	<string name="poisonings_cards_card_button_uri">Les mer</string>
+	<string name="poisonings_cards_no_results">Fant ingen resultater</string>
+	<string name="poisonings_cards_search_on_helsenorge">Søk på Helsenorge.no</string>
+	<string name="poisonings_cards_search_on_helsebiblioteket">Søk i Helsebiblioteket</string>
+	<string name="poisonings_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
+	<string name="poisonings_cards_menu_call">Ring Giftinformasjonen</string>
+
+	<!-- Antibiotics guides -->
+	<string name="antibiotics_guides_title">Antibiotikaveileder</string>
+	<string name="antibiotics_guides_toolbar_search_hint">Søk på norsk…</string>
+	<string name="antibiotics_guides_no_recent_searches">Ingen nylige søk</string>
+	<string name="antibiotics_guides_information">Søk etter en sykdom/tilstand eller et antibiotikum.\n\nKilden som brukes er <i>Antibiotikabruk i primærhelsetjenesten</i>.</string>
+	<string name="antibiotics_guides_recent_searches">Nylige søk</string>
+	<string name="antibiotics_guides_recent_searches_removed">Nylige søk fjernet</string>
+	<string name="antibiotics_guides_menu_voice_search">Talesøk</string>
+	<string name="antibiotics_guides_menu_clear_recent_searches">Fjern nylige søk</string>
+
+	<!-- Antibiotics guides cards -->
+	<string name="antibiotics_guides_cards_search">Søk: \"%1$s\"</string>
+	<string name="antibiotics_guides_cards_card_button_uri">Les mer</string>
+	<string name="antibiotics_guides_cards_no_results">Fant ingen resultater</string>
+	<string name="antibiotics_guides_cards_search_on_primaerhelsetjenesten">Søk i Primærhelsetjenesten</string>
+	<string name="antibiotics_guides_cards_search_on_helsedirektoratet">Søk i Helsedirektoratet</string>
+	<string name="antibiotics_guides_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
+
+	<!-- Nasjonale retningslinjer -->
+	<string name="nasjonale_retningslinjer_title">Nasjonale retningslinjer</string>
+	<string name="nasjonale_retningslinjer_toolbar_search_hint">Søk på norsk…</string>
+	<string name="nasjonale_retningslinjer_no_recent_searches">Ingen nylige søk</string>
+	<string name="nasjonale_retningslinjer_information">Kilden som brukes er <i>Nasjonale faglige retningslinjer</i> fra Helsedirektoratet.</string>
+	<string name="nasjonale_retningslinjer_recent_searches">Nylige søk</string>
+	<string name="nasjonale_retningslinjer_recent_searches_removed">Nylige søk fjernet</string>
+	<string name="nasjonale_retningslinjer_menu_voice_search">Talesøk</string>
+	<string name="nasjonale_retningslinjer_menu_clear_recent_searches">Fjern nylige søk</string>
+
+	<!-- Clinical trials -->
+	<string name="clinicaltrials_title">Kliniske studier</string>
+	<string name="clinicaltrials_toolbar_search_hint">Søk på engelsk…</string>
+	<string name="clinicaltrials_no_recent_searches">Ingen nylige søk</string>
+	<string name="clinicaltrials_information">Søk på <b>engelsk</b> etter studier, sykdommer, preparater eller substanser.\n\nKilden som brukes er <i>ClinicalTrials.gov</i> fra US National Institutes of Health.</string>
+	<string name="clinicaltrials_recent_searches">Nylige søk</string>
+	<string name="clinicaltrials_recent_searches_removed">Nylige søk fjernet</string>
+	<string name="clinicaltrials_menu_voice_search">Talesøk</string>
+	<string name="clinicaltrials_menu_clear_recent_searches">Fjern nylige søk</string>
+
+	<!-- Clinical trials cards -->
+	<string name="clinicaltrials_cards_search">Søk: \"%1$s\"</string>
+	<string name="clinicaltrials_cards_card_status">Status:</string>
+	<string name="clinicaltrials_cards_card_conditions">Tilstander:</string>
+	<string name="clinicaltrials_cards_card_intervention">Intervensjoner:</string>
+	<string name="clinicaltrials_cards_card_button_uri">Les mer</string>
+	<string name="clinicaltrials_cards_no_results">Fant ingen resultater</string>
+	<string name="clinicaltrials_cards_no_results_button">Sjekk på nett</string>
+	<string name="clinicaltrials_cards_something_went_wrong">Noe gikk galt. Prøv igjen.</string>
+
+	<!-- ATC -->
+	<string name="atc_title">ATC-register</string>
+
+	<!-- ATC codes -->
+	<string name="atc_codes_list_empty">Ingen substanser</string>
+	<string name="atc_codes_substance_not_a_substance">Ikke en substans</string>
+	<string name="atc_codes_could_not_find_substance">Kunne ikke finne substans</string>
+	<string name="atc_codes_dialog_title">Velg substans</string>
+
+	<!-- ICD-10 -->
+	<string name="icd10_title">ICD-10</string>
+	<string name="icd10_toolbar_search_hint">Søk etter kode eller navn…</string>
+	<string name="icd10_menu_voice_search">Talesøk</string>
+
+	<!-- ICD-10 chapter -->
+	<string name="icd10_chapter_toolbar_search_hint">Søk etter kode eller navn…</string>
+	<string name="icd10_chapter_list_empty">Ingen resultater. Prøv et annet søk.</string>
+	<string name="icd10_chapter_could_not_find_code">Kunne ikke finne ICD-10-kode</string>
+	<string name="icd10_chapter_menu_voice_search">Talesøk</string>
+
+	<!-- ICD-10 search -->
+	<string name="icd10_search_search">Søk: \"%1$s\"</string>
+	<string name="icd10_search_list_empty">Ingen resultater. Prøv et annet søk.</string>
+	<string name="icd10_search_could_not_find_code">Kunne ikke finne ICD-10-kode</string>
+
+	<!-- Manufacturers -->
+	<string name="manufacturers_title">Legemiddelfirmaer</string>
+	<string name="manufacturers_toolbar_search_hint">Søk etter legemiddelfirma…</string>
+	<string name="manufacturers_list_empty">Ingen resultater</string>
+	<string name="manufacturers_menu_new_approvals">Nye markedsføringstillatelser</string>
+
+	<!-- Manufacturer -->
+	<string name="manufacturer_medication">preparat</string>
+	<string name="manufacturer_medications">preparater</string>
+	<string name="manufacturer_menu_contact">Kontakt</string>
+
+	<!-- Pharmacies -->
+	<string name="pharmacies_title">Apotek</string>
+	<string name="pharmacies_toolbar_search_hint">Søk etter kommune…</string>
+	<string name="pharmacies_list_empty">Ingen resultater</string>
+	<string name="pharmacies_menu_overview">Apotekoversikt</string>
+
+	<!-- Pharmacies location -->
+	<string name="pharmacies_location_card_map">Vis på kart</string>
+	<string name="pharmacies_location_card_contact">Kontakt</string>
+	<string name="pharmacies_location_menu_contact_information_to_all">Kontaktinformasjon til alle</string>
+	<string name="pharmacies_location_card_image_content_description">Logo for apotek</string>
+
+	<!-- Pharmacies location map -->
+	<string name="pharmacies_location_map_locating">Finner apotek…</string>
+	<string name="pharmacies_location_map_information_dialog_title">Tips</string>
+	<string name="pharmacies_location_map_information_dialog_message">Trykk på posisjonsmarkør for å få opp to knapper nede til høyre.\n\nDisse gir mulighet til å åpne navigasjon til apoteket eller vise apoteket i Google Maps.\n\nTrykk på knappen oppe til høyre for å vise din posisjon.\n\n<b>NB:</b> GPS må være på.</string>
+	<string name="pharmacies_location_map_information_dialog_positive_button">OK</string>
+	<string name="pharmacies_location_map_location_not_found">Kan ikke finne postboksadresser</string>
+	<string name="pharmacies_location_map_menu_information">Informasjon</string>
+
+	<!-- Scales -->
+	<string name="scales_title">Skalaer</string>
+	<string name="scales_vas">Visual Analog Scale</string>
+	<string name="scales_gcs">Glasgow Coma Scale</string>
+	<string name="scales_mews">Modified Early Warning System</string>
+	<string name="scales_card_button">Forstørr</string>
+	<string name="scales_vas_image_content_description">Visual Analog Scale</string>
+	<string name="scales_gcs_image_content_description">Glasgow Coma Scale</string>
+	<string name="scales_mews_image_content_description">Modified Early Warning System</string>
+
+	<!-- Scale -->
+	<string name="scale_guide">Bruk fingrene for å zoome</string>
+	<string name="scale_image_content_description">Skala</string>
+
+	<!-- Notifications from SLV -->
+	<string name="notifications_from_slv_title">Varsler fra Legemiddelverket</string>
+	<string name="notifications_from_slv_could_not_get_notifications">Kunne ikke hente varsler. Er du koblet til Internett?</string>
+	<string name="notifications_from_slv_card_button">Les mer</string>
+	<string name="notifications_from_slv_menu_all">Se alle hos Legemiddelverket</string>
+
+	<!-- Calculators -->
+	<string name="calculators_title">Kalkulatorer</string>
+	<string name="calculators_information_dialog_title">Informasjon</string>
+	<string name="calculators_information_dialog_message">Kroppsmasseindeks (KMI), ofte kalt body mass index (BMI), er en av tingene man ser på for å vurdere en persons helserisiko. I tillegg til ser man på midjemål, fysisk aktivitet, kosthold, røykevaner og annet som varierer fra person til person.\n\nMennesker med stor muskelmasse kan ha høy BMI, men har lav fettprosent og karakteriseres ikke som overvektige. For barn og ungdom opp til 18 år er det en egen alders- og kjønnsjustert skala.\n\n​Midjemål kan gi en pekepinn på om man er i risikogruppa for metabolsk syndrom, type 2-diabetes og hjerte- og karsykdom. Men midjemål bør brukes sammen med BMI når man vurderer helserisiko. Målingen tas med vanlig målebånd der hvor midjen er smalest. Det vil si midt mellom nederste ribben og øverste delen av hoftekammen.\n\nFor gravide kvinner er overvekt og vektøkning, utover det anbefalte, forbundet med risiko for svangerskapsdiabetes og komplikasjoner under fødselen. For kvinner med stor vektøkning i svangerskapet kan det være vanskeligere å redusere vekten etter graviditeten. Vanlig vektøkning i svangerskapet er mellom 11 og 16 kilo. Optimal vektøkning avhenger av blant annet mors BMI før svangerskapet. ​Kvinner som er undervektige før svangerskapet kan gjerne ha høyere vektøkning (opp til 18 kg), og kvinner med overvekt bør ha lavere vektøkning (mindre enn 11 kg).\n\nKilde: Helsenorge.no</string>
+	<string name="calculators_information_dialog_positive_button">OK</string>
+	<string name="calculators_information_dialog_neutral_button">Les mer</string>
+	<string name="calculators_button">Beregn</string>
+	<string name="calculators_bmi_title">BMI</string>
+	<string name="calculators_bmi_weight_hint">Vekt i kilogram</string>
+	<string name="calculators_bmi_height_hint">Høyde i centimeter</string>
+	<string name="calculators_bmi_normal_weight">Normalvekt</string>
+	<string name="calculators_bmi_under_weight">Undervekt</string>
+	<string name="calculators_bmi_over_weight">Overvekt</string>
+	<string name="calculators_bmi_obesity_1_weight">Fedme grad I</string>
+	<string name="calculators_bmi_obesity_2_weight">Fedme grad II</string>
+	<string name="calculators_bmi_obesity_3_weight">Fedme grad III</string>
+	<string name="calculators_bmi_dialog_title">BMI</string>
+	<string name="calculators_bmi_dialog_message">Resultat: %1$.1f\n\nTolkning: %2$s\n\nKilde: Helsenorge.no</string>
+	<string name="calculators_bmi_dialog_positive_button">Lukk</string>
+	<string name="calculators_bmi_dialog_neutral_button">Les mer</string>
+	<string name="calculators_bmi_invalid_values">Ugyldige verdier</string>
+	<string name="calculators_waist_measurement_title">Midjemål</string>
+	<string name="calculators_waist_measurement_hint">Midjemål i centimeter</string>
+	<string name="calculators_waist_measurement_men_normal_weight">Menn: Normalvekt\n</string>
+	<string name="calculators_waist_measurement_men_over_weight">Menn: Overvekt\n</string>
+	<string name="calculators_waist_measurement_men_obesity_weight">Menn: Fedme\n</string>
+	<string name="calculators_waist_measurement_women_normal_weight">Kvinner: Normalvekt</string>
+	<string name="calculators_waist_measurement_women_over_weight">Kvinner: Overvekt</string>
+	<string name="calculators_waist_measurement_women_obesity_weight">Kvinner: Fedme</string>
+	<string name="calculators_waist_measurement_dialog_title">Midjemål</string>
+	<string name="calculators_waist_measurement_dialog_message">Resultat: %1$s cm\n\nTolkning:\n\n%2$s\n\nKilde: Helsenorge.no</string>
+	<string name="calculators_waist_measurement_dialog_positive_button">Lukk</string>
+	<string name="calculators_waist_measurement_dialog_neutral_button">Les mer</string>
+	<string name="calculators_waist_measurement_invalid_value">Ugyldig verdi</string>
+	<string name="calculators_corrected_qt_time_title">Korrigert QT-tid</string>
+	<string name="calculators_corrected_qt_time_qt_interval_hint">Målt QT-tid i millisekunder</string>
+	<string name="calculators_corrected_qt_time_rr_interval_hint">RR-intervall i millisekunder</string>
+	<string name="calculators_corrected_qt_time_dialog_title">Korrigert QT-tid</string>
+	<string name="calculators_corrected_qt_time_dialog_message">Resultat: %1$d ms\n\nFormel: Bazetts formel</string>
+	<string name="calculators_corrected_qt_time_dialog_positive_button">Lukk</string>
+	<string name="calculators_corrected_qt_time_dialog_neutral_button">Tolkning</string>
+	<string name="calculators_corrected_qt_time_invalid_values">Ugyldige verdier</string>
+	<string name="calculators_menu_information">Informasjon</string>
+
+	<!-- Notes -->
+	<string name="notes_title">Notater</string>
+	<string name="notes_empty">Ingen notater</string>
+	<string name="notes_dialog_pin_code_title">Notater</string>
+	<string name="notes_dialog_pin_code_message">Du må først opprette en PIN-kode. Ha god hukommelse, eller skriv den ned på en lapp og legg den i en låst skuff.</string>
+	<string name="notes_dialog_pin_code_hint">PIN-kode</string>
+	<string name="notes_dialog_pin_code_positive_button">Lagre</string>
+	<string name="notes_dialog_pin_code_negative_button">Avbryt</string>
+	<string name="notes_dialog_pin_code_invalid">PIN-koden må bestå av minst fire tall</string>
+	<string name="notes_dialog_verify_pin_code_title">Notater</string>
+	<string name="notes_dialog_verify_pin_code_hint">PIN-kode</string>
+	<string name="notes_dialog_verify_pin_code_positive_button">Åpne</string>
+	<string name="notes_dialog_verify_pin_code_negative_button">Avbryt</string>
+	<string name="notes_dialog_verify_pin_code_neutral_button">Tilbakestill</string>
+	<string name="notes_dialog_verify_pin_code_wrong">Feil PIN-kode</string>
+	<string name="notes_dialog_reset_pin_code_title">Tilbakestill PIN-kode</string>
+	<string name="notes_dialog_reset_pin_code_message">Er du sikker på at du vil tilbakestille PIN-koden din?\n\nDette vil slette alle notatene dine.</string>
+	<string name="notes_dialog_reset_pin_code_positive_button">Ja</string>
+	<string name="notes_dialog_reset_pin_code_neutral_button">Nei</string>
+	<string name="notes_dialog_reset_pin_code_reset">PIN-kode tilbakestilt</string>
+
+	<!-- Notes edit -->
+	<string name="notes_edit_title_new">Nytt notat</string>
+	<string name="notes_edit_title_edit">Rediger notat</string>
+	<string name="notes_edit_title_hint">Tittel</string>
+	<string name="notes_edit_text_hint">Tekst</string>
+	<string name="notes_edit_patient_id_hint">Pasient-ID (valgfri)</string>
+	<string name="notes_edit_patient_name_hint">Pasientnavn (valgfri)</string>
+	<string name="notes_edit_patient_doctor_hint">Ansvarlig lege (valgfri)</string>
+	<string name="notes_edit_patient_department_hint">Avdeling (valgfri)</string>
+	<string name="notes_edit_patient_room_hint">Romnummer (valgfri)</string>
+	<string name="notes_edit_patient_add_medication">Legg til preparat</string>
+	<string name="notes_edit_save_dialog_title">Lagre notat</string>
+	<string name="notes_edit_save_dialog_message">Vil du lagre notatet?</string>
+	<string name="notes_edit_save_dialog_positive_button">Ja</string>
+	<string name="notes_edit_save_dialog_neutral_button">Nei</string>
+	<string name="notes_edit_delete_dialog_title">Slett notat</string>
+	<string name="notes_edit_delete_dialog_message">Er du sikker på at du vil slette dette notatet?</string>
+	<string name="notes_edit_delete_dialog_positive_button">Ja</string>
+	<string name="notes_edit_delete_dialog_neutral_button">Nei</string>
+	<string name="notes_edit_medications_dialog_title">Velg preparat</string>
+	<string name="notes_edit_medications_dialog_interactions">Interaksjonsanalyse</string>
+	<string name="notes_edit_medications_dialog_remove_all">Fjern alle</string>
+	<string name="notes_edit_saved">Notat lagret</string>
+	<string name="notes_edit_deleted">Notat slettet</string>
+	<string name="notes_edit_invalid_values">Du må fylle ut tittel og tekst</string>
+	<string name="notes_edit_menu_delete">Slett</string>
+	<string name="notes_edit_menu_save">Lagre</string>
+
+	<!-- Notes edit medications -->
+	<string name="notes_edit_medications_title">Velg preparat</string>
+	<string name="notes_edit_medications_toolbar_search_hint">Søk etter preparat…</string>
+	<string name="notes_edit_medications_list_empty">Ingen resultater</string>
+
+	<!-- Tasks -->
+	<string name="tasks_title">Oppgaver</string>
+	<string name="tasks_list_empty">Ingen oppgaver</string>
+	<string name="tasks_information_dialog_title">Tips</string>
+	<string name="tasks_information_dialog_message">Trykk på den blå knappen nede til høyre for å opprette en ny oppgave.\n\nNår en oppgave er fullført, trykk på oppgaven. Den vil da bli markert som fullført.\n\nTrykk på ikonet oppe til høyre for å fjerne fullførte oppgaver.</string>
+	<string name="tasks_information_dialog_positive_button">OK</string>
+	<string name="tasks_task">oppgave</string>
+	<string name="tasks_tasks">oppgaver</string>
+	<string name="tasks_removed">fjernet</string>
+	<string name="tasks_dialog_title">Ny oppgave</string>
+	<string name="tasks_dialog_task_hint">Navn på oppgave</string>
+	<string name="tasks_dialog_positive_button">Lagre</string>
+	<string name="tasks_dialog_negative_button">Avbryt</string>
+	<string name="tasks_dialog_task_invalid_name">Du må fylle ut navn på oppgaven</string>
+	<string name="tasks_menu_clear_tasks">Fjern fullførte oppgaver</string>
+	<string name="tasks_menu_information">Informasjon</string>
+
+	<!-- Settings -->
+	<string name="settings_title">Innstillinger</string>
+	<string name="settings_category_notifications">Varsler</string>
+	<string name="settings_notification_channels_title">Velg</string>
+	<string name="settings_notification_channels_summary">Trykk på navnet til en kategori for å finjustere atferd i stedet for å skru av varsler helt</string>
+	<string name="settings_checkbox_notifications_notify_title">Varsle ved nytt varsel</string>
+	<string name="settings_checkbox_notifications_notify_summary">Varsle audiovisuelt når det kommer nye varsler</string>
+	<string name="settings_category_advanced">Avansert</string>
+	<string name="settings_checkbox_medication_multiple_documents">Åpne flere preparater samtidig</string>
+	<string name="settings_checkbox_medication_multiple_documents_summary">Åpne preparater som en egen skjerm. Du kan bla mellom skjermene med menyknappen for dine skjermer og apper i systemet</string>
+	<string name="settings_category_about">Om</string>
+	<string name="settings_intent_project_developer_website_title">Utviklet av</string>
+	<string name="settings_intent_project_developer_website_summary">Ole Jon Bjørkum</string>
+	<string name="settings_intent_project_website_title">Nettside</string>
+	<string name="settings_intent_project_website_summary">Besøk nettsiden til denne appen</string>
+	<string name="settings_intent_project_privacy_title">Personvern</string>
+	<string name="settings_intent_project_privacy_summary">Informasjon om hvordan ditt personvern ivaretas</string>
+	<string name="settings_intent_project_license_title">Lisens</string>
+	<string name="settings_intent_project_license_summary">Denne appen er lisensiert under The GNU General Public License, versjon 3</string>
+	<string name="settings_intent_project_licenses_title">Lisenser</string>
+	<string name="settings_intent_project_licenses_summary">Lisenser til tredjepartsbiblioteker brukt i denne appen</string>
+
+	<!-- Donate -->
+	<string name="donate_title">Doner</string>
+	<string name="donate_getting_product">Henter produkt…</string>
+	<string name="donate_information">Når du trykker på en av knappene over vil det komme opp en dialog hvor du kan bekrefte eller avbryte donasjonen.\n\nNB: Donasjoner går til utvikler, ikke innholdskildene.\n\nTusen takk!</string>
+	<string name="donate_thank_you">Tusen takk for din donasjon!</string>
+	<string name="donate_something_went_wrong">Noe gikk galt. Vennligst prøv igjen.</string>
+	<string name="donate_donate">Doner\u0020</string>
+
+	<!-- Barcode scanner -->
+	<string name="barcode_scanner_scan">Skann strekkoden på en preparatpakning</string>
+	<string name="barcode_scanner_wait">Vent…</string>
+	<string name="barcode_scanner_no_results">Ingen resultater</string>
+
+	<!-- Welcome -->
+	<string name="welcome_page_1_title">Velkommen!</string>
+	<string name="welcome_page_2_title">Navigasjon</string>
+	<string name="welcome_page_3_title">Ansvarsfraskrivelse</string>
+	<string name="welcome_page_4_title">Klar til bruk!</string>
+	<string name="welcome_page_1_text">LegeAppen er en app for leger og annet helsepersonell i Norge.\n\nLegeAppen samler mange nyttige ressurser på ett sted.\n\nMed LegeAppen kan du erstatte drøssevis av apper og nettsider med bare én app.</string>
+	<string name="welcome_page_2_text">Det første du møter når du åpner LegeAppen er en oversikt over alle preparater og substanser, samt dine favoritter.\n\nDu kan raskt søke i preparater og substanser ved å bruke søkefeltet.\n\nI sidemenyen finner du alle de andre funksjonene. Sidemenyen åpnes ved å trykke på ikonet oppe til venstre, eller dra inn fra venstre side.</string>
+	<string name="welcome_page_3_text">LegeAppen er utviklet av en privatperson, og selv om innholdet i appen hentes fra anerkjente kilder, kan ikke utvikler stilles til ansvar for beslutninger tatt på bakgrunn av informasjon funnet i denne appen.\n\nLegeAppen er ikke-kommersiell fri programvare med åpen kildekode, benytter seg av innhold fritt tilgjengelig på Internett og er lisensiert under The GNU General Public License, versjon 3.\n\n<i>\"Human knowledge belongs to the world\"</i></string>
+	<string name="welcome_page_4_text">Du er nå klar til å bruke LegeAppen. Trykk på knappen nedenfor for å gå til appen.\n\nDersom du har tilbakemeldinger, vær vennlig og bruk tilbakemeldingsfunksjonen i sidemenyen. Alle tilbakemeldinger settes pris på!</string>
+	<string name="welcome_page_4_button">Gå til appen</string>
+	<string name="welcome_guide_finished">Trykk på knappen for å gå til appen</string>
+	<string name="welcome_guide_unfinished">Dra mot venstre for å gå til neste side</string>
+	<string name="welcome_image_content_description">Sideindikator</string>
+
+	<!-- Drawer -->
+	<string name="drawer_content_description">Meny</string>
+	<string name="drawer_banner_image_content_description">Banner for sidemeny</string>
+	<string name="drawer_subheader_encyclopedias">Oppslagsverk</string>
+	<string name="drawer_subheader_resources">Ressurser</string>
+	<string name="drawer_subheader_tools">Verktøy</string>
+	<string name="drawer_subheader_other">Annet</string>
+	<string name="drawer_item_saved_articles">Lagrede artikler</string>
+	<string name="drawer_item_felleskatalogen">Felleskatalogen</string>
+	<string name="drawer_item_nlh">Legemiddelhåndboka</string>
+	<string name="drawer_item_nel">Legehåndboka</string>
+	<string name="drawer_item_helsebiblioteket">Helsebiblioteket</string>
+	<string name="drawer_item_tidsskriftet">Tidsskriftet</string>
+	<string name="drawer_item_oncolex">Oncolex</string>
+	<string name="drawer_item_brukerhandboken">Brukerhåndboken</string>
+	<string name="drawer_item_analyseoversikten">Analyseoversikten</string>
+	<string name="drawer_item_nhi">Norsk Helseinformatikk</string>
+	<string name="drawer_item_sml">Store medisinske leksikon</string>
+	<string name="drawer_item_wikipedia_norwegian">Wikipedia - Norsk</string>
+	<string name="drawer_item_forskning">Forskning.no</string>
+	<string name="drawer_item_helsenorge">Helsenorge.no</string>
+	<string name="drawer_item_uptodate">UpToDate</string>
+	<string name="drawer_item_bmj">BMJ Best Practice</string>
+	<string name="drawer_item_pubmed">PubMed</string>
+	<string name="drawer_item_webofscience">Web of Science</string>
+	<string name="drawer_item_medlineplus">MedlinePlus</string>
+	<string name="drawer_item_ao_surgery">AO Surgery Reference</string>
+	<string name="drawer_item_wikipedia_english">Wikipedia - Engelsk</string>
+	<string name="drawer_item_encyclopedias_show_more">Vis flere</string>
+	<string name="drawer_item_encyclopedias_hide_more">Skjul flere</string>
+	<string name="drawer_item_diseases_and_treatments">Sykdommer og behandlinger</string>
+	<string name="drawer_item_lvh">Legevakthåndboken</string>
+	<string name="drawer_item_interactions">Interaksjonsanalyse</string>
+	<string name="drawer_item_poisonings">Giftinformasjonen</string>
+	<string name="drawer_item_antibiotics_guides">Antibiotikaveileder</string>
+	<string name="drawer_item_nasjonale_retningslinjer">Nasjonale retningslinjer</string>
+	<string name="drawer_item_clinicaltrials">Kliniske studier</string>
+	<string name="drawer_item_atc">ATC-register</string>
+	<string name="drawer_item_icd10">ICD-10</string>
+	<string name="drawer_item_manufacturers">Legemiddelfirmaer</string>
+	<string name="drawer_item_pharmacies">Apotek</string>
+	<string name="drawer_item_calculators">Kalkulatorer</string>
+	<string name="drawer_item_scales">Skalaer</string>
+	<string name="drawer_item_notifications_from_slv">Varsler fra Legemiddelverket</string>
+	<string name="drawer_item_notes">Notater</string>
+	<string name="drawer_item_tasks">Oppgaver</string>
+	<string name="drawer_item_settings">Innstillinger</string>
+	<string name="drawer_item_donate">Doner</string>
+	<string name="drawer_item_feedback">Send tilbakemelding</string>
+	<string name="drawer_item_report_issue">Rapporter feil</string>
+
+	<!-- Correct -->
+	<string name="correct_dialog_title">Feil stavelse?</string>
+	<string name="correct_dialog_message">Det kan se ut som om du har stavet søket ditt feil.\n\nMente du heller: %1$s?</string>
+	<string name="correct_dialog_positive_button">Ja</string>
+	<string name="correct_dialog_negative_button">Nei</string>
+
+	<!-- Snackbars -->
+	<string name="snackbar_undo">Angre</string>
+
+	<!-- My tools -->
+	<string name="mytools_download_file">Se i varslingssenteret…</string>
+
+	<!-- Services -->
+	<string name="notification_channel_message_name">Kritiske varsler</string>
+	<string name="notification_channel_message_description">Sjeldne kritiske varsler fra utvikler</string>
+	<string name="notification_channel_slv_name">Varsler fra Legemiddelverket</string>
+	<string name="notification_channel_slv_description">Legemiddelmangel, sikkerhetsinformasjon osv</string>
+	<string name="notification_second_action">Se nyeste</string>
+	<string name="notification_third_action">Innstillinger</string>
+
+	<!-- Various -->
+	<string name="device_this_can_take_some_time">Dette kan ta noe tid…</string>
+	<string name="device_not_connected">Du må være tilkoblet Internett</string>
+	<string name="device_permissions_not_granted">Uten aktuell tillatelse får du ikke full funksjonalitet</string>
+	<string name="device_something_went_wrong">Noe gikk galt</string>
+	<string name="device_not_supported">Ikke støttet</string>
+	<string name="device_not_supported_dialog_title">Ikke støttet</string>
+	<string name="device_not_supported_dialog_message">Ikke støttet på denne enheten.</string>
+	<string name="device_not_supported_dialog_positive_button">Lukk</string>
+
+</resources>

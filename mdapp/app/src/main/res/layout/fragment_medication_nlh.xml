@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
+	<WebView android:id="@+id/medication_nlh_content" android:layout_alignParentTop="true" style="@style/layout_match_width_match_height_vertical_scrollbar"/>
+	<ProgressBar android:id="@+id/medication_nlh_progressbar" android:layout_centerInParent="true" style="@style/layout_progressbar"/>
+</RelativeLayout>

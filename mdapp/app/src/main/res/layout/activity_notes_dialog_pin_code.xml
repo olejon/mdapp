@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" style="@style/layout_match_width_wrap_height_linear_vertical">
+	<TextView android:text="@string/notes_dialog_pin_code_message" style="@style/notes_dialog_pin_code_message"/>
+	<android.support.design.widget.TextInputLayout android:id="@+id/notes_dialog_pin_code_layout" style="@style/layout_match_width_wrap_height">
+		<EditText android:id="@+id/notes_dialog_pin_code" android:inputType="number" android:hint="@string/notes_dialog_pin_code_hint" style="@style/notes_dialog_pin_code_edittext" tools:ignore="Autofill"/>
+	</android.support.design.widget.TextInputLayout>
+</LinearLayout>

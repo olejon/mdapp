@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/notes_card" style="@style/card_white_layout">
+	<LinearLayout style="@style/card_inner_clickable_layout">
+		<TextView android:id="@+id/notes_card_title" style="@style/notes_card_title"/>
+		<TextView android:id="@+id/notes_card_text" style="@style/notes_card_text"/>
+	</LinearLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/manufacturers_list_item" style="@style/manufacturers_list_item"/>

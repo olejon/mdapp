@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/recyclerview_layout">
+	<android.support.design.widget.AppBarLayout style="@style/appbar">
+		<android.support.design.widget.CollapsingToolbarLayout android:id="@+id/saved_articles_toolbar_layout" style="@style/collapsing_toolbar">
+			<ImageView android:src="@drawable/saved_articles" android:contentDescription="@string/saved_articles_title" style="@style/collapsing_toolbar_image"/>
+			<ImageView android:src="@drawable/ic_stars_white_48dp" android:contentDescription="@string/saved_articles_title" style="@style/collapsing_toolbar_logo"/>
+			<android.support.v7.widget.Toolbar android:id="@+id/saved_articles_toolbar" style="@style/collapsing_toolbar_toolbar"/>
+		</android.support.design.widget.CollapsingToolbarLayout>
+	</android.support.design.widget.AppBarLayout>
+	<android.support.v7.widget.RecyclerView android:id="@+id/saved_articles_list" style="@style/recyclerview_list_layout"/>
+	<TextView android:id="@+id/saved_articles_list_empty" android:text="@string/saved_articles_list_empty" style="@style/recyclerview_list_empty"/>
+</android.support.design.widget.CoordinatorLayout>

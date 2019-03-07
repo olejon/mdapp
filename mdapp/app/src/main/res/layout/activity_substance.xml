@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
+	<android.support.v7.widget.Toolbar android:id="@+id/substance_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+	<TextView android:id="@+id/substance_atc_code" android:layout_below="@+id/substance_toolbar" style="@style/substance_atc_code"/>
+	<ListView android:id="@+id/substance_list" android:layout_below="@+id/substance_atc_code" style="@style/layout_match_width_match_height"/>
+</RelativeLayout>

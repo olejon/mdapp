@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" style="@style/cards_layout">
+	<android.support.v7.widget.Toolbar android:id="@+id/calculators_toolbar" android:layout_alignParentTop="true" style="@style/toolbar"/>
+	<ScrollView android:layout_below="@+id/calculators_toolbar" style="@style/layout_match_width_match_height_vertical_scrollbar">
+		<LinearLayout style="@style/layout_match_width_match_height_linear_vertical">
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
+				<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
+					<TextView android:text="@string/calculators_bmi_title" style="@style/card_title"/>
+					<android.support.design.widget.TextInputLayout android:id="@+id/calculators_bmi_weight_layout" style="@style/calculators_text_input">
+						<EditText android:id="@+id/calculators_bmi_weight" android:inputType="number" android:hint="@string/calculators_bmi_weight_hint" style="@style/calculators_bmi_weight_edittext" tools:ignore="Autofill"/>
+					</android.support.design.widget.TextInputLayout>
+				<android.support.design.widget.TextInputLayout android:id="@+id/calculators_bmi_height_layout" style="@style/calculators_text_input">
+					<EditText android:id="@+id/calculators_bmi_height" android:inputType="number" android:hint="@string/calculators_bmi_height_hint" style="@style/calculators_bmi_height_edittext" tools:ignore="Autofill"/>
+				</android.support.design.widget.TextInputLayout>
+					<View style="@style/card_separator"/>
+					<LinearLayout style="@style/card_buttons_layout">
+						<Button android:id="@+id/calculators_bmi_button" android:text="@string/calculators_button" style="@style/card_button"/>
+					</LinearLayout>
+				</LinearLayout>
+			</android.support.v7.widget.CardView>
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
+				<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
+					<TextView android:text="@string/calculators_waist_measurement_title" style="@style/card_title"/>
+					<android.support.design.widget.TextInputLayout android:id="@+id/calculators_waist_measurement_layout" style="@style/calculators_text_input">
+						<EditText android:id="@+id/calculators_waist_measurement" android:inputType="number" android:hint="@string/calculators_waist_measurement_hint" style="@style/calculators_waist_measurement_edittext" tools:ignore="Autofill"/>
+					</android.support.design.widget.TextInputLayout>
+					<View style="@style/card_separator"/>
+					<LinearLayout style="@style/card_buttons_layout">
+						<Button android:id="@+id/calculators_waist_measurement_button" android:text="@string/calculators_button" style="@style/card_button"/>
+					</LinearLayout>
+				</LinearLayout>
+			</android.support.v7.widget.CardView>
+			<android.support.v7.widget.CardView style="@style/card_white_layout">
+				<LinearLayout style="@style/layout_match_width_wrap_height_linear_vertical">
+					<TextView android:text="@string/calculators_corrected_qt_time_title" style="@style/card_title"/>
+					<android.support.design.widget.TextInputLayout android:id="@+id/calculators_corrected_qt_time_qt_interval_layout" style="@style/calculators_text_input">
+						<EditText android:id="@+id/calculators_corrected_qt_time_qt_interval" android:inputType="number" android:hint="@string/calculators_corrected_qt_time_qt_interval_hint" style="@style/calculators_corrected_qt_time_qt_interval_edittext" tools:ignore="Autofill"/>
+					</android.support.design.widget.TextInputLayout>
+					<android.support.design.widget.TextInputLayout android:id="@+id/calculators_corrected_qt_time_rr_interval_layout" style="@style/calculators_text_input">
+						<EditText android:id="@+id/calculators_corrected_qt_time_rr_interval" android:inputType="number" android:hint="@string/calculators_corrected_qt_time_rr_interval_hint" style="@style/calculators_corrected_qt_time_rr_interval_edittext" tools:ignore="Autofill"/>
+					</android.support.design.widget.TextInputLayout>
+					<View style="@style/card_separator"/>
+					<LinearLayout style="@style/card_buttons_layout">
+						<Button android:id="@+id/calculators_corrected_qt_time_button" android:text="@string/calculators_button" style="@style/card_button"/>
+					</LinearLayout>
+				</LinearLayout>
+			</android.support.v7.widget.CardView>
+		</LinearLayout>
+	</ScrollView>
+</RelativeLayout>
