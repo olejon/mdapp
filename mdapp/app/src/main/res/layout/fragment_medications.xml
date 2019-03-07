@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height_linear_vertical">
-	<ListView android:id="@+id/main_medications_list" style="@style/layout_match_width_match_height"/>
-	<TextView android:id="@+id/main_medications_list_empty" android:text="@string/main_medications_list_empty" style="@style/list_simple_empty"/>
-</LinearLayout>

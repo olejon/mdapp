@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item android:id="@+id/notifications_from_slv_menu_all" android:orderInCategory="1" app:showAsAction="never" android:title="@string/notifications_from_slv_menu_all"/>
-</menu>

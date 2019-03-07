@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_match_height">
-	<android.support.v7.widget.Toolbar android:id="@+id/icd10_toolbar" android:layout_alignParentTop="true" style="@style/toolbar">
-		<EditText android:id="@+id/icd10_toolbar_search" android:hint="@string/icd10_toolbar_search_hint" style="@style/icd10_toolbar_search_edittext"/>
-	</android.support.v7.widget.Toolbar>
-	<ListView android:id="@+id/icd10_list" android:layout_below="@+id/icd10_toolbar" style="@style/layout_match_width_match_height"/>
-	<android.support.design.widget.FloatingActionButton android:id="@+id/icd10_fab" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:src="@drawable/ic_search_white_24dp" style="@style/fab_layout"/>
-</RelativeLayout>

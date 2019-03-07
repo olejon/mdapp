@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/layout_match_width_wrap_height_linear_vertical">
-	<android.support.design.widget.TextInputLayout android:id="@+id/tasks_dialog_task_layout" style="@style/layout_match_width_wrap_height">
-		<EditText android:id="@+id/tasks_dialog_task" android:hint="@string/tasks_dialog_task_hint" style="@style/tasks_dialog_edittext"/>
-	</android.support.design.widget.TextInputLayout>
-</LinearLayout>
